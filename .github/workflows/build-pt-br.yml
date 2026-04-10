@@ -29,15 +29,15 @@ jobs:
           cargo -V
           mdbook --version
 
-      - name: Clean previous builds
-        run: cargo clean
-
       - name: Build trpl crate
-        run: cargo build -p trpl
+        run: |
+          cd packages/trpl
+          cargo clean
+          cargo build
 
       - name: Run mdBook tests (PT-BR)
         run: MDBOOK_CONFIG=book-pt-br.toml mdbook test --library-path packages/trpl/target/debug/deps
-
+        
   lint:
     name: Run lints (PT-BR)
     runs-on: ubuntu-latest
