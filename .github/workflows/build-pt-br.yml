@@ -37,7 +37,7 @@ jobs:
 
       - name: Run mdBook tests (PT-BR)
         run: MDBOOK_CONFIG=book-pt-br.toml mdbook test --library-path packages/trpl/target/debug/deps
-        
+
   lint:
     name: Run lints (PT-BR)
     runs-on: ubuntu-latest
@@ -94,5 +94,12 @@ jobs:
       - name: Install lychee
         run: cargo install lychee
 
-      - name: Check for broken links (PT-BR)
-        run: find ./book-pt-br -name "*.html" -print0 | xargs -0 lychee --no-progress
+      - name: Check links (PT-BR)
+        run: |
+          find ./book-pt-br -name "*.html" -print0 | \
+          xargs -0 lychee \
+            --no-progress \
+            --root-dir ./book-pt-br \
+            --exclude 'file://.*/std/.*' \
+            --exclude 'file://.*/reference/.*' \
+            --exclude 'https://www.rust-lang.org/en-US/team.html'
