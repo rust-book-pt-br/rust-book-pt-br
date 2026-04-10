@@ -20,4 +20,4 @@ jobs:
         run: mdbook build
 
       - name: Build PT-BR
-        run: mdbook build -c book-pt-br.toml
+        run: mdbook build ./ --config book-pt-br.toml
