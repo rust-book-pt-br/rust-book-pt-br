@@ -1,5 +1,6 @@
 # 📘 Rust Book PT-BR (Community Maintained)
 
+
 Este projeto mantém uma tradução em português (Brasil) do livro oficial do Rust, baseada diretamente no upstream:
 
 👉 https://github.com/rust-lang/book
@@ -26,7 +27,7 @@ Este projeto mantém uma tradução em português (Brasil) do livro oficial do R
 
 ## 🌐 Acesso online
 
-(Adicionar após deploy no GitHub Pages)
+[rust-book-pt-br](https://rust-book-pt-br.github.io/rust-book-pt-br/)
 
 ---
 
