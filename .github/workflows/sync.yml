@@ -12,10 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: git remote add upstream https://github.com/rust-lang/book.git || true
+      - name: Add upstream
+        run: git remote add upstream https://github.com/rust-lang/book.git || true
 
-      - run: |
-          git fetch upstream
-          git merge upstream/main --no-edit
+      - name: Fetch upstream
+        run: git fetch upstream
 
-      - run: git push origin main
+      - name: Create branch
+        run: |
+          git checkout -b sync-upstream || git checkout sync-upstream
+
+      - name: Merge upstream
+        run: git merge upstream/main --no-edit
+
+      - name: Push branch
+        run: git push origin sync-upstream --force
