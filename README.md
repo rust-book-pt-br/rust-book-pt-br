@@ -1,3 +1,29 @@
+# 📘 Rust Book PT-BR (Community Maintained)
+
+Este projeto mantém uma tradução atualizada do Rust Book oficial.
+
+## 🔗 Fonte original
+
+https://github.com/rust-lang/book
+
+## 🚀 Objetivo
+
+- Tradução atualizada
+- Sync automático com upstream
+- Contribuição aberta
+
+## 🌐 Acesse online
+
+(Adicionar GitHub Pages depois)
+
+## ⚠️ Aviso
+
+Este NÃO é um projeto oficial da Rust Foundation.
+
+
+-----------------------------------------------------------------------------
+
+
 # The Rust Programming Language
 
 ![Build Status](https://github.com/rust-lang/book/workflows/CI/badge.svg)

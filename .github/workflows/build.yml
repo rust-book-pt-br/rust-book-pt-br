@@ -1,0 +1,23 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mdBook
+        run: |
+          curl -L https://github.com/rust-lang/mdBook/releases/latest/download/mdbook-linux-amd64.tar.gz | tar xz
+          sudo mv mdbook /usr/local/bin/
+
+      - name: Build EN
+        run: mdbook build
+
+      - name: Build PT-BR
+        run: mdbook build -c book-pt-br.toml

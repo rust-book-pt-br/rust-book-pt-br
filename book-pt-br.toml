@@ -1,0 +1,7 @@
+[book]
+title = "The Rust Programming Language (PT-BR)"
+language = "pt-br"
+src = "src-pt-br"
+
+[build]
+build-dir = "book-pt-br"
