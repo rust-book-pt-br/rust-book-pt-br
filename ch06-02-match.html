@@ -1,0 +1,499 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>A Estrutura de Controle de Fluxo match - A Linguagem de Programação Rust (PT-BR)</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris-d33b75bf.css">
+        <link rel="stylesheet" href="theme/2018-edition-4e126c62.css">
+        <link rel="stylesheet" href="theme/semantic-notes-9b5766c0.css">
+        <link rel="stylesheet" href="theme/listing-cab26221.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-996f7bd5.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-31482bb5.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">A Linguagem de Programação Rust (PT-BR)</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="operador-match-de-controle-de-fluxo"><a class="header" href="#operador-match-de-controle-de-fluxo">Operador <code>match</code> de Controle de Fluxo</a></h2>
+<p>O Rust tem um excelente operador de controle de fluxo chamado <code>match</code>, que nos
+permite comparar um valor com uma série de padrões e executar um código com
+base no padrão que casar. Padrões podem ser compostos de valores literais,
+variáveis, caracteres-curinga e várias outras coisas. O Capítulo 18 aborda
+todos os tipos de padrões e o que eles fazem. A grande utilidade do <code>match</code> vem
+da expressividade dos padrões e das análises feitas pelo compilador, tendo
+certeza de que todos os casos possíveis estão sendo tratados.</p>
+<p>Imagine que expressão <code>match</code> funciona como uma máquina de contar moedas: as
+moedas passam por um canal que possui furos de vários tamanhos, e cada moeda
+cai no primeiro furo em que ela couber. Da mesma forma, os valores passam por
+cada padrão de um <code>match</code>, e logo no primeiro padrão que o valor “se encaixar”,
+o bloco de código que estiver associado a ele será executado.</p>
+<p>Aproveitando que acabamos de falar sobre moedas, vamos usá-las como exemplo de
+utilização do <code>match</code>! Podemos escrever uma função que recebe uma moeda
+qualquer dos Estados Unidos e, assim como uma máquina, determina qual moeda ela
+é e retorna seu valor em <em>cents</em>, como mostra a Listagem 6-3:</p>
+<blockquote>
+<p><strong>Nota do tradutor:</strong> diferentemente do que acontece na maioria dos países,
+as moedas dos Estados Unidos possuem nomes: as de 1 <em>cent</em> são chamadas de
+<em>Penny</em>; as de 5 <em>cents</em>, de <em>Nickel</em>; as de 10 <em>cents</em>, de <em>Dime</em>; e as de 25
+<em>cents</em>, de <em>Quarter</em>.</p>
+</blockquote>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Moeda {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn valor_em_cents(moeda: Moeda) -&gt; u32 {
+    match moeda {
+        Moeda::Penny =&gt; 1,
+        Moeda::Nickel =&gt; 5,
+        Moeda::Dime =&gt; 10,
+        Moeda::Quarter =&gt; 25,
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 6-3: Uma enum e uma expressão <code>match</code> em que os
+padrões comparados são as variantes da enum.</span></p>
+<p>Vamos analisar o <code>match</code> da função <code>valor_em_cents</code>. Primeiro, usamos a
+palavra-chave <code>match</code> seguida de uma expressão, que neste caso é o valor
+<code>moeda</code>. É parecido a uma expressão utilizada com <code>if</code>, mas tem uma grande
+diferença: com <code>if</code>, a expressão precisa retornar um valor <em>booleano</em>. Aqui,
+pode ser de qualquer tipo. O tipo da variável <code>moeda</code>, neste exemplo, é a enum
+<code>Moeda</code>, que definimos na Listagem 6-3.</p>
+<p>Em seguida vêm os braços do <code>match</code>. Um braço é composto por duas partes: um
+padrão e algum código. O primeiro braço deste exemplo tem um padrão, que é o
+valor <code>Moeda::Penny</code>, e o operador <code>=&gt;</code> que separa o padrão do código associado
+a ele. O código, nesse caso, é apenas o valor <code>1</code>. Os braços são separados uns
+dos outros com uma vírgula.</p>
+<p>Quando o <code>match</code> é executado, ele compara o valor resultante com o padrão de
+cada braço, na ordem. Se o valor casar com um determinado padrão, o código
+associado a esse padrão será executado. Se o valor não se encaixa nesse padrão,
+a execução passa para o próximo braço, bem parecido com a máquina de contar
+moedas. Podemos ter tantos braços quanto precisamos. No caso da Listagem 6-3,
+nosso <code>match</code> tem quatro braços.</p>
+<p>O código associado a cada braço é uma expressão, e o seu valor resultante, no
+braço que combinar, é o que será retornado pela expressão <code>match</code>.</p>
+<p>Tipicamente não se usa chaves se o braço do <code>match</code> for curto, como é o caso na
+Listagem 6-3, em que cada braço retorna apenas um valor. Se você quiser
+executar mais de uma linha de código em um braço, você pode usar chaves para
+delimitá-las. Por exemplo, o código seguinte vai escrever na tela “Moeda da
+sorte!” sempre que o método for chamado com uma <code>Moeda::Penny</code>, mas ainda vai
+retornar o último valor do bloco, <code>1</code>:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">enum Moeda {
+</span><span class="boring">   Penny,
+</span><span class="boring">   Nickel,
+</span><span class="boring">   Dime,
+</span><span class="boring">   Quarter,
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn valor_em_cents(moeda: Moeda) -&gt; u32 {
+    match moeda {
+        Moeda::Penny =&gt; {
+            println!("Moeda da sorte!");
+            1
+        },
+        Moeda::Nickel =&gt; 5,
+        Moeda::Dime =&gt; 10,
+        Moeda::Quarter =&gt; 25,
+    }
+}
+<span class="boring">}</span></code></pre>
+<h3 id="padrões-atrelados-a-valores"><a class="header" href="#padrões-atrelados-a-valores">Padrões Atrelados a Valores</a></h3>
+<p>Outra característica útil dos braços do <code>match</code> é que eles podem ser atrelados
+a partes dos valores que se encaixam no padrão. É assim que podemos extrair
+valores dentro de uma variante de uma enum.</p>
+<p>Por exemplo, vamos alterar uma das nossas variantes, inserindo dados dentro
+dela. De 1999 até 2008, os Estados Unidos cunhou <em>quarters</em> com um <em>design</em>
+diferente para cada um dos 50 estados em um dos lados da moeda. Nenhuma outra
+moeda tinha essa diferença no <em>design</em>, apenas os <em>quarters</em>. Podemos adicionar
+essa informação à nossa <code>enum</code> alterando a variante <code>Quarter</code> para incluir o
+valor <code>Estado</code>, como é feito na Listagem 6-4:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Debug)] // Para podermos ver qual é o estado com mais facilidade
+enum Estado {
+    Alabama,
+    Alaska,
+    // ... etc
+}
+
+enum Moeda {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(Estado),
+}
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 6-4: Enum <code>Moeda</code>, cuja variante <code>Quarter</code>
+também guarda o valor <code>Estado</code>.</span></p>
+<p>Vamos imaginar que um amigo nosso está tentando colecionar todas os <em>quarters</em>
+dos 50 estados. Enquanto separamos nosso troco por tipo de moeda, vamos também
+dizer o nome do estado associado a cada <em>quarter</em>. Se for um dos que o nosso
+amigo ainda não tem, ele pode colocá-lo na sua coleção.</p>
+<p>Na expressão <code>match</code> desse código, vamos adicionar uma variável chamada
+<code>estado</code> ao padrão que casa com os valores da variante <code>Moeda::Quarter</code>. Quando
+uma <code>Moeda::Quarter</code> é testada, a variável <code>estado</code> vai ser atrelada ao valor
+do estado daquele <em>quarter</em>. Assim vamos poder usar o <code>estado</code> no código do
+braço, desse jeito:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">enum Estado {
+</span><span class="boring">   Alabama,
+</span><span class="boring">   Alaska,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">enum Moeda {
+</span><span class="boring">   Penny,
+</span><span class="boring">   Nickel,
+</span><span class="boring">   Dime,
+</span><span class="boring">   Quarter(Estado),
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn valor_em_cents(moeda: Moeda) -&gt; u32 {
+    match moeda {
+        Moeda::Penny =&gt; 1,
+        Moeda::Nickel =&gt; 5,
+        Moeda::Dime =&gt; 10,
+        Moeda::Quarter(estado) =&gt; {
+            println!("Quarter do estado {:?}!", estado);
+            25
+        },
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Se executarmos <code>valor_em_cents(Moeda::Quarter(Estado::Alaska))</code>, <code>moeda</code> seria
+<code>Moeda::Quarter(Estado::Alaska)</code>. Quando comparamos esse valor em cada um dos
+braços do <code>match</code>, nenhum deles vai casar enquanto não chegar em
+<code>Moeda::Quarter(estado)</code>. Nesse ponto, <code>estado</code> vai estar atrelado ao valor
+<code>Estado::Alaska</code>. Podemos, então, usar esse valor na expressão <code>println!</code>,
+obtendo o estado contido na variante <code>Quarter</code> da enum <code>Moeda</code>.</p>
+<h3 id="usando-match-com-optiont"><a class="header" href="#usando-match-com-optiont">Usando <code>match</code> com <code>Option&lt;T&gt;</code></a></h3>
+<p>Na seção anterior, queríamos obter o valor <code>T</code> contido em um <code>Some</code> quando era
+o caso em uma <code>Option&lt;T&gt;</code>. Também podemos manipular uma <code>Option&lt;T&gt;</code> usando
+<code>match</code>, assim como fizemos com a enum <code>Moeda</code>! Em vez de comparar moedas,
+vamos comparar as variantes de <code>Option&lt;T&gt;</code>, mas a forma de trabalhar com a
+expressão <code>match</code> continua a mesma.</p>
+<p>Digamos que queremos escrever uma função que recebe um <code>Option&lt;i32&gt;</code>, e se
+houver um valor embutido nele, soma um a esse valor. Se não houver um valor,
+a função deve retornar <code>None</code>, e nem tentar executar nenhuma operação.</p>
+<p>Essa função é bem fácil de implementar, graças ao <code>match</code>, e vai ficar conforme
+visto na Listagem 6-5:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn mais_um(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+    match x {
+        None =&gt; None,
+        Some(i) =&gt; Some(i + 1),
+    }
+}
+
+let cinco = Some(5);
+let seis = mais_um(cinco);
+let nenhum = mais_um(None);
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 6-5: Uma função que usa um <code>match</code> para tratar
+uma <code>Option&lt;i32&gt;</code>.</span></p>
+<h4 id="casando-somet"><a class="header" href="#casando-somet">Casando <code>Some(T)</code></a></h4>
+<p>Vamos examinar a primeira execução de <code>mais_um</code> em mais detalhes. Quando
+chamamos <code>mais_um(cinco)</code>, a variável <code>x</code> no corpo da função <code>mais_um</code> vai ter
+o valor <code>Some(5)</code>. Então comparamos ele a cada braço do <code>match</code>.</p>
+<pre><code class="language-rust ignore">None =&gt; None,</code></pre>
+<p>O valor <code>Some(5)</code> não casa com o padrão <code>None</code>, então seguimos para o
+próximo braço.</p>
+<pre><code class="language-rust ignore">Some(i) =&gt; Some(i + 1),</code></pre>
+<p><code>Some(5) casa com </code>Some(i)<code>? Sim, casa! Temos a mesma variante. O </code>i<code>está atrelado ao valor contido em</code>Some<code>, então </code>i<code>passa a ter o valor</code>5<code>. O código desse braço é executado, então somamos um ao valor de </code>i<code>e criamos um novo</code>Some<code>contendo nosso total de</code>6`.</p>
+<h4 id="casando-none"><a class="header" href="#casando-none">Casando <code>None</code></a></h4>
+<p>Agora vamos considerar a segunda chamada da função <code>mais_um</code> na Listagem 6-5,
+em que <code>x</code> é <code>None</code>. Nós entramos no <code>match</code> e comparamos com o primeiro braço.</p>
+<pre><code class="language-rust ignore">None =&gt; None,</code></pre>
+<p>Confere! Não há nenhum valor para somar, então o programa para e retorna o
+valor <code>None</code> do lado direito do <code>=&gt;</code>. Como o primeiro braço já casou, nenhum
+dos demais será testado.</p>
+<p>A combinação de enums e a expressão <code>match</code> é útil em diversas situações. Você
+verá muito esse padrão em Rust: fazer o <code>match</code> de uma enum, associar uma
+variável ao valor embutido, e então executar um código baseado nele. Pode
+parecer complicado no começo, mas uma vez que você se acostuma, você vai querer
+que tivesse isso em todas as linguagens. É, sistematicamente, um favorito dos
+usuários.</p>
+<h3 id="matches-são-exaustivos"><a class="header" href="#matches-são-exaustivos"><em>Matches</em> São Exaustivos</a></h3>
+<p>Há outro aspecto do <code>match</code> que precisamos discutir. Considere essa versão da
+nossa função <code>mais_um</code>:</p>
+<pre><code class="language-rust ignore">fn mais_um(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
+    match x {
+        Some(i) =&gt; Some(i + 1),
+    }
+}</code></pre>
+<p>Nós não tratamos o caso <code>None</code>, logo vai ocorrer um <em>bug</em> no nosso código. Por
+sorte, é um <em>bug</em> que o Rust sabe detectar. Se tentarmos compilar esse código,
+vamos ter esse erro:</p>
+<pre><code class="language-text">error[E0004]: non-exhaustive patterns: `None` not covered
+ --&gt;
+  |
+6 |         match x {
+  |               ^ pattern `None` not covered
+</code></pre>
+<p>O Rust sabe que nós não cobrimos todos os casos possíveis, e sabe até de qual
+padrão nos esquecemos! <em>Matches</em> em Rust são <em>exaustivos</em>: precisamos extinguir
+até a última possibilidade pra que o nosso código seja válido. Especialmente no
+caso de uma <code>Option&lt;T&gt;</code>, em que o Rust não nos deixa esquecer de tratar
+explicitamente o caso <code>None</code>. Ele nos impede de assumir que temos um valor
+válido quando possivelmente temos um valor nulo, e portanto, cometer o erro de
+um bilhão de dólares que vimos mais cedo.</p>
+<h3 id="o-espaço-reservado-_"><a class="header" href="#o-espaço-reservado-_">O espaço reservado <code>_</code></a></h3>
+<h3 id="o-placeholder--_"><a class="header" href="#o-placeholder--_">O <em>Placeholder</em> <code> _</code></a></h3>
+<p>O Rust também tem um padrão que podemos usar em situações em que não queremos
+listar todos os valores possíveis. Por exemplo, um <code>u8</code> pode ter valores
+válidos de 0 a 255. Se nos importamos apenas com os valores 1, 3, 5 e 7, não
+queremos ser obrigados a listar o 0, 2, 4, 6, 8, 9, e assim por diante até 255.
+Felizmente, nem precisamos: em vez disso, podemos usar o padrão especial <code>_</code>.</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let algum_valor_u8 = 0u8;
+match algum_valor_u8 {
+    1 =&gt; println!("um"),
+    3 =&gt; println!("três"),
+    5 =&gt; println!("cinco"),
+    7 =&gt; println!("sete"),
+    _ =&gt; (),
+}
+<span class="boring">}</span></code></pre>
+<p>O padrão <code>_</code> casa com qualquer valor. Colocando ele depois dos demais
+braços, o <code>_</code> vai casar com todos os casos possíveis que não foram
+especificados antes dele. O <code>()</code> é só o valor-unidade, pra que nada aconteça no
+caso <code>_</code>. Como resultado, podemos dizer que não queremos fazer nada com os
+possíveis valores que não listamos antes do <em>placeholder</em> <code>_</code>.</p>
+<p>Contudo, a expressão <code>match</code> pode ser um tanto verbosa em uma situação em que
+queremos apenas lidar com <em>um</em> dos casos. Pra essa situação, o Rust oferece o
+<code>if let</code>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch06-01-defining-an-enum.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="ch06-03-if-let.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch06-01-defining-an-enum.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="ch06-03-if-let.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris-2317480c.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

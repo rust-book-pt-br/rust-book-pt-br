@@ -1,0 +1,712 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>O que é ownership? - A Linguagem de Programação Rust (PT-BR)</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="ferris-d33b75bf.css">
+        <link rel="stylesheet" href="theme/2018-edition-4e126c62.css">
+        <link rel="stylesheet" href="theme/semantic-notes-9b5766c0.css">
+        <link rel="stylesheet" href="theme/listing-cab26221.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-996f7bd5.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-31482bb5.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">A Linguagem de Programação Rust (PT-BR)</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="o-que-é-ownership"><a class="header" href="#o-que-é-ownership">O Que É Ownership?</a></h2>
+<p>A característica central do Rust é <em>ownership</em>. Embora seja bem direta de
+explicar, ela tem implicações profundas em todo o resto da linguagem.</p>
+<p>Todos os programas têm que decidir de que forma vão usar a memória do computador
+durante a execução. Algumas linguagens possuem <em>garbage collection</em> (coleta de
+lixo), que constantemente busca segmentos de memória que já não são mais
+utilizados enquanto o programa executa; em outras linguagens, o programador deve
+alocar e liberar memória de forma explícita. Rust usa uma terceira abordagem: a
+memória é gerenciada através de um sistema de posse, que tem um conjunto de
+regras verificadas em tempo de compilação. Nenhuma característica relacionada ao
+ownership implica qualquer custo em tempo de execução.</p>
+<p>Como ownership é um conceito novo para muitos programadores, leva um pouco de
+tempo para se acostumar. A boa notícia é que quanto mais experiente você se
+torna em Rust e nas regras do sistema de posse, mais você será capaz de
+escrever, naturalmente, código seguro e eficiente. Fique aí!</p>
+<p>Quando você entender ownership, você terá uma fundação sólida para entender as
+características que fazem o Rust ser único. Neste capítulo, você vai aprender
+ownership trabalhando em alguns exemplos com foco em uma estrutura de dados
+muito comum: <em>strings</em>.</p>
+<!-- PROD: START BOX -->
+<section class="note" aria-role="note">
+<h3 id="a-pilha-e-a-heap"><a class="header" href="#a-pilha-e-a-heap">A Pilha e a <em>Heap</em></a></h3>
+<p>Em muitas linguagens de programação, não temos que pensar muito sobre a pilha
+e sobre a <em>heap</em>. Mas em uma linguagem de programação de sistemas, como Rust,
+o fato de um valor estar na pilha ou na heap tem impacto na forma como a
+linguagem se comporta e no porquê de termos que tomar certas decisões. Vamos
+descrever partes do ownership em relação à pilha e à heap mais para a frente
+neste capítulo, então aqui vai uma explicação preparatória.</p>
+<p>Tanto a pilha como a heap são partes da memória que estão disponíveis ao seu
+código para uso em tempo de execução, mas elas são estruturadas de formas
+diferentes. A pilha armazena valores na ordem em que eles chegam, e os remove
+na ordem inversa. Isto é chamado de <em>last in, first out</em> (último a chegar,
+primeiro a sair). Imagine uma pilha de pratos: quando você coloca mais pratos,
+você os põe em cima da pilha, e quando você precisa de um prato, você pega o
+que está no topo. Adicionar ou remover pratos do meio ou do fundo não funciona
+tão bem! Dizemos fazer um <em>push</em> na pilha quando nos refererimos a inserir
+dados, e fazer um <em>pop</em> da pilha quando nos referimos a remover dados.</p>
+<p>A pilha é rápida por conta da forma como ela acessa os dados: ela nunca tem
+que procurar um lugar para colocar novos dados, ou um lugar de onde obter
+dados, este lugar é sempre o topo da pilha. Outra propriedade que faz a pilha
+ser rápida é que todos os dados contidos nela devem ocupar um tamanho fixo e
+conhecido.</p>
+<p>Para dados com um tamanho desconhecido em tempo de compilação, ou com um
+tamanho que pode mudar, podemos usar a heap em vez da pilha. A heap é menos
+organizada: quando colocamos dados na heap, nós pedimos um certo espaço de
+memória. O sistema operacional encontra um espaço vazio em algum lugar na heap
+que seja grande o suficiente, marca este espaço como em uso, e nos retorna um
+<em>ponteiro</em>, que é o endereço deste local. Este processo é chamado de
+<em>alocar na heap</em>, e às vezes se abrevia esta frase como apenas “alocação”.
+Colocar valores na pilha não é considerado uma alocação. Como o ponteiro tem
+um tamanho fixo e conhecido, podemos armazená-lo na pilha, mas quando queremos
+os dados, de fato, temos que seguir o ponteiro.</p>
+<p>Imagine que você está sentado em um restaurante. Quando você entra, você diz
+o número de pessoas que estão com você, o atendente encontra uma mesa vazia
+que acomode todos e os leva para lá. Se alguém do seu grupo chegar mais tarde,
+poderá perguntar onde vocês estão para encontrá-los.</p>
+<p>Acessar dados na heap é mais lento do que acessar dados na pilha, porque você
+precisa seguir um ponteiro para chegar lá. Processadores de hoje em dia são
+mais rápidos se não precisarem pular tanto de um lugar para outro na memória.
+Continuando com a analogia, considere um garçom no restaurante anotando os
+pedidos de várias mesas. É mais eficiente anotar todos os pedidos de uma única
+mesa antes de passar para a mesa seguinte. Anotar um pedido da mesa A, depois
+um da mesa B, depois outro da mesa A, e outro da mesa B novamente seria um
+processo bem mais lento. Da mesma forma, um processador pode cumprir melhor
+sua tarefa se trabalhar em dados que estão próximos uns dos outros (assim como
+estão na pilha) em vez de dados afastados entre si (como podem estar na heap).
+Alocar um espaço grande na heap também pode levar tempo.</p>
+<p>Quando nosso código chama uma função, os valores passados para ela (incluindo
+possíveis ponteiros para dados na heap) e as variáveis locais da função são
+colocados na pilha. Quando a função termina, esses valores são removidos dela.</p>
+<p>Rastrear quais partes do código estão usando quais dados na heap, minimizar a
+quantidade de dados duplicados na heap e limpar segmentos inutilizados da heap
+para que não fiquemos sem espaço são todos problemas tratados pelo ownership.
+Uma vez que você entende ownership, você não vai mais precisar pensar tanto
+sobre a pilha e a heap, mas saber que ownership existe para gerenciar os dados
+na heap pode ajudar a explicar como e por que ele funciona.</p>
+</section>
+<!-- PROD: END BOX -->
+<h3 id="regras-de-propriedade"><a class="header" href="#regras-de-propriedade">Regras de Propriedade</a></h3>
+<p>Primeiro, vamos dar uma olhada nas regras de ownership. Mantenha em mente essas
+regras quando trabalharmos com os exemplos em seguida:</p>
+<blockquote>
+<ol>
+<li>Cada valor em Rust possui uma variável que é dita seu <em>owner</em> (sua dona).</li>
+<li>Pode apenas haver um owner por vez.</li>
+<li>Quando o owner sai fora de escopo, o valor será destruído.</li>
+</ol>
+</blockquote>
+<h3 id="escopo-de-variáveis"><a class="header" href="#escopo-de-variáveis">Escopo de Variáveis</a></h3>
+<p>Já analisamos um exemplo de programa em Rust no Capítulo 2. Agora que já
+passamos da sintaxe básica, não vamos incluir o código <code>fn main() {</code> nos
+próximos exemplos, então se você estiver acompanhando, terá que colocá-los
+manualmente dentro de uma função <code>main</code>. Como resultado, nossos exemplos serão
+um pouco mais concisos, mantendo o foco nos detalhes que realmente interessam.</p>
+<p>Como um primeiro exemplo de ownership, vamos olhar para o <em>escopo</em> de algumas
+variáveis. Um escopo é a área dentro de um programa para a qual um item é
+válido. Digamos que nós temos uma variável como esta:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = "olá";
+<span class="boring">}</span></code></pre>
+<p>A variável <code>s</code> se refere a uma string literal cujo valor é fixo no código. A
+variável é válida do ponto em que é declarada até o fim do atual <em>escopo</em>. A
+Listagem 4-1 tem comentários indicando onde a variável <code>s</code> é válida:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>{                      // s não é válida aqui, ainda não está declarada
+    let s = "texto";   // s é válida deste ponto em diante
+
+    // faz alguma coisa com s
+}                      // agora este escopo terminou, e s não é mais válida
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 4-1: Uma variável e o escopo em que ela é
+válida.</span></p>
+<p>Em outras palavras, existem dois pontos no tempo que são importantes aqui:</p>
+<ol>
+<li>Quando <code>s</code> <em>entra no escopo</em>, ela é válida.</li>
+<li>Permanece dessa maneira até que ela <em>saia de escopo</em>.</li>
+</ol>
+<p>Neste ponto, a relação entre escopos e quando variáveis são válidas é similar a
+outras linguagens de programação. Agora vamos construir sobre este entendimento,
+apresentando o tipo <code>String</code>.</p>
+<h3 id="o-tipo-string"><a class="header" href="#o-tipo-string">O Tipo <code>String</code></a></h3>
+<p>Para ilustrar as regras de ownership, precisamos de um tipo de dados que seja
+mais complexo do que aqueles abordados no Capítulo 3. Os tipos abordados na
+seção “Tipos de Dados” são todos armazenados na pilha, e retirados dela quando
+seu escopo termina, mas queremos ver dados que são armazenados na heap e
+explorar como o Rust faz para saber quando limpar esses dados.</p>
+<p>Vamos usar <code>String</code> como exemplo aqui, e concentrar nas partes de <code>String</code> que
+estão relacionadas ao ownership. Esses aspectos também se aplicam aos outros
+tipos complexos de dados fornecidos pela biblioteca padrão e os que você mesmo
+cria. Vamos discutir <code>String</code> mais a fundo no Capítulo 8.</p>
+<p>Já vimos strings literais, em que um valor de string é fixado pelo código do
+nosso programa. Strings literais são convenientes, mas nem sempre são adequadas
+para situações em que queremos usar texto. Um motivo é que elas são imutáveis.
+Outro é que nem todos os valores de string são conhecidos enquanto escrevemos
+nosso código: por exemplo, o que fazer se queremos obter uma entrada do usuário
+e armazená-la? Para essas situações, Rust tem um segundo tipo de strings,
+<code>String</code>. Este tipo é alocado na heap, e como tal, é capaz de armazenar uma
+quantidade de texto que é desconhecida em tempo de compilação. Você pode criar
+uma <code>String</code> de uma string literal usando a função <code>from</code>, da seguinte forma:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = String::from("texto");
+<span class="boring">}</span></code></pre>
+<p>O <code>::</code> é um operador que nos permite indicar que o <em>namespace</em> desta função
+<code>from</code>, em particular, é o tipo <code>String</code>, de forma que não precisamos usar um
+nome específico como <code>string_from</code>. Vamos discutir esta sintaxe na seção
+“Sintaxe do Método” do Capítulo 5, e quando falarmos sobre <em>namespaces</em> com
+módulos no Capítulo 7.</p>
+<p>Este tipo de string <em>pode</em> ser alterada:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut s = String::from("olá");
+
+s.push_str(", mundo!"); // push_str() adiciona um literal à String
+
+println!("{}", s); // Isso vai exibir `olá, mundo!`
+<span class="boring">}</span></code></pre>
+<p>Mas então, qual é a diferença aqui? Por que <code>String</code> pode ser alterada enquanto
+literais não podem? A diferença está em como esses dois tipos lidam com memória.</p>
+<h3 id="memória-e-alocação"><a class="header" href="#memória-e-alocação">Memória e Alocação</a></h3>
+<p>No caso de uma string literal, sabemos o seu conteúdo em tempo de compilação,
+então o texto é injetado diretamente para dentro do executável final, o que
+faz strings literais serem rápidas e eficientes. Mas essas propriedades provêm
+apenas da sua imutabilidade. Infelizmente, não podemos colocar um segmento de
+memória dentro do binário para cada texto cujo tamanho é desconhecido em tempo
+de compilação, e cujo tamanho pode mudar ao longo da execução do programa.</p>
+<p>Com o tipo <code>String</code>, para poder acomodar um trecho mutável e expansível de
+texto, precisamos alocar uma quantidade de memória na heap, que é desconhecida
+em tempo de compilação, para manter o seu conteúdo. Isto significa que:</p>
+<ol>
+<li>A memória deve ser solicitada ao sistema operacional em tempo de execução.</li>
+<li>Precisamos de uma forma de retornar esta memória ao sistema operacional
+quando tivermos finalizado nossa <code>String</code>.</li>
+</ol>
+<p>A primeira parte é feita por nós: quando chamamos <code>String::from</code>, sua
+implementação solicita a memória de que precisa. Isso é meio que universal em
+linguagens de programação.</p>
+<p>No entanto, a segunda parte é diferente. Em linguagens com um <em>garbage collector
+(GC)</em>, o GC rastreia e limpa a memória que não está mais sendo usada, e nós,
+como programadores, não precisamos pensar sobre isso. Sem um GC, é
+responsabilidade do programador identificar quando a memória não está mais sendo
+usada e chamar, explicitamente, um código que a retorne, assim como fizemos para
+solicitá-la. Fazer isso corretamente tem sido, historicamente, um problema
+difícil de programação. Se esquecermos, vamos desperdiçar memória. Se fizermos
+cedo demais, teremos uma variável inválida. Se fizermos duas vezes, também será
+um bug. Precisamos casar exatamente um <code>allocate</code> (alocar) com exatamente um
+<code>free</code> (liberar).</p>
+<p>Rust segue um caminho diferente: a memória é automaticamente retornada assim que
+a variável que a possui sai de escopo. Aqui está uma versão do nosso exemplo de
+escopo da Listagem 4-1 usando uma <code>String</code> em vez de uma string literal:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>{
+    let s = String::from("texto"); // s é válida deste ponto em diante
+
+    // faz alguma coisa com s
+}                                  // agora este escopo terminou, e s não é
+                                   // mais válida
+<span class="boring">}</span></code></pre>
+<p>Existe um ponto natural em que podemos retornar ao sistema operacional a memória
+da qual precisa nossa <code>String</code>: quando <code>s</code> sai de escopo. Quando uma variável
+sai de escopo, o Rust chama para nós uma função especial. Essa função é chamada
+<code>drop</code>, e é aí que o autor de <code>String</code> pode colocar o código que retorna
+a memória. Rust chama <code>drop</code> automaticamente ao fechar chaves (<code>}</code>).</p>
+<blockquote>
+<p>Nota: Em C++, esta forma de desalocar recursos no fim do tempo de vida útil de
+um item às vezes é chamado de <em>Resource Acquisition Is Initialization</em> (RAII,
+do inglês, Aquisição de Recurso É Inicialização). A função <code>drop</code> em Rust vai
+lhe ser bastante familar se você já tiver usado padrões RAII.</p>
+</blockquote>
+<p>Este padrão tem um profundo impacto na forma de escrever código em Rust. Pode
+parecer simples agora, mas o comportamento do código pode ser inesperado em
+situações mais complicadas, quando queremos que múltiplas variáveis usem os
+dados que alocamos na heap. Vamos explorar algumas dessas situações agora.</p>
+<h4 id="formas-de-interação-entre-variáveis-e-dados-move"><a class="header" href="#formas-de-interação-entre-variáveis-e-dados-move">Formas de Interação Entre Variáveis e Dados: <em>Move</em></a></h4>
+<p>Múltiplas variáveis podem interagir com os mesmos dados de diferentes formas em
+Rust. Vamos ver um exemplo usando um número inteiro na Listagem 4-2:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = 5;
+let y = x;
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 4-2: Atribuindo o valor inteiro da variável <code>x</code>
+para <code>y</code>.</span></p>
+<p>Provavelmente podemos advinhar o que isto faz com base nas nossas experiências
+com outras linguagens: “Associe o valor <code>5</code> a <code>x</code>; depois faça uma cópia do
+valor em <code>x</code> e a associe a <code>y</code>.” Agora temos duas variáveis, <code>x</code> e <code>y</code>, e ambas
+são iguais a <code>5</code>. É isto mesmo que acontece, porque números inteiros são valores
+simples que possuem um tamanho fixo e conhecido, e esses dois valores <code>5</code> são
+colocados na pilha.</p>
+<p>Agora vamos ver a versão usando <code>String</code>:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s1 = String::from("texto");
+let s2 = s1;
+<span class="boring">}</span></code></pre>
+<p>Isso parece bem similar ao código anterior, então poderíamos assumir que
+funcionaria da mesma forma, isto é, a segunda linha faria uma cópia do valor em
+<code>s1</code> e a associaria a <code>s2</code>. Mas não é exatamente isso que acontece.</p>
+<p>Para explicar isso mais detalhadamente, vamos ver como a <code>String</code> funciona por
+baixo dos panos na Figura 4-1. Uma <code>String</code> é feita de três partes, mostradas
+à esquerda: um ponteiro para a memória que guarda o conteúdo da string, um
+tamanho, e uma capacidade. Este grupo de dados é armazenado na pilha. No lado
+direito está a memória na heap que guarda o conteúdo.</p>
+<img alt="String na memória" src="img/trpl04-01.svg" class="center" style="width: 50%;" />
+<p><span class="caption">Figura 4-1: Representação na memória de uma <code>String</code>
+contendo o valor <code>"texto"</code> associado a <code>s1</code>.</span></p>
+<p>O tamanho representa quanta memória, em bytes, o conteúdo da <code>String</code> está
+usando atualmente. A capacidade é a quantidade total de memória, em bytes, que
+a <code>String</code> recebeu do sistema operacional. A diferença entre tamanho e
+capacidade é importante, mas não neste contexto, então não há problema em
+ignorar a capacidade por enquanto.</p>
+<p>Quando atribuímos <code>s1</code> a <code>s2</code>, os dados da <code>String</code> são copiados, o que
+significa que estamos copiando o ponteiro, o tamanho e a capacidade que estão na
+pilha. Não estamos copiando os dados que estão na heap, aos quais o ponteiro se
+refere. Em outras palavras, a representação dos dados na memória ocorre como
+na Figura 4-2.</p>
+<img alt="s1 e s2 apontando para o mesmo valor" src="img/trpl04-02.svg" class="center" style="width: 50%;" />
+<p><span class="caption">Figura 4-2: Representação na memória da variável <code>s2</code>, que
+tem uma cópia do ponteiro, tamanho e capacidade de <code>s1</code>.</span></p>
+<p>A representação <em>não</em> ocorre como na Figura 4-3, que é como ficaria a memória se
+o Rust também copiasse os dados da heap. Se o Rust fizesse isso, a operação
+<code>s2 = s1</code> seria potencialmente bastante custosa em termos de desempenho em tempo
+de execução caso os dados na heap fossem grandes.</p>
+<img alt="s1 e s2 em dois lugares" src="img/trpl04-03.svg" class="center" style="width: 50%;" />
+<p><span class="caption">Figura 4-3: Outra possibilidade do que <code>s2 = s1</code> poderia
+fazer se o Rust também copiasse os dados da heap.</span></p>
+<p>Anteriormente, dissemos que, quando uma variável sai de escopo, o Rust
+automaticamente chama a função <code>drop</code> e limpa a memória da heap para esta
+variável. Mas a Figura 4-2 mostra que os dois ponteiros estão apontando para o
+mesmo lugar. Isso é um problema: quando <code>s2</code> e <code>s1</code> saem de escopo, os dois vão
+tentar liberar a mesma memória. Isso é conhecido como erro de <em>double free</em>
+(liberação dupla), e é um dos bugs de segurança de memória que mencionamos
+anteriormente. Liberar memória duas vezes pode levar à corrupção da memória,
+o que pode, por sua vez, trazer potenciais vulnerabilidades de segurança.</p>
+<p>Para garantir a segurança de memória, há um outro detalhe sobre o que acontece
+nesta situação em Rust. Em vez de tentar copiar a memória alocada, o Rust
+considera que <code>s1</code> deixa de ser válida, e portanto, o Rust não precisa liberar
+nenhuma memória quando <code>s1</code> sai de escopo. Veja só o que acontece quando você
+tenta usar <code>s1</code> depois que <code>s2</code> é criada, não vai funcionar:</p>
+<pre><code class="language-rust ignore">let s1 = String::from("texto");
+let s2 = s1;
+
+println!("{}", s1);</code></pre>
+<p>Você vai ter um erro como este, porque o Rust lhe impede de usar a referência
+que foi invalidada:</p>
+<pre><code class="language-text">error[E0382]: use of moved value: `s1`
+ --&gt; src/main.rs:5:20
+  |
+3 |     let s2 = s1;
+  |         -- value moved here
+4 |
+5 |     println!("{}", s1);
+  |                    ^^ value used here after move
+  |
+  = note: move occurs because `s1` has type `std::string::String`, which does
+  not implement the `Copy` trait
+</code></pre>
+<p>Se você já ouviu os termos “cópia rasa” e “cópia profunda” (<em>shallow copy</em> e
+<em>deep copy</em>) enquanto trabalhava com outras linguagens, o conceito de copiar o
+ponteiro, tamanho e capacidade sem copiar os dados provavelmente parece uma
+cópia rasa. Mas como o Rust também invalida a primeira variável, em vez de
+chamar isto de cópia rasa, isto é conhecido como um <em>move</em>. Aqui poderíamos
+dizer que <code>s1</code> foi <em>movida</em> para <code>s2</code>. Então, o que realmente acontece é
+mostrado na Figura 4-4.</p>
+<img alt="s1 movida para s2" src="img/trpl04-04.svg" class="center" style="width: 50%;" />
+<p><span class="caption">Figura 4-4: Representação na memória depois de <code>s1</code> ter
+sido invalidada.</span></p>
+<p>Isso resolve o nosso problema! Tendo apenas <code>s2</code> válida, quando ela sair de
+escopo, somente ela vai liberar a memória, e pronto.</p>
+<p>Ademais, isto implica uma decisão de projeto: Rust nunca vai criar <em>deep copies</em>
+dos seus dados. Logo, para qualquer cópia <em>automática</em> que aconteça, pode-se
+assumir que ela não será custosa em termos de desempenho em tempo de execução.</p>
+<h4 id="formas-de-interação-entre-variáveis-e-dados-clone"><a class="header" href="#formas-de-interação-entre-variáveis-e-dados-clone">Formas de Interação Entre Variáveis e Dados: Clone</a></h4>
+<p>Se nós <em>queremos</em> fazer uma cópia profunda dos dados da <code>String</code> que estão na
+heap, e não apenas os dados que estão na pilha, podemos usar um método comum
+chamado <code>clone</code>. Vamos discutir sintaxe de métodos no Capítulo 5, mas como os
+métodos constituem uma característica comum em várias linguagens de programação,
+você provavelmente já os viu antes.</p>
+<p>Aqui está um exemplo de uso do método <code>clone</code>:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s1 = String::from("texto");
+let s2 = s1.clone();
+
+println!("s1 = {}, s2 = {}", s1, s2);
+<span class="boring">}</span></code></pre>
+<p>Isto funciona bem, e é assim que você pode, explicitamente, produzir o
+comportamento mostrado na Figura 4-3, onde os dados da heap <em>são</em> copiados.</p>
+<p>Quando você ver uma chamada para <code>clone</code>, você sabe que algum código arbitrário
+está sendo executado, e que este código talvez seja custoso. É um indicador
+visual de que algo diferente está acontecendo.</p>
+<h4 id="dados-somente-da-pilha-copy"><a class="header" href="#dados-somente-da-pilha-copy">Dados Somente da Pilha: Copy</a></h4>
+<p>Há um outro detalhezinho de que ainda não falamos. Este código usando números
+inteiros, parte do qual foi mostrado anteriormente na Listagem 4-2, funciona e é
+válido:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = 5;
+let y = x;
+
+println!("x = {}, y = {}", x, y);
+<span class="boring">}</span></code></pre>
+<p>Mas este código parece contradizer o que acabamos de aprender: não temos uma
+chamada ao método <code>clone</code>, mas <code>x</code> ainda é válido e não foi movido para <code>y</code>.</p>
+<p>O motivo é que tipos como números inteiros têm um tamanho conhecido em tempo de
+compilação e são armazenados inteiramente na pilha, e por isso, cópias desses
+valores são rápidas de se fazer. Isso significa que não há razão para impedir
+<code>x</code> de ser válido após criarmos a variável <code>y</code>. Em outras palavras, não há
+diferença entre cópia rasa e profunda aqui, então chamar o método <code>clone</code> não
+faria nada diferente de uma cópia rasa, por isso podemos deixá-lo de lado.</p>
+<p>O Rust tem uma anotação especial chamada de <em>trait</em> <code>Copy</code>, que podemos colocar
+em tipos como números inteiros, que são armazenados na pilha (falaremos mais
+sobre traits no Capítulo 10). Se um tipo possui o trait <code>Copy</code>, uma variável
+anterior vai continuar sendo utilizável depois de uma atribuição. O Rust não vai
+nos deixar anotar um tipo com o trait <code>Copy</code> se este tipo, ou qualquer uma de
+suas partes, tiver implementado o trait <code>Drop</code>. Se o tipo precisa que algo
+especial aconteça quando o valor sair de escopo e há uma anotação <code>Copy</code> neste
+tipo, vamos ter um erro de compilação. Para aprender sobre como inserir a
+anotação <code>Copy</code> ao seu tipo, veja o Apêndice C em Traits Deriváveis.</p>
+<p>Então quais tipos são <code>Copy</code>? Você pode verificar a documentação de um
+determinado tipo para se certificar, mas como regra geral, qualquer grupo de
+valores simples escalares podem ser <code>Copy</code>, e nada que precise de alocação ou
+que seja uma forma de recurso é <code>Copy</code>. Aqui estão alguns tipos que são <code>Copy</code>:</p>
+<ul>
+<li>Todos os tipos inteiros, como <code>u32</code>.</li>
+<li>O tipo booleano, <code>bool</code>, com valores <code>true</code> e <code>false</code>.</li>
+<li>O tipo caractere, <code>char</code>.</li>
+<li>Todos os tipos de ponto flutuante, como <code>f64</code>.</li>
+<li>Tuplas, mas apenas aquelas que contém tipos que também são <code>Copy</code>.
+<code>(i32, i32)</code> é <code>Copy</code>, mas <code>(i32, String)</code> não.</li>
+</ul>
+<h3 id="ownership-e-funções"><a class="header" href="#ownership-e-funções">Ownership e Funções</a></h3>
+<p>A semântica para passar um valor a uma função é similar à de atribuir um valor
+a uma variável. Passar uma variável a uma função irá mover ou copiar, assim como
+acontece em uma atribuição. A Listagem 4-3 tem um exemplo com algumas anotações
+mostrando onde as variáveis entram e saem de escopo:</p>
+<p><span class="filename">Arquivo: src/main.rs</span></p>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let s = String::from("texto");  // s entra em escopo.
+
+    toma_posse(s);                  // move o valor de s para dentro da função...
+                                    // ... e ele não é mais válido aqui.
+
+    let x = 5;                      // x entra em escopo.
+
+    faz_uma_copia(x);               // x seria movido para dentro da função,
+                                    // mas i32 é Copy, então está tudo bem em
+                                    // usar x daqui para a frente.
+
+} // Aqui, x sai de escopo, e depois s. Mas como o valor de s foi movido, nada
+  // de especial acontece.
+
+fn toma_posse(uma_string: String) { // uma_string entra em escopo.
+    println!("{}", uma_string);
+} // Aqui, uma_string sai de escopo, e o método `drop` é chamado. A memória que
+  // guarda seus dados é liberada.
+
+fn faz_uma_copia(um_inteiro: i32) { // um_inteiro entra em escopo.
+    println!("{}", um_inteiro);
+} // Aqui, um_inteiro sai de escopo. Nada de especial acontece.</code></pre>
+<p><span class="caption">Listagem 4-3: Funções com anotações de ownership e
+escopo</span></p>
+<p>Se tentássemos usar <code>s</code> após a chamada para <code>toma_posse</code>, o Rust iria lançar um
+erro de compilação. Essas verificações estáticas nos protegem de certo enganos.
+Tente adicionar um código à função <code>main</code> que usa <code>s</code> e <code>x</code> para ver onde você
+pode usá-los e onde as regras de ownership lhe impedem de fazê-lo.</p>
+<h3 id="retorno-de-valores-e-escopo"><a class="header" href="#retorno-de-valores-e-escopo">Retorno de Valores e Escopo</a></h3>
+<p>Retornar valores também pode transferir a posse de um valor. Aqui está um
+exemplo com anotações similares àquelas da Listagem 4-3:</p>
+<p><span class="filename">Arquivo: src/main.rs</span></p>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let s1 = entrega_valor();           // entrega_valor move o valor retornado
+                                        // para s1.
+
+    let s2 = String::from("texto");     // s2 entra em escopo.
+
+    let s3 = pega_e_entrega_valor(s2);  // s2 é movido para dentro da função
+                                        // pega_e_entrega_valor, que também
+                                        // move o valor retornado para s3.
+} // Aqui, s3 sai de escopo e é destruída. s2 sai de escopo, mas já foi movida,
+  // então nada demais acontece. s1 sai de escopo e é destruída.
+
+fn entrega_valor() -&gt; String {               // entrega_valor move o valor
+                                             // retornado para dentro da função
+                                             // que a chamou.
+
+    let uma_string = String::from("olá");    // uma_string entra em escopo.
+
+    uma_string                               // uma_string é retornada e movida
+                                             // para a função que chamou
+                                             // entrega_valor.
+}
+
+// pega_e_entrega_valor vai pegar uma String e retorná-la.
+fn pega_e_entrega_valor(uma_string: String) -&gt; String { // uma_string entra em
+                                                        // escopo.
+
+    uma_string  // uma_string é retornada e movida para a função que chamou
+                // pega_e_entrega_valor.
+}</code></pre>
+<p>A posse de uma variável segue o mesmo padrão toda vez: atribuir um valor a outra
+variável irá movê-lo. Quando uma variável que inclui dados na heap sai de
+escopo, o valor será destruído pelo método <code>drop</code>, a não ser que os dados tenham
+sido movidos para outra variável.</p>
+<p>Obter e retornar a posse de um valor em cada função é um pouco tedioso. O que
+fazer se queremos deixar uma função usar um valor sem tomar posse dele? É meio
+irritante saber que qualquer coisa que passemos a uma função também precisa ser
+passado de volta se quisermos usá-lo novamente, além de algum possível resultado
+proveniente do corpo da função que também queremos retornar.</p>
+<p>É possível retornar múltiplos valores usando uma tupla, da seguinte forma:</p>
+<p><span class="filename">Arquivo: src/main.rs</span></p>
+<pre class="playground"><code class="language-rust edition2024">fn main() {
+    let s1 = String::from("texto");
+
+    let (s2, tamanho) = calcula_tamanho(s1);
+
+    println!("O tamanho de '{}' é {}.", s2, tamanho);
+}
+
+fn calcula_tamanho(s: String) -&gt; (String, usize) {
+    let tamanho = s.len(); // len() retorna o tamanho de uma String.
+
+    (s, tamanho)
+}</code></pre>
+<p>Mas isto é muita cerimônia e trabalho para um conceito que deveria ser comum.
+Para nossa sorte, Rust tem uma ferramenta para este conceito, e ela é chamada de
+<em>referências</em>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="ch04-00-understanding-ownership.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="ch04-02-references-and-borrowing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="ch04-00-understanding-ownership.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="ch04-02-references-and-borrowing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="ferris-2317480c.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
