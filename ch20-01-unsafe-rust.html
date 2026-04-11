@@ -537,7 +537,7 @@ funções externas de outra linguagem que queremos chamar. A parte <code> "C"</c
 define qual <em>interface binária de aplicativo (ABI)</em> a função externa usa:
 A ABI define como chamar a função no nível do assembly. A ABI <code> "C"</code>
 é o mais comum e segue a ABI da linguagem de programação C. Informação
-sobre todas as ABIs suportadas pelo Rust está disponível em <a href="../reference/items/external-blocks.html#abi">Referência Rust</a>.</p>
+sobre todas as ABIs suportadas pelo Rust está disponível em <a href="https://doc.rust-lang.org/reference/items/external-blocks.html#abi">Referência Rust</a>.</p>
 <p>Cada item declarado em um bloco <code>unsafe extern</code> é implicitamente inseguro.
 No entanto, algumas funções FFI <em>são</em> seguras para serem chamadas. Por exemplo, a função <code>abs</code>
 da biblioteca padrão de C não tem nenhuma consideração de segurança de memória, e nós
@@ -697,7 +697,7 @@ Uma <em>união</em> é semelhante a um <code>struct</code>, mas apenas um campo 
 instância específica de uma só vez. Os sindicatos são usados principalmente para fazer interface com
 sindicatos no código C. Acessar campos de união não é seguro porque Rust não pode garantir
 o tipo de dados que estão sendo armazenados atualmente na instância de união. Você pode
-saiba mais sobre uniões na <a href="../reference/items/unions.html">Referência Rust</a>.</p>
+saiba mais sobre uniões na <a href="https://doc.rust-lang.org/reference/items/unions.html">Referência Rust</a>.</p>
 <h3 id="usando-miri-para-verificar-código-inseguro"><a class="header" href="#usando-miri-para-verificar-código-inseguro">Usando Miri para verificar código inseguro</a></h3>
 <p>Ao escrever código inseguro, você pode querer verificar se o que você escreveu
 na verdade é seguro e correto. Uma das melhores maneiras de fazer isso é usar Miri,

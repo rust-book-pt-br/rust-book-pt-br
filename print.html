@@ -422,7 +422,7 @@ não foi feito para funcionar:</p>
 código que não compile.</p>
 <h2 id="código-fonte"><a class="header" href="#código-fonte">Código-fonte</a></h2>
 <p>Os arquivos-fonte a partir dos quais este livro é gerado podem ser encontrados
-no <a href="https://github.com/rust-lang/book/tree/main/src">GitHub</a>.</p>
+no <a href="https://github.com/rust-book-pt-br/rust-book-pt-br/tree/main/src-pt-br">GitHub</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="primeiros-passos"><a class="header" href="#primeiros-passos">Primeiros Passos</a></h1>
 <p>Vamos começar sua jornada com Rust! Há muito a aprender, mas toda jornada
@@ -2159,7 +2159,7 @@ programa. A convenção de nomenclatura do Rust para constantes é usar somente
 maiúsculas, com underscores entre as palavras. O compilador consegue avaliar um
 conjunto limitado de operações em tempo de compilação, o que nos permite
 escrever esse valor de uma forma mais fácil de entender e verificar, em vez de
-definir a constante diretamente como 10.800. Veja a <a href="../reference/const_eval.html">seção do Rust Reference
+definir a constante diretamente como 10.800. Veja a <a href="https://doc.rust-lang.org/reference/const_eval.html">seção do Rust Reference
 sobre avaliação de constantes</a> para mais informações sobre as
 operações que podem ser usadas ao declarar constantes.</p>
 <p>Constantes são válidas durante todo o tempo de execução do programa, dentro do
@@ -5345,7 +5345,7 @@ para usar com o atributo <code>derive</code> que pode adicionar um comportamento
 tipos. Essas características e seus comportamentos estão listados no <a href="#c---traits-deriváveis">Apêndice C</a><!--
 ignorar -->. Abordaremos como implementar essas características com comportamento personalizado como
 bem como como criar suas próprias características no Capítulo 10. Existem também muitos
-atributos diferentes de <code>derive</code>; para obter mais informações, consulte <a href="../reference/attributes.html">os “Atributos”
+atributos diferentes de <code>derive</code>; para obter mais informações, consulte <a href="https://doc.rust-lang.org/reference/attributes.html">os “Atributos”
 seção da Referência de Ferrugem</a>.</p>
 <p>Nossa função <code>area</code> é muito específica: ela calcula apenas a área de retângulos.
 Seria útil vincular esse comportamento mais de perto à nossa estrutura <code>Rectangle</code>
@@ -11693,7 +11693,7 @@ a análise acontece em tempo de compilação, o que não afeta o desempenho em t
 neste capítulo: O Capítulo 18 discute objetos de características, que são outra maneira de usar
 características. Existem também cenários mais complexos que envolvem anotações vitalícias
 que você só precisará em cenários muito avançados; para aqueles, você deve ler
-a <a href="../reference/trait-bounds.html">Referência de ferrugem</a>. Mas a seguir, você aprenderá como escrever testes em
+a <a href="https://doc.rust-lang.org/reference/trait-bounds.html">Referência de ferrugem</a>. Mas a seguir, você aprenderá como escrever testes em
 Rust para que você possa ter certeza de que seu código está funcionando como deveria.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="escrevendo-testes-automatizados"><a class="header" href="#escrevendo-testes-automatizados">Escrevendo testes automatizados</a></h1>
@@ -25811,7 +25811,7 @@ funções externas de outra linguagem que queremos chamar. A parte <code> "C"</c
 define qual <em>interface binária de aplicativo (ABI)</em> a função externa usa:
 A ABI define como chamar a função no nível do assembly. A ABI <code> "C"</code>
 é o mais comum e segue a ABI da linguagem de programação C. Informação
-sobre todas as ABIs suportadas pelo Rust está disponível em <a href="../reference/items/external-blocks.html#abi">Referência Rust</a>.</p>
+sobre todas as ABIs suportadas pelo Rust está disponível em <a href="https://doc.rust-lang.org/reference/items/external-blocks.html#abi">Referência Rust</a>.</p>
 <p>Cada item declarado em um bloco <code>unsafe extern</code> é implicitamente inseguro.
 No entanto, algumas funções FFI <em>são</em> seguras para serem chamadas. Por exemplo, a função <code>abs</code>
 da biblioteca padrão de C não tem nenhuma consideração de segurança de memória, e nós
@@ -25971,7 +25971,7 @@ Uma <em>união</em> é semelhante a um <code>struct</code>, mas apenas um campo 
 instância específica de uma só vez. Os sindicatos são usados principalmente para fazer interface com
 sindicatos no código C. Acessar campos de união não é seguro porque Rust não pode garantir
 o tipo de dados que estão sendo armazenados atualmente na instância de união. Você pode
-saiba mais sobre uniões na <a href="../reference/items/unions.html">Referência Rust</a>.</p>
+saiba mais sobre uniões na <a href="https://doc.rust-lang.org/reference/items/unions.html">Referência Rust</a>.</p>
 <h3 id="usando-miri-para-verificar-código-inseguro"><a class="header" href="#usando-miri-para-verificar-código-inseguro">Usando Miri para verificar código inseguro</a></h3>
 <p>Ao escrever código inseguro, você pode querer verificar se o que você escreveu
 na verdade é seguro e correto. Uma das melhores maneiras de fazer isso é usar Miri,
@@ -27415,7 +27415,7 @@ resultará em erro. Macros mais complexas terão mais de um braço.</p>
 padrões abordada no Capítulo 19, porque padrões de macro são comparados com a
 estrutura do código Rust, e não com valores. Vamos examinar o que significam as
 partes do padrão na Listagem 20-35; para a sintaxe completa de padrões de
-macro, consulte a <a href="../reference/macros-by-example.html">Referência do Rust</a>.</p>
+macro, consulte a <a href="https://doc.rust-lang.org/reference/macros-by-example.html">Referência do Rust</a>.</p>
 <p>Primeiro, usamos um conjunto de parênteses para abranger todo o padrão. Usamos
 um cifrão (<code>$</code>) para declarar uma variável no sistema de macros que conterá o
 código Rust correspondente ao padrão. O cifrão deixa claro que se trata de uma
@@ -30462,7 +30462,7 @@ programa.</li>
 <li><strong><code>trait</code></strong>: Define um trait.</li>
 <li><strong><code>true</code></strong>: Literal booleano verdadeiro.</li>
 <li><strong><code>type</code></strong>: Define um alias de tipo ou tipo associado.</li>
-<li><strong><code>union</code></strong>: Define uma <a href="../reference/items/unions.html">union</a><!-- ignore -->; é palavra-chave apenas
+<li><strong><code>union</code></strong>: Define uma <a href="https://doc.rust-lang.org/reference/items/unions.html">union</a><!-- ignore -->; é palavra-chave apenas
 quando usada em uma declaração de union.</li>
 <li><strong><code>unsafe</code></strong>: Indica código, funções, traits ou implementações inseguros.</li>
 <li><strong><code>use</code></strong>: Traz símbolos para o escopo.</li>
