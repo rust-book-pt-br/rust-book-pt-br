@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -190,10 +190,10 @@ valor para o qual apontam. Elas não têm nenhuma outra habilidade senão
 referir-se a dados. Além disso, elas não têm nenhum custo adicional e são o tipo
 de ponteiro que usamos com maior frequência.</p>
 <p><em>Ponteiros inteligentes</em> (<em>smart pointers</em>), por outro lado, são estruturas de
-dados que agem como um ponteiro mas também têm metadados e habilidades
+dados que agem como ponteiros, mas também têm metadados e capacidades
 adicionais. O conceito de ponteiros inteligentes não é exclusivo do Rust: ele
 teve origem no C++ e também existe em outras linguagens. No Rust, os diferentes
-ponteiros inteligentes definidos na biblioteca padrão proveem funcionalidades
+ponteiros inteligentes definidos na biblioteca padrão fornecem funcionalidades
 além daquelas providas pelas referências. Um exemplo que vamos explorar neste
 capítulo é o tipo de ponteiro inteligente de <em>contagem de referências</em>
 (<em>reference counting</em>). Esse ponteiro lhe permite ter múltiplos possuidores de
@@ -217,7 +217,7 @@ que ele implementa as traits <code>Deref</code> e <code>Drop</code>. A trait <co
 instância da struct do ponteiro inteligente se comporte como uma referência.
 Assim podemos escrever código que funcione tanto com referências quanto com
 ponteiros inteligentes. A trait <code>Drop</code> nos permite personalizar o código que é
-executado quando uma instância do smart pointer sai de escopo. Neste capítulo,
+executado quando uma instância do ponteiro inteligente sai de escopo. Neste capítulo,
 discutiremos ambas as traits e demonstraremos porque são importantes para
 ponteiros inteligentes.</p>
 <p>Dado que os ponteiros inteligentes são um padrão de projeto (<em>design pattern</em>)
@@ -231,7 +231,7 @@ ponteiros inteligentes mais comuns na biblioteca padrão:</p>
 <li><code>Ref&lt;T&gt;</code> e <code>RefMut&lt;T&gt;</code>, acessados através de <code>RefCell&lt;T&gt;</code>, um tipo que aplica
 as regras de empréstimo em tempo de execução em vez de em tempo de compilação</li>
 </ul>
-<p>Além disso, vamos cobrir a pattern de <em>mutabilidade interior</em> (<em>interior
+<p>Além disso, vamos cobrir o padrão de <em>mutabilidade interior</em> (<em>interior
 mutability</em>), onde um tipo imutável expõe uma API para modificar um valor
 interno. Também vamos discutir <em>ciclos de referências</em>: como eles podem vazar
 memória e como evitá-los.</p>

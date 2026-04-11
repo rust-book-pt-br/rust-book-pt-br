@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,7 +182,7 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="a-trait-drop-roda-código-durante-a-limpeza"><a class="header" href="#a-trait-drop-roda-código-durante-a-limpeza">A Trait <code>Drop</code> Roda Código durante a Limpeza</a></h2>
-<p>A segunda trait de importância para a pattern de ponteiros inteligentes é a
+<p>A segunda trait importante no padrão de ponteiros inteligentes é a
 <code>Drop</code>, que nos permite personalizar o que acontece quando um valor está prestes
 a sair de escopo. Nós podemos prover uma implementação da trait <code>Drop</code> para
 qualquer tipo, e o código que especificarmos pode ser usado para liberar
@@ -227,7 +227,7 @@ fn main() {
 <p><span class="caption">Listagem 15-14: Uma struct <code>CustomSmartPointer</code> que
 implementa a trait <code>Drop</code> onde colocaríamos nosso código de limpeza</span></p>
 <p>A trait <code>Drop</code> é incluída no prelúdio, então não precisamos importá-la. Nós
-implementamos a trait <code>Drop</code> no <code>CustomSmartPointer</code> e providenciamos uma
+implementamos a trait <code>Drop</code> no <code>CustomSmartPointer</code> e fornecemos uma
 implementação para o método <code>drop</code> que chama <code>println!</code>. O corpo da função
 <code>drop</code> é onde você colocaria qualquer que fosse a lógica que você gostaria que
 rodasse quando uma instância do seu tipo for sair de escopo. Aqui estamos
@@ -328,7 +328,7 @@ porque o Rust faz isso automaticamente.</p>
 porque isso causaria um erro de compilação: o sistema de posse que garante que
 as referências são sempre válidas também garante que o <code>drop</code> é chamado apenas
 uma vez quando o valor não está mais sendo usado.</p>
-<p>Agora que examinamos o <code>Box&lt;T&gt;</code> e alguma características de ponteiros
+<p>Agora que examinamos o <code>Box&lt;T&gt;</code> e algumas características de ponteiros
 inteligentes, vamos dar uma olhada em alguns outros ponteiros inteligentes
 definidos na biblioteca padrão.</p>
 

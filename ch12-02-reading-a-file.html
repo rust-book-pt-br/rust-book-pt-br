@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,97 +182,88 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="lendo-um-arquivo"><a class="header" href="#lendo-um-arquivo">Lendo um Arquivo</a></h2>
-<p>Agora vamos adicionar funcionalidades para ler o arquivo que é especificado no
-argumento <code>filename</code> da linha de comando. Primeiro, precisamos de um arquivo de amostra para testá-lo:
-usaremos um arquivo com uma pequena quantidade de texto em várias linhas com algumas palavras repetidas.
-Listagem 12-3 tem um poema de Emily Dickinson que funcionará bem! Crie um arquivo chamado
-<em>poem.txt</em> no diretório raiz do seu projeto e entre com o poema “I’m Nobody!
-Who are you?”</p>
-<p><span class="filename">Arquivo: poem.txt</span></p>
-<pre><code class="language-text">I’m nobody! Who are you?
+<p>Agora vamos adicionar a funcionalidade para ler o arquivo especificado no
+argumento <code>file_path</code>. Primeiro, precisamos de um arquivo de amostra para
+testar: usaremos um arquivo com uma pequena quantidade de texto em várias
+linhas, com algumas palavras repetidas. A Listagem 12-3 traz um poema de Emily
+Dickinson que funciona muito bem! Crie um arquivo chamado <em>poem.txt</em> na raiz
+do seu projeto e coloque nele o poema “I’m Nobody! Who are you?”.</p>
+<figure class="listing" id="listing-12-3">
+<span class="file-name">Filename: poem.txt</span>
+<pre><code class="language-text">I'm nobody! Who are you?
 Are you nobody, too?
-Then there’s a pair of us — don’t tell!
-They’d banish us, you know.
+Then there's a pair of us - don't tell!
+They'd banish us, you know.
 
 How dreary to be somebody!
 How public, like a frog
 To tell your name the livelong day
 To an admiring bog!
 </code></pre>
-<p><span class="caption">Listagem 12-3: Um poema de Emily Dickinson fará um bom
-caso de teste.</span></p>
-<p>Com o texto no lugar, edite <em>src/main.rs</em> e adicione o código para abrir o arquivo, como
-mostrado na Listagem 12-4:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust should_panic edition2024">use std::env;
-use std::fs::File;
-use std::io::prelude::*;
+<figcaption><a href="#listing-12-3">Listing 12-3</a>: Um poema de Emily Dickinson é um bom caso de teste</figcaption>
+</figure>
+<p>Com o texto no lugar, edite <em>src/main.rs</em> e adicione código para ler o
+arquivo, como mostrado na Listagem 12-4.</p>
+<figure class="listing" id="listing-12-4">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust should_panic noplayground">use std::env;
+use std::fs;
 
 fn main() {
+    // --snip--
 <span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
 </span><span class="boring">
 </span><span class="boring">    let query = &amp;args[1];
-</span><span class="boring">    let filename = &amp;args[2];
+</span><span class="boring">    let file_path = &amp;args[2];
 </span><span class="boring">
-</span><span class="boring">    println!("Searching for {}", query);
-</span>    // --snip--
-    println!("In file {}", filename);
+</span><span class="boring">    println!("Searching for {query}");
+</span>    println!("In file {file_path}");
 
-    let mut f = File::open(filename).expect("file not found");
+    let contents = fs::read_to_string(file_path)
+        .expect("Should have been able to read the file");
 
-    let mut contents = String::new();
-    f.read_to_string(&amp;mut contents)
-        .expect("something went wrong reading the file");
-
-    println!("With text:\n{}", contents);
+    println!("With text:\n{contents}");
 }</code></pre>
-<p><span class="caption">Listagem 12-4: Leitura do conteúdo do arquivo especificado
-pelo segundo argumento</span></p>
-<p>Primeiro, adicionamos mais instruções <code>use</code> para trazer partes relevantes da
-biblioteca padrão: precisamos de <code>std::fs::File</code> para lidar com arquivos, e
-<code>std::io::prelude::*</code> contém vários traits úteis para fazer E/S, incluindo
-arquivo de E/S. Da mesma forma que Rust tem um prelúdio geral que traz certos
-tipos e funções no escopo automaticamente, o módulo <code>std::io</code> possui o seu próprio
-prelúdio de tipos e funções comuns que você precisará ao trabalhar com E/S. Ao contrário
-do prelúdio padrão, devemos adicionar explicitamente uma instrução <code>use</code> para o prelúdio
-de <code>std::io</code>.</p>
-<p>Em <code>main</code>, adicionamos três declarações: primeiro, recebemos um identificador mutável para o
-arquivo chamando a função <code>File::open</code> e transmitindo o valor da
-variável <code>filename</code>. Em segundo lugar, criamos uma variável chamada <code>contents</code> e configuramos
-para uma <code>String</code> mutável e vazia. Isso manterá o conteúdo do arquivo depois que nós
-lê-lo. Terceiro, chamamos <code>read_to_string</code> no nosso arquivo e passamos um
-referência mutável para <code>contents</code> como argumento.</p>
-<p>Após essas linhas, adicionamos novamente uma declaração temporária <code>println!</code> que
-imprime o valor do <code>contents</code> depois que o arquivo é lido, para que possamos verificar que
-o programa está funcionando até o momento.</p>
-<p>Vamos executar este código com qualquer string como o primeiro argumento da linha de comando (porque
-ainda não implementamos a parte de pesquisa) e o arquivo <em>poem.txt</em> como o
-segundo argumento:</p>
-<pre><code class="language-text">$ cargo run the poem.txt
+<figcaption><a href="#listing-12-4">Listing 12-4</a>: Lendo o conteúdo do arquivo especificado pelo segundo argumento</figcaption>
+</figure>
+<p>Primeiro, trazemos para o escopo uma parte relevante da biblioteca padrão com
+uma instrução <code>use</code>: precisamos de <code>std::fs</code> para lidar com arquivos.</p>
+<p>Em <code>main</code>, a nova instrução <code>fs::read_to_string</code> recebe <code>file_path</code>, abre esse
+arquivo e retorna um valor do tipo <code>std::io::Result&lt;String&gt;</code> contendo o
+conteúdo do arquivo.</p>
+<p>Depois disso, adicionamos novamente um <code>println!</code> temporário que imprime o
+valor de <code>contents</code> depois que o arquivo é lido, para que possamos verificar se
+o programa está funcionando até aqui.</p>
+<p>Vamos executar esse código com qualquer string como primeiro argumento de linha
+de comando, porque ainda não implementamos a parte da busca, e o arquivo
+<em>poem.txt</em> como segundo argumento:</p>
+<pre><code class="language-console">$ cargo run -- the poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep the poem.txt`
 Searching for the
 In file poem.txt
 With text:
-I’m nobody! Who are you?
+I'm nobody! Who are you?
 Are you nobody, too?
-Then there’s a pair of us — don’t tell!
-They’d banish us, you know.
+Then there's a pair of us - don't tell!
+They'd banish us, you know.
 
 How dreary to be somebody!
 How public, like a frog
 To tell your name the livelong day
 To an admiring bog!
+
 </code></pre>
-<p>Ótimo! O código lê e, em seguida, imprime o conteúdo do arquivo. Mas o código tem
-algumas falhas. A função <code>main</code> tem múltiplas responsabilidades: geralmente,
-as funções são mais claras e fáceis de manter se cada função for responsável
-por apenas uma idéia. O outro problema é que também não estamos lidando com erros,
-como poderíam ser. O programa ainda é pequeno, então essas falhas não são um grande problema,
-mas à medida que o programa cresce, será mais difícil consertá-los de forma elegante. É uma boa
-pratica começar a refatoração no início do desenvolvimento de um programa, porque são
-muito mais fáceis de refatorar quantidades menores de código. Vamos fazer isso depois.</p>
+<p>Ótimo! O código leu e depois imprimiu o conteúdo do arquivo. Mas esse código
+tem alguns problemas. No momento, a função <code>main</code> tem múltiplas
+responsabilidades: em geral, funções são mais claras e mais fáceis de manter
+se cada uma for responsável por apenas uma ideia. O outro problema é que não
+estamos lidando com erros tão bem quanto poderíamos. O programa ainda é
+pequeno, então esses problemas não são tão graves, mas, à medida que ele
+crescer, será mais difícil corrigir isso de forma elegante. É uma boa prática
+começar a refatoração cedo no desenvolvimento de um programa, porque é muito
+mais fácil refatorar pequenas quantidades de código. Faremos isso em seguida.</p>
 
                     </main>
 

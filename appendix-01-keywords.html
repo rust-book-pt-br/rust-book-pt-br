@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,64 +182,68 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="apêndice-a-palavras-chave"><a class="header" href="#apêndice-a-palavras-chave">Apêndice A: Palavras-chave</a></h2>
-<p>As listas a seguir contêm palavras-chave reservadas para uso current ou future
-usado pela linguagem Rust. Como tal, eles não podem ser usados como identificadores (exceto
-como identificadores brutos, conforme discutimos em <a href="#raw-identifiers">“Raw
-Identificadores”</a><!-- ignore -->). <em>Identificadores</em> são nomes
+<p>As listas a seguir contêm palavras-chave reservadas para uso atual ou futuro
+pela linguagem Rust. Como tal, elas não podem ser usadas como identificadores
+(exceto como identificadores brutos, conforme discutimos na seção
+<a href="#raw-identifiers">“Identificadores Brutos”</a><!-- ignore -->). <em>Identificadores</em> são nomes
 de funções, variáveis, parâmetros, campos struct, módulos, crates, constantes,
 macros, valores estáticos, atributos, tipos, traits ou lifetimes.</p>
 <h3 id="palavras-chave-atualmente-em-uso"><a class="header" href="#palavras-chave-atualmente-em-uso">Palavras-chave atualmente em uso</a></h3>
-<p>A seguir está uma lista de palavras-chave atualmente em uso, com suas funcionalidades
-descrito.</p>
+<p>A seguir está uma lista de palavras-chave atualmente em uso, com suas
+funcionalidades descritas.</p>
 <ul>
-<li>** <code>as</code> **: Execute a conversão primitiva, desambigua o trait específico
-contendo um item ou renomeie itens em instruções <code>use</code>.</li>
-<li>** <code> async</code>**: Retorna um <code> Future</code>em vez de bloquear o thread atual.</li>
-<li>** <code> await</code>**: Suspender a execução até que o resultado de um <code> Future</code>esteja pronto.</li>
-<li>** <code> break</code>**: Sai de um loop imediatamente.</li>
-<li>** <code> const</code>**: Defina itens constantes ou ponteiros brutos constantes.</li>
-<li>** <code> continue</code>**: Continue para a próxima iteração do loop.</li>
-<li>** <code> crate</code>**: Em um caminho de módulo, refere-se à raiz crate.</li>
-<li>** <code> dyn</code>**: Despacho dinâmico para um objeto trait.</li>
-<li>** <code> else</code>**: substituto para construções de fluxo de controle <code> if</code>e <code> if let</code>.</li>
-<li>** <code> enum</code>**: Defina uma enumeração.</li>
-<li>** <code> extern</code>**: Vincular uma função ou variável externa.</li>
-<li>** <code> false</code>**: literal booleano falso.</li>
-<li>** <code> fn</code>**: Defina uma função ou o tipo de ponteiro de função.</li>
-<li>** <code> for</code>**: Faça um loop sobre itens de um iterator, implemente um trait ou especifique um
-lifetime com classificação mais alta.</li>
-<li>** <code> if</code>**: Ramificação baseada no resultado de uma expressão condicional.</li>
-<li>** <code> impl</code>**: Implemente funcionalidade inerente ou trait.</li>
-<li>** <code> in</code>**: Parte da sintaxe do loop <code> for</code>.</li>
-<li>** <code> let</code>**: Vincular uma variável.</li>
-<li>** <code> loop</code>**: Loop incondicional.</li>
-<li>** <code> match</code>**: Combine um valor com padrões.</li>
-<li>** <code> mod</code>**: Defina um módulo.</li>
-<li>** <code> move</code>**: Faça um closure tirar ownership de todas as suas capturas.</li>
-<li>** <code> mut</code>**: denota mutabilidade em referências, ponteiros brutos ou ligações de padrões.</li>
-<li>** <code> pub</code>**: denota visibilidade pública em campos struct, blocos <code> impl</code>ou
+<li><strong><code>as</code></strong>: Executa conversão primitiva, desambigua o trait específico que
+contém um item ou renomeia itens em instruções <code>use</code>.</li>
+<li><strong><code>async</code></strong>: Retorna um <code>Future</code> em vez de bloquear a thread atual.</li>
+<li><strong><code>await</code></strong>: Suspende a execução até que o resultado de um <code>Future</code> esteja
+pronto.</li>
+<li><strong><code>break</code></strong>: Sai de um loop imediatamente.</li>
+<li><strong><code>const</code></strong>: Define itens constantes ou ponteiros brutos constantes.</li>
+<li><strong><code>continue</code></strong>: Continua para a próxima iteração do loop.</li>
+<li><strong><code>crate</code></strong>: Em um caminho de módulo, refere-se à raiz do crate.</li>
+<li><strong><code>dyn</code></strong>: Despacho dinâmico para um objeto trait.</li>
+<li><strong><code>else</code></strong>: Alternativa para construções de fluxo de controle <code>if</code> e <code>if let</code>.</li>
+<li><strong><code>enum</code></strong>: Define uma enumeração.</li>
+<li><strong><code>extern</code></strong>: Vincula uma função ou variável externa.</li>
+<li><strong><code>false</code></strong>: Literal booleano falso.</li>
+<li><strong><code>fn</code></strong>: Define uma função ou o tipo de ponteiro de função.</li>
+<li><strong><code>for</code></strong>: Percorre itens de um iterator, implementa um trait ou especifica
+um lifetime de ordem superior.</li>
+<li><strong><code>if</code></strong>: Ramifica com base no resultado de uma expressão condicional.</li>
+<li><strong><code>impl</code></strong>: Implementa funcionalidade inerente ou de trait.</li>
+<li><strong><code>in</code></strong>: Parte da sintaxe do loop <code>for</code>.</li>
+<li><strong><code>let</code></strong>: Vincula uma variável.</li>
+<li><strong><code>loop</code></strong>: Loop incondicional.</li>
+<li><strong><code>match</code></strong>: Combina um valor com padrões.</li>
+<li><strong><code>mod</code></strong>: Define um módulo.</li>
+<li><strong><code>move</code></strong>: Faz um closure tomar ownership de todas as suas capturas.</li>
+<li><strong><code>mut</code></strong>: Denota mutabilidade em referências, ponteiros brutos ou bindings
+de padrão.</li>
+<li><strong><code>pub</code></strong>: Denota visibilidade pública em campos de struct, blocos <code>impl</code> ou
 módulos.</li>
-<li>** <code> ref</code>**: vincular por referência.</li>
-<li>** <code> return</code>**: Retorno da função.</li>
-<li>** <code> Self</code>**: um alias de tipo para o tipo que estamos definindo ou implementando.</li>
-<li>** <code> self</code>**: Assunto do método ou módulo atual.</li>
-<li>** <code> static</code>**: Variável global ou lifetime com duração de todo o programa
-execução.</li>
-<li>** <code> struct</code>**: Defina uma estrutura.</li>
-<li>** <code> super</code>**: Módulo pai do módulo atual.</li>
-<li>** <code> trait</code>**: Defina um trait.</li>
-<li>** <code> true</code>**: literal verdadeiro booleano.</li>
-<li>** <code> type</code>**: Defina um alias de tipo ou tipo associado.</li>
-<li>** <code> union</code>**: Defina uma <a href="../reference/items/unions.html">união</a><!-- ignore -->; é uma palavra-chave somente quando
-usado em uma declaração sindical.</li>
-<li>** <code> unsafe</code>**: denota código, funções, traits ou implementações inseguras.</li>
-<li>** <code> use</code>**: Coloque os símbolos no escopo.</li>
-<li>** <code> where</code>**: denotam cláusulas que restringem um tipo.</li>
-<li>** <code> while</code>**: Loop condicionalmente baseado no resultado de uma expressão.</li>
+<li><strong><code>ref</code></strong>: Vincula por referência.</li>
+<li><strong><code>return</code></strong>: Retorna de uma função.</li>
+<li><strong><code>Self</code></strong>: Um alias de tipo para o tipo que estamos definindo ou
+implementando.</li>
+<li><strong><code>self</code></strong>: Receptor do método ou módulo atual.</li>
+<li><strong><code>static</code></strong>: Variável global ou lifetime que dura toda a execução do
+programa.</li>
+<li><strong><code>struct</code></strong>: Define uma struct.</li>
+<li><strong><code>super</code></strong>: Módulo pai do módulo atual.</li>
+<li><strong><code>trait</code></strong>: Define um trait.</li>
+<li><strong><code>true</code></strong>: Literal booleano verdadeiro.</li>
+<li><strong><code>type</code></strong>: Define um alias de tipo ou um tipo associado.</li>
+<li><strong><code>union</code></strong>: Define uma <a href="../reference/items/unions.html">union</a><!-- ignore -->; é uma palavra-chave
+apenas quando usada em uma declaração de union.</li>
+<li><strong><code>unsafe</code></strong>: Denota código, funções, traits ou implementações inseguras.</li>
+<li><strong><code>use</code></strong>: Traz símbolos para o escopo.</li>
+<li><strong><code>where</code></strong>: Denota cláusulas que restringem um tipo.</li>
+<li><strong><code>while</code></strong>: Executa um loop condicional com base no resultado de uma
+expressão.</li>
 </ul>
-<h3 id="palavras-chave-reservadas-para-uso-do-future"><a class="header" href="#palavras-chave-reservadas-para-uso-do-future">Palavras-chave reservadas para uso do Future</a></h3>
-<p>As seguintes palavras-chave ainda não possuem nenhuma funcionalidade, mas são reservadas por
-Rust para uso potencial do future:</p>
+<h3 id="palavras-chave-reservadas-para-uso-futuro"><a class="header" href="#palavras-chave-reservadas-para-uso-futuro">Palavras-chave reservadas para uso futuro</a></h3>
+<p>As seguintes palavras-chave ainda não possuem nenhuma funcionalidade, mas são
+reservadas por Rust para uso potencial no futuro:</p>
 <ul>
 <li><code>abstract</code></li>
 <li><code>become</code></li>
@@ -256,11 +260,12 @@ Rust para uso potencial do future:</p>
 <li><code>virtual</code></li>
 <li><code>yield</code></li>
 </ul>
-<h3 id="raw-identifiers"><a class="header" href="#raw-identifiers">Raw Identifiers</a></h3>
-<p><em>Identificadores brutos</em> são a sintaxe que permite usar palavras-chave onde não seriam
-normalmente será permitido. Você usa um identificador bruto prefixando uma palavra-chave com <code>r#</code>.</p>
-<p>Por exemplo, <code>match</code> é uma palavra-chave. Se você tentar compilar a seguinte função
-que usa <code>match</code> como nome:</p>
+<h3 id="identificadores-brutos"><a class="header" href="#identificadores-brutos">Identificadores Brutos</a></h3>
+<p><em>Identificadores brutos</em> são a sintaxe que permite usar palavras-chave onde
+normalmente isso não seria permitido. Você usa um identificador bruto
+prefixando uma palavra-chave com <code>r#</code>.</p>
+<p>Por exemplo, <code>match</code> é uma palavra-chave. Se você tentar compilar a seguinte
+função que usa <code>match</code> como nome:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
     haystack.contains(needle)
@@ -272,9 +277,9 @@ que usa <code>match</code> como nome:</p>
 4 | fn match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
   |    ^^^^^ expected identifier, found keyword
 </code></pre>
-<p>O erro mostra que você não pode usar a palavra-chave <code>match</code> como função
-identificador. Para usar <code>match</code> como nome de função, você precisa usar o valor bruto
-sintaxe do identificador, assim:</p>
+<p>O erro mostra que você não pode usar a palavra-chave <code>match</code> como identificador
+de função. Para usar <code>match</code> como nome de função, você precisa usar a sintaxe
+de identificador bruto, assim:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn r#match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
     haystack.contains(needle)
@@ -283,18 +288,20 @@ sintaxe do identificador, assim:</p>
 fn main() {
     assert!(r#match("foo", "foobar"));
 }</code></pre>
-<p>Este código será compilado sem erros. Observe o prefixo <code>r#</code> na função
-nome em sua definição, bem como onde a função é chamada em <code>main</code>.</p>
-<p>Os identificadores brutos permitem que você use qualquer palavra escolhida como identificador, mesmo que
-essa palavra é uma palavra-chave reservada. Isso nos dá mais liberdade para escolher
-nomes de identificadores, bem como nos permite integrar com programas escritos em um
-idioma onde essas palavras não são palavras-chave. Além disso, os identificadores brutos permitem
-você deve usar bibliotecas escritas em uma edição Rust diferente daquela que seu crate usa.
-Por exemplo, <code>try</code> não é uma palavra-chave na edição de 2015, mas é na edição de 2018, 2021,
-e edições de 2024. Se você depende de uma biblioteca escrita usando o 2015
-edição e tem uma função <code>try</code>, você precisará usar a sintaxe do identificador bruto,
-<code> r#try</code>neste caso, para chamar essa função do seu código em edições posteriores.
-Consulte <a href="appendix-05-editions.html">Apêndice E</a><!-- ignore --> para obter mais informações sobre edições.</p>
+<p>Esse código compila sem erros. Observe o prefixo <code>r#</code> no nome da função em sua
+definição, bem como no ponto em que a função é chamada em <code>main</code>.</p>
+<p>Os identificadores brutos permitem que você use qualquer palavra como
+identificador, mesmo que essa palavra seja uma palavra-chave reservada. Isso
+nos dá mais liberdade para escolher nomes de identificadores, além de permitir
+integração com programas escritos em uma linguagem em que essas palavras não
+são palavras-chave. Além disso, os identificadores brutos permitem que você use
+bibliotecas escritas em uma edição do Rust diferente daquela usada pelo seu
+crate. Por exemplo, <code>try</code> não é uma palavra-chave na edição de 2015, mas é nas
+edições de 2018, 2021 e 2024. Se você depende de uma biblioteca escrita na
+edição de 2015 e ela tem uma função <code>try</code>, será preciso usar a sintaxe de
+identificador bruto, <code>r#try</code>, nesse caso, para chamar essa função a partir do
+seu código em edições posteriores.</p>
+<p>Consulte <a href="appendix-05-editions.html">Apêndice E</a><!-- ignore --> para obter mais informações sobre edições.</p>
 
                     </main>
 

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,32 +182,30 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="validando-referências-com-tempos-de-vida"><a class="header" href="#validando-referências-com-tempos-de-vida">Validando Referências com Tempos de Vida</a></h2>
-<p>Quandos falamos sobre referências no Capítulo 4, nós deixamos de fora um detalhe
-importante: toda referência em Rust tem um <em>lifetime</em>, que é o escopo no qual
-aquela referência é válida. A maior parte das vezes tempos de vida são implícitos e
-inferidos, assim como a maior parte do tempo tipos são inferidos. Similarmente
-quando temos que anotar tipos porque múltiplos tipos são possíveis, há casos em
-que os tempos de vida das referências poderiam estar relacionados de alguns modos
-diferentes, então Rust precisa que nós anotemos as relações usando parâmetros
-genéricos de tempo de vida para que ele tenha certeza que as referênciais reais
-usadas em tempo de execução serão definitivamente válidas.</p>
-<p>Sim, é um pouco incomum, e será diferente de ferramentas que você usou em
-outras linguagens de programação. Tempos de vida são, de alguns jeitos, a
-característica mais distinta de Rust.</p>
-<p>Tempos de vida são um tópico grande que não poderão ser cobertos inteiramente
-nesse capítulo, então nós vamos cobrir algumas formas comuns que você pode
-encontrar a sintaxe de tempo de vida nesse capítulo para que você se
-familiarize com os conceitos. O Capítulo 19 conterá informações mais avançadas
-sobre tudo que tempos de vida podem fazer.</p>
+<p>Quando falamos sobre referências no Capítulo 4, deixamos de fora um detalhe
+importante: toda referência em Rust tem um <em>lifetime</em>, que é o escopo durante o
+qual aquela referência é válida. Na maior parte do tempo, os tempos de vida são
+implícitos e inferidos, assim como os tipos também costumam ser. De modo
+semelhante a quando precisamos anotar tipos porque múltiplos tipos são
+possíveis, há casos em que os tempos de vida das referências podem se
+relacionar de maneiras diferentes; então, o Rust exige que anotemos essas
+relações usando parâmetros genéricos de tempo de vida para ter certeza de que
+as referências reais usadas em tempo de execução serão válidas.</p>
+<p>Sim, isso é um pouco incomum e será diferente do que você talvez tenha usado em
+outras linguagens de programação. Em certo sentido, tempos de vida são uma das
+características mais distintas do Rust.</p>
+<p>Tempos de vida são um tópico amplo demais para ser coberto por completo neste
+capítulo, então veremos algumas formas comuns em que você pode encontrar a
+sintaxe de tempo de vida, para se familiarizar com os conceitos. O Capítulo 19
+traz informações mais avançadas sobre tudo o que tempos de vida podem fazer.</p>
 <h3 id="tempos-de-vida-previnem-referências-soltas"><a class="header" href="#tempos-de-vida-previnem-referências-soltas">Tempos de Vida Previnem Referências Soltas</a></h3>
-<p>O principal alvo de lifetimes é prevenir referências soltas, quais fazem com
-que o programa referencie dados quais nós não estamos querendo referenciar.
-Considere o programa na Listagem 10-18, com um escopo exterior e um interior.
-O escopo exterior declara uma variável chamada <code>r</code> com nenhum valor inicial, e
-o escopo interior declara uma variável chamada <code>x</code> com o valor inicial de 5.
-Dentro do escopo interior, nós tentamos estabelecer o valor de <code>r</code> como uma
-referência para <code>x</code>. Então, o escopo interior acaba, e nós tentamos imprimir o
-valor de <code>r</code>:</p>
+<p>O principal objetivo dos lifetimes é evitar referências soltas, que fariam o
+programa referenciar dados diferentes daqueles que pretendemos referenciar.
+Considere o programa da Listagem 10-18, com um escopo externo e um interno. O
+escopo externo declara uma variável chamada <code>r</code> sem valor inicial, e o escopo
+interno declara uma variável chamada <code>x</code> com o valor inicial 5. Dentro do
+escopo interno, tentamos definir o valor de <code>r</code> como uma referência para <code>x</code>.
+Então o escopo interno termina, e nós tentamos imprimir o valor de <code>r</code>:</p>
 <pre><code class="language-rust ignore">{
     let r;
 
@@ -218,17 +216,18 @@ valor de <code>r</code>:</p>
 
     println!("r: {}", r);
 }</code></pre>
-<p><span class="caption">Listagem 10-18: Uma tentativa de usar uma refência cujo
+<p><span class="caption">Listagem 10-18: Uma tentativa de usar uma referência cujo
 valor saiu de escopo</span></p>
 <section class="note" aria-role="note">
 <h4 id="variáveis-não-inicializadas-não-podem-ser-usadas"><a class="header" href="#variáveis-não-inicializadas-não-podem-ser-usadas">Variáveis Não Inicializadas Não Podem Ser Usadas</a></h4>
-<p>Os próximos exemplos declaram variáveis sem darem a elas um valor inicial,
-então o nome da variável existe no escopo exterior. Isso pode parecer um
-conflito com Rust não ter null. No entanto, se tentarmos usar uma variável
-antes de atribuir um valor a ela, nós teremos um erro em tempo de compilação.
+<p>Os próximos exemplos declaram variáveis sem lhes dar um valor inicial, então
+o nome da variável existe no escopo externo. À primeira vista, isso pode
+parecer entrar em conflito com o fato de Rust não ter null. No entanto, se
+tentarmos usar uma variável antes de atribuir um valor a ela, teremos um erro
+em tempo de compilação.
 Tente!</p>
 </section>
-<p>Quando compilarmos esse código, nós teremos um erro:</p>
+<p>Quando compilarmos esse código, teremos um erro:</p>
 <pre><code class="language-text">error: `x` does not live long enough
    |
 6  |         r = &amp;x;
@@ -239,17 +238,17 @@ Tente!</p>
 10 | }
    | - borrowed value needs to live until here
 </code></pre>
-<p>A variável <code>x</code> não “vive o suficiente”. Por que não? Bem, <code>x</code> vai sair de
-escopo quando passarmos pela chaves na linha 7, terminando o escopo interior.
-Mas <code>r</code> é válida para o escopo exterior; seu escopo é maior e dizemos que ela
-“vive mais tempo”. Se Rust permitisse que esse código funcionasse, <code>r</code> estaria
-fazendo uma referência à memória que foi desalocada quando <code>x</code> saiu de escopo,
-e qualquer coisa que tentássemos fazer com <code>r</code> não funcionaria corretamente.
-Então como o Rust determina que esse código não deve ser permitido?</p>
+<p>A variável <code>x</code> não “vive tempo suficiente”. Por quê? Porque <code>x</code> sai de escopo
+quando passamos pela chave na linha 7, encerrando o escopo interno. Mas <code>r</code>
+continua válida no escopo externo; como seu escopo é maior, dizemos que ela
+“vive mais tempo”. Se o Rust permitisse que esse código funcionasse, <code>r</code>
+estaria referenciando uma memória que foi desalocada quando <code>x</code> saiu de escopo,
+e qualquer tentativa de usar <code>r</code> não funcionaria corretamente. Então, como o
+Rust determina que esse código não deve ser permitido?</p>
 <h4 id="o-verificador-de-empréstimos"><a class="header" href="#o-verificador-de-empréstimos">O Verificador de Empréstimos</a></h4>
 <p>A parte do compilador chamada de <em>verificador de empréstimos</em> compara escopos
-para determinar que todos os empréstimos são válidos. A Listagem 10-19 mostra o
-mesmo exemplo da Listagem 10-18 com anotações mostrando os tempos de vida das
+para determinar se todos os empréstimos são válidos. A Listagem 10-19 mostra o
+mesmo exemplo da Listagem 10-18 com anotações indicando os tempos de vida das
 variáveis.</p>
 <pre><code class="language-rust ignore">{
     let r;         // -------+-- 'a
@@ -265,13 +264,12 @@ variáveis.</p>
 }</code></pre>
 <p><span class="caption">Listagem 10-19: Anotações de tempos de vida de <code>r</code> e <code>x</code>,
 chamadas de <code>a</code> e <code>b</code> respectivamente</span></p>
-<p>Nós anotamos o tempo de vida de <code>r</code> com <code>a</code> e o tempo de vida de <code>x</code> com <code>b</code>.
-Como você pode ver, o bloco interior de <code>'b</code> é bem menor que o bloco de tempo
-de vida do exterior <code>'a'</code>. Em tempo de compilação, o Rust compara o tamanho dos
-dois tempos de vida e vê que <code>r</code> tem um tempo de vida de <code>'a</code>, mas que ele se
-refere a um objeto com um tempo de vida <code>'b</code>. O programa é rejeitado porque o
-tempo de vida de <code>'b</code> é mais curto que o tempo de vida de <code>'a</code>: o sujeito da
-referência não vive tanto quanto a referência.</p>
+<p>Anotamos o tempo de vida de <code>r</code> com <code>'a</code> e o tempo de vida de <code>x</code> com <code>'b</code>.
+Como você pode ver, o bloco interno de <code>'b</code> é bem menor que o bloco externo de
+tempo de vida <code>'a</code>. Em tempo de compilação, o Rust compara o tamanho desses
+dois tempos de vida e vê que <code>r</code> tem um tempo de vida <code>'a</code>, mas se refere a um
+objeto com tempo de vida <code>'b</code>. O programa é rejeitado porque <code>'b</code> é mais curto
+do que <code>'a</code>: o alvo da referência não vive tanto quanto a própria referência.</p>
 <p>Vamos olhar para o exemplo na Listagem 10-20 que não tenta fazer uma referência
 solta e compila sem nenhum erro:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
@@ -287,19 +285,18 @@ solta e compila sem nenhum erro:</p>
 <span class="boring">}</span></code></pre>
 <p><span class="caption">Listagem 10-20: Uma referência válida porque os dados têm
 um tempo de vida maior do que o da referência</span></p>
-<p>Aqui, <code>x</code> tem o tempo de vida de <code>'b</code>, que nesse caso tem um tempo de vida
-maior que o de <code>'a</code>. Isso quer dizer que <code>r</code> pode referenciar <code>x</code>: o Rust sabe
-que a referência em <code>r</code> será sempre válida enquanto <code>x</code> for válido.</p>
-<p>Agora que mostramos onde os tempos de vida de referências estão em um exemplo
-concreto e discutimos como Rust analisa tempos de vida para garantir que
-referências sempre serão válidas, vamos falar sobre tempos de vidas genéricos
-de parâmetros e retornar valores no contexto das funções.</p>
+<p>Aqui, <code>x</code> tem o tempo de vida <code>'b</code>, que neste caso é maior que <code>'a</code>. Isso quer
+dizer que <code>r</code> pode referenciar <code>x</code>: o Rust sabe que a referência em <code>r</code> será
+sempre válida enquanto <code>x</code> for válido.</p>
+<p>Agora que vimos onde os tempos de vida das referências aparecem em um exemplo
+concreto e discutimos como o Rust os analisa para garantir que referências
+sejam sempre válidas, vamos falar sobre tempos de vida genéricos em parâmetros
+e valores de retorno no contexto de funções.</p>
 <h3 id="tempos-de-vida-genéricos-em-funções"><a class="header" href="#tempos-de-vida-genéricos-em-funções">Tempos de Vida Genéricos em Funções</a></h3>
-<p>Vamos escrever uma função que retornará a mais longa de dois cortes de string.
-Nós queremos ser capazes de chamar essa função passando para ela dois cortes
-de strings, e queremos que retorne uma string. O código na Listagem 10-21
-deve imprimir <code>A string mais longa é abcd</code> uma vez que tivermos implementado a
-função <code>maior</code>:</p>
+<p>Vamos escrever uma função que retornará o maior entre dois cortes de string.
+Queremos ser capazes de chamar essa função passando dois cortes de string e
+receber de volta um corte de string. O código da Listagem 10-21 deve imprimir
+<code>A string mais longa é abcd</code> quando tivermos implementado a função <code>maior</code>:</p>
 <p><span class="filename">Nome do Arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore">fn main() {
     let string1 = String::from("abcd");
@@ -308,16 +305,16 @@ função <code>maior</code>:</p>
     let resultado = maior(string1.as_str(), string2);
     println!("A string mais longa é {}", resultado);
 }</code></pre>
-<p><span class="caption">Listagem 10-21: Uma função <code>main</code> que chama pela função
-<code>maior</code> para achar a mais longa entre duas strings</span></p>
-<p>Note que queremos que a função pegue cortes de string (que são referências,
-como falamos no Capítulo 4) já que não queremos que a função <code>maior</code> tome posse
-de seus argumentos. Nós queremos que uma função seja capaz de aceitar cortes de
-uma <code>String</code> (que é o tipo de variável <code>string1</code>) assim como literais de string
-(que é o que a variável <code>string2</code> contém).</p>
-<p>Recorra à seção do Capítulo 4 “Cortes de Strings como Parâmetros” para mais
-discussões sobre porque esses são os argumentos que queremos.</p>
-<p>Se tentarmos implementar a função <code>maior</code> como mostrado na Listagem 10-22 ela
+<p><span class="caption">Listagem 10-21: Uma função <code>main</code> que chama a função
+<code>maior</code> para encontrar a mais longa entre duas strings</span></p>
+<p>Note que queremos que a função receba cortes de string, que são referências,
+como vimos no Capítulo 4, porque não queremos que a função <code>maior</code> tome posse
+de seus argumentos. Queremos que a função seja capaz de aceitar tanto cortes de
+uma <code>String</code> (que é o tipo da variável <code>string1</code>) quanto literais de string
+(que é o conteúdo da variável <code>string2</code>).</p>
+<p>Consulte a seção do Capítulo 4, “Cortes de Strings como Parâmetros”, para mais
+detalhes sobre por que esses são os argumentos que queremos.</p>
+<p>Se tentarmos implementar a função <code>maior</code> como mostrado na Listagem 10-22, ela
 não vai compilar:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore">fn maior(x: &amp;str, y: &amp;str) -&gt; &amp;str {
@@ -329,7 +326,7 @@ não vai compilar:</p>
 }</code></pre>
 <p><span class="caption">Listagem 10-22: Uma implementação da função <code>maior</code> que
 retorna o mais longo de dois cortes de string, mas ele não compila ainda</span></p>
-<p>Ao invés disso recebemos o seguinte erro que fala sobre tempos de vida:</p>
+<p>Em vez disso, recebemos o seguinte erro, que fala sobre tempos de vida:</p>
 <pre><code class="language-text">error[E0106]: missing lifetime specifier
    |
 1  | fn maior(x: &amp;str, y: &amp;str) -&gt; &amp;str {
@@ -339,49 +336,48 @@ retorna o mais longo de dois cortes de string, mas ele não compila ainda</span>
    signature does not say whether it is borrowed from `x` or `y`
 </code></pre>
 <p>O texto de ajuda está nos dizendo que o tipo de retorno precisa de um parâmetro
-de tempo de vida genérico nele porque o Rust não pode dizer se a referência que
-está sendo retornada se refere a <code>x</code> ou <code>y</code>. Atualmente, nós também não
-sabemos, já que o bloco <code>if</code> no corpo dessa função retorna uma referência para
-<code>x</code> e o bloco <code>else</code> retorna uma referência para <code>y</code>!</p>
-<p>Enquanto estamos definindo essa função, não sabemos os valores concretos que
-serão passados para essa função, então não sabemos se o caso <code>if</code> ou o caso
-<code>else</code> será executado. Nós também não sabemos os tempos de vida concretos das
-referências que serão passadas, então não podemos olhar para esses escopos como
-fizemos nas Listagem 10-19 e 10-20 afim de determinar que a referência que
-retornaremos sempre será válida. O verificador de empréstimos não consegue
-determinar isso também porque não sabe como os tempos de vida de <code>x</code> e <code>y</code> se
-relacionam com o tempo de vida do valor de retorno. Nós vamos adicionar
-parâmetros genéricos de tempo de vida que definirão a relação entre as
-referências para que o verificador de empréstimos possa fazer sua análise.</p>
+genérico de tempo de vida porque o Rust não consegue dizer se a referência
+retornada se refere a <code>x</code> ou a <code>y</code>. Na verdade, nós também não sabemos, já que
+o bloco <code>if</code> no corpo da função retorna uma referência para <code>x</code> e o bloco
+<code>else</code> retorna uma referência para <code>y</code>!</p>
+<p>Enquanto definimos essa função, não sabemos quais valores concretos serão
+passados para ela, então não sabemos se o caso <code>if</code> ou o caso <code>else</code> será
+executado. Também não sabemos quais serão os tempos de vida concretos das
+referências recebidas, então não podemos observar esses escopos como fizemos
+nas Listagens 10-19 e 10-20 para determinar se a referência retornada sempre
+será válida. O verificador de empréstimos também não consegue determinar isso,
+porque não sabe como os tempos de vida de <code>x</code> e <code>y</code> se relacionam com o tempo
+de vida do valor de retorno. Vamos adicionar parâmetros genéricos de tempo de
+vida que definam a relação entre as referências para que o verificador de
+empréstimos possa fazer sua análise.</p>
 <h3 id="sintaxe-de-anotação-de-tempo-de-vida"><a class="header" href="#sintaxe-de-anotação-de-tempo-de-vida">Sintaxe de Anotação de Tempo de Vida</a></h3>
-<p>Anotações de tempo de vida não mudam quanto tempo qualquer uma das referências
-envolvidas viverão. Do mesmo modo que funções podem aceitar qualquer tipo de
-assinatura que especifica um parâmetro de tipo genérico, funções podem aceitar
-referências com qualquer tempo de vida quando a assinatura especificar um
-parâmetro genérico de tempo de vida. O que anotações de tempo de vida fazem é
-relacionar os tempos de vida de múltiplas referências uns com os outros.</p>
-<p>Anotações de tempo de vida tem uma sintaxe levemente incomum: os nomes dos
-parâmetros de tempos de vida precisam começar com uma apóstrofe <code>'</code>. Os nomes
-dos parâmetros dos tempos de vida são usualmente todos em caixa baixa, e como
-tipos genéricos, seu nome usualmente são bem curtos. <code>'a</code> é o nome que a maior
-parte das pessoas usam por padrão. Parâmetros de anotações de tempos de vida
-vão depois do <code>&amp;</code> de uma referência, e um espaço separa a anotação de tempo de
-vida do tipo da referência.</p>
-<p>Aqui vão alguns exemplos: nós temos uma referência para um <code>i32</code> sem um
-parâmetro tempo de vida, uma referência para um <code>i32</code> que tem um parâmetro de
-tempo de vida chamado <code>'a</code>:</p>
+<p>Anotações de tempo de vida não mudam por quanto tempo qualquer uma das
+referências envolvidas viverá. Assim como funções podem aceitar qualquer tipo
+quando a assinatura especifica um parâmetro de tipo genérico, funções podem
+aceitar referências com qualquer tempo de vida quando a assinatura especifica
+um parâmetro genérico de tempo de vida. O que as anotações de tempo de vida
+fazem é relacionar entre si os tempos de vida de múltiplas referências.</p>
+<p>Anotações de tempo de vida têm uma sintaxe um pouco incomum: os nomes dos
+parâmetros de tempo de vida precisam começar com um apóstrofo (<code>'</code>). Esses
+nomes costumam ser todos em minúsculas e, assim como os tipos genéricos,
+geralmente são bem curtos. <code>'a</code> é o nome que a maioria das pessoas usa por
+padrão. As anotações de parâmetro de tempo de vida vêm depois do <code>&amp;</code> de uma
+referência, e um espaço separa a anotação de tempo de vida do tipo da
+referência.</p>
+<p>Aqui estão alguns exemplos: uma referência para um <code>i32</code> sem parâmetro de
+tempo de vida e uma referência para um <code>i32</code> que tem um parâmetro de tempo de
+vida chamado <code>'a</code>:</p>
 <pre><code class="language-rust ignore">&amp;i32        // uma referência
 &amp;'a i32     // uma referência com um tempo de vida explícito
 &amp;'a mut i32 // uma referência mutável com um tempo de vida explícito</code></pre>
-<p>Uma anotação de tempo de vida por si só não tem muito significado: anotações de
-tempos de vida dizem ao Rust como os parâmetros genéricos de tempos de vida de
-múltiplas referências se relacionam uns com os outros. Se tivermos uma função
-com o parâmetro <code>primeiro</code> que é uma referência para um <code>i32</code> que tem um tempo
-de vida de <code>'a</code>, e a função tem outro parâmetro chamado <code>segundo</code> que é outra
-referência para um <code>i32</code> que também possui um tempo de vida <code>'a</code>, essas duas
-anotações de tempo de vida com o mesmo nome indicam que as referências
-<code>primeiro</code> e <code>segundo</code> precisam ambas viver tanto quanto o mesmo tempo de vida
-genérico.</p>
+<p>Uma anotação de tempo de vida, por si só, não tem muito significado:
+anotações de tempo de vida dizem ao Rust como os parâmetros genéricos de tempo
+de vida de múltiplas referências se relacionam entre si. Se tivermos uma
+função com o parâmetro <code>primeiro</code>, que é uma referência para um <code>i32</code> com tempo
+de vida <code>'a</code>, e outro parâmetro chamado <code>segundo</code>, que também é uma referência
+para um <code>i32</code> com tempo de vida <code>'a</code>, essas duas anotações com o mesmo nome
+indicam que as referências <code>primeiro</code> e <code>segundo</code> precisam ambas viver pelo
+menos tanto quanto esse mesmo tempo de vida genérico.</p>
 <h3 id="anotações-de-tempo-de-vida-em-assinaturas-de-funções"><a class="header" href="#anotações-de-tempo-de-vida-em-assinaturas-de-funções">Anotações de Tempo de Vida em Assinaturas de Funções</a></h3>
 <p>Vamos olhar para anotações de tempo de vida no contexto da função <code>maior</code> que
 estamos trabalhando. Assim como parâmetros de tipos genéricos, parâmetros de

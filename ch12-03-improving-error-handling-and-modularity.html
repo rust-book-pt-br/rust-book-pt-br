@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,28 +181,29 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="refatoração-para-melhorar-a-modularidade-e-o-tratamento-de-erros"><a class="header" href="#refatoração-para-melhorar-a-modularidade-e-o-tratamento-de-erros">Refatoração para Melhorar a Modularidade e o Tratamento de Erros</a></h2>
-<p>Para melhorar o nosso programa, repararemos quatro problemas que têm a ver com a
-estrutura do programa e como ele está tratando possíveis erros.</p>
-<p>Primeiro, a nossa função <code>main</code> agora executa duas tarefas: analisa argumentos e
-abre arquivos. Para uma função tão pequena, este não é um grande problema. No entanto, se
-continuamos a desenvolver o nosso programa dentro de <code>main</code>, o número de tarefas separadas que
-a função <code>main</code> manipula aumentarão. Com uma função ganhando responsabilidades,
-torna-se mais difícil de raciocinar, mais difícil de testar e mais difícil de mudar
-sem quebrar uma das suas partes. É melhor separar a funcionalidade para que cada
-função seja responsável por uma tarefa.</p>
-<p>Esta questão também se liga ao segundo problema: embora <code>query</code> e <code>filename</code>
-sejam variáveis de configuração para o nosso programa, variáveis como <code>f</code> e <code>contents</code>
-são usadas para executar a lógica do programa. Quanto maior o <code>main</code> se torna, mais
-variáveis precisamos trazer no escopo; quanto mais variáveis temos no escopo,
-mais difícil será acompanhar o objetivo de cada uma. É melhor agrupar
-as variáveis de configuração em uma estrutura para tornar claro seu objetivo.</p>
-<p>O terceiro problema é que usamos <code>expect</code> para imprimir uma mensagem de erro, ao
-abrir um arquivo, falha, mas a mensagem de erro apenas imprime <code>file not found</code>.
-Abrir um arquivo pode falhar de várias maneiras, além do arquivo faltando: como
-exemplo, o arquivo pode existir, mas talvez não possamos ter permissão para abri-lo.
-Agora, se estivermos nessa situação, imprimiríamos a mensagem de erro <code>file not found</code>
-que daria ao usuário a informação errada!</p>
+                        <h2 id="refatorando-para-melhorar-a-modularidade-e-o-tratamento-de-erros"><a class="header" href="#refatorando-para-melhorar-a-modularidade-e-o-tratamento-de-erros">Refatorando para Melhorar a Modularidade e o Tratamento de Erros</a></h2>
+<p>Para melhorar o nosso programa, vamos corrigir quatro problemas relacionados à
+estrutura do programa e à forma como ele está tratando possíveis erros.</p>
+<p>Primeiro, a nossa função <code>main</code> agora executa duas tarefas: analisar argumentos
+e abrir arquivos. Para uma função tão pequena, isso ainda não é um grande
+problema. No entanto, se continuarmos a desenvolver o programa dentro de
+<code>main</code>, o número de tarefas separadas sob sua responsabilidade aumentará. À
+medida que uma função acumula responsabilidades, fica mais difícil raciocinar
+sobre ela, testá-la e alterá-la sem quebrar uma de suas partes. É melhor
+separar a funcionalidade para que cada função seja responsável por uma única
+tarefa.</p>
+<p>Essa questão também se conecta ao segundo problema: embora <code>query</code> e
+<code>filename</code> sejam variáveis de configuração do programa, variáveis como <code>f</code> e
+<code>contents</code> são usadas para executar sua lógica. Quanto maior <code>main</code> ficar, mais
+variáveis precisaremos trazer para o escopo; quanto mais variáveis tivermos em
+escopo, mais difícil será acompanhar a finalidade de cada uma. É melhor
+agrupar as variáveis de configuração em uma estrutura para deixar claro o seu
+propósito.</p>
+<p>O terceiro problema é que usamos <code>expect</code> para imprimir uma mensagem de erro
+quando a leitura do arquivo falha, mas a mensagem apenas diz <code>file not found</code>.
+Abrir um arquivo pode falhar de várias maneiras. Por exemplo, o arquivo pode
+existir, mas talvez não tenhamos permissão para abri-lo. Nessa situação,
+mostrar <code>file not found</code> daria à pessoa usuária uma informação incorreta!</p>
 <p>O quarto problema, usamos <code>expect</code> repetidamente para lidar com diferentes erros, e se o usuário
 executa o nosso programa sem especificar argumentos suficientes, eles terão erros <code>index out of bounds</code> do Rust, que não explica claramente o problema. Seria
 melhor se todo o código de tratamento de erros estiver em um só lugar para futuros mantenedores
@@ -465,7 +466,7 @@ a técnica que usamos na Lista 9-9 não é a melhor para usar aqui: uma chamada 
 , conforme discutido no Capítulo 9. Em vez disso, podemos usar outra técnica que você
 aprendeu no Capítulo 9 - retornando um <code>Result</code> que indica sucesso
 ou um erro.</p>
-<h4 id="retornando-um-result-de-um-new-em-vez-de-chamar-panic"><a class="header" href="#retornando-um-result-de-um-new-em-vez-de-chamar-panic">Retornando um <code>Result</code> de um <code>new</code> Em vez de Chamar <code>panic!</code></a></h4>
+<h4 id="retornando-um-result-de-new-em-vez-de-chamar-panic"><a class="header" href="#retornando-um-result-de-new-em-vez-de-chamar-panic">Retornando um <code>Result</code> de <code>new</code> em vez de Chamar <code>panic!</code></a></h4>
 <p>Em vez disso, podemos retornar um valor <code>Result</code> que conterá uma instância <code>Config</code> em
 caso bem-sucedido e descreverá o problema no caso de erro. Quando
 <code>Config::new</code> está se comunicando com <code>main</code>, podemos usar o tipo <code>Result</code> para
@@ -491,13 +492,13 @@ próxima listagem:</p>
 }</code></pre>
 <p><span class="caption">Listagem 12-9: Retornando um <code>Result</code> de
 <code>Config::new</code></span></p>
-<p>Nossa função <code>new</code> agora retorna um<code> Result</code> com uma instância <code>Config</code> no caso de sucesso
-e um <code>&amp;'static str</code> no caso de erro. Lembre-se da seção “The Static Lifetime” no capítulo 10
-que <code>&amp; 'static str</code> é o tipo de string literal, que é o nosso tipo de mensagem de erro por enquanto.</p>
-<p>Fizemos duas mudanças no corpo da função <code>new</code>: em vez de chamar
-<code>panic!</code> quando o usuário não passa argumentos suficientes, agora devolvemos um valor <code>Err</code>
-, e nós wrapped (embalamos) o valor de retorno <code>Config</code> em um <code>Ok</code>. Estas alterações
-fazem com que a função esteja conforme a sua nova assinatura de tipo.</p>
+<p>Nossa função <code>new</code> agora retorna um <code>Result</code>, com uma instância de <code>Config</code> no
+caso de sucesso e uma string literal no caso de erro. Nossos valores de erro
+serão, por enquanto, literais de string com lifetime <code>'static</code>.</p>
+<p>Fizemos duas mudanças no corpo da função: em vez de chamar <code>panic!</code> quando a
+pessoa usuária não fornece argumentos suficientes, agora retornamos um valor
+<code>Err</code>, e envolvemos o valor de retorno <code>Config</code> em um <code>Ok</code>. Essas alterações
+fazem a função se adequar à nova assinatura de tipo.</p>
 <p>Retornar um valor <code>Err</code> de <code>Config::new</code> permite que a função <code>main</code>
 lide com o valor <code>Result</code> retornado da função <code>new</code> e saia do processo
 de forma mais limpa no caso de erro.</p>
@@ -522,25 +523,23 @@ fn main() {
     // --snip--</code></pre>
 <p><span class="caption">Listagem 12-10: Se ao criar um <code>Config</code> falha, saimos
 com um código de erro</span></p>
-<p>Nesta lista, usamos um método que não abordamos antes:
-<code>unwrap_or_else</code>, que está definido em <code>Result &lt;T, E&gt;</code> pela biblioteca padrão.
-Usar <code>unwrap_or_else</code> nos permite definir algum erro personalizado, não-<code>panic!</code> de
-manipulação. Se o <code>Result</code> for um valor <code>Ok</code>, o comportamento deste método é semelhante
-a <code>unwrap</code>: ele retorna o valor interno <code>Ok</code>. No entanto, se o valor
-é um valor <code>Err</code>, este método chama o código na <em>closure</em>, que é uma
-função anônima que definimos e passamos como um argumento para <code>unwrap_or_else</code>. Nós
-entraremos em detalhes sobre closures no Capítulo 13. Por enquanto, você precisa apenas saber
-que <code>unwrap_or_else</code> passará o valor interno do <code>Err</code>, que neste
-caso é a string estática <code>not enough arguments</code> que adicionamos na Listagem 12-9,
-para o nosso closure no argumento <code>err</code> que aparece entre os pipes verticais.
-O código no closure pode então usar o valor <code>err</code> quando ele é executado.</p>
-<p>Adicionamos uma nova linha de <code>use</code> para importar <code>process</code> da biblioteca padrão.
-O código na closure que será executado no caso de erro são apenas duas linhas: nós
-imprimos o valor de <code>err</code> e depois chamamos <code>process::exit</code>. A função <code>process::exit</code>
-interromperá o programa imediatamente e retornará o número que foi
-passado como o código de status de saída. Isso é semelhante ao manuseio baseado no <code>panic!</code>
-que usamos na Listagem 12-8, mas já não obtemos todos os resultados extras. Vamos tentar
-isto:</p>
+<p>Nesta listagem, usamos um método que ainda não vimos em detalhe:
+<code>unwrap_or_else</code>, definido em <code>Result&lt;T, E&gt;</code> pela biblioteca padrão. Usá-lo
+nos permite definir um tratamento de erro personalizado, sem <code>panic!</code>. Se o
+<code>Result</code> for <code>Ok</code>, o comportamento desse método é semelhante ao de <code>unwrap</code>:
+ele retorna o valor interno. No entanto, se o valor for <code>Err</code>, esse método
+chama o código da <em>closure</em>, que é uma função anônima que definimos e passamos
+como argumento para <code>unwrap_or_else</code>. Falaremos mais sobre closures no Capítulo
+13. Por enquanto, basta saber que <code>unwrap_or_else</code> passa à closure o valor
+interno do <code>Err</code>, que neste caso é a string estática <code>not enough arguments</code>
+que adicionamos na Listagem 12-9.</p>
+<p>Adicionamos uma nova linha <code>use</code> para importar <code>process</code> da biblioteca padrão.
+O código na closure que será executado no caso de erro tem apenas duas linhas:
+imprimimos o valor de <code>err</code> e depois chamamos <code>process::exit</code>. A função
+<code>process::exit</code> interromperá o programa imediatamente e retornará o número que
+foi passado como código de status de saída. Isso é semelhante ao tratamento
+baseado em <code>panic!</code> que usamos na Listagem 12-8, mas sem toda a saída extra.
+Vamos experimentar:</p>
 <pre><code class="language-text">$ cargo run
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
     Finished dev [unoptimized + debuginfo] target(s) in 0.48 secs

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -259,12 +259,12 @@ futuro. Considere o programa na Listagem 4-6, que usa a função da Listagem 4-5
 </span>fn main() {
     let mut s = String::from("texto longo");
 
-    let palavra = primeira_palavra(&amp;s); // palavra vai ter o valor 5.
+    let palavra = primeira_palavra(&amp;s); // palavra terá o valor 5.
 
     s.clear(); // Isso esvazia a String, deixando ela igual a "".
 
     // palavra ainda tem o valor 5 aqui, mas já não há mais uma string para a
-    // qual o valor 5 faça algum sentido. palavra agora é totalmente inválida!
+    // qual o valor 5 faça algum sentido. `palavra` agora é totalmente inválida!
 }</code></pre>
 <p><span class="caption">Listagem 4-6: Armazenando o resultado de uma chamada à
 função <code>primeira_palavra</code>, e depois, mudando o conteúdo da <code>String</code>.</span></p>
@@ -273,7 +273,7 @@ função <code>primeira_palavra</code>, e depois, mudando o conteúdo da <code>S
 de <code>s</code> de nenhuma forma, então, <code>palavra</code> ainda contém o valor <code>5</code>. Poderíamos
 usar esse valor <code>5</code> com a variável <code>s</code> para tentar extrair a primeira palavra da
 string, mas isso seria um bug, pois o conteúdo de <code>s</code> já mudou após termos salvo
-o valor <code>5</code> na variável <code>word</code>.</p>
+o valor <code>5</code> na variável <code>palavra</code>.</p>
 <p>Ter que se preocupar sobre o índice da <code>palavra</code> ficar fora de sincronia com os
 dados em <code>s</code> é tedioso e propenso a erros! Gerenciar esses índices é ainda mais
 delicado se escrevermos uma função <code>segunda_palavra</code>. Sua assinatura teria que
@@ -294,8 +294,8 @@ seguinte forma:</p>
 let texto = &amp;s[0..5];
 let longo = &amp;s[6..11];
 <span class="boring">}</span></code></pre>
-<p>Isto é similar a pegar uma referência à <code>String</code> inteira, mas um extra-apontando
-do pedaço <code>[0..5]</code>. Em vez de uma referência à <code>String</code> inteira, trata-se de
+<p>Isto é similar a pegar uma referência à <code>String</code> inteira, mas com o adicional
+do trecho <code>[0..5]</code>. Em vez de uma referência à <code>String</code> inteira, trata-se de
 uma referência a uma porção da <code>String</code>. A sintaxe <code>início..fim</code> representa um
 <em>range</em> (uma faixa) que começa em <code>início</code> e continua até, mas não incluindo,
 <code>fim</code>.</p>

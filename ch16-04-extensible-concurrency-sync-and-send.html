@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -184,79 +184,79 @@
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="extensible-concurrency-with-the-sync-and-send-traits"></a>
 <a id="extensible-concurrency-with-the-send-and-sync-traits"></a></p>
-<h2 id="simultaneidade-extensível-com-send-e-sync"><a class="header" href="#simultaneidade-extensível-com-send-e-sync">Simultaneidade extensível com <code>Send</code> e <code>Sync</code></a></h2>
-<p>Curiosamente, quase todos os recursos de simultaneidade dos quais falamos até agora
-este capítulo faz parte da biblioteca padrão, não da linguagem. Seu
-as opções para lidar com a simultaneidade não estão limitadas ao idioma ou ao
-biblioteca padrão; você pode escrever seus próprios recursos de simultaneidade ou usá-los
-escrito por outros.</p>
-<p>No entanto, entre os principais conceitos de simultaneidade incorporados na linguagem
-em vez da biblioteca padrão estão <code>std::marker</code> traits <code>Send</code> e <code>Sync</code>.</p>
+<h2 id="concorrência-extensível-com-send-e-sync"><a class="header" href="#concorrência-extensível-com-send-e-sync">Concorrência extensível com <code>Send</code> e <code>Sync</code></a></h2>
+<p>Curiosamente, quase todos os recursos de concorrência dos quais falamos até agora
+neste capítulo fazem parte da biblioteca padrão, não da linguagem. Suas
+opções para lidar com concorrência não estão limitadas à linguagem nem à
+biblioteca padrão; você pode escrever seus próprios recursos de concorrência ou usar os
+escritos por outras pessoas.</p>
+<p>No entanto, entre os principais conceitos de concorrência incorporados à linguagem,
+em vez de à biblioteca padrão, estão as traits <code>Send</code> e <code>Sync</code> de <code>std::marker</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="allowing-transference-of-ownership-between-threads-with-send"></a></p>
 <h3 id="transferindo-ownership-entre-threads"><a class="header" href="#transferindo-ownership-entre-threads">Transferindo ownership entre threads</a></h3>
-<p>O marcador <code>Send</code> trait indica que ownership de valores do tipo
-implementação de <code>Send</code> pode ser transferida entre threads. Quase todos os tipos de Rust
-implementa <code>Send</code>, mas há algumas exceções, incluindo <code> Rc&lt;T&gt;</code>: Este
-não é possível implementar <code> Send</code>porque se você clonou um valor <code> Rc&lt;T&gt;</code>e tentou
-transferir ownership do clone para outro thread, ambos threads podem atualizar
-a contagem de referência ao mesmo tempo. Por esta razão, <code> Rc&lt;T&gt;</code>é implementado
-para uso em situações de thread único em que você não deseja pagar o
-Penalidade de desempenho seguro do thread.</p>
+<p>A trait marcadora <code>Send</code> indica que o ownership de valores do tipo que
+implementa <code>Send</code> pode ser transferido entre threads. Quase todos os tipos de Rust
+implementam <code>Send</code>, mas há algumas exceções, incluindo <code>Rc&lt;T&gt;</code>: ele
+não pode implementar <code>Send</code> porque, se você clonasse um valor <code>Rc&lt;T&gt;</code> e tentasse
+transferir o ownership do clone para outra thread, ambas as threads poderiam atualizar
+a contagem de referências ao mesmo tempo. Por essa razão, <code>Rc&lt;T&gt;</code> é implementado
+para uso em situações de thread única, em que você não deseja pagar a
+penalidade de desempenho da segurança para threads.</p>
 <p>Portanto, o sistema de tipos de Rust e os limites de trait garantem que você nunca poderá
-enviar acidentalmente um valor <code>Rc&lt;T&gt;</code> através do threads de forma insegura. Quando tentamos fazer
+enviar acidentalmente um valor <code>Rc&lt;T&gt;</code> através de threads de forma insegura. Quando tentamos fazer
 isso na Listagem 16-14, obtivemos o erro de que a trait <code>Send</code> não está
 implementada para <code>Rc&lt;Mutex&lt;i32&gt;&gt;</code>. Quando mudamos para <code>Arc&lt;T&gt;</code>, que
 implementa <code>Send</code>, o código passou a compilar.</p>
-<p>Qualquer tipo composto inteiramente de tipos <code>Send</code> é automaticamente marcado como <code>Send</code> como
-bem. Quase todos os tipos primitivos são <code>Send</code>, exceto os ponteiros brutos, que
+<p>Qualquer tipo composto inteiramente por tipos <code>Send</code> também é automaticamente marcado como <code>Send</code>.
+Quase todos os tipos primitivos são <code>Send</code>, exceto os ponteiros brutos, que
 discutiremos no Capítulo 20.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="allowing-access-from-multiple-threads-with-sync"></a></p>
 <h3 id="acessando-de-vários-threads"><a class="header" href="#acessando-de-vários-threads">Acessando de vários threads</a></h3>
-<p>O marcador <code>Sync</code> trait indica que é seguro para o tipo que implementa
-<code>Sync </code> a ser referenciado a partir de vários threads. Em outras palavras, qualquer tipo<code>T </code>
-implementa<code>Sync</code>se<code>&amp;T</code>(uma referência imutável a<code>T</code>) implementa<code>Send</code>,
-o que significa que a referência pode ser enviada com segurança para outro thread. Semelhante a<code>Send</code>,
-todos os tipos primitivos implementam<code>Sync</code>, e tipos compostos inteiramente de tipos que
-implementar<code>Sync</code>também implementar<code> Sync</code>.</p>
+<p>A trait marcadora <code>Sync</code> indica que é seguro que o tipo que implementa
+<code>Sync</code> seja referenciado a partir de várias threads. Em outras palavras, qualquer tipo <code>T</code>
+implementa <code>Sync</code> se <code>&amp;T</code> (uma referência imutável a <code>T</code>) implementa <code>Send</code>,
+o que significa que a referência pode ser enviada com segurança para outra thread. Assim como <code>Send</code>,
+todos os tipos primitivos implementam <code>Sync</code>, e tipos compostos inteiramente por tipos que
+implementam <code>Sync</code> também implementam <code>Sync</code>.</p>
 <p>O smart pointer <code>Rc&lt;T&gt;</code> também não implementa <code>Sync</code> pelos mesmos motivos
-que não implementa <code>Send</code>. O tipo <code> RefCell&lt;T&gt;</code>(do qual falamos
-no Capítulo 15) e a família de tipos <code> Cell&lt;T&gt;</code>relacionados não implementam
-<code>Sync</code>. A implementação da verificação de borrowing que<code>RefCell&lt;T&gt;</code>faz em tempo de execução
-não é seguro para thread. O smart pointer<code>Mutex&lt;T&gt;</code>implementa<code>Sync</code>e pode ser
-usado para compartilhar acesso com vários threads, como você viu em <a href="ch16-03-shared-state.html#shared-access-to-mutext">“Acesso compartilhado a
-<code> Mutex&lt;T&gt;</code>”</a><!-- ignore -->.</p>
+pelos quais não implementa <code>Send</code>. O tipo <code>RefCell&lt;T&gt;</code> (do qual falamos
+no Capítulo 15) e a família de tipos <code>Cell&lt;T&gt;</code> relacionada não implementam
+<code>Sync</code>. A implementação de verificação de borrowing que <code>RefCell&lt;T&gt;</code> faz em tempo de execução
+não é segura para threads. O smart pointer <code>Mutex&lt;T&gt;</code> implementa <code>Sync</code> e pode ser
+usado para compartilhar acesso com várias threads, como você viu em <a href="ch16-03-shared-state.html#shared-access-to-mutext">“Acesso compartilhado a
+<code>Mutex&lt;T&gt;</code>”</a><!-- ignore -->.</p>
 <h3 id="implementar-send-e-sync-manualmente-não-é-seguro"><a class="header" href="#implementar-send-e-sync-manualmente-não-é-seguro">Implementar <code>Send</code> e <code>Sync</code> manualmente não é seguro</a></h3>
-<p>Como os tipos compostos inteiramente por outros tipos que implementam o <code>Send</code> e
-<code>Sync </code> traits também implementa automaticamente<code>Send </code> e<code>Sync</code>, não precisamos
-implemente esses traits manualmente. Como marcador traits, eles nem possuem
-métodos a implementar. Eles são úteis apenas para impor invariantes relacionados a
-simultaneidade.</p>
+<p>Como os tipos compostos inteiramente por outros tipos que implementam as traits <code>Send</code> e
+<code>Sync</code> também implementam automaticamente <code>Send</code> e <code>Sync</code>, não precisamos
+implementar essas traits manualmente. Como traits marcadoras, elas nem sequer possuem
+métodos a implementar. Elas são úteis apenas para impor invariantes relacionados à
+concorrência.</p>
 <p>A implementação manual desses traits envolve a implementação de código Rust inseguro.
-Falaremos sobre o uso de código Rust inseguro no Capítulo 20; por enquanto, o importante
-A informação é que a construção de novos tipos simultâneos não compostos de <code>Send</code> e
-As peças <code>Sync</code> requerem uma reflexão cuidadosa para manter as garantias de segurança. <a href="../nomicon/index.html">“O
-Rustonomicon”</a> tem mais informações sobre essas garantias e como
-defendê-los.</p>
+Falaremos sobre o uso de código Rust inseguro no Capítulo 20; por enquanto, a informação
+importante é que a construção de novos tipos concorrentes que não sejam compostos por partes
+<code>Send</code> e <code>Sync</code> requer reflexão cuidadosa para manter as garantias de segurança. <a href="../nomicon/index.html">“O
+Rustonomicon”</a> tem mais informações sobre essas garantias e sobre como
+preservá-las.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Esta não é a última vez que você verá concorrência neste livro: O próximo capítulo
-concentra-se na programação async, e o projeto no Capítulo 21 usará o
-conceitos deste capítulo em uma situação mais realista do que os conceitos menores
-exemplos discutidos aqui.</p>
-<p>Como mencionado anteriormente, porque muito pouco de como o Rust lida com a simultaneidade é
-parte da linguagem, muitas soluções de simultaneidade são implementadas como crates.
+<p>Esta não é a última vez que você verá concorrência neste livro: o próximo capítulo
+se concentra em programação async, e o projeto do Capítulo 21 usará os
+conceitos deste capítulo em uma situação mais realista do que os exemplos menores
+discutidos aqui.</p>
+<p>Como mencionado anteriormente, como muito pouco de como o Rust lida com concorrência faz
+parte da linguagem, muitas soluções de concorrência são implementadas como crates.
 Eles evoluem mais rapidamente do que a biblioteca padrão, portanto, pesquise
-online para o crates atual e de última geração para uso em multithread
+online pelos crates atuais e de ponta para uso em cenários multithread
 situações.</p>
-<p>A biblioteca padrão Rust fornece canais para passagem de mensagens e troca inteligente
-tipos de ponteiro, como <code>Mutex&lt;T&gt;</code> e <code>Arc&lt;T&gt;</code>, que são seguros para uso em
-contextos simultâneos. O sistema de tipos e o borrow checker garantem que o
-o código que usa essas soluções não resultará em corridas de dados ou referências inválidas.
+<p>A biblioteca padrão do Rust fornece canais para passagem de mensagens e tipos de
+smart pointer, como <code>Mutex&lt;T&gt;</code> e <code>Arc&lt;T&gt;</code>, que são seguros para uso em
+contextos concorrentes. O sistema de tipos e o borrow checker garantem que o
+código que usa essas soluções não resultará em corridas de dados nem em referências inválidas.
 Depois de compilar seu código, você pode ter certeza de que ele será felizmente
 executado em vários threads sem os tipos de bugs difíceis de rastrear comuns em
-outras línguas. A programação simultânea não é mais um conceito a temer:
-Vá em frente e faça seus programas simultâneos, sem medo!</p>
+outras linguagens. Programação concorrente não é mais um conceito a temer:
+vá em frente e faça seus programas concorrentes, sem medo!</p>
 
                     </main>
 

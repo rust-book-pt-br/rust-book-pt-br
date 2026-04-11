@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,7 +182,9 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="instalação"><a class="header" href="#instalação">Instalação</a></h2>
-<p>O primeiro passo é instalar Rust. Vamos fazer o download de Rust através do <code>rustup</code>, uma ferramenta de linha de comando para gerenciar versões Rust e ferramentas associadas.
+<p>O primeiro passo é instalar o Rust. Vamos fazer o download do Rust por meio do
+<code>rustup</code>, uma ferramenta de linha de comando para gerenciar versões do Rust e
+ferramentas associadas.
 Você precisará de uma conexão com a Internet para o download.</p>
 <blockquote>
 <p>Nota: Se você preferir não usar o <code>rustup</code> por algum motivo, consulte <a href="https://www.rust-lang.org/pt-BR/tools/install">a página de instalação de Rust</a> para outras opções.</p>
@@ -206,10 +208,19 @@ Você precisará de uma conexão com a Internet para o download.</p>
 <p>Como alternativa, você pode adicionar a seguinte linha ao seu <em>~/.bash_profile</em>:</p>
 <pre><code class="language-text">$ export PATH="$HOME/.cargo/bin:$PATH"
 </code></pre>
-<p>Além disso, você precisará de um <em>linker</em> de algum tipo. Provavelmente já está instalado, mas quando você tenta compilar um programa Rust e obtem erros, indicando que um linker não pôde executar, isso significa que um linker não está instalado no seu sistema e você precisará instalá-lo manualmente. Os compiladores C geralmente vêm com o linker correto. Verifique a documentação da sua plataforma para saber como instalar
-um compilador C. Além disso, alguns pacotes Rust comuns dependem do código C e precisarão de um compilador C. Portanto, pode valer a pena instalar um agora.</p>
+<p>Além disso, você precisará de algum tipo de <em>linker</em>. Ele provavelmente já está
+instalado, mas, se ao tentar compilar um programa Rust você receber erros
+indicando que um linker não pôde ser executado, isso significa que ele não está
+instalado no seu sistema e você precisará instalá-lo manualmente. Compiladores
+de C geralmente vêm com o linker correto. Verifique a documentação da sua
+plataforma para saber como instalar um compilador C. Além disso, alguns pacotes
+Rust comuns dependem de código C e precisarão de um compilador C. Portanto,
+pode valer a pena instalar um agora.</p>
 <h3 id="instalando-rustup-no-windows"><a class="header" href="#instalando-rustup-no-windows">Instalando <code>rustup</code> no Windows</a></h3>
-<p>No Windows, vá para <a href="https://www.rust-lang.org/pt-BR/tools/install">https://www.rust-lang.org/pt-BR/tools/install</a> e siga as instruções para instalar Rust. Em algum momento da instalação, você receberá uma mensagem explicando que também precisará das ferramentas de <em>build</em> do C ++ para o Visual Studio 2013 ou posterior.
+<p>No Windows, vá para <a href="https://www.rust-lang.org/pt-BR/tools/install">https://www.rust-lang.org/pt-BR/tools/install</a>
+e siga as instruções para instalar o Rust. Em algum momento da instalação, você
+receberá uma mensagem explicando que também precisará das ferramentas de
+<em>build</em> de C++ para o Visual Studio 2013 ou posterior.
 A maneira mais fácil de adquirir as ferramentas de build é instalar <a href="https://visualstudio.microsoft.com/pt-br/downloads/">Ferramentas Integradas do Visual Studio 2019</a>. <!--Diretório mudou: As ferramentas estão na seção: Outras Ferramentas e Estruturas. --></p>
 <p>O restante deste livro usa comandos que funcionam no <em>cmd.exe</em> e no PowerShell. Se houver diferenças específicas, explicaremos qual usar.</p>
 <h3 id="atualização-e-desinstalação"><a class="header" href="#atualização-e-desinstalação">Atualização e Desinstalação</a></h3>
@@ -223,11 +234,18 @@ A maneira mais fácil de adquirir as ferramentas de build é instalar <a href="h
 <p>Para verificar se você possui Rust instalado corretamente, abra um shell e digite esta linha:</p>
 <pre><code class="language-text">$ rustc --version
 </code></pre>
-<p>Você deverá ver o número da versão, <em>commit</em> hash, e <em>commit</em> da data da versão estável mais recente lançada no seguinte formato:</p>
+<p>Você deverá ver o número da versão, o <em>commit</em> hash e a data do <em>commit</em> da
+versão estável mais recente lançada, no seguinte formato:</p>
 <pre><code class="language-text">rustc x.y.z (abcabcabc yyyy-mm-dd)
 </code></pre>
-<p>Se você visualizar essas informações, instalou Rust com sucesso! Se você não vir essas informações e estiver no Windows, verifique se Rust está na sua variável de sistema <code>%PATH%</code>. Se tudo estiver correto e Rust ainda não estiver funcionando, há vários lugares onde você pode obter ajuda. O mais fácil é o canal #beginners em <a href="https://discord.gg/rust-lang">the official Rust Discord</a>. Lá, você pode conversar com outros <em>Rustáceos</em> (um apelido bobo que chamamos a nós mesmos) que podem ajudá-lo. Outros ótimos recursos
-incluem o canal no Telegram <a href="https://t.me/rustlangbr">Rust Brasil</a>, além do <a href="https://users.rust-lang.org/">the Users forum</a> e <a href="http://stackoverflow.com/questions/tagged/rust">Stack Overflow</a>.</p>
+<p>Se você visualizar essas informações, instalou o Rust com sucesso! Se elas não
+aparecerem e você estiver no Windows, verifique se o Rust está na variável de
+sistema <code>%PATH%</code>. Se tudo estiver correto e o Rust ainda não estiver
+funcionando, há vários lugares onde você pode obter ajuda. O mais fácil é o
+canal <code>#beginners</code> no <a href="https://discord.gg/rust-lang">Discord oficial do Rust</a>. Lá, você pode
+conversar com outros <em>Rustáceos</em> que podem ajudar. Outros ótimos recursos
+incluem o canal no Telegram <a href="https://t.me/rustlangbr">Rust Brasil</a>, além do <a href="https://users.rust-lang.org/">fórum de
+usuários</a> e do <a href="http://stackoverflow.com/questions/tagged/rust">Stack Overflow</a>.</p>
 <h3 id="documentação-local"><a class="header" href="#documentação-local">Documentação Local</a></h3>
 <p>O instalador também inclui uma cópia da documentação localmente, para que você possa lê-la offline. Execute <code>rustup doc</code> para abrir a documentação local no seu navegador.</p>
 <p>Sempre que um tipo ou função for fornecida pela biblioteca padrão e você não tiver certeza do que esta faz ou como usá-la, use a documentação da interface de programação de aplicativos (API) para descobrir!</p>

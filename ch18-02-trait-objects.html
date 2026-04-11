@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -185,35 +185,35 @@
 <p><a id="using-trait-objects-that-allow-for-values-of-different-types"></a></p>
 <h2 id="usando-objetos-trait-para-abstrair-comportamento-compartilhado"><a class="header" href="#usando-objetos-trait-para-abstrair-comportamento-compartilhado">Usando objetos trait para abstrair comportamento compartilhado</a></h2>
 <p>No Capítulo 8, mencionamos que uma limitação dos vetores é que eles podem
-armazenar elementos de apenas um tipo. Criamos uma solução alternativa na Listagem 8-9 onde
-definimos um enum <code>SpreadsheetCell</code> que tinha variantes para conter números inteiros, flutuantes,
+armazenar elementos de apenas um tipo. Criamos uma solução alternativa na Listagem 8-9, em que
+definimos um enum <code>SpreadsheetCell</code> que tinha variantes para conter números inteiros, de ponto flutuante
 e texto. Isso significava que poderíamos armazenar diferentes tipos de dados em cada célula e
-ainda tem um vetor que representa uma linha de células. Isto é perfeitamente bom
-solução quando nossos itens intercambiáveis são um conjunto fixo de tipos que conhecemos
+ainda ter um vetor representando uma linha de células. Essa é uma solução perfeitamente
+boa quando nossos itens intercambiáveis são um conjunto fixo de tipos que conhecemos
 quando nosso código é compilado.</p>
 <p>No entanto, às vezes queremos que o usuário da nossa biblioteca seja capaz de estender o conjunto de
 tipos que são válidos em uma situação particular. Para mostrar como podemos alcançar
 isso, criaremos um exemplo de ferramenta de interface gráfica do usuário (GUI) que itera
-através de uma lista de itens, chamando um método <code>draw</code> em cada um para atraí-los para o
-tela – uma técnica comum para ferramentas GUI. Criaremos uma biblioteca crate chamada
-<code>gui </code> que contém a estrutura de uma biblioteca GUI. Este crate pode incluir
-alguns tipos para as pessoas usarem, como<code>Button </code> ou<code>TextField </code>. Além disso,
-Os usuários do<code>gui</code>desejarão criar seus próprios tipos que possam ser desenhados: Para
-Por exemplo, um programador pode adicionar um<code>Image</code>e outro pode adicionar um
-<code> SelectBox</code>.</p>
+por uma lista de itens, chamando um método <code>draw</code> em cada um para desenhá-los na
+tela, uma técnica comum em ferramentas GUI. Criaremos um crate de biblioteca chamado
+<code>gui</code>, que contém a estrutura de uma biblioteca GUI. Esse crate pode incluir
+alguns tipos para as pessoas usarem, como <code>Button</code> ou <code>TextField</code>. Além disso,
+usuários de <code>gui</code> desejarão criar seus próprios tipos que possam ser desenhados. Por
+exemplo, um programador pode adicionar um <code>Image</code> e outro pode adicionar um
+<code>SelectBox</code>.</p>
 <p>No momento em que escrevo a biblioteca, não podemos conhecer e definir todos os tipos
 outros programadores podem querer criar. Mas sabemos que <code>gui</code> precisa manter
 rastreia muitos valores de tipos diferentes e precisa chamar um método <code>draw</code>
 em cada um desses valores de tipo diferente. Não é preciso saber exatamente o que
 acontecerá quando chamarmos o método <code> draw</code>, basta que o valor tenha aquele
 método disponível para chamarmos.</p>
-<p>Para fazer isso em uma linguagem com herança, podemos definir uma classe chamada
-<code>Component </code> que possui um método chamado<code>draw </code>. As outras aulas, como
-<code>Button</code>,<code>Image</code>e<code>SelectBox</code>herdariam de<code>Component</code>e, portanto,
-herdar o método<code>draw</code>. Cada um deles poderia substituir o método<code>draw</code>para definir
-seu comportamento personalizado, mas a estrutura poderia tratar todos os tipos como se
-elas eram instâncias<code>Component</code>e chamam<code>draw</code>nelas. Mas porque Rust
-não tem herança, precisamos de outra forma de estruturar a biblioteca<code> gui</code>para
+<p>Para fazer isso em uma linguagem com herança, poderíamos definir uma classe chamada
+<code>Component</code> com um método chamado <code>draw</code>. As outras classes, como
+<code>Button</code>, <code>Image</code> e <code>SelectBox</code>, herdariam de <code>Component</code> e, portanto,
+herdariam o método <code>draw</code>. Cada uma poderia sobrescrever o método <code>draw</code> para definir
+seu comportamento personalizado, mas a estrutura poderia tratar todos esses tipos como se
+fossem instâncias de <code>Component</code> e chamar <code>draw</code> nelas. Mas, como Rust
+não tem herança, precisamos de outra forma de estruturar a biblioteca <code>gui</code> para
 permitir que os usuários criem novos tipos compatíveis com a biblioteca.</p>
 <h3 id="definindo-uma-trait-para-comportamento-comum"><a class="header" href="#definindo-uma-trait-para-comportamento-comum">Definindo uma trait para comportamento comum</a></h3>
 <p>Para implementar o comportamento que queremos que <code>gui</code> tenha, definiremos uma

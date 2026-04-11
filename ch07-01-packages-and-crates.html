@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,20 +181,20 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="pacotes-e-caixas"><a class="header" href="#pacotes-e-caixas">Pacotes e caixas</a></h2>
-<p>As primeiras partes do sistema de módulos que abordaremos são os pacotes e o crates.</p>
+                        <h2 id="pacotes-e-crates"><a class="header" href="#pacotes-e-crates">Pacotes e Crates</a></h2>
+<p>As primeiras partes do sistema de módulos que abordaremos são os pacotes e os crates.</p>
 <p>Uma <em>crate</em> é a menor quantidade de código que o compilador Rust considera em um
 tempo. Mesmo se você executar <code>rustc</code> em vez de <code>cargo</code> e passar um único código-fonte
 arquivo (como fizemos em <a href="ch01-02-hello-world.html#rust-program-basics">“Noções básicas do programa Rust”</a><!-- ignore
---> no Capítulo 1), o compilador considera esse arquivo como um crate. As caixas podem
+--> no Capítulo 1), o compilador considera esse arquivo como um crate. Crates podem
 contêm módulos, e os módulos podem ser definidos em outros arquivos que são obtidos
 compilado com o crate, como veremos nas próximas seções.</p>
 <p>Um crate pode vir em uma de duas formas: um crate binário ou uma biblioteca crate.
-<em>Caixas binárias</em> são programas que você pode compilar em um executável que pode ser executado,
+<em>Crates binários</em> são programas que você pode compilar em um executável que pode ser executado,
 como um programa de linha de comando ou um servidor. Cada um deve ter uma função chamada
 <code>main</code> que define o que acontece quando o executável é executado. Todos os crates que temos
 criados até agora foram binários crates.</p>
-<p><em>Caixas de biblioteca</em> não têm uma função <code>main</code> e não compilam para um
+<p><em>Crates de biblioteca</em> não têm uma função <code>main</code> e não compilam para um
 executável. Em vez disso, eles definem funcionalidades destinadas a serem compartilhadas com
 vários projetos. Por exemplo, o <code>rand</code> crate que usamos no <a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">Capítulo
 2</a><!-- ignore --> fornece funcionalidade que gera números aleatórios.

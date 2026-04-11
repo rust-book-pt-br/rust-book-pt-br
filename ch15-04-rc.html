@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -183,7 +183,7 @@
                     <main>
                         <h2 id="rct-o-ponteiro-inteligente-com-contagem-de-referências"><a class="header" href="#rct-o-ponteiro-inteligente-com-contagem-de-referências"><code>Rc&lt;T&gt;</code>, o Ponteiro Inteligente com Contagem de Referências</a></h2>
 <p>Na maioria dos casos, a posse é clara: você sabe exatamente qual variável tem
-posse de um dado valor. Contudo, há casos onde um único valor pode ter múltiplos
+posse de um dado valor. Contudo, há casos em que um único valor pode ter múltiplos
 possuidores. Por exemplo, em uma estrutura de dados em grafo, múltiplas arestas
 podem apontar para o mesmo vértice, e esse vértice é conceitualmente possuído
 por todas as arestas que apontam para ele. Um vértice não deveria ser liberado a
@@ -253,7 +253,7 @@ lista</span></p>
 </code></pre>
 <p>As variantes <code>Cons</code> têm posse dos dados que elas contêm, então quando criamos a
 lista <code>b</code>, <code>a</code> é movida para dentro de <code>b</code>, e <code>b</code> toma posse de <code>a</code>. Então,
-quando tentamos usar <code>a</code> de novo na criação de <code>c</code>, não somos permitidos porque
+quando tentamos usar <code>a</code> de novo na criação de <code>c</code>, isso não é permitido porque
 <code>a</code> foi movida.</p>
 <p>Poderíamos mudar a definição de <code>Cons</code> para guardar referências, mas aí teríamos
 que especificar parâmetros de tempo de vida (<em>lifetime parameters</em>). Fazendo
@@ -266,8 +266,8 @@ uma referência a ele.</p>
 do <code>Box&lt;T&gt;</code>, como mostra a Listagem 15-18. Cada variante <code>Cons</code> agora vai conter
 um valor e um <code>Rc&lt;T&gt;</code> apontando para uma <code>List</code>. Quando criarmos <code>b</code>, em vez de
 tomar posse de <code>a</code>, iremos clonar o <code>Rc&lt;List&gt;</code> que <code>a</code> está segurando, o que
-aumenta o número de referências de uma para duas e permite com que <code>a</code> e
-<code>b</code>compartilhem posse dos dados naquele <code>Rc&lt;List&gt;</code>. Também vamos clonar <code>a</code>
+aumenta o número de referências de uma para duas e permite que <code>a</code> e
+<code>b</code> compartilhem posse dos dados naquele <code>Rc&lt;List&gt;</code>. Também vamos clonar <code>a</code>
 quando criarmos <code>c</code>, o que aumenta o número de referências de duas para três.
 Cada vez que chamarmos <code>Rc::clone</code>, a contagem de referências ao valor dentro do
 <code>Rc&lt;List&gt;</code> irá aumentar, e ele não será liberado até que haja zero referências a
@@ -308,7 +308,7 @@ ignorar as chamadas a <code>Rc::clone</code>.</p>
 contagem de referências mudando conforme criamos e destruímos referências ao
 <code>Rc&lt;List&gt;</code> em <code>a</code>.</p>
 <p>Na Listagem 15-19, vamos mudar a <code>main</code> para que tenha um escopo interno em
-volta da lista <code>c</code>; assim poderemos ver como a contagem de referências muda
+torno da lista <code>c</code>; assim poderemos ver como a contagem de referências muda
 quando <code>c</code> sai de escopo. Em cada ponto do programa onde a contagem de
 referências muda, iremos imprimir seu valor, que podemos obter chamando a função
 <code>Rc::strong_count</code>. Essa função se chama <code>strong_count</code> (<em>contagem das
@@ -360,7 +360,7 @@ dados entre diversas partes do nosso programa <em>apenas para leitura</em>. Se o
 violar uma das regras de empréstimo discutidas no Capítulo 4: múltiplos
 empréstimos mutáveis do mesmo lugar podem causar corridas de dados (<em>data
 races</em>) e inconsistências. Mas conseguir modificar dados é muito útil! Na
-próxima seção, discutiremos a pattern de mutabilidade interior (<em>interior
+próxima seção, discutiremos o padrão de mutabilidade interior (<em>interior
 mutability</em>) e o tipo <code>RefCell&lt;T&gt;</code> que podemos usar junto com um <code>Rc&lt;T&gt;</code> para
 trabalhar com essa restrição de imutabilidade.</p>
 

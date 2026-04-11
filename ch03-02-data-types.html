@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,21 +182,21 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="tipos-de-dados"><a class="header" href="#tipos-de-dados">Tipos de dados</a></h1>
-<p>Todo valor em Rust é um <em>tipo de dado</em>, que informa ao Rust que tipos de
-dados estão sendo especificados para que saiba como trabalhar com esses dados. Vamos olhar para
-dois subconjuntos de tipos de dados: escalar e composto.</p>
+<p>Todo valor em Rust tem um <em>tipo de dado</em>, que informa ao Rust que tipo de
+dado está sendo usado para que ele saiba como trabalhar com esse dado. Vamos
+olhar para dois subconjuntos de tipos de dados: escalares e compostos.</p>
 <p>Tenha em mente que Rust é uma linguagem de <em>tipagem estática</em>, o que significa
-que deve conhecer os tipos de todas as variáveis em tempo de compilação. O compilador
+que ele deve conhecer os tipos de todas as variáveis em tempo de compilação. O compilador
 geralmente pode inferir que tipo queremos com base no valor e como o usamos. Nos casos
-em que são é possível vários tipos de dados, como quando convertemos uma <code>String</code> em um tipo numérico
-usando <code>parse</code> na seção “Comparando o Adivinha ao Número Secreto” no
+em que vários tipos de dados são possíveis, como quando convertemos uma <code>String</code> em um tipo numérico
+usando <code>parse</code> na seção “Comparando o Palpite ao Número Secreto” no
 Capítulo 2, devemos adicionar uma anotação de tipo, como a seguinte:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let guess: u32 = "42".parse().expect("Não é um número!");
 <span class="boring">}</span></code></pre>
 <p>Se não adicionarmos uma anotação de tipo, Rust irá mostrar o seguinte erro,
-que significa que o compilador precisa de mais informaçoes para saber qual tipo de dados
+que significa que o compilador precisa de mais informações para saber qual tipo de dado
 queremos usar:</p>
 <pre><code class="language-text">error[E0282]: type annotations needed
  --&gt; src/main.rs:2:9
@@ -217,14 +217,14 @@ esses tipos de outras linguagens de programação. Vamos pular para como eles fu
 um tipo inteiro no Capítulo 2, o tipo <code>u32</code>. Esse tipo de
 declaração indica que
 o valor associado deve ser um inteiro sem sinal (tipos inteiros com sinal começam com <code>i</code>, em vez de <code>u</code>) que ocupa 32 bits de espaço. Tabela 3-1 mostra
-os tipos inteiros internos ao Rust. Cada variante está na
-coluna com sinal e sem sinal (por exemplo, <code>i16</code>) pode ser usada para declarar um valor do tipo
+os tipos inteiros internos do Rust. Cada variante nas
+colunas com sinal e sem sinal pode ser usada para declarar um valor do tipo
 inteiro.</p>
 <p><span class="caption">Tabela 3-1: Tipos inteiros no Rust</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Tamanho</th><th>Signed</th><th>Unsigned</th></tr>
+<tr><th>Tamanho</th><th>Com sinal</th><th>Sem sinal</th></tr>
 </thead>
 <tbody>
 <tr><td>8-bit</td><td><code>i8</code></td><td><code>u8</code></td></tr>
@@ -236,24 +236,24 @@ inteiro.</p>
 </table>
 </div>
 <p>Cada variante pode ser com ou sem sinal e ter tamanho explícito.
-<em>Signed</em> e <em>unsigned</em> refere-se à possibilidade do número ser
-negativo ou positivo - em outras palavras, se o número precisa de um sinal
-com ele (signed) ou se sempre for
-positivo pode ser representado sem um sinal (unsigned). É como escrevemos números no papel: Quando
+<em>signed</em> e <em>unsigned</em> referem-se à possibilidade de o número ser
+negativo ou positivo; em outras palavras, se o número precisa vir acompanhado
+de um sinal (<em>signed</em>) ou se, por ser sempre
+positivo, pode ser representado sem sinal (<em>unsigned</em>). É como escrevemos números no papel: quando
 o sinal importa, o número é mostrado com um sinal de mais ou menos; contudo,
 quando é seguro assumir que o número é positivo, é mostrado sem sinal.
 Números com sinais são armazenados usando a representação complemento de dois (se você não tiver
 certeza do que é isso, você pode procurar sobre isso na internet; uma explicação está fora do escopo
 deste livro).</p>
 <p>Cada variante com sinal pode armazenar números de -(2<sup>n - 1</sup>) até 2<sup>n -
-1</sup> - 1 incluso, sendo <em>n</em> o número de bits que varia de acordo com o uso. Então, um
-<code>i8</code> pode armazenar números de -(2<sup>7</sup>) até 2<sup>7</sup> - 1, que é  igual
-a -128 até 127. Variantes sem sinal pode armazenar números de 0 até 2<sup>n</sup> - 1,
-entao um <code>u8</code> pode armazenar números de 0 até 2<sup>8</sup> - 1, que é de 0 até 255.</p>
+1</sup> - 1, inclusive, sendo <em>n</em> o número de bits que a variante usa. Então, um
+<code>i8</code> pode armazenar números de -(2<sup>7</sup>) até 2<sup>7</sup> - 1, isto é,
+de -128 até 127. Variantes sem sinal podem armazenar números de 0 até 2<sup>n</sup> - 1,
+então um <code>u8</code> pode armazenar números de 0 até 2<sup>8</sup> - 1, isto é, de 0 até 255.</p>
 <p>Além disso, os tipos <code>isize</code> e <code>usize</code> dependem do computador em que seu programa
-está rodando: 64 bits se estiver em uma arquitetura de 64-bit e 32 bits
-se sua arquitetura for 32-bit.</p>
-<p>Você pode criar inteiros literais em qualquer uma das formas mostrada na Tabela 3-2. Observe
+está rodando: 64 bits se estiver em uma arquitetura de 64 bits e 32 bits
+se sua arquitetura for de 32 bits.</p>
+<p>Você pode criar inteiros literais em qualquer uma das formas mostradas na Tabela 3-2. Observe
 que todos os literais de números, exceto o byte literal, permitem um sufixo de tipo,
 como por exemplo, <code>57u8</code> e <code>_</code> são separadores visuais, tal como <code>1_000</code>.</p>
 <p><span class="caption">Tabela 3-2: Inteiros Literais no Rust</span></p>
@@ -271,10 +271,10 @@ como por exemplo, <code>57u8</code> e <code>_</code> são separadores visuais, t
 </tbody>
 </table>
 </div>
-<p>Então como você pode saber qual tipo de inteiro usar? Se sentir-se inseguro, as
-escolhas padrões do Rust geralmente são boas, e por padrão os inteiros são do tipo <code>i32</code>: Esse
-tipo geralmente é o mais rápido, até em sistemas de 64-bit. A
-principal situação em que você usuaria <code>isize</code> ou <code>usize</code> é indexar algum tipo de coleção.</p>
+<p>Então, como você pode saber qual tipo de inteiro usar? Se estiver em dúvida, as
+escolhas padrão do Rust geralmente são boas, e por padrão os inteiros são do tipo <code>i32</code>. Esse
+tipo geralmente é o mais rápido, até mesmo em sistemas de 64 bits. A
+principal situação em que você usaria <code>isize</code> ou <code>usize</code> é indexar algum tipo de coleção.</p>
 <h4 id="tipos-de-ponto-flutuante"><a class="header" href="#tipos-de-ponto-flutuante">Tipos de ponto flutuante</a></h4>
 <p>Rust também tem dois tipos primitivos para <em>números de ponto flutuante</em>, que são
 números com casas decimais. Os pontos flutuantes do Rust são
@@ -291,7 +291,7 @@ maior precisão.</p>
 <p>Números em ponto flutuante são representados de acordo com o padrão IEEE-754. O tipo
 <code>f32</code> é de precisão simples e <code>f64</code> tem precisão dupla.</p>
 <h4 id="operações-numéricas"><a class="header" href="#operações-numéricas">Operações numéricas</a></h4>
-<p>Rust suporta operações matemáticas básicas, você pode esperar
+<p>Rust suporta operações matemáticas básicas. Você pode esperar
 todas as seguintes operações para todos os tipos numéricos: adição, subtração, multiplicação, divisão e resto.
 O código a seguir mostra como usar cada declaração <code>let</code>:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
@@ -311,12 +311,12 @@ O código a seguir mostra como usar cada declaração <code>let</code>:</p>
     // resto
     let resto = 43 % 5;
 }</code></pre>
-<p>Cada expressão nessas declarações, usa um operador matemático e computa um único valor,
-que então é atribuído à uma variável.
+<p>Cada expressão nessas declarações usa um operador matemático e computa um único valor,
+que então é atribuído a uma variável.
 Apêndice B contém uma lista de todos os operadores que o Rust suporta.</p>
 <h4 id="o-tipo-booleano"><a class="header" href="#o-tipo-booleano">O tipo booleano</a></h4>
-<p>Como em diversas linguagens de programação, o tipo Booleano em Rust possue dois valores
-possíveis: <code>true</code> e <code>false</code>. O tipo Booleano no Rust é especificado usando <code>bool</code>.
+<p>Como em diversas linguagens de programação, o tipo booleano em Rust possui dois valores
+possíveis: <code>true</code> e <code>false</code>. O tipo booleano no Rust é especificado usando <code>bool</code>.
 Por exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -324,22 +324,22 @@ Por exemplo:</p>
 
     let f: bool = false; // com tipo explícito
 }</code></pre>
-<p>A principal utilização de valores Booleanos é através dos condicionais, como um <code>if</code>.
+<p>A principal utilização de valores booleanos é em condicionais, como um <code>if</code>.
 Veremos como a expressão <code>if</code> funciona em Rust na seção
 “Controle de fluxo”.</p>
 <h4 id="o-tipo-de-caractere"><a class="header" href="#o-tipo-de-caractere">O tipo de caractere</a></h4>
 <p>Até agora trabalhamos apenas com números, mas Rust também suporta letras. O <code>char</code>
-é o tipo mais primitivo da linguaguem e o seguinte código
-mostra uma forma de utilizá-lo. (Observe que o <code>char</code> é
-específicado com aspas simples, é o oposto de strings, que usa aspas duplas.)</p>
+é o tipo mais primitivo da linguagem, e o código a seguir
+mostra uma forma de utilizá-lo. Observe que <code>char</code> é
+especificado com aspas simples, ao contrário de strings, que usam aspas duplas.</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let c = 'z';
     let z = 'ℤ';
     let heart_eyed_cat = '😻';
 }</code></pre>
-<p>O tipo <code>char</code> representa um valor unicode, o que quer dizer que você pode
-armazenar muito mais que apenas ASCII. Letras com acentuação; ideogramas chinês, japonês e
+<p>O tipo <code>char</code> representa um valor Unicode, o que quer dizer que você pode
+armazenar muito mais do que apenas ASCII. Letras com acentuação, ideogramas chinês, japonês e
 coreano; emoji; e caracteres não visíveis são válidos.
 Valores Unicode vão de <code>U+0000</code> até <code>U+D7FF</code> e <code>U+E000</code> até
 <code>U+10FFFF</code> incluso. Contudo, um “caractere” não é realmente um conceito em Unicode,
@@ -347,19 +347,19 @@ então a sua intuição de o que é um “caractere” pode não combinar com o 
 <code>char</code> em Rust. Discutiremos esse tópico em detalhes em “Strings” no Capítulo 8.</p>
 <h3 id="tipos-compostos"><a class="header" href="#tipos-compostos">Tipos compostos</a></h3>
 <p><em>Tipos compostos</em> podem agrupar vários valores em um único tipo. Rust tem dois
-tipos primitivos compostos: tuplas e vetores.</p>
+tipos primitivos compostos: tuplas e arrays.</p>
 <h4 id="o-tipo-tupla-de-valores"><a class="header" href="#o-tipo-tupla-de-valores">O tipo tupla de valores</a></h4>
-<p>Uma tupla é de modo geral uma forma de agrupar um certo número de valores
-com uma variável do tipo composto.</p>
+<p>Uma tupla é, de modo geral, uma forma de agrupar um certo número de valores
+em uma variável de tipo composto.</p>
 <p>Criamos uma tupla escrevendo uma lista de valores separados por vírgula
 dentro de parênteses. Cada posição da tupla tem um tipo e os tipos dos elementos
-da tupla não necessitam serem iguais.
+da tupla não precisam ser iguais.
 Adicionamos anotações de tipo neste exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let tup: (i32, f64, u8) = (500, 6.4, 1);
 }</code></pre>
-<p>A variável <code>tup</code> liga-se a tupla, porque uma tupla é considerada
+<p>A variável <code>tup</code> se liga à tupla, porque uma tupla é considerada
 um único elemento composto. Para pegar os valores da tupla individualmente, podemos usar
 a correspondência de padrões para desestruturar o valor de uma tupla, como este:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
@@ -370,8 +370,8 @@ a correspondência de padrões para desestruturar o valor de uma tupla, como est
 
     println!("O valor do y é: {}", y);
 }</code></pre>
-<p>Esse primeito programa cria uma tupla e vincula ela à variável <code>tup</code>. Em seguida,
-ele usa um padrão com <code>let</code> para tirar <code>tup</code> e tranformá-lo em três variáveis
+<p>Esse primeiro programa cria uma tupla e a vincula à variável <code>tup</code>. Em seguida,
+ele usa um padrão com <code>let</code> para pegar <code>tup</code> e transformá-lo em três variáveis
 separadas, <code>x</code>, <code>y</code> e <code>z</code>. Isso é chamado de <em>desestruturação</em>, porque quebra uma única tupla
 em três partes. Finalmente, o programa exibe o valor de <code>y</code>,
 que é <code>6.4</code>.</p>
@@ -389,38 +389,38 @@ do valor que queremos acessar. Por exemplo:</p>
     let um = x.2;
 }</code></pre>
 <p>Esse programa cria uma tupla, <code>x</code>, e então cria uma variável para cada
-elemento usando seus índices. Como ocorre nas maiorias das linguagens, o primeiro
+elemento usando seus índices. Como ocorre na maioria das linguagens, o primeiro
 índice em uma tupla é o 0.</p>
-<h4 id="o-tipo-matriz"><a class="header" href="#o-tipo-matriz">O tipo matriz</a></h4>
-<p>Uma outra maneira de ter uma coleção de vários valores é uma <em>matriz</em>. Diferentemente
-de uma tupla, todos os elementos de uma matriz devem ser do mesmo tipo.
-Matrizes em Rust são diferentes de matrizes de outras linguagens, porque matrizes em Rust são de
-tamanhos fixos: uma vez declarado, eles não podem aumentar ou diminuir de tamanho.</p>
-<p>Em Rust, os valores que entram numa matriz são escritos em uma lista separados
+<h4 id="o-tipo-array"><a class="header" href="#o-tipo-array">O tipo array</a></h4>
+<p>Outra maneira de ter uma coleção de vários valores é um <em>array</em>. Diferentemente
+de uma tupla, todos os elementos de um array devem ser do mesmo tipo.
+Arrays em Rust são diferentes de arrays em outras linguagens, porque têm
+tamanho fixo: uma vez declarados, não podem aumentar nem diminuir de tamanho.</p>
+<p>Em Rust, os valores que entram em um array são escritos em uma lista separados
 por vírgulas dentro de colchetes:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let a = [1, 2, 3, 4, 5];
 }</code></pre>
-<p>Matrizes são úteis quando você deseja que seus dados sejam alocados em pilha do que
-no heap (discutiremos mais sobre pilha e heap no Capítulo 4), ou quando
-você quer garantir que sempre terá um número fixo de elementos. Uma matriz não
-é tão flexível como um vetor. Um vetor é de tipo semelhante,
-fornecido pela biblioteca padrão que <em>é</em> permitido diminuir ou aumentar o tamanho.
-Se você não tem certeza se deve usar uma matriz ou vetor, você provavlemente usará um
-vetor. O Capítulo 8 discute sobre vetores com mais detalhes.</p>
-<p>Um exemplo de quando você poderia necessitar usar uma matriz no lugar de um vetor é
+<p>Arrays são úteis quando você deseja que seus dados sejam alocados na stack em vez
+de na heap, assunto que discutiremos com mais detalhes no Capítulo 4, ou quando
+você quer garantir que sempre terá um número fixo de elementos. Um array não
+é tão flexível quanto um vetor. Um vetor é um tipo semelhante,
+fornecido pela biblioteca padrão, cujo tamanho <em>pode</em> diminuir ou aumentar.
+Se você não tem certeza se deve usar um array ou um vetor, provavelmente usará um
+vetor. O Capítulo 8 discute vetores com mais detalhes.</p>
+<p>Um exemplo de quando você poderia precisar usar um array no lugar de um vetor é
 um programa em que você precisa saber o nome dos meses do ano. É improvável
-que tal programa deseje adicionar ou remover meses, então você pode usar uma matriz
+que tal programa deseje adicionar ou remover meses, então você pode usar um array
 porque você sabe que sempre conterá 12 itens:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
               "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 <span class="boring">}</span></code></pre>
-<h5 id="acessando-um-elemento-da-matriz"><a class="header" href="#acessando-um-elemento-da-matriz">Acessando um elemento da matriz</a></h5>
-<p>Uma matriz é um pedaço da memória alocada na pilha. Você pode acessar
-os elementos da matriz usando indices, como a seguir:</p>
+<h5 id="acessando-um-elemento-do-array"><a class="header" href="#acessando-um-elemento-do-array">Acessando um elemento do array</a></h5>
+<p>Um array é um bloco de memória alocado na stack. Você pode acessar
+os elementos do array usando índices, como a seguir:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let a = [1, 2, 3, 4, 5];
@@ -428,12 +428,12 @@ os elementos da matriz usando indices, como a seguir:</p>
     let primeiro = a[0];
     let segundo = a[1];
 }</code></pre>
-<p>Neste exemplo, a variável chamada <code>primeiro</code> irá pegar o valor <code>1</code>, porque
-é o valor indexado por <code>[0]</code> na matriz. A variável chamada <code>segundo</code> irá
-pegar o valor <code>2</code>, do indice <code>[1]</code> da matriz.</p>
-<h5 id="acesso-inválido-a-elemento-da-matriz"><a class="header" href="#acesso-inválido-a-elemento-da-matriz">Acesso inválido a elemento da matriz</a></h5>
-<p>O que acontece se você tentar acessar um elemento da matriz que está além do fim
-da matriz? Digamos que você mude o exemplo para o código a seguir, que será compilado,
+<p>Neste exemplo, a variável chamada <code>primeiro</code> receberá o valor <code>1</code>, porque
+esse é o valor no índice <code>[0]</code> do array. A variável chamada <code>segundo</code> receberá
+o valor <code>2</code>, do índice <code>[1]</code> do array.</p>
+<h5 id="acesso-inválido-a-elemento-do-array"><a class="header" href="#acesso-inválido-a-elemento-do-array">Acesso inválido a elemento do array</a></h5>
+<p>O que acontece se você tentar acessar um elemento do array que está além do fim
+do array? Digamos que você mude o exemplo para o código a seguir, que será compilado,
 mas existe um erro quando for executar:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore">fn main() {
@@ -453,14 +453,14 @@ thread '&lt;main&gt;' panicked at 'index out of bounds: the len is 5 but the ind
  10', src/main.rs:6
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 </code></pre>
-<p>A compilação não produz nenhum erro, mas o programa resulta um
+<p>A compilação não produz nenhum erro, mas o programa resulta em um
 erro <em>em tempo de execução</em> e não uma saída com sucesso. Quando você
-tenta acessar um elemento usando indexação, o Rust verifica se o índice especificado é menor que o tamaho
-da matriz. Se o índice é maior que o tamanho, o Rust vai entrar
+tenta acessar um elemento usando indexação, o Rust verifica se o índice especificado é menor que o tamanho
+do array. Se o índice for maior que o tamanho, o Rust vai entrar
 em <em>pânico</em>, que é o termo usado pelo Rust quando um programa resulta em erro.</p>
-<p>Esse é o primeiro exemplo dos pricípios de segurança do Rust em ação. Em várias
-linguagens de baixo nível, esse tipo de verificação não é feita e quando você fornece um
-índice incorreto, memória inválida pode ser acessada. Rust protege você deste tipo
+<p>Esse é o primeiro exemplo dos princípios de segurança do Rust em ação. Em várias
+linguagens de baixo nível, esse tipo de verificação não é feito e, quando você fornece um
+índice incorreto, memória inválida pode ser acessada. Rust protege você desse tipo
 de erro ao sair imediatamente, em vez de permitir o acesso à memória e
 continuando. O Capítulo 9 discute mais sobre o tratamento de erros do Rust.</p>
 

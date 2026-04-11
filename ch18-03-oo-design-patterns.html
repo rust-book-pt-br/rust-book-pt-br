@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,8 +182,8 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="implementando-um-padrão-de-design-orientado-a-objetos"><a class="header" href="#implementando-um-padrão-de-design-orientado-a-objetos">Implementando um padrão de design orientado a objetos</a></h2>
-<p>O <em>state pattern</em> é um padrão de design orientado a objetos. O ponto crucial do
-O padrão é que definimos um conjunto de estados que um valor pode ter internamente. O
+<p>O <em>state pattern</em> é um padrão de design orientado a objetos. O ponto central do
+padrão é que definimos um conjunto de estados que um valor pode ter internamente. Esses
 estados são representados por um conjunto de <em>objetos de estado</em>, e o comportamento do valor
 muda com base em seu estado. Vamos trabalhar com um exemplo de blog
 post struct que possui um campo para armazenar seu estado, que será um objeto de estado
@@ -193,8 +193,8 @@ traits em vez de objetos e herança. Cada objeto de estado é responsável
 por seu próprio comportamento e por governar quando deveria se transformar em outro
 estado. O valor que contém um objeto de estado não sabe nada sobre os diferentes
 comportamento dos estados ou quando fazer a transição entre estados.</p>
-<p>A vantagem de usar o padrão estatal é que, quando o negócio
-requisitos da mudança do programa, não precisaremos alterar o código do
+<p>A vantagem de usar o padrão de estado é que, quando os requisitos de negócio
+do programa mudarem, não precisaremos alterar o código do
 valor que contém o estado ou o código que usa o valor. Só precisaremos
 atualizar o código dentro de um dos objetos de estado para alterar suas regras ou talvez
 adicione mais objetos de estado.</p>
@@ -215,12 +215,12 @@ tentar aprovar um rascunho de postagem do blog antes de solicitarmos uma revisã
 deve permanecer um rascunho não publicado.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="a-traditional-object-oriented-attempt"></a></p>
-<h3 id="attempting-traditional-object-oriented-style"><a class="header" href="#attempting-traditional-object-oriented-style">Attempting Traditional Object-Oriented Style</a></h3>
+<h3 id="tentando-o-estilo-orientado-a-objetos-tradicional"><a class="header" href="#tentando-o-estilo-orientado-a-objetos-tradicional">Tentando o estilo orientado a objetos tradicional</a></h3>
 <p>Existem infinitas maneiras de estruturar código para resolver o mesmo problema, cada uma com
-diferentes compensações. A implementação desta seção é mais tradicional
-estilo orientado a objetos, que é possível escrever em Rust, mas não leva
-vantagem de alguns dos pontos fortes do Rust. Mais tarde, demonstraremos um diferente
-solução que ainda usa o padrão de design orientado a objetos, mas é estruturada
+trade-offs diferentes. A implementação desta seção usa um estilo mais tradicional de
+orientação a objetos, que é possível escrever em Rust, mas não tira
+proveito de alguns dos pontos fortes do Rust. Mais tarde, demonstraremos uma
+solução diferente que ainda usa o padrão de design orientado a objetos, mas é estruturada
 de uma forma que pode parecer menos familiar para programadores com orientação a objetos
 experiência. Compararemos as duas soluções para experimentar as compensações de
 projetar o código Rust de maneira diferente do código em outras linguagens.</p>

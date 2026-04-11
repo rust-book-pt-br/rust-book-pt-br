@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,12 +182,12 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="tratamento-de-erros"><a class="header" href="#tratamento-de-erros">Tratamento de Erros</a></h1>
-<p>O comprometimento de Rust à segurança se extende ao tratamento de erros. Erros
-são um fato da vida em software, portanto Rust possui um número de <em>features</em>
+<p>O compromisso do Rust com a segurança se estende ao tratamento de erros. Erros
+são um fato da vida em software, portanto Rust possui vários <em>recursos</em>
 para lidar com situações em que algo dá errado. Em vários casos, Rust requer que
 você reconheça a possibilidade de um erro acontecer e aja preventivamente antes
 que seu código compile. Esse requisito torna seu programa mais robusto ao assegurar
-que voce irá descobrir erros e lidar com eles apropriadamente antes de mandar seu
+que você irá descobrir erros e lidar com eles apropriadamente antes de mandar seu
 código para produção!</p>
 <p>Rust agrupa erros em duas categorias principais: <em>recuperáveis</em> e <em>irrecuperáveis</em>.
 Erros recuperáveis são situações em que é razoável reportar o problema ao usuário
@@ -199,8 +199,8 @@ com ambos da mesma maneira usando mecanismos como exceções. Rust não tem
 exceções. Em vez disso, ele tem o valor <code>Result&lt;T, E&gt;</code> para erros recuperáveis
 e a macro <code>panic!</code> que para a execução ao encontrar um erro irrecuperável. Esse
 capítulo cobre primeiro como chamar <code>panic!</code> e depois fala sobre retornar valores
-<code>Result&lt;T, E&gt;</code>. Adicionalmente, vamos explorar o que se levar em consideração
-para decidir entre tentar se recuperar de um erro ou parar execução.</p>
+<code>Result&lt;T, E&gt;</code>. Além disso, vamos explorar o que levar em consideração
+ao decidir entre tentar se recuperar de um erro ou parar a execução.</p>
 
                     </main>
 

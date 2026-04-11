@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,9 +181,9 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="boxt-aponta-para-dados-no-heap-e-tem-tamanho-conhecido"><a class="header" href="#boxt-aponta-para-dados-no-heap-e-tem-tamanho-conhecido"><code>Box&lt;T&gt;</code> Aponta para Dados no Heap e Tem Tamanho Conhecido</a></h2>
+                        <h2 id="usando-boxt-para-apontar-para-dados-no-heap"><a class="header" href="#usando-boxt-para-apontar-para-dados-no-heap">Usando <code>Box&lt;T&gt;</code> para Apontar para Dados no Heap</a></h2>
 <p>O ponteiro inteligente mais simples é um <em>box</em> (literalmente, “caixa”), cujo
-tipo é escrito <code>Box&lt;T&gt;</code>. <em>Boxes</em> (plural de <em>box</em>) lhe permitem armazenar dados
+tipo é escrito <code>Box&lt;T&gt;</code>. <em>Boxes</em> (plural de <em>box</em>) permitem armazenar dados
 no heap em vez de na pilha. O que fica na pilha é o ponteiro para o dado no
 heap. Confira o Capítulo 4 para rever a diferença entre pilha e heap.</p>
 <p>Boxes não têm custo adicional de desempenho além de armazenar dados no heap em
@@ -203,7 +203,7 @@ um pouco mais sobre as outras duas situações: no segundo caso, transferir poss
 de uma quantidade grande de dados pode levar muito tempo porque os dados são
 copiados de um lado para o outro na pilha. Para melhorar o desempenho nessa
 situação, podemos armazenar essa quantidade grande de dados no heap em um box.
-Assim, apenas uma quantidade pequena de dados referentes ao ponteiro é copiada
+Assim, apenas uma pequena quantidade de dados referentes ao ponteiro é copiada
 na pilha, e os dados em si ficam em um lugar só no heap. O terceiro caso é
 conhecido como um <em>objeto de trait</em> (<em>trait object</em>), e o Capítulo 17 dedica uma
 seção inteira somente a esse tópico. Então o que você aprender aqui você irá
@@ -219,9 +219,9 @@ como interagir com valores armazenados dentro de um <code>Box&lt;T&gt;</code>.</
 }</code></pre>
 <p><span class="caption">Listagem 15-1: Armazenando um valor <code>i32</code> no heap usando
 um box</span></p>
-<p>Nós definimos a variável <code>b</code> como tendo o valor de um <code>Box</code> que aponta para o
+<p>Definimos a variável <code>b</code> como tendo o valor de um <code>Box</code> que aponta para o
 valor <code>5</code>, que está alocado no heap. Esse programa irá imprimir <code>b = 5</code>; nesse
-caso, podemos acessar o dado no box de um jeito similar ao que usaríamos se esse
+caso, podemos acessar o dado no box de um jeito semelhante ao que usaríamos se esse
 dado estivesse na pilha. Da mesma forma que com qualquer valor possuído, quando
 um box sai de escopo, como o <code>b</code> no fim da <code>main</code>, ele é desalocado. A
 desalocação acontece para o box (armazenado na pilha) e para os dados aos quais
@@ -229,7 +229,7 @@ ele aponta (armazenados no heap).</p>
 <p>Colocar um único valor no heap não é muito útil, então você normalmente não vai
 usar boxes sozinhos desse jeito. Ter valores como um único <code>i32</code> na pilha, onde
 são armazenados por padrão, é mais apropriado para a maioria das situações.
-Vamos dar uma olhada em um caso onde o box nos possibilita definir tipos que não
+Vamos dar uma olhada em um caso em que o box nos permite definir tipos que não
 poderíamos definir sem ele.</p>
 <h3 id="boxes-possibilitam-tipos-recursivos"><a class="header" href="#boxes-possibilitam-tipos-recursivos">Boxes Possibilitam Tipos Recursivos</a></h3>
 <p>Em tempo de compilação, o Rust precisa saber quanto espaço um tipo ocupa. Um
@@ -282,7 +282,7 @@ os propósitos deste exemplo. Poderíamos tê-la implementado usando tipos
 genéricos, conforme discutimos no Capítulo 10, para definir um tipo cons list
 que poderia armazenar valores de qualquer tipo.</p>
 </blockquote>
-<p>A listagem 15-3 mostra como fica o uso do tipo <code>List</code> para armazenar a lista
+<p>A Listagem 15-3 mostra como fica o uso do tipo <code>List</code> para armazenar a lista
 <code>1, 2, 3</code>.</p>
 <p><span class="filename">Arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore">use List::{Cons, Nil};
@@ -314,7 +314,7 @@ definir um enum recursivo</span></p>
 <p>O erro diz que esse tipo “tem tamanho infinito”. A razão é que nós definimos
 <code>List</code> com uma variante que é recursiva: ela contém um outro valor de si mesma
 diretamente. Como resultado, o Rust não consegue determinar quanto espaço ele
-precisa para armazenar um valor <code>List</code>. Vamos analizar por partes por que
+precisa para armazenar um valor <code>List</code>. Vamos analisar por partes por que
 recebemos esse erro: primeiro, vamos ver como o Rust decide quanto espaço
 precisa para armazenar o valor de um tipo <em>não</em> recursivo.</p>
 <h4 id="computando-o-tamanho-de-um-tipo-não-recursivo"><a class="header" href="#computando-o-tamanho-de-um-tipo-não-recursivo">Computando o Tamanho de um Tipo Não Recursivo</a></h4>

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,127 +181,146 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="aceitando-argumentos-em-linha-de-comando"><a class="header" href="#aceitando-argumentos-em-linha-de-comando">Aceitando Argumentos em Linha de Comando</a></h2>
-<p>Vamos criar um novo projeto usando, como sempre, <code>cargo new</code>. Chamaremos o nosso projeto
-<code>minigrep</code> para distingui-lo da ferramenta<code> grep</code> que você já pode ter
-no seu sistema.</p>
-<pre><code class="language-text">$ cargo new --bin minigrep
+                        <h2 id="aceitando-argumentos-de-linha-de-comando"><a class="header" href="#aceitando-argumentos-de-linha-de-comando">Aceitando Argumentos de Linha de Comando</a></h2>
+<p>Vamos criar um novo projeto usando, como sempre, <code>cargo new</code>. Chamaremos nosso
+projeto de <code>minigrep</code> para distingui-lo da ferramenta <code>grep</code> que você talvez já
+tenha no seu sistema:</p>
+<pre><code class="language-console">$ cargo new minigrep
      Created binary (application) `minigrep` project
 $ cd minigrep
 </code></pre>
-<p>A primeira tarefa é fazer que <code>minigrep</code> aceite seus dois argumentos de linha de comando: o
-nome de arquivo e uma string para procurar. Ou seja, queremos ser capazes de administrar o nosso
-programa com <code>cargo run</code>, uma string para procurar e um caminho para um arquivo onde será feira a
-procura, dessa forma:</p>
-<pre><code class="language-text">$ cargo run searchstring example-filename.txt
+<p>A primeira tarefa é fazer com que <code>minigrep</code> aceite dois argumentos de linha
+de comando: o caminho do arquivo e uma string a ser procurada. Ou seja,
+queremos poder executar o nosso programa com <code>cargo run</code>, dois hífens para
+indicar que os argumentos seguintes são para o nosso programa e não para o
+Cargo, uma string para procurar e um caminho para um arquivo onde a busca será
+feita, assim:</p>
+<pre><code class="language-console">$ cargo run -- searchstring example-filename.txt
 </code></pre>
-<p>Neste momento, o programa gerado por <code>cargo new</code> não pode processar os argumentos que nós
-passamos. No entanto, algumas bibliotecas existentes no <a href="https://crates.io/">Crates.io</a>
-que podem  nos ajudar a escrever um programa que aceite argumentos na linha de comando, mas
-como você está aprendendo esses conceitos, vamos implementar essa capacidade
-nós mesmos.</p>
-<h3 id="lendo-os-valores-do-argumento"><a class="header" href="#lendo-os-valores-do-argumento">Lendo os Valores do Argumento</a></h3>
-<p>Para garantir que <code>minigrep</code> seja capaz de ler os valores dos argumentos da linha de comando, nós
-precisamos de uma função fornecida na biblioteca padrão do Rust, que é
-<code>std::env::args</code>. Esta função retorna um <em>iterador</em> da linha de comando
-com os argumentos que foram passados à <code>minigrep</code>. Ainda não discutimos iteradores
-(nós os cobrimos totalmente no Capítulo 13), mas por enquanto você só precisa saber dois
-detalhes sobre iteradores: os iteradores produzem uma série de valores, e podemos chamar
-a função <code>collect</code> em um iterador para transformá-lo em uma coleção, como um
-vetor, contendo todos os elementos que o iterador produz.</p>
-<p>Use o código na Listagem 12-1 para permitir que seu programa <code>minigrep</code> leia qualquer
-argumento da linha de comando passados para ele e depois colete os valores em um vetor:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<p>Neste momento, o programa gerado por <code>cargo new</code> não consegue processar os
+argumentos que passamos. Existem bibliotecas em
+<a href="https://crates.io/">crates.io</a> que ajudam a escrever programas que aceitam
+argumentos de linha de comando, mas, como você está aprendendo esses conceitos,
+vamos implementar essa capacidade por conta própria.</p>
+<h3 id="lendo-os-valores-dos-argumentos"><a class="header" href="#lendo-os-valores-dos-argumentos">Lendo os Valores dos Argumentos</a></h3>
+<p>Para permitir que <code>minigrep</code> leia os valores dos argumentos de linha de comando
+que passamos a ele, precisaremos da função <code>std::env::args</code>, fornecida pela
+biblioteca padrão de Rust. Essa função retorna um <em>iterador</em> com os argumentos
+de linha de comando passados para <code>minigrep</code>. Veremos iteradores por completo
+no <a href="ch13-00-functional-features.html">Capítulo 13</a><!-- ignore -->. Por enquanto, você só precisa saber dois
+detalhes sobre eles: iteradores produzem uma série de valores, e podemos
+chamar o método <code>collect</code> em um iterador para transformá-lo em uma coleção,
+como um vetor, contendo todos os elementos produzidos por ele.</p>
+<p>O código da Listagem 12-1 permite que o programa <code>minigrep</code> leia quaisquer
+argumentos de linha de comando passados para ele e depois colete esses valores
+em um vetor.</p>
+<figure class="listing" id="listing-12-1">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">use std::env;
 
 fn main() {
     let args: Vec&lt;String&gt; = env::args().collect();
-    println!("{:?}", args);
+    dbg!(args);
 }</code></pre>
-<p><span class="caption">Listagem 12-1: Coletando os argumentos da linha de comando
-um vetor e imprimindo-os</span></p>
-<p>Primeiro, trazemos o módulo <code>std::env</code> para o escopo com uma declaração <code>use</code>, então nós
-podemos usar a função <code>args</code>. Observe que a função <code>std::env::args</code> é
-aninhada em dois níveis de módulos. Como discutimos no Capítulo 7, nos casos em que
-a função desejada está aninhada em mais de um módulo, é convenção
-trazer o módulo pai para o escopo em vez da função. Como resultado, nós
-podemos facilmente usar outras funções de <code>std::env</code>. Também é menos ambíguo que
-adicionar <code>use std::env::args</code> e depois chamando a função com apenas <code>args</code>
-porque <code>args</code> pode ser facilmente confundido com uma função definida no
-módulo atual.</p>
+<figcaption><a href="#listing-12-1">Listing 12-1</a>: Coletando os argumentos de linha de comando em um vetor e imprimindo-os</figcaption>
+</figure>
+<p>Primeiro, trazemos o módulo <code>std::env</code> para o escopo com uma instrução <code>use</code>,
+para podermos usar sua função <code>args</code>. Observe que <code>std::env::args</code> está
+aninhada em dois níveis de módulos. Como discutimos no <a href="ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#creating-idiomatic-use-paths">Capítulo
+7</a><!-- ignore -->, quando a função desejada está aninhada em
+mais de um módulo, costumamos trazer o módulo pai para o escopo em vez da
+própria função. Fazendo isso, também podemos usar facilmente outras funções de
+<code>std::env</code>. Além disso, fica menos ambíguo do que adicionar
+<code>use std::env::args</code> e depois chamar a função apenas como <code>args</code>, já que
+<code>args</code> poderia ser facilmente confundido com uma função definida no módulo
+atual.</p>
 <section class="note" aria-role="note">
 <h3 id="a-função-args-e-unicode-inválido"><a class="header" href="#a-função-args-e-unicode-inválido">A Função <code>args</code> e Unicode Inválido</a></h3>
-<p>Note que <code>std::env::args</code> emitirá pânico se algum argumento contiver código
-Unicode inválido. Se o seu programa precisar aceitar argumentos que sejam
-Unicode inválidos , use <code>std::env::args_os</code> em vez disso. Essa função retorna valores <code>OsString</code>
-em vez de valores <code>String</code>. Nós escolhemos usar <code>std::env::args</code> aqui
-por simplicidade, porque os valores de <code>OsString</code> diferem por plataforma e são mais
-complexo para trabalhar do que os valores de <code>String</code>.</p>
+<p>Observe que <code>std::env::args</code> entrará em pânico se algum argumento contiver
+Unicode inválido. Se o seu programa precisar aceitar argumentos contendo
+Unicode inválido, use <code>std::env::args_os</code> em vez disso. Essa função retorna
+um iterador que produz valores <code>OsString</code> em vez de <code>String</code>. Escolhemos usar
+<code>std::env::args</code> aqui por simplicidade, porque valores <code>OsString</code> variam de
+plataforma para plataforma e são mais complexos de manipular do que valores
+<code>String</code>.</p>
 </section>
-<p>Na primeira linha do <code>main</code>, chamamos <code>env::args</code>, e usamos <code>collect</code> imediatamente
-para transformar o iterador em um vetor contendo todos os valores produzidos pelo
-iterador. Podemos usar a função <code>collect</code> para criar muitos tipos de
-coleções, então nós explicitamente anotamos o tipo de <code>args</code> para especificar que nós
-queremos um vetor de strings. Embora raramente precisemos anotar tipos em
-Rust, <code>collect</code> é uma função que muitas vezes você precisa anotar, porque Rust
-não é capaz de inferir o tipo de coleção que deseja.</p>
-<p>Finalmente, imprimimos o vetor usando o formatador de debug, <code>:?</code>. Vamos tentar executar
-o código sem argumentos e depois com dois argumentos:</p>
-<pre><code class="language-text">$ cargo run
---snip--
-["target/debug/minigrep"]
-
-$ cargo run needle haystack
---snip--
-["target/debug/minigrep", "needle", "haystack"]
+<p>Na primeira linha de <code>main</code>, chamamos <code>env::args</code> e usamos imediatamente
+<code>collect</code> para transformar o iterador em um vetor contendo todos os valores
+produzidos por ele. Podemos usar <code>collect</code> para criar muitos tipos de coleção,
+então explicitamos o tipo de <code>args</code> para especificar que queremos um vetor de
+strings. Embora raramente seja preciso anotar tipos em Rust, <code>collect</code> é uma
+das funções para as quais isso costuma ser necessário, porque Rust não consegue
+inferir qual tipo de coleção você deseja.</p>
+<p>Por fim, imprimimos o vetor usando o formatador de debug. Vamos tentar executar
+o código primeiro sem argumentos e depois com dois argumentos:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
+     Running `target/debug/minigrep`
+[src/main.rs:5:5] args = [
+    "target/debug/minigrep",
+]
 </code></pre>
-<p>Observe que o primeiro valor no vetor é <code>"target/debug/minigrep"</code>, que
-é o nome do nosso binário. Isso corresponde ao comportamento da lista de argumentos em
-C, permitindo que os programas usem o nome pelo qual eles foram invocados em sua execução.
-Geralmente, é conveniente ter acesso ao nome do programa, caso desejemos imprimi-lo em mensagens ou
-alterar o comportamento do programa com base no alias da linha de comando que foi usado
-para chamar o programa. Mas, para os fins deste capítulo, vamos ignorá-lo e salvar apenas
-os dois argumentos que precisamos.</p>
-<h3 id="salvando-os-valores-do-argumento-em-variáveis"><a class="header" href="#salvando-os-valores-do-argumento-em-variáveis">Salvando os Valores do Argumento em Variáveis</a></h3>
-<p>Imprimir o valor do vetor de argumentos ilustra que o programa é
-capaz de acessar os valores especificados como argumentos da linha de comando. Agora precisamos
-salvar os valores dos dois argumentos nas variáveis para que possamos usar esses valores
-durante o resto do programa. Fazemos isso na Listagem 12-2:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust should_panic edition2024">use std::env;
+<pre><code class="language-console">$ cargo run -- needle haystack
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.57s
+     Running `target/debug/minigrep needle haystack`
+[src/main.rs:5:5] args = [
+    "target/debug/minigrep",
+    "needle",
+    "haystack",
+]
+</code></pre>
+<p>Observe que o primeiro valor do vetor é <code>"target/debug/minigrep"</code>, que é o
+nome do nosso binário. Isso corresponde ao comportamento da lista de argumentos
+em C, permitindo que programas usem o nome com o qual foram invocados durante
+a execução. Muitas vezes é conveniente ter acesso ao nome do programa, caso
+queiramos imprimi-lo em mensagens ou alterar seu comportamento com base no
+alias de linha de comando usado para invocá-lo. Mas, para os fins deste
+capítulo, vamos ignorá-lo e salvar apenas os dois argumentos de que
+precisamos.</p>
+<h3 id="salvando-os-valores-dos-argumentos-em-variáveis"><a class="header" href="#salvando-os-valores-dos-argumentos-em-variáveis">Salvando os Valores dos Argumentos em Variáveis</a></h3>
+<p>O programa agora consegue acessar os valores especificados como argumentos de
+linha de comando. Em seguida, precisamos salvar os valores dos dois argumentos
+em variáveis para podermos usá-los ao longo do restante do programa. Fazemos
+isso na Listagem 12-2.</p>
+<figure class="listing" id="listing-12-2">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust should_panic noplayground">use std::env;
 
 fn main() {
     let args: Vec&lt;String&gt; = env::args().collect();
 
     let query = &amp;args[1];
-    let filename = &amp;args[2];
+    let file_path = &amp;args[2];
 
-    println!("Searching for {}", query);
-    println!("In file {}", filename);
+    println!("Searching for {query}");
+    println!("In file {file_path}");
 }</code></pre>
-<p><span class="caption">Listagem 12-2: Criando variáveis para guardar o argumento de consulta
-e argumento do nome do arquivo</span></p>
-<p>Como vimos quando imprimimos o vetor, o nome do programa ocupa o primeiro
-valor no vetor em <code>args[0]</code>, então estamos começando no índice <code>1</code>. O primeiro
-argumento <code>minigrep</code> é a string que estamos procurando, então colocamos uma
-referência ao primeiro argumento na variável <code>query</code>. O segundo argumento
-será o nome do arquivo, então colocamos uma referência ao segundo argumento no
-variável <code>filename</code>.</p>
-<p>Imprimimos temporariamente os valores dessas variáveis para provar que o código funciona
-como pretendemos. Vamos executar este programa novamente com os argumentos <code>test</code>
-e <code>sample.txt</code>:</p>
-<pre><code class="language-text">$ cargo run test sample.txt
+<figcaption><a href="#listing-12-2">Listing 12-2</a>: Criando variáveis para armazenar o argumento de consulta e o argumento do caminho do arquivo</figcaption>
+</figure>
+<p>Como vimos quando imprimimos o vetor, o nome do programa ocupa o primeiro valor
+em <code>args[0]</code>, então começamos pelo índice <code>1</code>. O primeiro argumento que
+<code>minigrep</code> recebe é a string que estamos procurando, então colocamos uma
+referência a esse argumento na variável <code>query</code>. O segundo argumento será o
+caminho do arquivo, então colocamos uma referência a ele na variável
+<code>file_path</code>.</p>
+<p>Imprimimos temporariamente os valores dessas variáveis para provar que o código
+está funcionando como esperamos. Vamos executar esse programa novamente com os
+argumentos <code>test</code> e <code>sample.txt</code>:</p>
+<pre><code class="language-console">$ cargo run -- test sample.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep test sample.txt`
 Searching for test
 In file sample.txt
 </code></pre>
-<p>Ótimo, o programa está funcionando! Os valores dos argumentos que precisamos estão sendo
-salvos nas variáveis certas. Mais tarde, adicionaremos algum tratamento de erro para lidar
-com certas situações errôneas potenciais, como quando o usuário não fornece
-argumentos; por enquanto, ignoraremos essa situação, e trabalharemos na adição das
-funcinalidades de leitura dos arquivos.</p>
+<p>Ótimo, o programa está funcionando! Os valores dos argumentos de que
+precisamos estão sendo salvos nas variáveis corretas. Mais adiante,
+adicionaremos tratamento de erros para lidar com situações potencialmente
+problemáticas, como quando a pessoa usuária não fornece argumentos; por
+enquanto, vamos ignorar essa situação e trabalhar na adição da funcionalidade
+de leitura de arquivos.</p>
 
                     </main>
 

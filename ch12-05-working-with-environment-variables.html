@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,24 +182,39 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="trabalhando-com-variáveis-de-ambiente"><a class="header" href="#trabalhando-com-variáveis-de-ambiente">Trabalhando com Variáveis de Ambiente</a></h2>
-<p>Melhoraremos <code>minigrep</code> adicionando um recurso extra: uma opção para
-pesquisa insensível às letras maiúsculas ou minúsculas, que o usuário poderá ativar através de
-variável de ambiente. Poderíamos fazer deste recurso uma opção de linha de comando e exigir que
-os usuários entram cada vez que eles querem que ele se aplique, mas, em vez disso, usaremos um
-variável de ambiente. Isso permite que nossos usuários estabeleçam a variável de ambiente
-uma vez e todas as suas buscas são insensíveis às maiúsculas e minúsculas naquela sessão do terminal.</p>
-<h3 id="escrevendo-um-teste-de-falha-para-a-função-search-insensível-a-maiúsculas-e-minúsculas"><a class="header" href="#escrevendo-um-teste-de-falha-para-a-função-search-insensível-a-maiúsculas-e-minúsculas">Escrevendo um Teste de Falha para a Função <code>search</code> insensível a Maiúsculas e Minúsculas</a></h3>
-<p>Queremos adicionar uma nova função <code>search_case_insensitive</code> que chamaremos quando
-a variável de ambiente estiver ativada. Seguiremos com o processo TDD, então
-o primeiro passo é novamente escrever um teste de falha. Vamos adicionar um novo teste para a
-nova função <code>search_case_insensitive</code> e renomear nosso antigo teste de
-<code>one_result</code> para <code>case_sensitive</code> de forma a esclarecer as diferenças entre os dois
-testes, conforme mostrado na Listagem 12-20:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<p>Vamos melhorar o binário <code>minigrep</code> adicionando um recurso extra: uma opção
+para busca sem diferenciação entre maiúsculas e minúsculas que a pessoa usuária
+pode ativar por meio de uma variável de ambiente. Poderíamos transformar esse
+recurso em uma opção de linha de comando e exigir que a pessoa o informe toda
+vez que quisesse usá-lo, mas, ao torná-lo uma variável de ambiente, permitimos
+que ela a configure uma única vez e tenha todas as buscas daquela sessão de
+terminal feitas sem distinção entre maiúsculas e minúsculas.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="writing-a-failing-test-for-the-case-insensitive-search-function"></a></p>
+<h3 id="escrevendo-um-teste-que-falha-para-a-função-de-busca-sem-diferenciar-maiúsculas"><a class="header" href="#escrevendo-um-teste-que-falha-para-a-função-de-busca-sem-diferenciar-maiúsculas">Escrevendo um Teste que Falha para a Função de Busca sem Diferenciar Maiúsculas</a></h3>
+<p>Primeiro, vamos adicionar uma nova função <code>search_case_insensitive</code> à
+biblioteca <code>minigrep</code>, que será chamada quando a variável de ambiente estiver
+definida. Continuaremos seguindo o processo de TDD, então o primeiro passo é,
+novamente, escrever um teste que falha. Vamos adicionar um novo teste para a
+nova função <code>search_case_insensitive</code> e renomear o teste antigo de
+<code>one_result</code> para <code>case_sensitive</code> para deixar clara a diferença entre os dois,
+como mostrado na Listagem 12-20.</p>
+<figure class="listing" id="listing-12-20">
+<span class="file-name">Filename: src/lib.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+</span><span class="boring">    let mut results = Vec::new();
+</span><span class="boring">
+</span><span class="boring">    for line in contents.lines() {
+</span><span class="boring">        if line.contains(query) {
+</span><span class="boring">            results.push(line);
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    results
+</span><span class="boring">}
+</span><span class="boring">
 </span>#[cfg(test)]
-mod test {
+mod tests {
     use super::*;
 
     #[test]
@@ -211,10 +226,7 @@ safe, fast, productive.
 Pick three.
 Duct tape.";
 
-        assert_eq!(
-            vec!["safe, fast, productive."],
-            search(query, contents)
-        );
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
     }
 
     #[test]
@@ -231,33 +243,48 @@ Trust me.";
             search_case_insensitive(query, contents)
         );
     }
-}
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 12-20: Adicionando um novo teste de falha para a
-função insensível à maiúsculas e minúsculas que estamos prestes a adicionar</span></p>
-<p>Note que também editamos o <code>contents</code> do antigo teste. Adicionamos uma nova linha
-com o texto <code>“Duct tape”</code> usando um D maiúsculo que não deve corresponder à consulta
-“duct” quando procuramos de forma sensível à maiúsculas e minúsculas. Alterando o teste antigo
-desta forma, ajuda a garantir que não quebramos acidentalmente a diferenciação de maiúsculas e minúsculas
-na funcionalidade de pesquisa que já implementamos. Este teste deve passar agora
-e deve continuar a passar enquanto trabalhamos na pesquisa insensível à maiúsculas e minúsculas.</p>
-<p>O novo teste para a pesquisa insensível usa “rUsT” para sua consulta. Na função
-<code>search_case_insensitive</code> que estamos prestes a adicionar, a consulta “rUsT” deve
-combinar a linha que contém “Rust:” com um R maiúsculo e também a linha “Trust
-me.”, embora ambos tenham uma caixa (maiúsculas e minúsculas) diferente da consulta. Este é o nosso teste de
-falha, e ele não compilará porque ainda não definimos a
-função <code>search_case_insensitive</code>. Sinta-se livre para adicionar uma implementação
-que sempre retorna um vetor vazio, semelhante à forma como fizemos para a função <code>search</code>
-na Listagem 12-16 para ver a compilação e o teste falhar.</p>
+}</code></pre>
+<figcaption><a href="#listing-12-20">Listing 12-20</a>: Adicionando um novo teste que falha para a função sem diferenciação entre maiúsculas e minúsculas que estamos prestes a adicionar</figcaption>
+</figure>
+<p>Observe que também editamos o <code>contents</code> do teste antigo. Adicionamos uma nova
+linha com o texto <code>"Duct tape."</code>, com <code>D</code> maiúsculo, que não deve corresponder
+à consulta <code>"duct"</code> quando a busca for sensível a maiúsculas e minúsculas.
+Alterar o teste antigo dessa maneira ajuda a garantir que não quebraremos
+acidentalmente a funcionalidade de busca sensível a maiúsculas e minúsculas que
+já implementamos. Esse teste deve passar agora e deve continuar passando
+enquanto trabalhamos na busca sem diferenciação entre maiúsculas e minúsculas.</p>
+<p>O novo teste para a busca <em>insensitive</em> usa <code>"rUsT"</code> como consulta. Na função
+<code>search_case_insensitive</code> que estamos prestes a adicionar, a consulta <code>"rUsT"</code>
+deve corresponder à linha contendo <code>"Rust:"</code>, com <code>R</code> maiúsculo, e também à
+linha <code>"Trust me."</code>, embora ambas tenham capitalização diferente da consulta.
+Esse é o nosso teste que falha, e ele não compilará porque ainda não definimos
+<code>search_case_insensitive</code>. Se quiser, você pode adicionar uma implementação
+esqueleto que sempre retorne um vetor vazio, de modo semelhante ao que fizemos
+com <code>search</code> na Listagem 12-16, para ver o teste compilar e falhar.</p>
 <h3 id="implementando-a-função-search_case_insensitive"><a class="header" href="#implementando-a-função-search_case_insensitive">Implementando a Função <code>search_case_insensitive</code></a></h3>
 <p>A função <code>search_case_insensitive</code>, mostrada na Listagem 12-21, será quase
-o mesmo que a função <code>search</code>. A única diferença é que vamos forçar minúsculas
-para <code>query</code> e para cada <code>line</code>, qualquer que seja o caso dos argumentos de entrada,
-eles serão sempre minúsculos quando verificamos se a linha contém a consulta:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn search_case_insensitive&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+igual à função <code>search</code>. A única diferença é que vamos converter para minúsculas
+<code>query</code> e cada <code>line</code>, para que, independentemente da capitalização dos
+argumentos de entrada, ambos fiquem no mesmo formato quando verificarmos se a
+linha contém a consulta.</p>
+<figure class="listing" id="listing-12-21">
+<span class="file-name">Filename: src/lib.rs</span>
+<pre><code class="language-rust noplayground"><span class="boring">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
+</span><span class="boring">    let mut results = Vec::new();
+</span><span class="boring">
+</span><span class="boring">    for line in contents.lines() {
+</span><span class="boring">        if line.contains(query) {
+</span><span class="boring">            results.push(line);
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    results
+</span><span class="boring">}
+</span><span class="boring">
+</span>pub fn search_case_insensitive&lt;'a&gt;(
+    query: &amp;str,
+    contents: &amp;'a str,
+) -&gt; Vec&lt;&amp;'a str&gt; {
     let query = query.to_lowercase();
     let mut results = Vec::new();
 
@@ -269,181 +296,350 @@ eles serão sempre minúsculos quando verificamos se a linha contém a consulta:
 
     results
 }
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 12-21: Definindo a função <code>search_case_insensitive</code>
-para forçar caixa baixa na consulta antes de compará-las</span></p>
-<p>Primeiro, caixa baixa na string <code>query</code> e a armazenamos em uma variável sombreada com
-o mesmo nome. Chamar <code>to_lowercase</code> na consulta é necessário, portanto, não importa
-se a consulta do usuário é “rust”, “RUST”, “Rust”, ou “rUsT”, trataremos a
-consulta como se fosse “rust” sendo insensível ao caso.</p>
-<p>Note que <code>query</code> é agora uma <code>String</code> ao invés de um fatia de string, porque chamar
-<code>to_lowercase</code> cria novos dados em vez de referenciar dados existentes. Suponha que
-a consulta é “rUsT”, por exemplo: essa fatia de string não contém minúsculas
-“u” ou “t” para nós usarmos, então temos que alocar uma nova <code>String</code> contendo
-“rust”. Quando passamos <code>query</code> como um argumento para o método <code>contains</code> agora, nós
-precisamos adicionar um ampersand (&amp;) porque a assinatura de <code>contains</code> é definida para
-uma fatia de string.</p>
-<p>Em seguida, adicionamos uma chamada a <code>to_lowercase</code> em cada <code>line</code> antes de verificarmos se
-contém <code>query</code> para passar para caixa baixa em todos os caracteres. Agora que convertemos <code>line</code>
-e <code>query</code> para letras minúsculas, encontraremos correspondências, não importa qual seja o caso da
-consulta.</p>
-<p>Vamos ver se esta implementação passa nos testes:</p>
-<pre><code class="language-text">running 2 tests
-test test::case_insensitive ... ok
-test test::case_sensitive ... ok
+<span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn case_sensitive() {
+</span><span class="boring">        let query = "duct";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.
+</span><span class="boring">Duct tape.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn case_insensitive() {
+</span><span class="boring">        let query = "rUsT";
+</span><span class="boring">        let contents = "\
+</span><span class="boring">Rust:
+</span><span class="boring">safe, fast, productive.
+</span><span class="boring">Pick three.
+</span><span class="boring">Trust me.";
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(
+</span><span class="boring">            vec!["Rust:", "Trust me."],
+</span><span class="boring">            search_case_insensitive(query, contents)
+</span><span class="boring">        );
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-12-21">Listing 12-21</a>: Definindo a função <code>search_case_insensitive</code> para converter consulta e linha em minúsculas antes de compará-las</figcaption>
+</figure>
+<p>Primeiro, convertemos a string <code>query</code> para minúsculas e a armazenamos em uma
+nova variável com o mesmo nome, sombreando a original. Chamar <code>to_lowercase</code>
+na consulta é necessário para que, independentemente de a pessoa ter digitado
+<code>"rust"</code>, <code>"RUST"</code>, <code>"Rust"</code> ou <code>"rUsT"</code>, tratemos a consulta como se fosse
+<code>"rust"</code> e não nos importemos com a capitalização. Embora <code>to_lowercase</code>
+trate o básico de Unicode, ele não é cem por cento preciso. Se estivéssemos
+escrevendo uma aplicação real, faríamos um pouco mais de trabalho aqui, mas
+esta seção trata de variáveis de ambiente, não de Unicode, então vamos parar
+por aqui.</p>
+<p>Observe que <code>query</code> agora é uma <code>String</code>, e não mais uma fatia de string,
+porque chamar <code>to_lowercase</code> cria novos dados em vez de referenciar dados
+existentes. Suponha, por exemplo, que a consulta seja <code>"rUsT"</code>: essa fatia de
+string não contém um <code>u</code> ou <code>t</code> minúsculos prontos para usarmos, então temos de
+alocar uma nova <code>String</code> contendo <code>"rust"</code>. Quando agora passamos <code>query</code> como
+argumento para <code>contains</code>, precisamos adicionar um e comercial porque a
+assinatura de <code>contains</code> foi definida para receber uma fatia de string.</p>
+<p>Em seguida, adicionamos uma chamada a <code>to_lowercase</code> em cada <code>line</code> para
+converter todos os caracteres para minúsculas. Agora que convertemos <code>line</code> e
+<code>query</code> para minúsculas, encontraremos correspondências independentemente da
+capitalização da consulta.</p>
+<p>Vamos ver se essa implementação passa nos testes:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling minigrep v0.1.0 (file:///projects/minigrep)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.33s
+     Running unittests src/lib.rs (target/debug/deps/minigrep-9cd200e5fac0fc94)
 
-test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+running 2 tests
+test tests::case_insensitive ... ok
+test tests::case_sensitive ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/minigrep-9cd200e5fac0fc94)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests minigrep
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
 </code></pre>
-<p>Ótimo! Eles passaram. Agora, vamos chamar a nova função <code>search_case_insensitive</code>
-da função <code>run</code>. Primeiro, adicionaremos uma opção de configuração ao
-<code>Config</code> struct para alternar entre pesquisa sensível a maiúsculas e minúsculas.
-Adicionar esse campo causará erros no compilador, já que não estamos inicializando
-o campo em nenhum lugar:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<p>Ótimo! Eles passaram. Agora vamos chamar a nova função
+<code>search_case_insensitive</code> a partir da função <code>run</code>. Primeiro, adicionaremos
+uma opção de configuração à struct <code>Config</code> para alternar entre busca sensível
+e não sensível a maiúsculas e minúsculas. Adicionar esse campo causará erros de
+compilação, porque ainda não o inicializamos em lugar nenhum:</p>
+<p><span class="filename">Arquivo: src/main.rs</span></p>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span><span class="boring">// --snip--
+</span><span class="boring">
+</span><span class="boring">
 </span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
 </span>pub struct Config {
     pub query: String,
-    pub filename: String,
-    pub case_sensitive: bool,
+    pub file_path: String,
+    pub ignore_case: bool,
 }
-<span class="boring">}</span></code></pre>
-<p>Note que nós adicionamos o campo <code>case_sensitive</code> que contém um Booleano. Em seguida nós
-precisamos da função <code>run</code> para verificar o valor do campo <code>case_sensitive</code> e usá-la
-para decidir se devemos chamar a função <code>search</code> ou a
-função <code>search_case_insensitive</code>, conforme mostrado na Listagem 12-22. Note que isso ainda
-não irá compilar ainda:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<p>Adicionamos o campo <code>ignore_case</code>, que armazena um Booleano. Em seguida,
+precisamos que a função <code>run</code> verifique o valor de <code>ignore_case</code> e use isso
+para decidir se deve chamar <code>search</code> ou <code>search_case_insensitive</code>, como mostra
+a Listagem 12-22. Isso ainda não compilará.</p>
+<figure class="listing" id="listing-12-22">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">use std::env;
 </span><span class="boring">use std::error::Error;
-</span><span class="boring">use std::fs::File;
-</span><span class="boring">use std::io::prelude::*;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
 </span><span class="boring">
-</span><span class="boring">fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
-</span><span class="boring">     vec![]
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">fn search_case_insensitive&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
-</span><span class="boring">     vec![]
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">struct Config {
-</span><span class="boring">    query: String,
-</span><span class="boring">    filename: String,
-</span><span class="boring">    case_sensitive: bool,
-</span><span class="boring">}
-</span><span class="boring">
-</span>pub fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
-    let mut f = File::open(config.filename)?;
+</span>use minigrep::{search, search_case_insensitive};
 
-    let mut contents = String::new();
-    f.read_to_string(&amp;mut contents)?;
+// --snip--
 
-    let results = if config.case_sensitive {
-        search(&amp;config.query, &amp;contents)
-    } else {
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config { query, file_path })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let contents = fs::read_to_string(config.file_path)?;
+
+    let results = if config.ignore_case {
         search_case_insensitive(&amp;config.query, &amp;contents)
+    } else {
+        search(&amp;config.query, &amp;contents)
     };
 
     for line in results {
-        println!("{}", line);
+        println!("{line}");
     }
 
     Ok(())
-}
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 12-22: Chamando  <code>search</code> ou
-<code>search_case_insensitive</code> baseado no valor em <code>config.case_sensitive</code></span></p>
-<p>Finalmente, precisamos verificar a variável de ambiente. As funções para
-trabalhar com variáveis de ambiente estão no módulo <code>env</code> na biblioteca padrão
-, por isso queremos trazer esse módulo para o escopo com uma linha <code>use std::env;</code>
-no topo de <em>src/lib.rs</em>. Então vamos usar o método <code>var</code> do módulo <code>env</code>
-para verificar uma variável de ambiente chamada <code>CASE_INSENSITIVE</code>, conforme
-na Listagem 12-23:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+}</code></pre>
+<figcaption><a href="#listing-12-22">Listing 12-22</a>: Chamando <code>search</code> ou <code>search_case_insensitive</code> com base no valor de <code>config.ignore_case</code></figcaption>
+</figure>
+<p>Por fim, precisamos verificar a variável de ambiente. As funções para
+trabalhar com variáveis de ambiente estão no módulo <code>env</code> da biblioteca
+padrão, que já está no escopo no topo de <em>src/main.rs</em>. Usaremos a função
+<code>var</code> do módulo <code>env</code> para verificar se algum valor foi definido para uma
+variável de ambiente chamada <code>IGNORE_CASE</code>, como na Listagem 12-23.</p>
+<figure class="listing" id="listing-12-23">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore noplayground"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
 </span><span class="boring">fn main() {
-</span>use std::env;
-<span class="boring">struct Config {
-</span><span class="boring">    query: String,
-</span><span class="boring">    filename: String,
-</span><span class="boring">    case_sensitive: bool,
+</span><span class="boring">    let args: Vec&lt;String&gt; = env::args().collect();
+</span><span class="boring">
+</span><span class="boring">    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+</span><span class="boring">        println!("Problem parsing arguments: {err}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    });
+</span><span class="boring">
+</span><span class="boring">    if let Err(e) = run(config) {
+</span><span class="boring">        println!("Application error: {e}");
+</span><span class="boring">        process::exit(1);
+</span><span class="boring">    }
 </span><span class="boring">}
-</span>
-// --snip--
-
-impl Config {
-    pub fn new(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span>impl Config {
+    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
         if args.len() &lt; 3 {
             return Err("not enough arguments");
         }
 
         let query = args[1].clone();
-        let filename = args[2].clone();
+        let file_path = args[2].clone();
 
-        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
 
-        Ok(Config { query, filename, case_sensitive })
+        Ok(Config {
+            query,
+            file_path,
+            ignore_case,
+        })
     }
 }
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 12-23: Checando por uma variável de ambiente chamada
-<code>CASE_INSENSITIVE</code></span></p>
-<p>Aqui, criamos uma nova variável <code>case_sensitive</code>. Para definir seu valor, chamamos a
-função <code>env::var</code> e passamos o nome da variável de ambiente <code>CASE_INSENSITIVE</code>
-. O método <code>env::var</code> retorna um <code>Result</code> que será o sucesso
-variante <code>Ok</code> que contém o valor da variável de ambiente se a
-variável de ambiente está definida. Ele retornará a variante <code>Err</code> se a
-variável de ambiente não está definida.</p>
-<p>Estamos usando o método <code>is_err</code> no <code>Result</code> para verificar se é um erro
-e, portanto, não definido, o que significa que <em>deveria</em> fazer uma pesquisa sensível a maiúsculas e minúsculas. Se
-a variável de ambiente <code>CASE_INSENSITIVE</code> está configurada para qualquer coisa,<code>is_err</code> irá
-retornar false e realizará uma pesquisa sem distinção entre maiúsculas e minúsculas. Nós não nos importamos com
-o <em>valor</em> da variável de ambiente, apenas se está definido ou não,
-estamos verificando <code>is_err</code> em vez de <code>unwrap</code>, <code>expect</code> ou qualquer um dos outros
-métodos que vimos em <code>Result</code>.</p>
-<p>Nós passamos o valor na variável <code>case_sensitive</code> para a instância <code>Config</code>
-na função <code>run</code> pode ler esse valor e decidir se deve chamar <code>search</code> ou
-<code>search_case_insensitive</code> conforme implementamos na Listagem 12-22.</p>
-<p>Vamos tentar! Primeiro, executaremos nosso programa sem o conjunto de variáveis
-de ambiente e com a consulta “to”, que deve corresponder a qualquer linha que contenha
-a palavra “to” em todas as letras minúsculas:</p>
-<pre><code class="language-text">$ cargo run to poem.txt
+<span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-12-23">Listing 12-23</a>: Verificando se existe qualquer valor definido em uma variável de ambiente chamada <code>IGNORE_CASE</code></figcaption>
+</figure>
+<p>Aqui, criamos uma nova variável, <code>ignore_case</code>. Para definir seu valor,
+chamamos <code>env::var</code> e passamos o nome da variável de ambiente <code>IGNORE_CASE</code>. A
+função <code>env::var</code> retorna um <code>Result</code>: ela será um <code>Ok</code> contendo o valor da
+variável de ambiente se ela estiver definida com qualquer valor, e retornará
+<code>Err</code> se a variável não estiver definida.</p>
+<p>Estamos usando o método <code>is_ok</code> em <code>Result</code> para verificar se a variável de
+ambiente está definida, o que significa que o programa deve fazer uma busca sem
+diferenciação entre maiúsculas e minúsculas. Se <code>IGNORE_CASE</code> não estiver
+definida, <code>is_ok</code> retornará <code>false</code>, e o programa fará uma busca sensível a
+maiúsculas e minúsculas. Não nos importamos com o <em>valor</em> da variável de
+ambiente, apenas com o fato de ela estar definida ou não, por isso usamos
+<code>is_ok</code>, em vez de <code>unwrap</code>, <code>expect</code> ou qualquer outro método de <code>Result</code> que
+já vimos.</p>
+<p>Passamos o valor da variável <code>ignore_case</code> para a instância de <code>Config</code>, para
+que a função <code>run</code> possa lê-lo e decidir se chama <code>search_case_insensitive</code> ou
+<code>search</code>, como implementamos na Listagem 12-22.</p>
+<p>Vamos experimentar! Primeiro, executaremos o programa sem definir a variável de
+ambiente e com a consulta <code>to</code>, que deve corresponder a qualquer linha que
+contenha a palavra <em>to</em> inteiramente em minúsculas:</p>
+<pre><code class="language-console">$ cargo run -- to poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
      Running `target/debug/minigrep to poem.txt`
 Are you nobody, too?
 How dreary to be somebody!
 </code></pre>
-<p>Parece que isso ainda funciona! Agora, vamos executar o programa com <code>CASE_INSENSITIVE</code>
-definido como <code>1</code> mas com a mesma consulta “to”; devemos pegar linhas que contenham “to”
-que possam ter letras maiúsculas:</p>
-<pre><code class="language-text">$ CASE_INSENSITIVE=1 cargo run to poem.txt
-    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
-     Running `target/debug/minigrep to poem.txt`
-Are you nobody, too?
+<p>Parece que continua funcionando! Agora vamos executar o programa com
+<code>IGNORE_CASE</code> definido como <code>1</code>, mas usando a mesma consulta <code>to</code>:</p>
+<pre><code class="language-console">$ IGNORE_CASE=1 cargo run -- to poem.txt
+</code></pre>
+<p>Se você estiver usando PowerShell, precisará definir a variável de ambiente e
+executar o programa como comandos separados:</p>
+<pre><code class="language-console">PS&gt; $Env:IGNORE_CASE=1; cargo run -- to poem.txt
+</code></pre>
+<p>Isso fará com que <code>IGNORE_CASE</code> permaneça definido pelo restante da sessão do
+shell. Você pode removê-lo com o cmdlet <code>Remove-Item</code>:</p>
+<pre><code class="language-console">PS&gt; Remove-Item Env:IGNORE_CASE
+</code></pre>
+<p>Devemos então obter linhas que contenham <em>to</em> e talvez tenham letras
+maiúsculas:</p>
+<!-- manual-regeneration
+cd listings/ch12-an-io-project/listing-12-23
+IGNORE_CASE=1 cargo run -- to poem.txt
+can't extract because of the environment variable
+-->
+<pre><code class="language-console">Are you nobody, too?
 How dreary to be somebody!
 To tell your name the livelong day
 To an admiring bog!
 </code></pre>
-<p>Se você estiver usando o PowerShell, precisará definir a variável de ambiente e
-executar o programa em dois comandos em vez de um:</p>
-<pre><code class="language-text">$ $env.CASE_INSENSITIVE=1
-$ cargo run to poem.txt
-</code></pre>
-<p>Excelente, também temos linhas contendo “To”! Nosso programa <code>minigrep</code> agora pode fazer
-busca insensível a maiúsculas e minúsculas controlada por uma variável de ambiente. Agora você
-sabe como gerenciar as opções definidas usando argumentos de linha de comando ou variáveis de ambiente!</p>
-<p>Alguns programas permitem argumentos <em>and</em> variáveis de ambiente para a mesma
-configuração. Nesses casos, os programas decidem que um ou outro tenham
-precedência. Para outro exercício por conta própria, tente controlar o caso
-insensibilidade através de um argumento de linha de comando ou uma variável de ambiente
-. Decida se o argumento da linha de comando ou a variável de ambiente
-deve ter precedência se o programa for executado com um conjunto para diferenciação de maiúsculas e minúsculas
-ou um conjunto para maiúsculas e minúsculas insensível.</p>
-<p>O módulo <code>std::env</code> contém muitos mais recursos úteis para lidar com
-variáveis de ambiente: confira sua documentação para ver o que está disponível.</p>
+<p>Excelente, também obtivemos linhas que contêm <em>To</em>! Nosso programa <code>minigrep</code>
+agora pode fazer buscas sem diferenciação entre maiúsculas e minúsculas,
+controladas por uma variável de ambiente. Agora você sabe como gerenciar
+opções definidas por argumentos de linha de comando ou por variáveis de
+ambiente.</p>
+<p>Alguns programas permitem tanto argumentos quanto variáveis de ambiente para a
+mesma configuração. Nesses casos, o programa decide qual dos dois tem
+precedência. Como exercício, tente controlar a sensibilidade a maiúsculas e
+minúsculas tanto por um argumento de linha de comando quanto por uma variável
+de ambiente. Decida se o argumento ou a variável deve ter precedência quando o
+programa for executado com um indicando busca sensível e o outro indicando
+busca sem diferenciação entre maiúsculas e minúsculas.</p>
+<p>O módulo <code>std::env</code> contém muitos outros recursos úteis para lidar com
+variáveis de ambiente: vale a pena consultar sua documentação para ver o que
+está disponível.</p>
 
                     </main>
 

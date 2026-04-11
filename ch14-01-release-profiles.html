@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,32 +181,36 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="personalizando-compilações-com-perfis-de-lançamento"><a class="header" href="#personalizando-compilações-com-perfis-de-lançamento">Personalizando compilações com perfis de lançamento</a></h2>
-<p>No Rust, <em>perfis de lançamento</em> são perfis predefinidos e personalizáveis com
-configurações diferentes que permitem ao programador ter mais controle sobre
-várias opções para compilar código. Cada perfil é configurado independentemente de
-os outros.</p>
-<p>Cargo tem dois perfis principais: o perfil <code>dev</code> que Cargo usa quando você executa <code>cargo build</code> e o perfil <code>release</code> que Cargo usa quando você executa <code>cargo build --release</code>. O perfil <code> dev</code>é definido com bons padrões para desenvolvimento,
-e o perfil <code> release</code>possui bons padrões para compilações de lançamento.</p>
-<p>Esses nomes de perfil podem ser familiares na saída de suas compilações:</p>
+                        <h2 id="personalizando-builds-com-perfis-de-release"><a class="header" href="#personalizando-builds-com-perfis-de-release">Personalizando Builds com Perfis de Release</a></h2>
+<p>Em Rust, <em>perfis de release</em> são perfis predefinidos e personalizáveis com
+configurações diferentes, que permitem à pessoa programadora ter mais controle
+sobre várias opções de compilação. Cada perfil é configurado independentemente
+dos demais.</p>
+<p>Cargo tem dois perfis principais: o perfil <code>dev</code>, que o Cargo usa quando você
+executa <code>cargo build</code>, e o perfil <code>release</code>, que o Cargo usa quando você
+executa <code>cargo build --release</code>. O perfil <code>dev</code> tem bons padrões para
+desenvolvimento, e o perfil <code>release</code> tem bons padrões para builds de release.</p>
+<p>Esses nomes de perfil talvez já sejam familiares pela saída das suas
+compilações:</p>
 <!-- manual-regeneration
-em qualquer lugar, execute:
-Construção cargo
-Compilação cargo --lançamento
-e garantir que a saída abaixo seja precisa
+anywhere, run:
+cargo build
+cargo build --release
+and ensure output below is accurate
 -->
 <pre><code class="language-console">$ cargo build
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
 $ cargo build --release
     Finished `release` profile [optimized] target(s) in 0.32s
 </code></pre>
-<p>O <code>dev</code> e <code>release</code> são esses perfis diferentes usados ​​pelo compilador.</p>
-<p>Cargo possui configurações padrão para cada um dos perfis que se aplicam quando você não
-adicionou explicitamente quaisquer seções <code>[profile.*]</code> no arquivo <em>Cargo.toml</em> do projeto.
-Ao adicionar seções <code>[profile.*]</code> para qualquer perfil que você deseja personalizar, você
-substituir qualquer subconjunto das configurações padrão. Por exemplo, aqui estão os padrões
-valores para a configuração <code>opt-level</code> para os perfis <code>dev</code> e <code>release</code>:</p>
-<p><span class="filename">Filename: Cargo.toml</span></p>
+<p>Esses <code>dev</code> e <code>release</code> são os perfis diferentes usados pelo compilador.</p>
+<p>Cargo possui configurações padrão para cada perfil, aplicadas quando você não
+adiciona explicitamente seções <code>[profile.*]</code> ao arquivo <em>Cargo.toml</em> do
+projeto. Ao adicionar seções <code>[profile.*]</code> para qualquer perfil que queira
+personalizar, você substitui qualquer subconjunto dessas configurações padrão.
+Por exemplo, estes são os valores padrão da configuração <code>opt-level</code> para os
+perfis <code>dev</code> e <code>release</code>:</p>
+<p><span class="filename">Arquivo: Cargo.toml</span></p>
 <pre><code class="language-toml">[profile.dev]
 opt-level = 0
 
@@ -214,28 +218,30 @@ opt-level = 0
 opt-level = 3
 </code></pre>
 <p>A configuração <code>opt-level</code> controla o número de otimizações que Rust aplicará
-seu código, com um intervalo de 0 a 3. Aplicar mais otimizações estende
-tempo de compilação, portanto, se você estiver desenvolvendo e compilando seu código com frequência,
-você desejará menos otimizações para compilar mais rapidamente, mesmo que o código resultante
-corre mais devagar. O <code>opt-level</code> padrão para <code>dev</code> é, portanto, <code>0</code>. Quando você está
-pronto para liberar seu código, é melhor gastar mais tempo compilando. Você só vai
-compilar no modo de lançamento uma vez, mas você executará o programa compilado muitas vezes,
-portanto, o modo de liberação troca um tempo de compilação mais longo por código que é executado mais rapidamente. Isso é
-por que o <code> opt-level</code>padrão para o perfil <code> release</code>é <code> 3</code>.</p>
-<p>Você pode substituir uma configuração padrão adicionando um valor diferente para ela em
-<em>Carga.toml</em>. Por exemplo, se quisermos usar o nível de otimização 1 no
-perfil de desenvolvimento, podemos adicionar essas duas linhas ao <em>Cargo.toml</em> do nosso projeto
-arquivo:</p>
-<p><span class="filename">Filename: Cargo.toml</span></p>
+ao seu código, em uma escala de 0 a 3. Aplicar mais otimizações aumenta o
+tempo de compilação; então, se você está em desenvolvimento e compila seu
+código com frequência, vai querer menos otimizações para compilar mais rápido,
+mesmo que o código resultante rode mais devagar. Por isso, o <code>opt-level</code>
+padrão para <code>dev</code> é <code>0</code>. Quando você estiver pronto para lançar seu código, é
+melhor gastar mais tempo compilando. Você só compilará em modo de release uma
+vez, mas executará o programa compilado muitas vezes, então o modo de release
+troca um tempo de compilação maior por código que executa mais rápido. É por
+isso que o <code>opt-level</code> padrão do perfil <code>release</code> é <code>3</code>.</p>
+<p>Você pode substituir uma configuração padrão adicionando um valor diferente para
+ela em <em>Cargo.toml</em>. Por exemplo, se quisermos usar o nível de otimização 1 no
+perfil de desenvolvimento, podemos adicionar estas duas linhas ao
+<em>Cargo.toml</em> do projeto:</p>
+<p><span class="filename">Arquivo: Cargo.toml</span></p>
 <pre><code class="language-toml">[profile.dev]
 opt-level = 1
 </code></pre>
-<p>Este código substitui a configuração padrão de <code>0</code>. Agora, quando executamos <code> cargo build</code>,
-Cargo usará os padrões para o perfil <code> dev</code>mais nossa personalização para
-<code>opt-level</code>. Como definimos<code>opt-level</code>como<code> 1</code>, Cargo aplicará mais
-otimizações do que o padrão, mas não tantas quanto em uma versão de lançamento.</p>
-<p>Para obter a lista completa de opções de configuração e padrões para cada perfil, consulte
-<a href="https://doc.rust-lang.org/cargo/reference/profiles.html">Documentação do Cargo</a>.</p>
+<p>Esse código substitui a configuração padrão <code>0</code>. Agora, quando executarmos
+<code>cargo build</code>, o Cargo usará os padrões do perfil <code>dev</code> mais a nossa
+customização de <code>opt-level</code>. Como definimos <code>opt-level</code> como <code>1</code>, o Cargo
+aplicará mais otimizações do que o padrão, mas não tantas quanto em um build
+de release.</p>
+<p>Para obter a lista completa de opções de configuração e os padrões de cada
+perfil, consulte <a href="https://doc.rust-lang.org/cargo/reference/profiles.html">a documentação do Cargo</a>.</p>
 
                     </main>
 

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,52 +181,57 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="controle-de-fluxo-conciso-com-if-let"><a class="header" href="#controle-de-fluxo-conciso-com-if-let">Controle de Fluxo Conciso com <code>if let</code></a></h2>
-<p>A sintaxe do <code>if let</code> permite combinar <code>if</code> e <code>let</code> em uma forma menos verbosa
-de tratar apenas os valores que casam com um padrão e ignorar os demais.
-Considere o programa da Listagem 6-6, que confere um valor do tipo
-<code>Option&lt;u8&gt;</code>, mas só executa um código se houver um valor associado igual a
-três:</p>
+                        <h2 id="controle-de-fluxo-conciso-com-if-let-e-letelse"><a class="header" href="#controle-de-fluxo-conciso-com-if-let-e-letelse">Controle de Fluxo Conciso com <code>if let</code> e <code>let...else</code></a></h2>
+<p>A sintaxe <code>if let</code> permite combinar <code>if</code> e <code>let</code> em uma forma menos verbosa de
+tratar valores que casam com um padrão enquanto ignora os demais. Considere o
+programa da Listagem 6-6, que faz <code>match</code> em um valor <code>Option&lt;u8&gt;</code> na variável
+<code>config_max</code>, mas só quer executar código se o valor for a variante <code>Some</code>.</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let algum_valor_u8 = Some(0u8);
-match algum_valor_u8 {
-    Some(3) =&gt; println!("três"),
+</span>let config_max = Some(3u8);
+match config_max {
+    Some(max) =&gt; println!("O máximo configurado é {max}"),
     _ =&gt; (),
 }
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 6-6: Um <code>match</code> que só executa um código quando
-o valor é <code>Some(3)</code>.</span></p>
-<p>Queremos fazer alguma coisa com o <code>Some(3)</code>, mas não queremos fazer nada com
-nenhum outro valor, seja <code>Some&lt;u8&gt;</code> ou <code>None</code>. Pra satisfazer a expressão
-<code>match</code>, temos que colocar <code>_ =&gt; ()</code> após processar apenas uma variante, ou
-seja, é muito código para pouca coisa.</p>
-<p>Em vez disso, poderíamos escrever o mesmo código de uma forma mais compacta,
-usando <code>if let</code>. O código seguinte tem o mesmo comportamento do <code>match</code> na
-Listagem 6-6:</p>
+<p><span class="caption">Listagem 6-6: Um <code>match</code> que só se importa em executar
+código quando o valor é <code>Some</code></span></p>
+<p>Se o valor for <code>Some</code>, imprimimos o valor contido nessa variante associando-o à
+variável <code>max</code> no padrão. Não queremos fazer nada com o valor <code>None</code>. Para
+satisfazer a expressão <code>match</code>, temos de adicionar <code>_ =&gt; ()</code> depois de tratar
+apenas uma variante, o que acaba sendo um código repetitivo incômodo.</p>
+<p>Em vez disso, poderíamos escrever isso de forma mais curta com <code>if let</code>. O
+código a seguir se comporta da mesma maneira que o <code>match</code> da Listagem 6-6:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span><span class="boring">let algum_valor_u8 = Some(0u8);
-</span>if let Some(3) = algum_valor_u8 {
-    println!("três");
+</span><span class="boring">let config_max = Some(3u8);
+</span>if let Some(max) = config_max {
+    println!("O máximo configurado é {max}");
 }
 <span class="boring">}</span></code></pre>
-<p><code>if let</code> recebe um padrão e uma expressão separados por um <code>=</code>. Isso funciona
-da mesma forma que um <code>match</code>, em que a expressão seria passada para o <code>match</code>,
-e o padrão apareceria no primeiro braço.</p>
-<p>Usar o <code>if let</code> implica menos código pra digitar e menos indentação. Porém,
-perdemos a verificação exaustiva que é garantida pelo <code>match</code>. A escolha entre
-<code>match</code> e <code>if let</code> depende do que você está fazendo em uma situação particular,
-e se a redução no volume de código compensa a perda da verificação exaustiva.</p>
-<p>Em outras palavras, você pode enxergar o <code>if let</code> como um <em>syntax sugar</em> (um
-atalho) para um <code>match</code> que só executa um código quando o valor casa com um
-único padrão, e ignora todos os outros valores.</p>
-<p>Também podemos incluir um <code>else</code> em um <code>if let</code>. O bloco de código que vai no
-<code>else</code> é o mesmo que iria no caso <code>_</code> da expressão <code>match</code> equivalente.
-Lembre-se da enum <code>Moeda</code> que definimos na Listagem 6-4, cuja variante
-<code>Quarter</code> guardava um valor do tipo <code>Estado</code>. Se queremos contar todas as
-moedas que não forem <em>quarters</em>, enquanto também anunciamos o estado dos
-<em>quarters</em>, poderíamos fazer isso com uma expressão <code>match</code> igual a esta:</p>
+<p>A sintaxe <code>if let</code> recebe um padrão e uma expressão separados por um sinal de
+igual. Ela funciona da mesma forma que um <code>match</code>: a expressão seria fornecida
+ao <code>match</code>, e o padrão seria o primeiro braço. Neste caso, o padrão é
+<code>Some(max)</code>, e <code>max</code> fica associado ao valor dentro de <code>Some</code>. Em seguida,
+podemos usar <code>max</code> no corpo do bloco <code>if let</code>, do mesmo modo que faríamos no
+braço correspondente do <code>match</code>. O código dentro do <code>if let</code> só é executado se
+o valor casar com o padrão.</p>
+<p>Usar <code>if let</code> significa menos digitação, menos indentação e menos código
+repetitivo.
+Em compensação, você perde a verificação exaustiva garantida por <code>match</code>, que
+assegura que nenhum caso foi esquecido. Escolher entre <code>match</code> e <code>if let</code>
+depende do que você está fazendo em uma situação específica e se ganhar
+concisão é uma troca aceitável pela perda dessa verificação exaustiva.</p>
+<p>Em outras palavras, você pode pensar em <code>if let</code> como um atalho sintático para
+um
+<code>match</code> que executa código quando o valor casa com um único padrão e ignora
+todos os demais.</p>
+<p>Também podemos incluir um <code>else</code> em um <code>if let</code>. O bloco de código do <code>else</code> é
+o mesmo bloco que iria no caso <code>_</code> da expressão <code>match</code> equivalente. Lembre-se
+da definição da enum <code>Moeda</code> na Listagem 6-4, em que a variante <code>Quarter</code>
+também armazenava um valor <code>Estado</code>. Se quiséssemos contar todas as moedas que
+não fossem <em>quarters</em>, ao mesmo tempo em que anunciamos o estado dos
+<em>quarters</em>, poderíamos fazer isso com uma expressão <code>match</code>, assim:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">#[derive(Debug)]
@@ -248,7 +253,7 @@ match moeda {
     _ =&gt; contagem += 1,
 }
 <span class="boring">}</span></code></pre>
-<p>Ou poderíamos usar um <code>if let</code> e um <code>else</code> desta forma:</p>
+<p>Ou poderíamos usar <code>if let</code> com <code>else</code>, desta forma:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">#[derive(Debug)]
@@ -271,20 +276,183 @@ if let Moeda::Quarter(estado) = moeda {
     contagem += 1;
 }
 <span class="boring">}</span></code></pre>
-<p>Se a lógica do seu programa fica muito verbosa quando é expressa por meio de um
-<code>match</code>, lembre-se que você também dispõe do <code>if let</code>.</p>
+<h2 id="permanecendo-no-caminho-feliz-com-letelse"><a class="header" href="#permanecendo-no-caminho-feliz-com-letelse">Permanecendo no “Caminho Feliz” com <code>let...else</code></a></h2>
+<p>Um padrão comum é realizar algum cálculo quando um valor está presente e, caso
+contrário, retornar um valor padrão. Continuando com nosso exemplo das moedas
+com um valor <code>Estado</code>, se quiséssemos dizer algo engraçado dependendo de quão
+antigo o estado do <em>quarter</em> é, poderíamos introduzir um método em <code>Estado</code>
+para verificar a idade do estado, assim:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[derive(Debug)] // Para podermos inspecionar o estado em instantes
+enum Estado {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+impl Estado {
+    fn existia_em(&amp;self, ano: u16) -&gt; bool {
+        match self {
+            Estado::Alabama =&gt; ano &gt;= 1819,
+            Estado::Alaska =&gt; ano &gt;= 1959,
+            // -- snip --
+        }
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Então poderíamos usar <code>if let</code> para fazer <code>match</code> no tipo de moeda,
+introduzindo uma variável <code>estado</code> dentro do corpo da condição, como na
+Listagem 6-7:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">enum Estado {
+</span><span class="boring">    Alabama,
+</span><span class="boring">    Alaska,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Estado {
+</span><span class="boring">    fn existia_em(&amp;self, ano: u16) -&gt; bool {
+</span><span class="boring">        match self {
+</span><span class="boring">            Estado::Alabama =&gt; ano &gt;= 1819,
+</span><span class="boring">            Estado::Alaska =&gt; ano &gt;= 1959,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">enum Moeda {
+</span><span class="boring">    Penny,
+</span><span class="boring">    Nickel,
+</span><span class="boring">    Dime,
+</span><span class="boring">    Quarter(Estado),
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn descrever_quarter_do_estado(moeda: Moeda) -&gt; Option&lt;String&gt; {
+    if let Moeda::Quarter(estado) = moeda {
+        if estado.existia_em(1900) {
+            Some(format!("{estado:?} é bem antigo para os EUA!"))
+        } else {
+            Some(format!("{estado:?} é relativamente novo."))
+        }
+    } else {
+        None
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 6-7: Verificando se um estado existia em 1900
+usando condicionais aninhadas em um <code>if let</code></span></p>
+<p>Isso resolve o problema, mas desloca o trabalho para dentro do corpo do <code>if let</code>, e, se o código a ser executado ficar mais complexo, pode ser difícil
+acompanhar exatamente como os ramos de nível superior se relacionam. Também
+podemos aproveitar o fato de que expressões produzem um valor, seja para obter
+o <code>estado</code> a partir do <code>if let</code>, seja para retornar mais cedo, como na
+Listagem 6-8. Você também poderia fazer algo parecido com <code>match</code>.</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">enum Estado {
+</span><span class="boring">    Alabama,
+</span><span class="boring">    Alaska,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Estado {
+</span><span class="boring">    fn existia_em(&amp;self, ano: u16) -&gt; bool {
+</span><span class="boring">        match self {
+</span><span class="boring">            Estado::Alabama =&gt; ano &gt;= 1819,
+</span><span class="boring">            Estado::Alaska =&gt; ano &gt;= 1959,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">enum Moeda {
+</span><span class="boring">    Penny,
+</span><span class="boring">    Nickel,
+</span><span class="boring">    Dime,
+</span><span class="boring">    Quarter(Estado),
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn descrever_quarter_do_estado(moeda: Moeda) -&gt; Option&lt;String&gt; {
+    let estado = if let Moeda::Quarter(estado) = moeda {
+        estado
+    } else {
+        return None;
+    };
+
+    if estado.existia_em(1900) {
+        Some(format!("{estado:?} é bem antigo para os EUA!"))
+    } else {
+        Some(format!("{estado:?} é relativamente novo."))
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 6-8: Usando <code>if let</code> para produzir um valor ou
+retornar cedo</span></p>
+<p>Essa versão também é um pouco incômoda de acompanhar. Um dos ramos do <code>if let</code>
+produz um valor, e o outro retorna da função por completo.</p>
+<p>Para tornar esse padrão comum mais agradável de expressar, Rust tem
+<code>let...else</code>. A sintaxe <code>let...else</code> recebe um padrão no lado esquerdo e uma
+expressão no lado direito, de forma muito parecida com <code>if let</code>, mas não tem
+um ramo <code>if</code>, apenas um ramo <code>else</code>. Se o padrão casar, o valor do padrão será
+associado no escopo externo. Se o padrão <em>não</em> casar, o fluxo do programa
+seguirá para o braço <code>else</code>, que precisa retornar da função.</p>
+<p>Na Listagem 6-9, você pode ver como a Listagem 6-8 fica ao usar <code>let...else</code>
+no lugar de <code>if let</code>:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[derive(Debug)]
+</span><span class="boring">enum Estado {
+</span><span class="boring">    Alabama,
+</span><span class="boring">    Alaska,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Estado {
+</span><span class="boring">    fn existia_em(&amp;self, ano: u16) -&gt; bool {
+</span><span class="boring">        match self {
+</span><span class="boring">            Estado::Alabama =&gt; ano &gt;= 1819,
+</span><span class="boring">            Estado::Alaska =&gt; ano &gt;= 1959,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">enum Moeda {
+</span><span class="boring">    Penny,
+</span><span class="boring">    Nickel,
+</span><span class="boring">    Dime,
+</span><span class="boring">    Quarter(Estado),
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn descrever_quarter_do_estado(moeda: Moeda) -&gt; Option&lt;String&gt; {
+    let Moeda::Quarter(estado) = moeda else {
+        return None;
+    };
+
+    if estado.existia_em(1900) {
+        Some(format!("{estado:?} é bem antigo para os EUA!"))
+    } else {
+        Some(format!("{estado:?} é relativamente novo."))
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><span class="caption">Listagem 6-9: Usando <code>let...else</code> para deixar mais claro
+o fluxo da função</span></p>
+<p>Repare que, dessa forma, o corpo principal da função permanece no “caminho
+feliz”, sem que dois ramos tenham fluxos de controle muito diferentes, como
+acontecia no <code>if let</code>.</p>
+<p>Se você estiver em uma situação em que a lógica do programa fica verbosa demais
+para ser expressa com <code>match</code>, lembre-se de que <code>if let</code> e <code>let...else</code> também
+fazem parte da sua caixa de ferramentas em Rust.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Nós acabamos de ver como usar enums para criar tipos customizados a partir de
-um conjunto de valores enumerados. Mostramos como o tipo <code>Option&lt;T&gt;</code>, da
+<p>Agora já vimos como usar enums para criar tipos customizados que podem assumir
+um dentre vários valores enumerados. Mostramos como o tipo <code>Option&lt;T&gt;</code>, da
 biblioteca padrão, ajuda você a usar o sistema de tipos para evitar erros.
-Quando as enums contêm dados, você pode usar <code>match</code> ou <code>if let</code> para extrair
-e usar esses valores, dependendo de quantos casos você precisa tratar.</p>
-<p>Agora, seus programas em Rust podem expressar conceitos em seu domínio usando
-structs e enums. Criar tipos customizados para a sua <em>API</em> aumenta sua
-segurança: o compilador vai se certificar de que suas funções recebem apenas
-os valores que correspondem aos tipos esperados.</p>
-<p>Para fornecer uma API bem organizada aos seus usuários, que seja simples de
-usar, e que exponha apenas o que é necessário aos usuários, vamos agora passar
+Quando valores de enums contêm dados, você pode usar <code>match</code> ou <code>if let</code> para
+extrair e usar esses valores, dependendo de quantos casos precisa tratar.</p>
+<p>Seus programas em Rust agora podem expressar conceitos do seu domínio usando
+structs e enums. Criar tipos customizados para a sua API garante segurança de
+tipos: o compilador vai assegurar que suas funções recebam apenas valores do
+tipo esperado por cada uma delas.</p>
+<p>Para fornecer aos seus usuários uma API bem organizada, simples de usar e que
+exponha apenas o que eles realmente precisam, vamos agora voltar nossa atenção
 para os módulos em Rust.</p>
 
                     </main>

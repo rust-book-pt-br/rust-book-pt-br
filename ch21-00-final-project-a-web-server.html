@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -183,38 +183,38 @@
                     <main>
                         <h1 id="projeto-final-construindo-um-servidor-web-multithread"><a class="header" href="#projeto-final-construindo-um-servidor-web-multithread">Projeto Final: Construindo um Servidor Web Multithread</a></h1>
 <p>Foi uma longa jornada, mas chegamos ao final do livro. Neste
-capítulo, construiremos mais um projeto juntos para demonstrar algumas das
-conceitos que abordamos nos capítulos finais, bem como recapitular alguns
+capítulo, construiremos mais um projeto juntos para demonstrar alguns dos
+conceitos que abordamos nos capítulos finais, bem como recapitular algumas
 lições.</p>
-<p>Para nosso projeto final, faremos um web server que diz “Olá!” e parece
-Figura 21-1 em um navegador da web.</p>
-<p>Aqui está nosso plano para construir o web server:</p>
+<p>Para nosso projeto final, faremos um servidor web que diz “Olá!” e se parece com a
+Figura 21-1 em um navegador.</p>
+<p>Aqui está nosso plano para construir o servidor web:</p>
 <ol>
 <li>Aprenda um pouco sobre TCP e HTTP.</li>
 <li>Ouça conexões TCP em um soquete.</li>
 <li>Analise um pequeno número de solicitações HTTP.</li>
 <li>Crie uma resposta HTTP adequada.</li>
-<li>Melhore o rendimento do nosso servidor com um pool thread.</li>
+<li>Melhore o rendimento do nosso servidor com um thread pool.</li>
 </ol>
 <img alt="Captura de tela de um navegador acessando o endereço 127.0.0.1:8080 e exibindo uma página com o texto “Hello! Hi from Rust”" src="img/trpl21-01.png" class="center" style="width: 50%;" />
 <p><span class="caption">Figura 21-1: Nosso projeto final compartilhado</span></p>
 <p>Antes de começarmos, devemos mencionar dois detalhes. Primeiro, o método que iremos
-usar não será a melhor maneira de construir um web server com Rust. Membros da comunidade
+usar não será a melhor maneira de construir um servidor web com Rust. Membros da comunidade
 publicaram uma série de crates prontos para produção disponíveis em
-<a href="https://crates.io/">crates.io</a> que fornecem web server e
-Implementações de pool thread do que construiremos. Contudo, a nossa intenção neste
-capítulo é para ajudá-lo a aprender, não para seguir o caminho mais fácil. Como Rust é um
-linguagem de programação de sistemas, podemos escolher o nível de abstração que queremos
-trabalhar e pode ir para um nível mais baixo do que é possível ou prático em outros
-línguas.</p>
-<p>Segundo, não usaremos async e await aqui. Construir um pool thread é uma tarefa
-desafio grande o suficiente por si só, sem adicionar a construção de um tempo de execução async!
+<a href="https://crates.io/">crates.io</a> que fornecem servidores web e
+implementações de thread pool semelhantes às que construiremos. Contudo, a nossa intenção neste
+capítulo é ajudá-lo a aprender, não seguir o caminho mais fácil. Como Rust é uma
+linguagem de programação de sistemas, podemos escolher o nível de abstração em que queremos
+trabalhar e podemos ir para um nível mais baixo do que é possível ou prático em outras
+linguagens.</p>
+<p>Segundo, não usaremos async e await aqui. Construir um thread pool já é um desafio
+grande o suficiente por si só, sem adicionar a construção de um runtime async!
 No entanto, observaremos como async e await podem ser aplicáveis a alguns dos
 mesmos problemas que veremos neste capítulo. Em última análise, como observamos em
-Capítulo 17, muitos tempos de execução async usam pools thread para gerenciar seu trabalho.</p>
-<p>Portanto, escreveremos o servidor HTTP básico e o pool thread manualmente para que
-você pode aprender as idéias e técnicas gerais por trás do crates que você pode usar
-no future.</p>
+Capítulo 17, muitos runtimes async usam thread pools para gerenciar seu trabalho.</p>
+<p>Portanto, escreveremos o servidor HTTP básico e o thread pool manualmente para que
+você possa aprender as ideias e técnicas gerais por trás dos crates que poderá usar
+no futuro.</p>
 
                     </main>
 

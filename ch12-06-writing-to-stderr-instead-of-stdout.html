@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,89 +181,145 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="escrevendo-mensagens-de-erro-para-erro-padrão-em-vez-de-saída-padrão"><a class="header" href="#escrevendo-mensagens-de-erro-para-erro-padrão-em-vez-de-saída-padrão">Escrevendo Mensagens de Erro para Erro Padrão em Vez de Saída Padrão</a></h2>
-<p>No momento, estamos escrevendo toda a nossa saída para o terminal usando a função
-<code>println!</code>. A maioria dos terminais fornece dois tipos de saída: <em>saída padrão</em>
-(<code>stdout</code>) para informações gerais e <em>erro padrão</em> (<code>stderr</code>) para mensagens
-de erro. Essa distinção permite que os usuários escolham direcionar a saída
-bem-sucedida de um programa para um arquivo, mas ainda imprimir mensagens de erro na tela.</p>
-<p>A função <code>println!</code> só é capaz de imprimir na saída padrão, então temos
-que usar outra coisa para imprimir em erro padrão.</p>
-<h3 id="verificando-onde-os-erros-são-escritos"><a class="header" href="#verificando-onde-os-erros-são-escritos">Verificando Onde os Erros são Escritos</a></h3>
+                        <!-- Old headings. Do not remove or links may break. -->
+<p><a id="writing-error-messages-to-standard-error-instead-of-standard-output"></a></p>
+<h2 id="redirecionando-erros-para-a-saída-de-erro-padrão"><a class="header" href="#redirecionando-erros-para-a-saída-de-erro-padrão">Redirecionando Erros para a Saída de Erro Padrão</a></h2>
+<p>No momento, estamos escrevendo toda a nossa saída no terminal usando a macro
+<code>println!</code>. Na maioria dos terminais, há dois tipos de saída: a <em>saída padrão</em>
+(<code>stdout</code>) para informações gerais e a <em>saída de erro padrão</em> (<code>stderr</code>) para
+mensagens de erro. Essa distinção permite que a pessoa usuária direcione a
+saída bem-sucedida de um programa para um arquivo, ao mesmo tempo em que ainda
+vê as mensagens de erro na tela.</p>
+<p>A macro <code>println!</code> só é capaz de imprimir na saída padrão, então precisamos
+usar outra coisa para imprimir na saída de erro padrão.</p>
+<h3 id="verificando-onde-os-erros-estão-sendo-escritos"><a class="header" href="#verificando-onde-os-erros-estão-sendo-escritos">Verificando Onde os Erros Estão Sendo Escritos</a></h3>
 <p>Primeiro, vamos observar como o conteúdo impresso por <code>minigrep</code> está sendo
-gravado na saída padrão, incluindo as mensagens de erro que desejamos gravar
-no erro padrão. Faremos isso redirecionando o fluxo de saída padrão para um arquivo e,
-ao mesmo tempo, causando um erro intencionalmente. Não redirecionamos o fluxo de
-erros padrão, portanto, qualquer conteúdo enviado ao erro padrão continuará sendo exibido na tela.</p>
-<p>Espera-se que os programas de linha de comando enviem mensagens de erro para o fluxo erro padrão
-, para que ainda possamos ver mensagens de erro na tela, mesmo se redirecionarmos o fluxo
-de saída padrão para um arquivo. Nosso programa não está bem comportado: estamos prestes a ver
-que ele salva a saída da mensagem de erro em um arquivo!</p>
-<p>A maneira de demonstrar este comportamento é rodando o programa com <code>&gt;</code> e o
-nome do arquivo, <em>output.txt</em>, para o qual queremos redirecionar o fluxo de saída padrão.
-Não passamos nenhum argumento, o que deve causar um erro:</p>
-<pre><code class="language-text">$ cargo run &gt; output.txt
+escrito atualmente na saída padrão, incluindo as mensagens de erro que
+queremos, em vez disso, enviar para a saída de erro padrão. Faremos isso
+redirecionando o fluxo de saída padrão para um arquivo enquanto provocamos um
+erro intencionalmente. Não redirecionaremos o fluxo de erro padrão, então tudo
+o que for enviado para ele continuará aparecendo na tela.</p>
+<p>Espera-se que programas de linha de comando enviem mensagens de erro para a
+saída de erro padrão, para que possamos continuar vendo mensagens de erro na
+tela mesmo quando redirecionamos a saída padrão para um arquivo. Nosso programa
+não está se comportando bem neste momento: veremos que ele salva a mensagem de
+erro em um arquivo!</p>
+<p>Para demonstrar esse comportamento, executaremos o programa com <code>&gt;</code> e o caminho
+do arquivo, <em>output.txt</em>, para o qual queremos redirecionar a saída padrão. Não
+passaremos nenhum argumento, o que deve causar um erro:</p>
+<pre><code class="language-console">$ cargo run &gt; output.txt
 </code></pre>
-<p>A sintaxe <code>&gt;</code> diz ao shell para gravar o conteúdo da saída padrão para
-<em>output.txt</em> em vez da tela. Nós não vimos a mensagem de erro que estávamos
-esperando impresso na tela, o que significa que deve ter acabado no
-arquivo. Isto é o que o <em>output.txt</em> contém:</p>
+<p>A sintaxe <code>&gt;</code> diz ao shell para escrever o conteúdo da saída padrão em
+<em>output.txt</em>, em vez de mostrá-lo na tela. Como não vimos a mensagem de erro
+que esperávamos ver na tela, isso significa que ela deve ter ido parar no
+arquivo. Isto é o que <em>output.txt</em> contém:</p>
 <pre><code class="language-text">Problem parsing arguments: not enough arguments
 </code></pre>
-<p>Sim, nossa mensagem de erro está sendo impressa na saída padrão. É muito mais
-útil que mensagens de erro como essa sejam impressas no erro padrão e que somente
-os dados de uma execução bem-sucedida acabem no arquivo quando redirecionamos a
-saída padrão dessa maneira. Nós vamos mudar isso.</p>
-<h3 id="imprimindo-erros-em-padrão-de-erros"><a class="header" href="#imprimindo-erros-em-padrão-de-erros">Imprimindo Erros em Padrão de Erros</a></h3>
-<p>Usaremos o código da Listagem 12-24 para alterar a forma como as mensagens de erro são impressas.
-Por causa da refatoração que fizemos anteriormente neste capítulo, todo o código que
-imprime mensagens de erro está em uma função, <code>main</code>. A biblioteca padrão fornece a
-macro <code>eprintln!</code> que imprime no fluxo de erro padrão, então vamos alterar os dois
-locais que estávamos chamando <code>println!</code> para imprimir erros para usar <code>eprintln!</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre><code class="language-rust ignore">fn main() {
+<p>Exatamente: nossa mensagem de erro está sendo impressa na saída padrão. É muito
+mais útil que mensagens de erro como essa sejam impressas na saída de erro
+padrão, de modo que apenas os dados de uma execução bem-sucedida acabem no
+arquivo. Vamos mudar isso.</p>
+<h3 id="imprimindo-erros-na-saída-de-erro-padrão"><a class="header" href="#imprimindo-erros-na-saída-de-erro-padrão">Imprimindo Erros na Saída de Erro Padrão</a></h3>
+<p>Usaremos o código da Listagem 12-24 para alterar a forma como as mensagens de
+erro são impressas. Por causa da refatoração que fizemos anteriormente neste
+capítulo, todo o código que imprime mensagens de erro está em uma única função,
+<code>main</code>. A biblioteca padrão fornece a macro <code>eprintln!</code>, que imprime na saída
+de erro padrão, então vamos substituir as duas chamadas a <code>println!</code> que
+imprimem erros por <code>eprintln!</code>.</p>
+<figure class="listing" id="listing-12-24">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore"><span class="boring">use std::env;
+</span><span class="boring">use std::error::Error;
+</span><span class="boring">use std::fs;
+</span><span class="boring">use std::process;
+</span><span class="boring">
+</span><span class="boring">use minigrep::{search, search_case_insensitive};
+</span><span class="boring">
+</span>fn main() {
     let args: Vec&lt;String&gt; = env::args().collect();
 
-    let config = Config::new(&amp;args).unwrap_or_else(|err| {
-        eprintln!("Problem parsing arguments: {}", err);
+    let config = Config::build(&amp;args).unwrap_or_else(|err| {
+        eprintln!("Problem parsing arguments: {err}");
         process::exit(1);
     });
 
-    if let Err(e) = minigrep::run(config) {
-        eprintln!("Application error: {}", e);
-
+    if let Err(e) = run(config) {
+        eprintln!("Application error: {e}");
         process::exit(1);
     }
-}</code></pre>
-<p><span class="caption">Listagem 12-24: Escrevendo mensagens de erro para o erro padrão
-em vez da saída padrão usando o <code>eprintln!</code></span></p>
-<p>Depois de alterar <code>println!</code> para <code>eprintln!</code>, vamos executar o programa novamente
-da mesma forma, sem argumentos e redirecionando a saída padrão com <code>&gt;</code>:</p>
-<pre><code class="language-text">$ cargo run &gt; output.txt
+}
+<span class="boring">
+</span><span class="boring">pub struct Config {
+</span><span class="boring">    pub query: String,
+</span><span class="boring">    pub file_path: String,
+</span><span class="boring">    pub ignore_case: bool,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Config {
+</span><span class="boring">    fn build(args: &amp;[String]) -&gt; Result&lt;Config, &amp;'static str&gt; {
+</span><span class="boring">        if args.len() &lt; 3 {
+</span><span class="boring">            return Err("not enough arguments");
+</span><span class="boring">        }
+</span><span class="boring">
+</span><span class="boring">        let query = args[1].clone();
+</span><span class="boring">        let file_path = args[2].clone();
+</span><span class="boring">
+</span><span class="boring">        let ignore_case = env::var("IGNORE_CASE").is_ok();
+</span><span class="boring">
+</span><span class="boring">        Ok(Config {
+</span><span class="boring">            query,
+</span><span class="boring">            file_path,
+</span><span class="boring">            ignore_case,
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn run(config: Config) -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+</span><span class="boring">    let contents = fs::read_to_string(config.file_path)?;
+</span><span class="boring">
+</span><span class="boring">    let results = if config.ignore_case {
+</span><span class="boring">        search_case_insensitive(&amp;config.query, &amp;contents)
+</span><span class="boring">    } else {
+</span><span class="boring">        search(&amp;config.query, &amp;contents)
+</span><span class="boring">    };
+</span><span class="boring">
+</span><span class="boring">    for line in results {
+</span><span class="boring">        println!("{line}");
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    Ok(())
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-12-24">Listing 12-24</a>: Escrevendo mensagens de erro na saída de erro padrão, em vez da saída padrão, com <code>eprintln!</code></figcaption>
+</figure>
+<p>Agora vamos executar o programa da mesma forma novamente, sem nenhum argumento
+e redirecionando a saída padrão com <code>&gt;</code>:</p>
+<pre><code class="language-console">$ cargo run &gt; output.txt
 Problem parsing arguments: not enough arguments
 </code></pre>
-<p>Agora vemos o erro na tela e o <em>output.txt</em> não contém nada, que é o
-comportamento esperado dos programas de linha de comando.</p>
-<p>Vamos executar o programa novamente com argumentos que não causam erro, mas ainda
-redirecionamos a saída padrão para um arquivo, da seguinte forma:</p>
-<pre><code class="language-text">$ cargo run to poem.txt &gt; output.txt
+<p>Agora vemos o erro na tela, e <em>output.txt</em> não contém nada, que é exatamente o
+comportamento esperado de programas de linha de comando.</p>
+<p>Vamos executar o programa mais uma vez, agora com argumentos que não causem
+erro, mas ainda redirecionando a saída padrão para um arquivo, assim:</p>
+<pre><code class="language-console">$ cargo run -- to poem.txt &gt; output.txt
 </code></pre>
-<p>Não veremos nenhuma saída para o terminal e <em>output.txt</em> conterá nossos
+<p>Não veremos nenhuma saída no terminal, e <em>output.txt</em> conterá os nossos
 resultados:</p>
 <p><span class="filename">Arquivo: output.txt</span></p>
 <pre><code class="language-text">Are you nobody, too?
 How dreary to be somebody!
 </code></pre>
-<p>Isso demonstra que agora estamos usando a saída padrão para saída bem-sucedida e
-erro padrão para saída de erro, apropriadamente.</p>
+<p>Isso demonstra que agora estamos usando a saída padrão para a saída
+bem-sucedida e a saída de erro padrão para as mensagens de erro, como deveria
+ser.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Neste capítulo, recapitulamos alguns dos principais conceitos que você aprendeu até agora
-e abordamos como realizar operações de E/S comuns em um contexto Rust. Usando argumentos
-de linha de comando, arquivos, variáveis de ambiente e a macro <code>eprintln!</code> para
-erros de impressão, você está preparado para escrever aplicativos de linha de comando. Usando
-os conceitos dos capítulos anteriores, seu código será bem organizado, armazenará dados de forma
-eficaz nas estruturas de dados apropriadas, tratará erros com precisão e será bem testado.</p>
-<p>Em seguida, exploraremos alguns recursos do Rust que foram influenciados por linguagens
+<p>Este capítulo retomou alguns dos conceitos mais importantes vistos até aqui e
+mostrou como realizar operações comuns de E/S em Rust. Usando argumentos de
+linha de comando, arquivos, variáveis de ambiente e a macro <code>eprintln!</code> para
+imprimir erros, você agora está pronta ou pronto para escrever aplicações de
+linha de comando. Combinado aos conceitos dos capítulos anteriores, seu código
+estará bem organizado, armazenará dados de forma eficaz nas estruturas de dados
+apropriadas, tratará erros de maneira elegante e será bem testado.</p>
+<p>A seguir, exploraremos alguns recursos de Rust influenciados por linguagens
 funcionais: closures e iteradores.</p>
 
                     </main>

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,13 +182,13 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="sintaxe-do-método"><a class="header" href="#sintaxe-do-método">Sintaxe do Método</a></h2>
-<p><em>Methods</em> (métodos) são semelhantes às funções: eles são declarados com a chave
-<code>fn</code> e o seu nome, eles podem ter parâmetros e valor de retorno, e eles contêm
-algum código que é executado quando eles são chamados de algum outro lugar.
-No entanto, métodos são diferentes das funções, porque são definidos no contexto
-de uma struct (ou um objeto enum ou uma trait, que nós cobrimos nos Capítulos 6
-e 17, respectivamente), o seu primeiro parâmetro é sempre <code>self</code>, que representa
-a instância da struct do método que está a ser chamado.</p>
+<p>Métodos são semelhantes a funções: nós os declaramos com a palavra-chave <code>fn</code> e
+um nome, eles podem ter parâmetros e valor de retorno, e contêm código que é
+executado quando são chamados de outro lugar. No entanto, métodos são
+diferentes de funções porque são definidos no contexto de uma struct (ou de um
+enum ou trait object, que cobriremos nos Capítulos 6 e 18, respectivamente), e
+seu primeiro parâmetro é sempre <code>self</code>, que representa a instância da struct em
+que o método está sendo chamado.</p>
 <h3 id="definindo-métodos"><a class="header" href="#definindo-métodos">Definindo Métodos</a></h3>
 <p>Vamos alterar a função <code>area</code> que tem uma instância de <code>Rectangle</code> como um
 parâmetro e, em vez disso, fazer um método <code>area</code> definido na struct <code>Rectangle</code>
@@ -216,25 +216,24 @@ fn main() {
 }</code></pre>
 <p><span class="caption">Lista 5-13: Definindo um método <code>area</code> na struct
 <code>Rectangle</code></span></p>
-<p>Para definir a função dentro do contexto de <code>Rectangle</code>, vamos iniciar um bloco
-<code>impl</code> (<em>Implementação</em>). Depois movemos a função <code>area</code> dentro do corpo ({})
-do <code>impl</code> e alteramos o primeiro (e neste caso, unico) parâmetro a ser <code>self</code> na
-assinatura e em todos os lugares dentro do corpo.
-Em <code>main</code>, onde chamamos a função <code>area</code> e passamos <code>ct1</code> como um argumento,
-podemos usar a <em>sintaxe de método</em> (method sintax) para chamar o método <code>área</code>
-na nossa instância <code>Rectangle</code>. A sintaxe de método vem em seguida a uma
-instância: adicionamos um ponto seguido pelo nome do método, parênteses e os
-argumentos.</p>
+<p>Para definir a função dentro do contexto de <code>Rectangle</code>, começamos um bloco
+<code>impl</code> (implementação). Depois movemos a função <code>area</code> para dentro do corpo do
+<code>impl</code> e alteramos o primeiro, e neste caso único, parâmetro para <code>self</code> na
+assinatura e em todo o corpo. Em <code>main</code>, onde chamávamos a função <code>area</code> e
+passávamos <code>rect1</code> como argumento, podemos usar a <em>sintaxe de método</em> para
+chamar o método <code>area</code> na nossa instância <code>Rectangle</code>. A sintaxe de método vem
+depois de uma instância: adicionamos um ponto seguido do nome do método,
+parênteses e quaisquer argumentos.</p>
 <p>Na assinatura de <code>area</code>, usamos <code>&amp;self</code> em vez de <code>rectangle: &amp;Rectangle</code> porque
 Rust sabe que o tipo de <code>self</code> é <code>Rectangle</code> devido a este método estar dentro do
 contexto do <code>impl Rectangle</code>. Note que ainda precisamos usar o <code>&amp;</code> antes de
 <code>self</code>, tal como fizemos em <code>&amp;Rectangle</code>. Métodos podem tomar posse de <code>self</code>,
-pedir emprestado <code>self</code> imutavel como temos feito aqui, ou pedir emprestado <code>self</code>
-mutavel, assim como qualquer outro parâmetro.</p>
-<p>Escolhemos <code>&amp;selft</code> aqui pela mesma razão usamos <code>&amp;Rectangle</code> na versão função:
-nós não queremos tomar posse, nós apenas queremos ler os dados da struct,
+tomar <code>self</code> emprestado de forma imutável, como fizemos aqui, ou tomar <code>self</code>
+emprestado de forma mutável, assim como qualquer outro parâmetro.</p>
+<p>Escolhemos <code>&amp;self</code> aqui pela mesma razão que usamos <code>&amp;Rectangle</code> na versão com função:
+não queremos tomar posse; queremos apenas ler os dados da struct,
 e não escrever nela. Se quisermos mudar a instância da qual chamamos
-o método como parte do que o método faz, usariamos <code>&amp;mut self</code> como o
+o método como parte do que ele faz, usaríamos <code>&amp;mut self</code> como o
 primeiro parâmetro. Ter um método que toma posse da instância, usando apenas
 <code>self</code> como primeiro parâmetro é raro; esta técnica é geralmente utilizada
 quando o método transforma o <code>self</code> em algo mais e queremos evitar que o
@@ -249,12 +248,12 @@ lugares na biblioteca que fornecemos.</p>
 <p>Em linguagens como C++, dois operadores diferentes são usados para chamar
 métodos: você usa <code>.</code> se você está chamando um método do objeto diretamente
 e <code>-&gt;</code> se você está chamando o método em um apontador para o objeto e
-necessita de <code>desreferenciar</code> o apontadr primeiro. Em outras palavras,
-se <code>objeto</code> é um apontador, <code>objeto-&gt;algo()</code> é semelhante a <code>(*objeto).algo()</code>.</p>
+precisa desreferenciar o ponteiro primeiro. Em outras palavras,
+se <code>objeto</code> é um ponteiro, <code>objeto-&gt;algo()</code> é semelhante a <code>(*objeto).algo()</code>.</p>
 <p>Rust não tem um equivalente para o operador <code>-&gt;</code>; em vez disso, Rust tem
 um recurso chamado <em>referenciamento e desreferenciamento automático</em>.
 Chamada de métodos é um dos poucos lugares em Rust que têm este comportamento.</p>
-<p>Eis como funciona: quando você chamar um método com <code>objeto.algo()</code>, Rust
+<p>Eis como funciona: quando você chama um método com <code>objeto.algo()</code>, Rust
 adiciona automaticamente <code>&amp;</code>, <code>&amp;mut</code> ou <code>*</code> para que <code>objeto</code> corresponda
 à assinatura do método. Em outras palavras, as seguintes são as mesmas:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
@@ -279,12 +278,12 @@ adiciona automaticamente <code>&amp;</code>, <code>&amp;mut</code> ou <code>*</c
 (&amp;p1).distance(&amp;p2);
 <span class="boring">}</span></code></pre>
 <p>O primeiro parece muito mais limpo. Este comportamento de referenciamento
-automático funciona porque métodos têm um receptor claro- o tipo <code>self</code>.
+automático funciona porque métodos têm um receptor claro: o tipo <code>self</code>.
 Dado o receptor e o nome de um método, Rust pode descobrir definitivamente
 se o método é leitura (<code>&amp;self</code>), mutação (<code>&amp;mut self</code>), ou consumo (<code>self</code>).
-O fato de que Rust faz o empréstimo para receptores de método implícito é em
-grande parte porque o ownership é ergonomico na prática.</p>
-<h3 id="métodos-com-mais-parametros"><a class="header" href="#métodos-com-mais-parametros">Métodos com Mais Parametros</a></h3>
+O fato de Rust tornar implícito o empréstimo de receptores de método é uma
+grande parte do que faz o ownership ser ergonômico na prática.</p>
+<h3 id="métodos-com-mais-parâmetros"><a class="header" href="#métodos-com-mais-parâmetros">Métodos com Mais Parâmetros</a></h3>
 <p>Vamos praticar usando métodos através da aplicação de um segundo método sobre
 o struct <code>Rectangle</code> . Desta vez, queremos uma instância de <code>Rectangle</code> para
 ter outra instância de <code>Rectangle</code> e retornar <code>verdadeiro</code> se o segundo

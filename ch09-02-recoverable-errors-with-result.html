@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,15 +181,15 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="erros-recuperáveis-com-result"><a class="header" href="#erros-recuperáveis-com-result">Erros recuperáveis com <code>Result</code></a></h2>
-<p>A maior parte dos erros não são sérios o suficiente para precisar que o
-programa pare totalmente. Às vezes, quando uma função falha, é por uma
-razão que nós podemos facilmente interpretar e responder. Por exemplo,
-se tentamos abrir um arquivo e essa operação falhar porque o arquivo não
-existe, nós podemos querer criar o arquivo em vez de terminar o processo.</p>
-<p>Lembre-se do Capítulo 2, na seção “<a href="ch02-00-guessing-game-tutorial.html#handling-potential-failure-with-the-result-type">Tratando Potenciais Falhas com o Tipo Result</a></p>
-<!-- ignore -->”  que o enum `Result` é definido como tendo duas variantes,
-<p><code>Ok</code> e <code>Err</code>, como mostrado a seguir:</p>
+                        <h2 id="erros-recuperáveis-com-result"><a class="header" href="#erros-recuperáveis-com-result">Erros Recuperáveis com <code>Result</code></a></h2>
+<p>A maioria dos erros não é grave o suficiente para exigir que o programa seja
+interrompido por completo. Às vezes, quando uma função falha, isso acontece por
+um motivo que você consegue interpretar facilmente e ao qual pode responder.
+Por exemplo, se você tentar abrir um arquivo e essa operação falhar porque o
+arquivo não existe, talvez queira criá-lo em vez de encerrar o processo.</p>
+<p>Lembre-se de <a href="ch02-00-guessing-game-tutorial.html#handling-potential-failure-with-result">“Tratando Falhas Potenciais com <code>Result</code>”</a><!--
+ignore -->, no Capítulo 2, que o enum <code>Result</code> é definido com duas variantes,
+<code>Ok</code> e <code>Err</code>, da seguinte forma:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Result&lt;T, E&gt; {
@@ -197,378 +197,549 @@ existe, nós podemos querer criar o arquivo em vez de terminar o processo.</p>
     Err(E),
 }
 <span class="boring">}</span></code></pre>
-<p>O <code>T</code> e <code>E</code> são parâmetros de tipos genéricos: nós os discutiremos em mais
-detalhe no Capítulo 10. O que você precisa saber agora é que <code>T</code> representa
-o tipo do valor que vai ser retornado dentro da variante <code>Ok</code> em caso de sucesso,
-e <code>E</code> representa o tipo de erro que será retornado dentro da variante <code>Err</code>
-em caso de falha. Por <code>Result</code> ter esses parâmetros de tipo genéricos, nós
-podemos usar o tipo <code>Result</code> e as funções que a biblioteca padrão definiu sobre
-ele em diversas situações em que o valor de sucesso e o valor de erro que
-queremos retornar possam divergir.</p>
-<p>Vamos chamar uma função que retorna um valor <code>Result</code> porque a função poderia
-falhar: na Listagem 9-3 tentamos abrir um arquivo:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<p><code>T</code> e <code>E</code> são parâmetros de tipo genéricos: vamos discutir genéricos com mais
+detalhes no Capítulo 10. O que você precisa saber agora é que <code>T</code> representa o
+tipo do valor que será retornado em caso de sucesso, dentro da variante <code>Ok</code>, e
+<code>E</code> representa o tipo do erro que será retornado em caso de falha, dentro da
+variante <code>Err</code>. Como <code>Result</code> tem esses parâmetros de tipo genéricos, podemos
+usar o tipo <code>Result</code> e as funções definidas sobre ele em muitas situações
+diferentes, nas quais o valor de sucesso e o valor de erro que queremos
+retornar podem variar.</p>
+<p>Vamos chamar uma função que retorna um valor <code>Result</code>, porque essa função pode
+falhar. Na Listagem 9-3, tentamos abrir um arquivo.</p>
+<figure class="listing" id="listing-9-3">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">use std::fs::File;
 
 fn main() {
-    let f = File::open("hello.txt");
+    let greeting_file_result = File::open("hello.txt");
 }</code></pre>
-<p><span class="caption">Listagem 9-3: Abrindo um arquivo</span></p>
-<p>Como sabemos que <code>File::open</code> retorna um <code>Result</code>? Poderíamos olhar na documentação
-da API da biblioteca padrão, ou poderíamos perguntar para o compilador! Se damos à <code>f</code>
-uma anotação de tipo que sabemos <em>não</em> ser o tipo retornado pela função e tentamos
-compilar o código, o compilador nos dirá que os tipos não casam. A mensagem de erro
-vai então nos dizer qual é, <em>de fato</em>, o tipo de <code>f</code>. Vamos tentar isso: nós sabemos que
-o tipo retornado por <code>File::open</code> não é <code>u32</code>, então vamos mudar a declaração
-<code>let f</code> para isso:</p>
-<pre><code class="language-rust ignore">let f: u32 = File::open("hello.txt");</code></pre>
-<p>Tentar compilar agora nos dá a seguinte saída:</p>
-<pre><code class="language-text">error[E0308]: mismatched types
- --&gt; src/main.rs:4:18
-  |
-4 |     let f: u32 = File::open("hello.txt");
-  |                  ^^^^^^^^^^^^^^^^^^^^^^^ expected u32, found enum
-`std::result::Result`
-  |
-  = note: expected type `u32`
-  = note:    found type `std::result::Result&lt;std::fs::File, std::io::Error&gt;`
-</code></pre>
-<p>Isso nos diz que o valor de retorno de <code>File::open</code> é um <code>Result&lt;T, E&gt;</code>.
-O parâmetro genérico <code>T</code> foi preenchido aqui com o tipo do valor de sucesso,
-<code>std::fs::File</code>, que é um <em>handle</em> de arquivo. O tipo de <code>E</code> usado no valor
-de erro é <code>std::io::Error</code>.</p>
-<p>Esse tipo de retorno significa que a chamada a <code>File::open</code> pode dar certo
-e retornar para nós um <em>handle</em> de arquivo que podemos usar pra ler ou escrever
-nele. Essa chamada de função pode também falhar: por exemplo, o arquivo pode não
-existir ou talvez não tenhamos permissão para acessar o arquivo. A função <code>File::open</code>
-precisa ter uma maneira de nos dizer se ela teve sucesso ou falhou e ao mesmo tempo
-nos dar ou o <em>handle</em> de arquivo ou informação sobre o erro. Essa informação é
-exatamente o que o enum <code>Result</code> comunica.</p>
-<p>No caso em que <code>File::open</code> tem sucesso, o valor na variável <code>f</code> será uma instância
-de <code>Ok</code> que contém um <em>handle</em> de arquivo. No caso em que ela falha, o valor em <code>f</code>
-será uma instância de <code>Err</code> que contém mais informação sobre o tipo de erro que
-aconteceu.</p>
-<p>Devemos fazer com que o código na Listagem 9-3 faça diferentes ações dependendo
-do valor retornado por <code>File::open</code>. A Listagem 9-4 mostra uma maneira de lidar
-com o <code>Result</code> usando uma ferramenta básica: a expressão <code>match</code> que discutimos
-no Capítulo 6.</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<figcaption><a href="#listing-9-3">Listing 9-3</a>: Abrindo um arquivo</figcaption>
+</figure>
+<p>O tipo de retorno de <code>File::open</code> é <code>Result&lt;T, E&gt;</code>. O parâmetro genérico <code>T</code>
+foi preenchido pela implementação de <code>File::open</code> com o tipo do valor de
+sucesso, <code>std::fs::File</code>, que é um handle de arquivo. O tipo de <code>E</code> usado no
+valor de erro é <code>std::io::Error</code>. Esse tipo de retorno significa que a chamada
+a <code>File::open</code> pode ter sucesso e retornar um handle de arquivo do qual podemos
+ler ou no qual podemos escrever. A chamada também pode falhar: por exemplo, o
+arquivo pode não existir, ou talvez não tenhamos permissão para acessá-lo. A
+função <code>File::open</code> precisa de uma forma de nos dizer se teve sucesso ou falha
+e, ao mesmo tempo, nos fornecer o handle do arquivo ou as informações sobre o
+erro. É exatamente isso que o enum <code>Result</code> expressa.</p>
+<p>No caso em que <code>File::open</code> tem sucesso, o valor na variável
+<code>greeting_file_result</code> será uma instância de <code>Ok</code> contendo um handle de
+arquivo. No caso em que falha, o valor em <code>greeting_file_result</code> será uma
+instância de <code>Err</code> contendo mais informações sobre o tipo de erro ocorrido.</p>
+<p>Precisamos acrescentar algo ao código da Listagem 9-3 para executar ações
+diferentes dependendo do valor retornado por <code>File::open</code>. A Listagem 9-4
+mostra uma forma de tratar esse <code>Result</code> usando uma ferramenta básica: a
+expressão <code>match</code>, que discutimos no Capítulo 6.</p>
+<figure class="listing" id="listing-9-4">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
 
 fn main() {
-    let f = File::open("hello.txt");
+    let greeting_file_result = File::open("hello.txt");
 
-    let f = match f {
+    let greeting_file = match greeting_file_result {
         Ok(file) =&gt; file,
-        Err(error) =&gt; {
-            panic!("Houve um problema ao abrir o arquivo: {:?}", error)
-        },
+        Err(error) =&gt; panic!("Problem opening the file: {error:?}"),
     };
 }</code></pre>
-<p><span class="caption">Listagem 9-4: Usando uma expressão <code>match</code> para tratar as
-variantes de <code>Result</code> que podemos encontrar.</span></p>
-<p>Note que, como no enum <code>Option</code>, o enum <code>Result</code> e suas variantes foram importadas
-no prelúdio, então não precisamos especificar <code>Result::</code> antes das variantes <code>Ok</code>
-e <code>Err</code> nas linhas de <code>match</code>.</p>
-<p>Aqui dizemos ao Rust que quando o resultado é <code>Ok</code> ele deve retornar o valor
-interno <code>file</code> de dentro da variante <code>Ok</code> e nós então podemos atribuir este
-valor de <em>handle</em> de arquivo à variável <code>f</code>. Depois do <code>match</code>, nós podemos então
-usar o <em>handle</em> de arquivo para ler ou escrever.</p>
-<p>A outra linha de <code>match</code> trata do caso em que recebemos um valor de <code>Err</code> de
-<code>File::open</code>. Nesse exemplo, nós escolhemos chamar a macro <code>panic!</code>. Se não
-há nenhum arquivo chamado <em>hello.txt</em> no diretório atual e rodarmos esse código,
+<figcaption><a href="#listing-9-4">Listing 9-4</a>: Usando uma expressão <code>match</code> para tratar as variantes de <code>Result</code> que podem ser retornadas</figcaption>
+</figure>
+<p>Observe que, assim como acontece com o enum <code>Option</code>, o enum <code>Result</code> e suas
+variantes são trazidos para o escopo pelo prelúdio, então não precisamos
+escrever <code>Result::</code> antes de <code>Ok</code> e <code>Err</code> nos braços do <code>match</code>.</p>
+<p>Quando o resultado é <code>Ok</code>, esse código retorna o valor interno <code>file</code> da
+variante <code>Ok</code>, e então atribuímos esse handle de arquivo à variável
+<code>greeting_file</code>. Depois do <code>match</code>, podemos usar o handle para leitura ou
+escrita.</p>
+<p>O outro braço do <code>match</code> trata o caso em que recebemos um valor <code>Err</code> de
+<code>File::open</code>. Neste exemplo, escolhemos chamar a macro <code>panic!</code>. Se não houver
+um arquivo chamado <em>hello.txt</em> no diretório atual e executarmos esse código,
 veremos a seguinte saída da macro <code>panic!</code>:</p>
-<pre><code class="language-text">thread 'main' panicked at 'Houve um problema ao abrir o arquivo: Error { repr:
-Os { code: 2, message: "No such file or directory" } }', src/main.rs:9:12
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running `target/debug/error-handling`
 
+thread 'main' panicked at src/main.rs:8:23:
+Problem opening the file: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>Como sempre, essa saída nos diz exatamente o que aconteceu de errado.</p>
-<h3 id="usando-match-com-diferentes-erros"><a class="header" href="#usando-match-com-diferentes-erros">Usando <code>match</code> com Diferentes Erros</a></h3>
-<p>O código na Listagem 9-4 chamará <code>panic!</code> não importa a razão pra <code>File::open</code>
-ter falhado. O que queremos fazer em vez disso é tomar diferentes ações para diferentes
-motivos de falha: se <code>File::open</code> falhou porque o arquivo não existe, nós
-queremos criar um arquivo e retornar o <em>handle</em> para ele. Se <code>File::open</code>
-falhou por qualquer outra razão, por exemplo porque não temos a permissão para
-abrir o arquivo, nós ainda queremos chamar <code>panic!</code> da mesma maneira que fizemos
-na Listagem 9-4. Veja a Listagem 9-5, que adiciona outra linha ao <code>match</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<p>Como de costume, essa saída nos diz exatamente o que deu errado.</p>
+<h3 id="fazendo-match-em-diferentes-erros"><a class="header" href="#fazendo-match-em-diferentes-erros">Fazendo <code>match</code> em Diferentes Erros</a></h3>
+<p>O código da Listagem 9-4 chamará <code>panic!</code> independentemente do motivo pelo qual
+<code>File::open</code> falhou. No entanto, queremos tomar ações diferentes para causas de
+falha diferentes. Se <code>File::open</code> falhar porque o arquivo não existe, queremos
+criar o arquivo e retornar o handle do novo arquivo. Se <code>File::open</code> falhar por
+qualquer outro motivo, por exemplo, por não termos permissão para abrir o
+arquivo, ainda queremos que o código chame <code>panic!</code> da mesma forma que fez na
+Listagem 9-4. Para isso, adicionamos uma expressão <code>match</code> interna, como
+mostrado na Listagem 9-5.</p>
+<figure class="listing" id="listing-9-5">
+<span class="file-name">Filename: src/main.rs</span>
 <!-- ignore this test because otherwise it creates hello.txt which causes other
 tests to fail lol -->
 <pre><code class="language-rust ignore">use std::fs::File;
 use std::io::ErrorKind;
 
 fn main() {
-    let f = File::open("hello.txt");
+    let greeting_file_result = File::open("hello.txt");
 
-    let f = match f {
+    let greeting_file = match greeting_file_result {
         Ok(file) =&gt; file,
-        Err(ref error) if error.kind() == ErrorKind::NotFound =&gt; {
-            match File::create("hello.txt") {
+        Err(error) =&gt; match error.kind() {
+            ErrorKind::NotFound =&gt; match File::create("hello.txt") {
                 Ok(fc) =&gt; fc,
-                Err(e) =&gt; {
-                    panic!(
-                        "Tentou criar um arquivo e houve um problema: {:?}",
-                        e
-                    )
-                },
+                Err(e) =&gt; panic!("Problem creating the file: {e:?}"),
+            },
+            _ =&gt; {
+                panic!("Problem opening the file: {error:?}");
             }
-        },
-        Err(error) =&gt; {
-            panic!(
-                "Houve um problema ao abrir o arquivo: {:?}",
-                error
-            )
         },
     };
 }</code></pre>
-<p><span class="caption">Listagem 9-5: Tratando diferentes tipos de erros de diversas
-maneiras.</span></p>
-<p>O tipo do valor que <code>File::open</code> retorna dentro da variante <code>Err</code> é <code>io::Error</code>,
-que é uma struct fornecida pela biblioteca padrão. Essa struct tem o método
-<code>kind</code> que podemos chamar para receber um valor de <code>io::ErrorKind</code>. <code>io::ErrorKind</code>
-é um enum fornecido pela biblioteca padrão que tem variantes representando diversos
-tipos de erros que podem ocorrer em uma operação de <code>io</code>. A variante que queremos
-usar é <code>ErrorKind::NotFound</code>, que indica que o arquivo que queremos abrir não existe
-ainda.</p>
-<p>A condição <code>if error.kind() == ErrorKind::NotFound</code> é chamada de um <em>match guard</em>:
-é uma condição extra dentro de uma linha de <code>match</code> que posteriormente refina
-o padrão da linha. Essa condição deve ser verdadeira para o código da linha ser
-executado; caso contrário a análise de padrões vai continuar considerando as
-próximas linhas no <code>match</code>. O <code>ref</code> no padrão é necessário para que o <code>error</code>
-não seja movido para a condição do <em>guard</em>, mas meramente referenciado por ele.
-A razão de <code>ref</code> ser utilizado em vez de <code>&amp;</code> para pegar uma referência vai ser
-discutida em detalhe no Capítulo 18. Resumindo, no contexto de um padrão, <code>&amp;</code>
-corresponde a uma referência e nos dá seu valor, enquanto <code>ref</code> corresponde a um valor
-e nos dá uma referência a ele.</p>
-<p>A condição que queremos checar no <em>match guard</em> é se o valor retornado pelo
-<code>error.kind()</code> é a variante <code>NotFound</code> do enum <code>ErrorKind</code>. Se é, queremos
-tentar criar um arquivo com <code>File::create</code>. No entanto, como <code>File::create</code>
-pode também falhar, precisamos adicionar um <code>match</code> interno também. Quando
-o arquivo não pode ser aberto, outro tipo de mensagem de erro será mostrada.
-A última linha do <code>match</code> externo continua a mesma de forma que o programa
-entre em pânico pra qualquer erro além do de arquivo ausente.</p>
-<h3 id="atalhos-para-pânico-em-erro-unwrap-e-expect"><a class="header" href="#atalhos-para-pânico-em-erro-unwrap-e-expect">Atalhos para Pânico em Erro: <code>unwrap</code> e <code>expect</code></a></h3>
+<figcaption><a href="#listing-9-5">Listing 9-5</a>: Tratando diferentes tipos de erro de maneiras diferentes</figcaption>
+</figure>
+<p>O tipo do valor que <code>File::open</code> retorna dentro da variante <code>Err</code> é
+<code>io::Error</code>, uma struct fornecida pela biblioteca padrão. Essa struct tem um
+método, <code>kind</code>, que podemos chamar para obter um valor <code>io::ErrorKind</code>. O enum
+<code>io::ErrorKind</code> também é fornecido pela biblioteca padrão e tem variantes que
+representam os diferentes tipos de erro que podem resultar de uma operação de
+<code>io</code>. A variante que queremos usar é <code>ErrorKind::NotFound</code>, que indica que o
+arquivo que estamos tentando abrir ainda não existe. Assim, fazemos <code>match</code> em
+<code>greeting_file_result</code>, mas também temos um <code>match</code> interno em <code>error.kind()</code>.</p>
+<p>A condição que queremos verificar nesse <code>match</code> interno é se o valor retornado
+por <code>error.kind()</code> é a variante <code>NotFound</code> do enum <code>ErrorKind</code>. Se for,
+tentamos criar o arquivo com <code>File::create</code>. No entanto, como <code>File::create</code>
+também pode falhar, precisamos de um segundo braço nessa expressão <code>match</code>
+interna. Quando o arquivo não pode ser criado, uma mensagem de erro diferente é
+exibida. O segundo braço do <code>match</code> externo permanece igual, então o programa
+entra em pânico para qualquer erro além da ausência do arquivo.</p>
+<section class="note" aria-role="note">
+<h4 id="alternativas-ao-uso-de-match-com-resultt-e"><a class="header" href="#alternativas-ao-uso-de-match-com-resultt-e">Alternativas ao Uso de <code>match</code> com <code>Result&lt;T, E&gt;</code></a></h4>
+<p>Isso é bastante <code>match</code>! A expressão <code>match</code> é muito útil, mas também é bem
+primitiva. No Capítulo 13, você aprenderá sobre closures, que são usadas com
+muitos dos métodos definidos em <code>Result&lt;T, E&gt;</code>. Esses métodos podem ser mais
+concisos do que usar <code>match</code> ao tratar valores <code>Result&lt;T, E&gt;</code> no seu código.</p>
+<p>Por exemplo, aqui está outra forma de escrever a mesma lógica mostrada na
+Listagem 9-5, desta vez usando closures e o método <code>unwrap_or_else</code>:</p>
+<!-- CAN'T EXTRACT SEE https://github.com/rust-lang/mdBook/issues/1127 -->
+<pre><code class="language-rust ignore">use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file = File::open("hello.txt").unwrap_or_else(|error| {
+        if error.kind() == ErrorKind::NotFound {
+            File::create("hello.txt").unwrap_or_else(|error| {
+                panic!("Problem creating the file: {error:?}");
+            })
+        } else {
+            panic!("Problem opening the file: {error:?}");
+        }
+    });
+}</code></pre>
+<p>Embora esse código tenha o mesmo comportamento da Listagem 9-5, ele não
+contém nenhuma expressão <code>match</code> e é mais limpo de ler. Volte a este exemplo
+depois de ler o Capítulo 13 e procure o método <code>unwrap_or_else</code> na
+documentação da biblioteca padrão. Muitos outros métodos desse tipo podem
+simplificar expressões <code>match</code> grandes e aninhadas quando você estiver lidando
+com erros.</p>
+</section>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="shortcuts-for-panic-on-error-unwrap-and-expect"></a></p>
+<h4 id="atalhos-para-entrar-em-pânico-em-caso-de-erro"><a class="header" href="#atalhos-para-entrar-em-pânico-em-caso-de-erro">Atalhos para Entrar em Pânico em Caso de Erro</a></h4>
 <p>Usar <code>match</code> funciona bem o suficiente, mas pode ser um pouco verboso e nem
-sempre comunica tão bem a intenção. O tipo <code>Result&lt;T, E&gt;</code> tem vários métodos
-auxiliares definidos para fazer diversas tarefas. Um desses métodos, chamado
-<code>unwrap</code>, é um método de atalho que é implementado justamente como o <code>match</code> que
-escrevemos na Listagem 9-4. Se o valor de <code>Result</code> for da variante <code>Ok</code>, <code>unwrap</code>
-vai retornar o valor dentro de <code>Ok</code>. Se o <code>Result</code> for da variante <code>Err</code>, <code>unwrap</code>
-vai chamar a macro <code>panic!</code>. Aqui um exemplo de <code>unwrap</code> em ação:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+sempre comunica a intenção com clareza. O tipo <code>Result&lt;T, E&gt;</code> tem muitos
+métodos auxiliares definidos para realizar tarefas mais específicas. O método
+<code>unwrap</code> é um atalho implementado exatamente como a expressão <code>match</code> que
+escrevemos na Listagem 9-4. Se o valor <code>Result</code> for a variante <code>Ok</code>, <code>unwrap</code>
+retornará o valor dentro de <code>Ok</code>. Se o <code>Result</code> for a variante <code>Err</code>, <code>unwrap</code>
+chamará a macro <code>panic!</code> para nós. Aqui está um exemplo de <code>unwrap</code> em ação:</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
 
 fn main() {
-    let f = File::open("hello.txt").unwrap();
+    let greeting_file = File::open("hello.txt").unwrap();
 }</code></pre>
-<p>Se rodarmos esse código sem um arquivo <em>hello.txt</em>, veremos uma mensagem de erro
-da chamada de <code>panic!</code> que o método <code>unwrap</code> faz:</p>
-<pre><code class="language-text">thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Error {
-repr: Os { code: 2, message: "No such file or directory" } }',
-/stable-dist-rustc/build/src/libcore/result.rs:868
+</figure>
+<p>Se executarmos esse código sem um arquivo <em>hello.txt</em>, veremos uma mensagem de
+erro da chamada a <code>panic!</code> feita pelo método <code>unwrap</code>:</p>
+<!-- manual-regeneration
+cd listings/ch09-error-handling/no-listing-04-unwrap
+cargo run
+copy and paste relevant text
+-->
+<pre><code class="language-text">thread 'main' panicked at src/main.rs:4:49:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 </code></pre>
-<p>Outro método, <code>expect</code>, que é semelhante a <code>unwrap</code>, nos deixa também escolher
-a mensagem de erro do <code>panic!</code>. Usar <code>expect</code> em vez de <code>unwrap</code> e fornecer
-boas mensagens de erros podem transmitir sua intenção e tornar a procura pela
-fonte de pânico mais fácil. A sintaxe de <code>expect</code> é a seguinte:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<p>Da mesma forma, o método <code>expect</code> também nos permite escolher a mensagem de
+erro do <code>panic!</code>. Usar <code>expect</code> em vez de <code>unwrap</code> e fornecer boas mensagens de
+erro pode transmitir melhor sua intenção e facilitar a identificação da origem
+de um pânico. A sintaxe de <code>expect</code> é assim:</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust should_panic edition2024">use std::fs::File;
 
 fn main() {
-    let f = File::open("hello.txt").expect("Falhou ao abrir hello.txt");
+    let greeting_file = File::open("hello.txt")
+        .expect("hello.txt should be included in this project");
 }</code></pre>
-<p>Nós usamos <code>expect</code> da mesma maneira que <code>unwrap</code>: para retornar o <em>handle</em> de arquivo
-ou chamar a macro de <code>panic!</code>. A mensagem de erro usada por <code>expect</code> na sua chamada
-de <code>panic!</code> será o parâmetro que passamos para <code>expect</code> em vez da mensagem padrão
-que o <code>unwrap</code> usa. Aqui está como ela aparece:</p>
-<pre><code class="language-text">thread 'main' panicked at 'Falhou ao abrir hello.txt: Error { repr: Os { code:
-2, message: "No such file or directory" } }',
-/stable-dist-rustc/build/src/libcore/result.rs:868
+</figure>
+<p>Usamos <code>expect</code> da mesma forma que <code>unwrap</code>: para retornar o handle de arquivo
+ou chamar a macro <code>panic!</code>. A mensagem de erro usada por <code>expect</code> em sua
+chamada a <code>panic!</code> será o parâmetro que passamos a <code>expect</code>, em vez da mensagem
+de <code>panic!</code> padrão usada por <code>unwrap</code>. Ela fica assim:</p>
+<!-- manual-regeneration
+cd listings/ch09-error-handling/no-listing-05-expect
+cargo run
+copy and paste relevant text
+-->
+<pre><code class="language-text">thread 'main' panicked at src/main.rs:5:10:
+hello.txt should be included in this project: Os { code: 2, kind: NotFound, message: "No such file or directory" }
 </code></pre>
-<p>Como essa mensagem de erro começa com o texto que especificamos, <code>Falhou ao abrir hello.txt</code>, será mais fácil encontrar o trecho do código de onde vem essa mensagem de erro. Se usamos <code>unwrap</code> em diversos lugares, pode tomar mais tempo encontrar
-exatamente qual dos <code>unwrap</code> está causando o pânico, dado que todas as chamadas
-a <code>unwrap</code> chamam o print de pânico com a mesma mensagem.</p>
+<p>Em código de qualidade de produção, a maioria dos Rustaceans prefere <code>expect</code>
+em vez de <code>unwrap</code> e fornece mais contexto sobre por que a operação deve sempre
+ter sucesso. Assim, se alguma suposição se mostrar errada, você terá mais
+informações para usar no debug.</p>
 <h3 id="propagando-erros"><a class="header" href="#propagando-erros">Propagando Erros</a></h3>
-<p>Quando você está escrevendo uma função cuja implementação chama algo que pode
-falhar, em vez de tratar o erro dentro dessa função, você pode retornar o
-erro ao código que a chamou de forma que ele possa decidir o que fazer. Isso é
-conhecido como <em>propagar</em> o erro e dá mais controle ao código que chamou sua
-função, onde talvez haja mais informação sobre como tratar o erro
-do que você tem disponível no contexto do seu código.</p>
-<p>Por exemplo, a Listagem 9-6 mostra uma função que lê um nome de usuário de um arquivo.
-Se o arquivo não existe ou não pode ser lido, essa função vai retornar esses erros
-ao código que chamou essa função:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<p>Quando a implementação de uma função chama algo que pode falhar, em vez de
+tratar o erro dentro da própria função, você pode retornar o erro para o código
+chamador, para que ele decida o que fazer. Isso é conhecido como <em>propagar</em> o
+erro e dá mais controle ao código chamador, que talvez tenha mais informações
+ou lógica sobre como o erro deve ser tratado do que você tem disponível no
+contexto do seu código.</p>
+<p>Por exemplo, a Listagem 9-6 mostra uma função que lê um nome de usuário a
+partir de um arquivo. Se o arquivo não existir ou não puder ser lido, essa
+função retornará esses erros ao código que a chamou.</p>
+<figure class="listing" id="listing-9-6">
+<span class="file-name">Filename: src/main.rs</span>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>use std::io;
-use std::io::Read;
-use std::fs::File;
+</span>use std::fs::File;
+use std::io::{self, Read};
 
 fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
-    let f = File::open("hello.txt");
+    let username_file_result = File::open("hello.txt");
 
-    let mut f = match f {
+    let mut username_file = match username_file_result {
         Ok(file) =&gt; file,
         Err(e) =&gt; return Err(e),
     };
 
-    let mut s = String::new();
+    let mut username = String::new();
 
-    match f.read_to_string(&amp;mut s) {
-        Ok(_) =&gt; Ok(s),
+    match username_file.read_to_string(&amp;mut username) {
+        Ok(_) =&gt; Ok(username),
         Err(e) =&gt; Err(e),
     }
 }
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 9-6: Uma função que retorna erros ao código que a chamou
-usando <code>match</code></span></p>
-<p>Vamos olhar primeiro ao tipo retornado pela função: <code>Result&lt;String, io::Error&gt;</code>.
-Isso significa que a função está retornando um valor do tipo <code>Result&lt;T, E&gt;</code> onde
-o parâmetro genérico <code>T</code> foi preenchido pelo tipo concreto <code>String</code> e o tipo genérico
-<code>E</code> foi preenchido pelo tipo concreto <code>io::Error</code>. Se essa função tem sucesso sem
-nenhum problema, o código que chama essa função vai receber um valor <code>Ok</code> que contém
-uma <code>String</code>- o nome de usuário que essa função leu do arquivo. Se essa função
-encontra qualquer problema, o código que a chama receberá um valor de <code>Err</code>
-que contém uma instância de <code>io::Error</code>, que contém mais informação
-sobre o que foi o problema. Escolhemos <code>io::Error</code> como o tipo de retorno
-dessa função porque é este o tipo de erro retornado pelas
-duas operações que estamos chamando no corpo dessa função que podem falhar:
-a função <code>File::open</code> e o método <code>read_to_string</code>.</p>
-<p>O corpo da função começa chamando a função <code>File::open</code>. Nós então tratamos
-o valor de <code>Result</code> retornado usando um <code>match</code> semelhante ao da Listagem 9-4,
-só que em vez de chamar <code>panic!</code> no caso de <code>Err</code>, retornamos mais cedo dessa função
-e passamos o valor de erro de <code>File::open</code> de volta ao código que a chamou, como o
-valor de erro da nossa função. Se <code>File::open</code> tem sucesso, nós guardamos o <em>handle</em> de
-arquivo na variável <code>f</code> e continuamos.</p>
-<p>Então, criamos uma nova <code>String</code> na variável <code>s</code> e chamamos o método <code>read_to_string</code>
-no <em>handle</em> de arquivo <code>f</code> para ler o conteúdo do arquivo e armazená-lo em <code>s</code>. O método
-<code>read_to_string</code> também retorna um <code>Result</code> porque ele pode falhar, mesmo que
-<code>File::open</code> teve sucesso. Então precisamos de outro <code>match</code> para tratar esse
-<code>Result</code>: se <code>read_to_string</code> teve sucesso, então nossa função teve sucesso, e nós
-retornamos o nome de usuário lido do arquivo que está agora em <code>s</code>, encapsulado em um <code>Ok</code>.
-Se <code>read_to_string</code> falhou, retornamos o valor de erro da mesma maneira que retornamos
-o valor de erro no <code>match</code> que tratou o valor de retorno de <code>File::open</code>.
-No entanto, não precisamos explicitamente escrever <code>return</code>, porque essa já é a
-última expressão na função.</p>
-<p>O código que chama nossa função vai então receber ou um valor <code>Ok</code> que
-contém um nome de usuário ou um valor de <code>Err</code> que contém um <code>io::Error</code>. Nós
-não sabemos o que o código que chamou nossa função fará com esses valores. Se o
-código que chamou recebe um valor de <code>Err</code>, ele poderia chamar <code>panic!</code> e causar
-um crash, usar um nome de usuário padrão, ou procurar o nome de usuário em outro
-lugar que não é um arquivo, por exemplo. Nós não temos informação o suficiente sobre
-o que o código que chamou está de fato tentando fazer, então propagamos toda a
-informação de sucesso ou erro para cima para que ele a trate apropriadamente.</p>
-<p>Esse padrão de propagação de erros é tão comum em Rust que a linguagem disponibiliza
-o operador de interrogação <code>?</code> para tornar isso mais fácil.</p>
-<h4 id="um-atalho-para-propagar-erros-"><a class="header" href="#um-atalho-para-propagar-erros-">Um Atalho Para Propagar Erros: <code>?</code></a></h4>
-<p>A Listagem 9-7 mostra uma implementação de <code>read_username_from_file</code> que tem a
-mesma funcionalidade que tinha na Listagem 9-6, mas esta implementação usa o operador
-de interrogação:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<figcaption><a href="#listing-9-6">Listing 9-6</a>: Uma função que retorna erros ao código chamador usando <code>match</code></figcaption>
+</figure>
+<p>Essa função pode ser escrita de uma forma bem mais curta, mas vamos começar
+fazendo muito do processo manualmente para explorar o tratamento de erros; ao
+final, mostraremos a versão mais curta. Primeiro, vejamos o tipo de retorno da
+função: <code>Result&lt;String, io::Error&gt;</code>. Isso significa que a função está
+retornando um valor do tipo <code>Result&lt;T, E&gt;</code>, em que o parâmetro genérico <code>T</code> foi
+preenchido com o tipo concreto <code>String</code> e o tipo genérico <code>E</code> foi preenchido
+com o tipo concreto <code>io::Error</code>.</p>
+<p>Se essa função tiver sucesso sem nenhum problema, o código que a chama
+receberá um valor <code>Ok</code> contendo uma <code>String</code>, isto é, o <code>username</code> que a função
+leu do arquivo. Se essa função encontrar qualquer problema, o código chamador
+receberá um valor <code>Err</code> contendo uma instância de <code>io::Error</code> com mais
+informações sobre o problema. Escolhemos <code>io::Error</code> como tipo de retorno dessa
+função porque esse é o tipo de erro retornado pelas duas operações que estamos
+chamando no corpo da função e que podem falhar: a função <code>File::open</code> e o
+método <code>read_to_string</code>.</p>
+<p>O corpo da função começa chamando <code>File::open</code>. Em seguida, tratamos o valor
+<code>Result</code> com um <code>match</code> semelhante ao da Listagem 9-4. Se <code>File::open</code> tiver
+sucesso, o handle de arquivo no padrão <code>file</code> se torna o valor da variável
+mutável <code>username_file</code>, e a função continua. No caso de <code>Err</code>, em vez de
+chamar <code>panic!</code>, usamos a palavra-chave <code>return</code> para retornar imediatamente da
+função e passar o valor de erro de <code>File::open</code>, agora na variável de padrão
+<code>e</code>, de volta ao código chamador como o valor de erro desta função.</p>
+<p>Assim, se tivermos um handle de arquivo em <code>username_file</code>, a função então cria
+uma nova <code>String</code> na variável <code>username</code> e chama o método <code>read_to_string</code> no
+handle de arquivo armazenado em <code>username_file</code> para ler o conteúdo do arquivo
+para dentro de <code>username</code>. O método <code>read_to_string</code> também retorna um
+<code>Result</code>, porque ele pode falhar, mesmo que <code>File::open</code> tenha tido sucesso.
+Portanto, precisamos de outro <code>match</code> para tratar esse <code>Result</code>: se
+<code>read_to_string</code> tiver sucesso, então nossa função terá tido sucesso, e
+retornaremos o nome de usuário lido do arquivo, agora armazenado em <code>username</code>,
+empacotado em um <code>Ok</code>. Se <code>read_to_string</code> falhar, retornaremos o valor de erro
+da mesma forma que retornamos o valor de erro no <code>match</code> que tratava o valor de
+retorno de <code>File::open</code>. No entanto, não precisamos dizer <code>return</code>
+explicitamente, porque esta é a última expressão da função.</p>
+<p>O código que chama essa função então tratará de receber um valor <code>Ok</code>
+contendo um nome de usuário ou um valor <code>Err</code> contendo um <code>io::Error</code>. Cabe ao
+código chamador decidir o que fazer com esses valores. Se ele receber um valor
+<code>Err</code>, poderia chamar <code>panic!</code> e encerrar o programa, usar um nome de usuário
+padrão ou procurar o nome de usuário em outro lugar que não um arquivo, por
+exemplo. Não temos informações suficientes sobre o que o código chamador
+realmente está tentando fazer, então propagamos para cima todas as informações
+de sucesso ou erro para que ele as trate da forma apropriada.</p>
+<p>Esse padrão de propagação de erros é tão comum em Rust que a linguagem fornece
+o operador ponto de interrogação <code>?</code> para facilitar isso.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="a-shortcut-for-propagating-errors-the--operator"></a></p>
+<h4 id="atalho-do-operador-"><a class="header" href="#atalho-do-operador-">Atalho do Operador <code>?</code></a></h4>
+<p>A Listagem 9-7 mostra uma implementação de <code>read_username_from_file</code> com a
+mesma funcionalidade da Listagem 9-6, mas que usa o operador <code>?</code>.</p>
+<figure class="listing" id="listing-9-7">
+<span class="file-name">Filename: src/main.rs</span>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>use std::io;
-use std::io::Read;
-use std::fs::File;
+</span>use std::fs::File;
+use std::io::{self, Read};
 
 fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
-    let mut f = File::open("hello.txt")?;
-    let mut s = String::new();
-    f.read_to_string(&amp;mut s)?;
-    Ok(s)
+    let mut username_file = File::open("hello.txt")?;
+    let mut username = String::new();
+    username_file.read_to_string(&amp;mut username)?;
+    Ok(username)
 }
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 9-7: Uma função que retorna erros para o código
-que a chamou usando <code>?</code>.</span></p>
-<p>O <code>?</code> colocado após um valor de <code>Result</code> é definido para funcionar quase
-da mesma maneira que as expressões <code>match</code> que definimos para tratar o valor
-de <code>Result</code> na Listagem 9-6. Se o valor de <code>Result</code> é um <code>Ok</code>, o valor dentro dele
-vai ser retornado dessa expressão e o programa vai continuar. Se o valor
-é um <code>Err</code>, o valor dentro dele vai ser retornado da função inteira como se
-tivéssemos usado a palavra-chave <code>return</code> de modo que o valor de erro é propagado
-ao código que chamou a função.</p>
-<p>A única diferença entre a expressão <code>match</code> da Listagem 9-6 e o que o operador
-de interrogação faz é que quando usamos o operador de interrogação, os valores
-de erro passam pela função <code>from</code> definida no <em>trait</em> <code>From</code> na biblioteca
-padrão. Vários tipos de erro implementam a função <code>from</code> para converter um
-erro de um tipo em outro. Quando usado pelo operador de
-interrogação, a chamada à função <code>from</code> converte o tipo de erro que o
-operador recebe no tipo de erro definido no tipo de retorno da função em
-que estamos usando <code>?</code>. Isso é útil quando partes de uma função podem falhar
-por várias razões diferentes, mas a função retorna um tipo de erro que
-representa todas as maneiras que a função pode falhar. Enquanto cada
-tipo de erro implementar a função <code>from</code> para definir como se converter
-ao tipo de erro retornado, o operador de interrogação lida com a conversão
-automaticamente.</p>
-<p>No contexto da Listagem 9-7, o <code>?</code> no final da chamada de <code>File::open</code> vai
-retornar o valor dentro do <code>Ok</code> à variável <code>f</code>. Se um erro ocorrer, <code>?</code>
-vai retornar mais cedo a função inteira e dar um valor de <code>Err</code> ao código
-que a chamou. O mesmo se aplica ao <code>?</code> ao final da chamada de <code>read_to_string</code>.</p>
-<p>O <code>?</code> elimina um monte de excesso e torna a implementação dessa
-função mais simples. Poderíamos até encurtar ainda mais esse código
-ao encadear chamadas de método imediatamente depois do <code>?</code>, como mostrado
-na Listagem 9-8:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<figcaption><a href="#listing-9-7">Listing 9-7</a>: Uma função que retorna erros ao código chamador usando o operador <code>?</code></figcaption>
+</figure>
+<p>O <code>?</code> colocado após um valor <code>Result</code> foi definido para funcionar quase da
+mesma forma que as expressões <code>match</code> que definimos para tratar os valores
+<code>Result</code> na Listagem 9-6. Se o valor do <code>Result</code> for um <code>Ok</code>, o valor dentro de
+<code>Ok</code> será retornado por essa expressão, e o programa continuará. Se o valor for
+um <code>Err</code>, o <code>Err</code> será retornado da função inteira como se tivéssemos usado a
+palavra-chave <code>return</code>, de modo que o valor de erro seja propagado para o
+código chamador.</p>
+<p>Há uma diferença entre o que a expressão <code>match</code> da Listagem 9-6 faz e o que o
+operador <code>?</code> faz: valores de erro sobre os quais o operador <code>?</code> é chamado
+passam pela função <code>from</code>, definida no trait <code>From</code> da biblioteca padrão, que é
+usada para converter valores de um tipo em outro. Quando o operador <code>?</code> chama a
+função <code>from</code>, o tipo de erro recebido é convertido para o tipo de erro
+definido no tipo de retorno da função atual. Isso é útil quando uma função
+retorna um único tipo de erro para representar todas as formas pelas quais ela
+pode falhar, mesmo que partes dela possam falhar por muitos motivos diferentes.</p>
+<p>Por exemplo, poderíamos alterar a função <code>read_username_from_file</code> da Listagem
+9-7 para retornar um tipo de erro personalizado chamado <code>OurError</code>, que nós
+mesmos definimos. Se também definirmos <code>impl From&lt;io::Error&gt; for OurError</code> para
+construir uma instância de <code>OurError</code> a partir de um <code>io::Error</code>, então as
+chamadas ao operador <code>?</code> no corpo de <code>read_username_from_file</code> invocarão
+<code>from</code> e converterão os tipos de erro sem que seja necessário adicionar mais
+código à função.</p>
+<p>No contexto da Listagem 9-7, o <code>?</code> no fim da chamada a <code>File::open</code> retornará o
+valor dentro de <code>Ok</code> para a variável <code>username_file</code>. Se ocorrer um erro, o
+operador <code>?</code> retornará imediatamente da função inteira e entregará qualquer
+valor <code>Err</code> ao código chamador. O mesmo se aplica ao <code>?</code> no fim da chamada a
+<code>read_to_string</code>.</p>
+<p>O operador <code>?</code> elimina bastante código repetitivo e torna a implementação dessa
+função mais simples. Poderíamos até encurtar esse código ainda mais encadeando
+chamadas de método imediatamente após o <code>?</code>, como mostrado na Listagem 9-8.</p>
+<figure class="listing" id="listing-9-8">
+<span class="file-name">Filename: src/main.rs</span>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>use std::io;
-use std::io::Read;
-use std::fs::File;
+</span>use std::fs::File;
+use std::io::{self, Read};
 
 fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
-    let mut s = String::new();
+    let mut username = String::new();
 
-    File::open("hello.txt")?.read_to_string(&amp;mut s)?;
+    File::open("hello.txt")?.read_to_string(&amp;mut username)?;
 
-    Ok(s)
+    Ok(username)
 }
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 9-8: Encadeando chamadas de método após o operador
-de interrogação.</span></p>
-<p>Nós movemos a criação da nova <code>String</code> em <code>s</code> para o começo da função;
-essa parte não mudou. Em vez de criar uma variável <code>f</code>, nós encadeamos
-a chamada para <code>read_to_string</code> diretamente ao resultado de
-<code>File::open("hello.txt")?</code>. Nós ainda temos um <code>?</code> ao fim da chamada a
-<code>read_to_string</code>, e ainda retornamos um valor de <code>Ok</code> contendo o nome de usuário
-em <code>s</code> quando ambos os métodos <code>File::open</code> e <code>read_to_string</code> tiveram sucesso ao invés
-de retornarem erros. Essa funcionalidade é novamente a mesma da Listagem 9-6 e
-Listagem 9-7; essa é só uma maneira diferente e mais ergonômica de escrevê-la.</p>
-<h4 id="-somente-pode-ser-usado-em-funções-que-retornam-result"><a class="header" href="#-somente-pode-ser-usado-em-funções-que-retornam-result"><code>?</code> Somente Pode Ser Usado em Funções Que Retornam Result</a></h4>
-<p>O <code>?</code> só pode ser usado em funções que tem um tipo de retorno de <code>Result</code>,
-porque está definido a funcionar da mesma maneira que a expressão <code>match</code> que
-definimos na Listagem 9-6. A parte do <code>match</code> que requer um tipo de retorno de
-<code>Result</code> é <code>return Err(e)</code>, então o tipo de retorno da função deve ser
-um <code>Result</code> para ser compatível com esse <code>return</code>.</p>
-<p>Vamos ver o que ocorre quando usamos <code>?</code> na função <code>main</code>, que como vimos, tem
-um tipo de retorno de <code>()</code>:</p>
-<pre><code class="language-rust ignore">use std::fs::File;
+<figcaption><a href="#listing-9-8">Listing 9-8</a>: Encadeando chamadas de método após o operador <code>?</code></figcaption>
+</figure>
+<p>Movemos a criação da nova <code>String</code> em <code>username</code> para o início da função; essa
+parte não mudou. Em vez de criar uma variável <code>username_file</code>, encadeamos a
+chamada a <code>read_to_string</code> diretamente ao resultado de <code>File::open("hello.txt")?</code>.
+Ainda temos um <code>?</code> no final da chamada a <code>read_to_string</code>, e continuamos
+retornando um valor <code>Ok</code> contendo <code>username</code> quando <code>File::open</code> e
+<code>read_to_string</code> têm sucesso, em vez de retornar erros. A funcionalidade segue
+sendo a mesma das Listagens 9-6 e 9-7; esta é apenas uma forma diferente e mais
+ergonômica de escrevê-la.</p>
+<p>A Listagem 9-9 mostra uma forma de deixar isso ainda mais curto usando
+<code>fs::read_to_string</code>.</p>
+<figure class="listing" id="listing-9-9">
+<span class="file-name">Filename: src/main.rs</span>
+<!-- Deliberately not using rustdoc_include here; the `main` function in the
+file panics. We do want to include it for reader experimentation purposes, but
+don't want to include it for rustdoc testing purposes. -->
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::fs;
+use std::io;
+
+fn read_username_from_file() -&gt; Result&lt;String, io::Error&gt; {
+    fs::read_to_string("hello.txt")
+}
+<span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-9-9">Listing 9-9</a>: Usando <code>fs::read_to_string</code> em vez de abrir e depois ler o arquivo</figcaption>
+</figure>
+<p>Ler um arquivo para dentro de uma string é uma operação bastante comum, então a
+biblioteca padrão oferece a função conveniente <code>fs::read_to_string</code>, que abre o
+arquivo, cria uma nova <code>String</code>, lê o conteúdo do arquivo, coloca esse conteúdo
+na <code>String</code> e a retorna. É claro que usar <code>fs::read_to_string</code> não nos dá a
+oportunidade de explicar todo o tratamento de erros, então primeiro fizemos do
+jeito mais longo.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="where-the--operator-can-be-used"></a></p>
+<h4 id="onde-o-operador--pode-ser-usado"><a class="header" href="#onde-o-operador--pode-ser-usado">Onde o Operador <code>?</code> Pode Ser Usado</a></h4>
+<p>O operador <code>?</code> só pode ser usado em funções cujo tipo de retorno seja
+compatível com o valor sobre o qual <code>?</code> é aplicado. Isso acontece porque o
+operador <code>?</code> foi definido para realizar um retorno antecipado de um valor a
+partir da função, da mesma forma que a expressão <code>match</code> que definimos na
+Listagem 9-6. Na Listagem 9-6, o <code>match</code> estava usando um valor <code>Result</code>, e o
+braço de retorno antecipado devolvia um valor <code>Err(e)</code>. O tipo de retorno da
+função precisa ser um <code>Result</code> para ser compatível com esse <code>return</code>.</p>
+<p>Na Listagem 9-10, vamos observar o erro que recebemos se usarmos o operador <code>?</code>
+em uma função <code>main</code> com um tipo de retorno incompatível com o tipo do valor
+sobre o qual usamos <code>?</code>.</p>
+<figure class="listing" id="listing-9-10">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">use std::fs::File;
 
 fn main() {
-    let f = File::open("hello.txt")?;
+    let greeting_file = File::open("hello.txt")?;
 }</code></pre>
-<p>Quando compilamos esse código recebemos a seguinte mensagem de erro:</p>
-<pre><code class="language-text">error[E0277]: the `?` operator can only be used in a function that returns
-`Result` (or another type that implements `std::ops::Try`)
- --&gt; src/main.rs:4:13
+<figcaption><a href="#listing-9-10">Listing 9-10</a>: Tentar usar <code>?</code> em uma função <code>main</code> que retorna <code>()</code> não compila</figcaption>
+</figure>
+<p>Esse código abre um arquivo, o que pode falhar. O operador <code>?</code> vem após o valor
+<code>Result</code> retornado por <code>File::open</code>, mas essa função <code>main</code> tem tipo de retorno
+<code>()</code>, e não <code>Result</code>. Ao compilar esse código, recebemos a seguinte mensagem de
+erro:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling error-handling v0.1.0 (file:///projects/error-handling)
+error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+ --&gt; src/main.rs:4:48
   |
-4 |     let f = File::open("hello.txt")?;
-  |             ------------------------
-  |             |
-  |             cannot use the `?` operator in a function that returns `()`
-  |             in this macro invocation
+3 | fn main() {
+  | --------- this function should return `Result` or `Option` to accept `?`
+4 |     let greeting_file = File::open("hello.txt")?;
+  |                                                ^ cannot use the `?` operator in a function that returns `()`
   |
-  = help: the trait `std::ops::Try` is not implemented for `()`
-  = note: required by `std::ops::Try::from_error`
+help: consider adding return type
+  |
+3 ~ fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+4 |     let greeting_file = File::open("hello.txt")?;
+5 +     Ok(())
+  |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `error-handling` (bin "error-handling") due to 1 previous error
 </code></pre>
-<p>Esse erro aponta que só podemos usar o operador de interrogação em funções
-que retornam <code>Result</code>. Em funções que não retornam <code>Result</code>, quando você chama
-outras funções que retornam <code>Result</code>, você deve usar um <code>match</code> ou um dos métodos
-de <code>Result</code> para tratá-lo em vez de usar <code>?</code> para potencialmente
-propagar o erro ao código que a chamou.</p>
-<p>Agora que discutimos os detalhes de chamar <code>panic!</code> ou retornar <code>Result</code>, vamos
-retornar ao tópico de como decidir qual é apropriado para utilizar em quais
-casos.</p>
+<p>Essa mensagem de erro destaca que só podemos usar o operador <code>?</code> em uma função
+que retorne <code>Result</code>, <code>Option</code> ou outro tipo que implemente <code>FromResidual</code>.</p>
+<p>Para corrigir o erro, você tem duas opções. Uma delas é alterar o tipo de
+retorno da sua função para que ele seja compatível com o valor sobre o qual
+você está usando o operador <code>?</code>, desde que não exista nenhuma restrição que
+impeça isso. A outra opção é usar um <code>match</code> ou um dos métodos de
+<code>Result&lt;T, E&gt;</code> para tratar o <code>Result&lt;T, E&gt;</code> da maneira apropriada.</p>
+<p>A mensagem de erro também mencionou que <code>?</code> pode ser usado com valores
+<code>Option&lt;T&gt;</code>. Assim como no uso de <code>?</code> com <code>Result</code>, você só pode usar <code>?</code> sobre
+um <code>Option</code> em uma função que retorne <code>Option</code>. O comportamento do operador <code>?</code>
+quando chamado sobre <code>Option&lt;T&gt;</code> é semelhante ao seu comportamento sobre
+<code>Result&lt;T, E&gt;</code>: se o valor for <code>None</code>, <code>None</code> será retornado antecipadamente da
+função naquele ponto. Se o valor for <code>Some</code>, o valor dentro de <code>Some</code> será o
+resultado da expressão, e a função continuará. A Listagem 9-11 mostra um
+exemplo de uma função que encontra o último caractere da primeira linha de um
+texto dado.</p>
+<figure class="listing" id="listing-9-11">
+<pre class="playground"><code class="language-rust edition2024">fn last_char_of_first_line(text: &amp;str) -&gt; Option&lt;char&gt; {
+    text.lines().next()?.chars().last()
+}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    assert_eq!(
+</span><span class="boring">        last_char_of_first_line("Hello, world\nHow are you today?"),
+</span><span class="boring">        Some('d')
+</span><span class="boring">    );
+</span><span class="boring">
+</span><span class="boring">    assert_eq!(last_char_of_first_line(""), None);
+</span><span class="boring">    assert_eq!(last_char_of_first_line("\nhi"), None);
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-9-11">Listing 9-11</a>: Usando o operador <code>?</code> em um valor <code>Option&lt;T&gt;</code></figcaption>
+</figure>
+<p>Essa função retorna <code>Option&lt;char&gt;</code> porque é possível que exista um caractere
+ali, mas também é possível que não exista. Esse código recebe o argumento
+<code>text</code>, um string slice, e chama o método <code>lines</code> sobre ele, o que retorna um
+iterador sobre as linhas da string. Como essa função quer examinar a primeira
+linha, ela chama <code>next</code> no iterador para obter o primeiro valor. Se <code>text</code> for
+uma string vazia, essa chamada a <code>next</code> retornará <code>None</code>; nesse caso, usamos
+<code>?</code> para interromper e retornar <code>None</code> de <code>last_char_of_first_line</code>. Se <code>text</code>
+não for uma string vazia, <code>next</code> retornará um valor <code>Some</code> contendo um string
+slice da primeira linha de <code>text</code>.</p>
+<p>O <code>?</code> extrai o string slice, e podemos chamar <code>chars</code> sobre ele para obter um
+iterador dos seus caracteres. Estamos interessados no último caractere dessa
+primeira linha, então chamamos <code>last</code> para retornar o último item do iterador.
+Isso é um <code>Option</code>, porque é possível que a primeira linha seja uma string
+vazia; por exemplo, se <code>text</code> começar com uma linha em branco, mas tiver
+caracteres em outras linhas, como em <code>"\nhi"</code>. No entanto, se existir um último
+caractere na primeira linha, ele será retornado na variante <code>Some</code>. O operador
+<code>?</code> no meio nos oferece uma forma concisa de expressar essa lógica, permitindo
+implementar a função em uma única linha. Se não pudéssemos usar o operador <code>?</code>
+com <code>Option</code>, teríamos de implementar essa lógica usando mais chamadas de
+método ou uma expressão <code>match</code>.</p>
+<p>Observe que você pode usar o operador <code>?</code> sobre um <code>Result</code> em uma função que
+retorna <code>Result</code>, e pode usar o operador <code>?</code> sobre um <code>Option</code> em uma função
+que retorna <code>Option</code>, mas não pode misturar as coisas. O operador <code>?</code> não
+converterá automaticamente um <code>Result</code> em um <code>Option</code>, nem o contrário; nesses
+casos, você pode usar métodos como <code>ok</code> em <code>Result</code> ou <code>ok_or</code> em <code>Option</code>
+para fazer a conversão explicitamente.</p>
+<p>Até agora, todas as funções <code>main</code> que usamos retornavam <code>()</code>. A função <code>main</code>
+é especial porque é o ponto de entrada e de saída de um programa executável, e
+existem restrições sobre quais tipos de retorno ela pode ter para que o
+programa se comporte como esperado.</p>
+<p>Felizmente, <code>main</code> também pode retornar <code>Result&lt;(), E&gt;</code>. A Listagem 9-12 traz o
+código da Listagem 9-10, mas alteramos o tipo de retorno de <code>main</code> para
+<code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code> e adicionamos um valor de retorno <code>Ok(())</code> ao
+final. Agora esse código compila.</p>
+<figure class="listing" id="listing-9-12">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore">use std::error::Error;
+use std::fs::File;
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn Error&gt;&gt; {
+    let greeting_file = File::open("hello.txt")?;
+
+    Ok(())
+}</code></pre>
+<figcaption><a href="#listing-9-12">Listing 9-12</a>: Alterar <code>main</code> para retornar <code>Result&lt;(), E&gt;</code> permite usar o operador <code>?</code> em valores <code>Result</code></figcaption>
+</figure>
+<p>O tipo <code>Box&lt;dyn Error&gt;</code> é um trait object, sobre o qual falaremos em <a href="ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior">“Usando
+Trait Objects para Abstrair sobre Comportamento Compartilhado”</a><!--
+ignore -->, no Capítulo 18. Por enquanto, você pode ler <code>Box&lt;dyn Error&gt;</code> como
+“qualquer tipo de erro”. Usar <code>?</code> sobre um valor <code>Result</code> em uma função <code>main</code>
+cujo tipo de erro é <code>Box&lt;dyn Error&gt;</code> é permitido porque isso possibilita
+retornar antecipadamente qualquer valor <code>Err</code>. Ainda que o corpo dessa função
+<code>main</code> venha a retornar apenas erros do tipo <code>std::io::Error</code>, ao especificar
+<code>Box&lt;dyn Error&gt;</code>, essa assinatura continuará correta mesmo que mais código que
+retorne outros erros seja adicionado ao corpo de <code>main</code>.</p>
+<p>Quando uma função <code>main</code> retorna <code>Result&lt;(), E&gt;</code>, o executável sai com valor
+<code>0</code> se <code>main</code> retornar <code>Ok(())</code> e sai com um valor diferente de zero se <code>main</code>
+retornar um valor <code>Err</code>. Executáveis escritos em C retornam inteiros quando
+encerram: programas que terminam com sucesso retornam o inteiro <code>0</code>, e
+programas que falham retornam algum inteiro diferente de <code>0</code>. Rust também
+retorna inteiros em executáveis para ser compatível com essa convenção.</p>
+<p>A função <code>main</code> pode retornar qualquer tipo que implemente <a href="../std/process/trait.Termination.html">o trait
+<code>std::process::Termination</code></a><!-- ignore -->, que contém uma função
+<code>report</code> responsável por retornar um <code>ExitCode</code>. Consulte a documentação da
+biblioteca padrão para mais informações sobre como implementar o trait
+<code>Termination</code> para os seus próprios tipos.</p>
+<p>Agora que discutimos os detalhes de chamar <code>panic!</code> ou retornar <code>Result</code>,
+voltemos ao tema de como decidir qual dessas abordagens é a mais apropriada em
+cada situação.</p>
 
                     </main>
 

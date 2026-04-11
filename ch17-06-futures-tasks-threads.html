@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,16 +181,16 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="juntando-tudo-futures-tarefas-e-threads"><a class="header" href="#juntando-tudo-futures-tarefas-e-threads">Juntando tudo: Futures, tarefas e threads</a></h2>
-<p>Como vimos no <a href="http://localhost:3000/ch16-00-concurrency.html">Capítulo 16</a><!-- ignore -->, threads fornecem uma forma de
-concorrência. Neste capítulo vimos outra abordagem: usar async com futures e
-streams. Se você está se perguntando quando escolher um método em vez do outro,
-a resposta é: depende! E, em muitos casos, a escolha não é threads <em>ou</em> async,
-mas sim threads <em>e</em> async.</p>
-<p>Há décadas muitos sistemas operacionais oferecem modelos de concorrência
+                        <h2 id="juntando-tudo-futures-tasks-e-threads"><a class="header" href="#juntando-tudo-futures-tasks-e-threads">Juntando Tudo: Futures, Tasks e Threads</a></h2>
+<p>Como vimos no <a href="http://localhost:3000/ch16-00-concurrency.html">Capítulo 16</a><!-- ignore -->, threads oferecem uma forma de
+concorrência. Neste capítulo, vimos outra abordagem: usar async com futures e
+streams. Se você está se perguntando quando escolher um método em vez do
+outro, a resposta é: depende! E, em muitos casos, a escolha não é threads <em>ou</em>
+async, mas sim threads <em>e</em> async.</p>
+<p>Há décadas, muitos sistemas operacionais oferecem modelos de concorrência
 baseados em threads e, por isso, muitas linguagens de programação também os
 suportam. No entanto, esses modelos não vêm sem trade-offs. Em muitos sistemas
-operacionais, eles usam uma quantidade considerável de memória por thread.
+operacionais, threads usam uma quantidade considerável de memória por thread.
 Além disso, threads só são uma opção quando o sistema operacional e o hardware
 as suportam. Diferentemente de desktops e dispositivos móveis convencionais,
 alguns sistemas embarcados nem sequer têm sistema operacional e, portanto, não
@@ -198,36 +198,35 @@ têm threads.</p>
 <p>O modelo async oferece um conjunto diferente, e em última análise
 complementar, de trade-offs. No modelo async, operações concorrentes não
 precisam de suas próprias threads. Em vez disso, podem ser executadas em
-tarefas, como quando usamos <code>trpl::spawn_task</code> para iniciar trabalho a partir
-de uma função síncrona na seção sobre streams. Uma tarefa é semelhante a uma
+tasks, como quando usamos <code>trpl::spawn_task</code> para iniciar trabalho a partir de
+uma função síncrona na seção sobre streams. Uma task é semelhante a uma
 thread, mas, em vez de ser gerenciada pelo sistema operacional, é gerenciada
 por código em nível de biblioteca: o runtime.</p>
-<p>Existe um motivo para as APIs de criação de threads e de criação de tarefas
+<p>Existe um motivo para as APIs de criação de threads e de criação de tasks
 serem tão parecidas. Threads funcionam como uma fronteira para conjuntos de
-operações síncronas; a concorrência é possível <em>entre</em> threads. Tarefas
+operações síncronas; a concorrência é possível <em>entre</em> threads. Tasks
 funcionam como uma fronteira para conjuntos de operações <em>assíncronas</em>; a
-concorrência é possível tanto <em>entre</em> quanto <em>dentro</em> das tarefas, porque uma
-tarefa pode alternar entre os futures em seu corpo. Por fim, futures são a
+concorrência é possível tanto <em>entre</em> quanto <em>dentro</em> das tasks, porque uma
+task pode alternar entre os futures em seu corpo. Por fim, futures são a
 unidade mais granular de concorrência em Rust, e cada future pode representar
 uma árvore de outros futures. O runtime, mais especificamente seu executor,
-gerencia tarefas, e tarefas gerenciam futures. Nesse sentido, tarefas se
-parecem com threads leves gerenciadas em runtime, com capacidades adicionais
-que surgem do fato de serem gerenciadas por um runtime e não pelo sistema
-operacional.</p>
-<p>Isso não significa que tarefas async sejam sempre melhores do que threads, nem
-o contrário. A concorrência com threads é, em alguns aspectos, um modelo de
+gerencia tasks, e tasks gerenciam futures. Nesse sentido, tasks se parecem com
+threads leves gerenciadas em runtime, com capacidades adicionais que surgem do
+fato de serem gerenciadas por um runtime e não pelo sistema operacional.</p>
+<p>Isso não significa que tasks async sejam sempre melhores do que threads, nem o
+contrário. A concorrência com threads é, em alguns aspectos, um modelo de
 programação mais simples do que a concorrência com <code>async</code>. Isso pode ser uma
 força ou uma fraqueza. Threads são um pouco “dispare e esqueça”: elas não têm
-um equivalente nativo a um future e, portanto, simplesmente executam até o fim,
-sem interrupção, exceto pelo próprio sistema operacional.</p>
-<p>E acontece que threads e tarefas muitas vezes funcionam muito bem juntas,
-porque tarefas podem, pelo menos em alguns runtimes, ser movidas entre
-threads. De fato, nos bastidores, o runtime que estamos usando, incluindo as
-funções <code>spawn_blocking</code> e <code>spawn_task</code>, é multithread por padrão! Muitos
-runtimes usam uma abordagem chamada <em>work stealing</em> para mover tarefas de forma
-transparente entre threads, com base em como elas estão sendo utilizadas no
-momento, a fim de melhorar o desempenho geral do sistema. Essa abordagem, na
-verdade, exige tarefas <em>e</em> threads e, portanto, também futures.</p>
+um equivalente nativo a um future e, portanto, simplesmente executam até o
+fim, sem interrupção, exceto pelo próprio sistema operacional.</p>
+<p>E acontece que threads e tasks muitas vezes funcionam muito bem juntas, porque
+tasks podem, pelo menos em alguns runtimes, ser movidas entre threads. De
+fato, nos bastidores, o runtime que estamos usando, incluindo as funções
+<code>spawn_blocking</code> e <code>spawn_task</code>, é multithread por padrão! Muitos runtimes usam
+uma abordagem chamada <em>work stealing</em> para mover tasks de forma transparente
+entre threads, com base em como elas estão sendo utilizadas no momento, a fim
+de melhorar o desempenho geral do sistema. Essa abordagem, na verdade, exige
+tasks <em>e</em> threads e, portanto, também futures.</p>
 <p>Ao pensar em qual método usar em cada situação, considere estas regras
 práticas:</p>
 <ul>
@@ -283,15 +282,15 @@ inúmeros exemplos desse tipo de combinação em casos de uso do mundo real.</p>
 <p>Esta não é a última vez que você verá concorrência neste livro. O projeto do
 <a href="ch21-00-final-project-a-web-server.html">Capítulo 21</a><!-- ignore --> vai aplicar esses conceitos em uma situação
 mais realista do que os exemplos mais simples discutidos aqui e comparar de
-forma mais direta a resolução de problemas com threads versus tarefas e
+forma mais direta a resolução de problemas com threads versus tasks e
 futures.</p>
 <p>Independentemente de qual dessas abordagens você escolha, Rust oferece as
 ferramentas necessárias para escrever código seguro, rápido e concorrente, seja
 para um servidor web de alta vazão, seja para um sistema operacional embarcado.</p>
 <p>A seguir, falaremos sobre formas idiomáticas de modelar problemas e estruturar
-soluções à medida que seus programas em Rust ficam maiores. Além disso,
-discutiremos como os idiomas de Rust se relacionam com aqueles com que você
-pode estar familiarizado na programação orientada a objetos.</p>
+soluções à medida que seus programas em Rust ficarem maiores. Além disso,
+discutiremos como os idiomatismos de Rust se relacionam com aqueles que você
+talvez conheça da programação orientada a objetos.</p>
 
                     </main>
 

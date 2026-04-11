@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,38 +182,41 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="um-projeto-de-es-criando-um-programa-de-linha-de-comando"><a class="header" href="#um-projeto-de-es-criando-um-programa-de-linha-de-comando">Um projeto de E/S: Criando um Programa de Linha de Comando</a></h1>
-<p>Este capítulo é um recapitulação de muitas habilidades que você aprendeu até agora e uma
-exploração de mais alguns recursos da biblioteca padrão. Vamos construir uma
-ferramenta que interage com arquivo de entrada/saída em linha de comando para praticar alguns dos
-conceitos de Rust que você tem a disposição.</p>
-<p>A velocidade, a segurança, a saída <em>binary-único</em> e o suporte multi-plataforma de Rust
-fazem dela uma linguagem ideal para a criação de ferramentas de linha de comando. Assim,
-para nosso projeto, criaremos nossa própria versão da ferramenta clássica de linha de comando <code>grep</code>
-(<strong>g</strong>lobally search a <strong>r</strong>egular <strong>e</strong>xpression and <strong>p</strong>rint). No caso de uso mais simples,
-o <code>grep</code> procura um arquivo especificado para uma string especificada. Para fazer isso, o <code>grep</code>
-toma como argumento um nome de arquivo e uma string, e então lê o arquivo e localiza linhas naquele
-arquivo que contém o argumento string. Em seguida, imprime essas linhas.</p>
-<p>Ao longo do caminho, mostraremos como fazer com que nossa ferramenta de linha de comando use recursos do
-terminal que muitas ferramentas de linha de comando usam. Leremos o valor de uma
-variável de ambiente para permitir ao usuário configurar o comportamento de nossa ferramenta.
-Também imprimiremos na saída de console de erro padrão (<code>stderr</code>) em vez da
-saída padrão (<code>stdout</code>), por exemplo, o usuário pode redirecionar saída de sucesso
-para um arquivo enquanto ainda está vendo mensagens de erro na tela.</p>
-<p>Um membro da comunidade One Rust, Andrew Gallant, já criou uma versão completa
-, e muito rápida do <code>grep</code>, chamada <code>ripgrep</code>. Em comparação, nossa
-versão do <code>grep</code> será bastante simples, mas este capítulo lhe dará alguns dos
-conhecimento básicos que você precisa para entender um projeto real como
-<code>ripgrep</code>.</p>
-<p>Nosso projeto <code>grep</code> combinará uma série de conceitos que você aprendeu até agora:</p>
+<p>Este capítulo é uma recapitulação de muitas das habilidades que você aprendeu
+até agora, além de uma exploração de mais alguns recursos da biblioteca padrão.
+Vamos construir uma ferramenta de linha de comando que interage com entrada e
+saída de arquivos para praticar alguns dos conceitos de Rust que você já tem à
+disposição.</p>
+<p>A velocidade, a segurança, a geração de um único binário e o suporte
+multiplataforma do Rust fazem dele uma linguagem ideal para a criação de
+ferramentas de linha de comando. Assim, para nosso projeto, criaremos nossa
+própria versão da ferramenta clássica de linha de comando <code>grep</code>
+(<strong>g</strong>lobally search a <strong>r</strong>egular <strong>e</strong>xpression and <strong>p</strong>rint). No caso de
+uso mais simples, o <code>grep</code> procura uma string específica em um arquivo
+especificado. Para fazer isso, o <code>grep</code> recebe como argumentos um caminho de
+arquivo e uma string. Em seguida, ele lê o arquivo, encontra as linhas que
+contêm essa string e imprime essas linhas.</p>
+<p>Ao longo do caminho, mostraremos como fazer nossa ferramenta de linha de
+comando usar recursos do terminal que muitas outras ferramentas desse tipo
+usam. Leremos o valor de uma variável de ambiente para permitir que o usuário
+configure o comportamento da ferramenta. Também imprimiremos mensagens de erro
+no fluxo de erro padrão (<code>stderr</code>) em vez de na saída padrão (<code>stdout</code>), para
+que, por exemplo, o usuário possa redirecionar a saída bem-sucedida para um
+arquivo enquanto continua vendo as mensagens de erro na tela.</p>
+<p>Um membro da comunidade Rust, Andrew Gallant, já criou uma versão completa e
+muito rápida do <code>grep</code>, chamada <code>ripgrep</code>. Em comparação, a nossa versão será
+bastante simples, mas este capítulo dará a você parte do conhecimento básico de
+que precisa para entender um projeto real como o <code>ripgrep</code>.</p>
+<p>Nosso projeto <code>grep</code> combinará vários conceitos que você aprendeu até agora:</p>
 <ul>
-<li>Organizar código (usando o que aprendeu em módulos, Capítulo 7)</li>
-<li>Usando vetores e strings (coleções, Capítulo 8)</li>
-<li>Erros de manipulação (Capítulo 9)</li>
-<li>Usando traits e lifetimes, quando apropriado (Capítulo 10)</li>
-<li>Escrevendo testes (Capítulo 11)</li>
+<li>Organizar código (usando o que você aprendeu sobre módulos, no Capítulo 7)</li>
+<li>Usar vetores e strings (coleções, no Capítulo 8)</li>
+<li>Tratar erros (Capítulo 9)</li>
+<li>Usar traits e lifetimes, quando apropriado (Capítulo 10)</li>
+<li>Escrever testes (Capítulo 11)</li>
 </ul>
-<p>Também apresentamos brevemente closures, iterações e trait objects, que
-os capítulos 13 e 17 abordarão em detalhes.</p>
+<p>Também apresentaremos brevemente closures, iterators e trait objects, que os
+Capítulos 13 e 18 abordarão em detalhes.</p>
 
                     </main>
 

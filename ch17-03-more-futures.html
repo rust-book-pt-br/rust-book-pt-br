@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -184,18 +184,18 @@
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="yielding"></a></p>
 <h3 id="entregando-controle-ao-tempo-de-execução"><a class="header" href="#entregando-controle-ao-tempo-de-execução">Entregando controle ao tempo de execução</a></h3>
-<p>Lembre-se da seção <a href="ch17-01-futures-and-syntax.html#our-first-async-program">“Nosso primeiro programa async”</a><!-- ignore -->
-de que, em cada ponto <code>await</code>, Rust dá ao runtime a chance de pausar a
-tarefa e mude para outra se o future aguardado não estiver pronto. O
-o inverso também é verdadeiro: Rust <em>apenas</em> pausa os blocos async e devolve o controle para
-um tempo de execução em um ponto await. Tudo entre os pontos await é síncrono.</p>
-<p>Isso significa que se você fizer muito trabalho em um bloco async sem um ponto await,
-que future bloqueará qualquer outro futures de progredir. Você pode às vezes
-ouça isso sendo chamado de um future <em>faminto</em> outro futures. Em alguns casos,
-isso pode não ser grande coisa. No entanto, se você estiver fazendo algum tipo de trabalho caro
-configuração ou trabalho de longa duração, ou se você tiver um future que continuará fazendo alguns
-tarefa específica indefinidamente, você precisará pensar sobre quando e onde entregar
-controle de volta ao tempo de execução.</p>
+<p>Lembre-se, da seção <a href="ch17-01-futures-and-syntax.html#our-first-async-program">“Nosso primeiro programa async”</a><!-- ignore -->,
+de que, em cada ponto <code>await</code>, o Rust dá ao runtime a chance de pausar a
+tarefa e mudar para outra se o future aguardado não estiver pronto. O
+inverso também é verdadeiro: o Rust <em>apenas</em> pausa os blocos async e devolve o controle ao
+runtime em um ponto <code>await</code>. Tudo entre pontos <code>await</code> é síncrono.</p>
+<p>Isso significa que, se você fizer muito trabalho em um bloco async sem um ponto <code>await</code>,
+esse future bloqueará o progresso de quaisquer outros futures. Às vezes você pode
+ouvir isso ser descrito como um future “faminto”, que deixa outros futures sem progredir. Em alguns casos,
+isso pode não ser um problema. No entanto, se você estiver fazendo algum tipo de trabalho caro
+de configuração ou de longa duração, ou se tiver um future que continuará realizando alguma
+tarefa específica indefinidamente, precisará pensar sobre quando e onde devolver
+o controle ao runtime.</p>
 <p>Vamos simular uma operação demorada para ilustrar o problema de starvation e,
 depois, explorar como resolvê-lo. A Listagem 17-14 apresenta uma função <code>slow</code>.</p>
 <figure class="listing" id="listing-17-14">
@@ -216,10 +216,10 @@ depois, explorar como resolvê-lo. A Listagem 17-14 apresenta uma função <code
 }</code></pre>
 <figcaption><a href="#listing-17-14">Listing 17-14</a>: Usando <code>thread::sleep</code> para simular operações lentas</figcaption>
 </figure>
-<p>Este código usa <code>std::thread::sleep</code> em vez de <code>trpl::sleep</code> para que a chamada
-<code>slow </code> bloqueará o thread atual por alguns milissegundos. Nós podemos
-use<code>slow</code> para substituir operações do mundo real que são de longa duração e
-bloqueio.</p>
+<p>Este código usa <code>std::thread::sleep</code> em vez de <code>trpl::sleep</code>, de modo que a
+chamada a <code>slow</code> bloqueará a thread atual por alguns milissegundos. Podemos
+usar <code>slow</code> para representar operações do mundo real que são longas e
+bloqueantes.</p>
 <p>Na Listagem 17-15, usamos <code>slow</code> para emular esse tipo de trabalho vinculado à CPU em
 um par de futures.</p>
 <figure class="listing" id="listing-17-15">
@@ -502,8 +502,8 @@ esperei.</li>
 necessidade: queremos competir com o future transmitido em relação à duração. Podemos usar
 <code>trpl::sleep </code> para criar um cronômetro future a partir da duração e usar<code>trpl::select</code>
 para executar esse cronômetro com o future que o chamador passa.</p>
-<p>In Listing 17-20, we implement <code>timeout</code> by matching on the result of awaiting
-<code>trpl::select</code>.</p>
+<p>Na Listagem 17-20, implementamos <code>timeout</code> fazendo <code>match</code> sobre o resultado de
+aguardar <code>trpl::select</code>.</p>
 <figure class="listing" id="listing-17-20">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
@@ -541,16 +541,16 @@ para executar esse cronômetro com o future que o chamador passa.</p>
 }</code></pre>
 <figcaption><a href="#listing-17-20">Listing 17-20</a>: Definindo <code>timeout</code> com <code>select</code> e <code>sleep</code></figcaption>
 </figure>
-<p>A implementação do <code>trpl::select</code> não é justa: ele sempre pesquisa argumentos em
-a ordem em que são passados ​​(outras implementações <code>select</code> serão
-escolher aleatoriamente qual argumento pesquisar primeiro). Assim, passamos <code>future_to_try</code> para
-<code>select </code> primeiro para que tenha a chance de ser concluído mesmo que<code>max_time </code> seja muito
-curta duração. Se<code>future_to_try </code> terminar primeiro,<code>select </code> retornará<code>Left </code>
-com a saída de<code>future_to_try</code>. Se<code>timer</code>terminar primeiro,<code>select</code>irá
-retorne<code>Right</code>com a saída do temporizador de<code> ()</code>.</p>
-<p>Se o <code>future_to_try</code> for bem-sucedido e obtivermos um <code>Left(output)</code>, retornamos
-<code>Ok(output)</code>. Se o temporizador terminar e obtivermos um<code>Right(())</code>,
-ignore<code>()</code>com<code>_</code>e retorne<code> Err(max_time)</code>.</p>
+<p>A implementação de <code>trpl::select</code> não é justa: ela sempre faz <code>poll</code> nos argumentos na
+ordem em que são passados (outras implementações de <code>select</code> podem escolher
+aleatoriamente qual argumento verificar primeiro). Assim, passamos <code>future_to_try</code> para
+<code>select</code> primeiro para que ele tenha a chance de ser concluído mesmo que <code>max_time</code> seja muito
+curto. Se <code>future_to_try</code> terminar primeiro, <code>select</code> retornará <code>Left</code>
+com a saída de <code>future_to_try</code>. Se <code>timer</code> terminar primeiro, <code>select</code> retornará
+<code>Right</code> com a saída do temporizador, <code>()</code>.</p>
+<p>Se <code>future_to_try</code> for bem-sucedido e obtivermos <code>Left(output)</code>, retornamos
+<code>Ok(output)</code>. Se o temporizador terminar e obtivermos <code>Right(())</code>,
+ignoramos <code>()</code> com <code>_</code> e retornamos <code>Err(max_time)</code>.</p>
 <p>Com isso, temos um <code>timeout</code> funcional construído a partir de dois outros auxiliares async. Se
 executamos nosso código, ele imprimirá o modo de falha após o tempo limite:</p>
 <pre><code class="language-text">Failed after 2 seconds

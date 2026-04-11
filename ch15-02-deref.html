@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="tratando-ponteiros-inteligentes-como-referências-normais-com-a-trait-deref"><a class="header" href="#tratando-ponteiros-inteligentes-como-referências-normais-com-a-trait-deref">Tratando Ponteiros Inteligentes como Referências Normais com a Trait <code>Deref</code></a></h2>
+                        <h2 id="tratando-ponteiros-inteligentes-como-referências-normais"><a class="header" href="#tratando-ponteiros-inteligentes-como-referências-normais">Tratando Ponteiros Inteligentes como Referências Normais</a></h2>
 <p>Implementar a trait <code>Deref</code> nos permite personalizar o comportamento do
 <em>operador de desreferência</em> (<em>dereference operator</em>), <code>*</code> (que é diferente do
 operador de multiplicação ou de glob). Implementando a <code>Deref</code> de tal modo que o
@@ -210,8 +210,8 @@ de desreferência para seguir a referência até o dado:</p>
 }</code></pre>
 <p><span class="caption">Listagem 15-6: Usando o operador de desreferência para
 seguir uma referência a um valor <code>i32</code></span></p>
-<p>A variável <code>x</code> contém um valor <code>i32</code>, <code>5</code>. Nós setamos <code>y</code> igual a uma
-referência a <code>x</code>. Podemos conferir (coloquialmente, “assertar”) que <code>x</code> é igual
+<p>A variável <code>x</code> contém um valor <code>i32</code>, <code>5</code>. Nós definimos <code>y</code> como uma
+referência a <code>x</code>. Podemos verificar que <code>x</code> é igual
 a <code>5</code>. Contudo, se queremos fazer uma asserção sobre o valor em <code>y</code>, temos que
 usar <code>*y</code> para seguir a referência até o valor ao qual <code>y</code> aponta (por isso
 “desreferência”). Uma vez que desreferenciamos <code>y</code>, temos acesso ao valor
@@ -245,15 +245,15 @@ Listagem 15-7:</p>
 }</code></pre>
 <p><span class="caption">Listagem 15-7: Usando o operador de desreferência em um
 <code>Box&lt;i32&gt;</code></span></p>
-<p>A única diferença entre a Listagem 15-7 e a Listagem 15-6 é que aqui nós setamos
-<code>y</code> para ser uma instância de um box apontando para o valor em <code>x</code> em vez de uma
+<p>A única diferença entre a Listagem 15-7 e a Listagem 15-6 é que aqui nós
+definimos <code>y</code> como uma instância de um box apontando para o valor em <code>x</code>, em vez de uma
 referência apontando para o valor de <code>x</code>. Na última asserção, podemos usar o
 operador de desreferência para seguir o ponteiro do box do mesmo jeito que
 fizemos quando <code>y</code> era uma referência. A seguir, vamos explorar o que tem de
 especial no <code>Box&lt;T&gt;</code> que nos permite usar o operador de desreferência, criando
-nosso próprio tipo box.</p>
+nosso próprio tipo de box.</p>
 <h3 id="definindo-nosso-próprio-ponteiro-inteligente"><a class="header" href="#definindo-nosso-próprio-ponteiro-inteligente">Definindo Nosso Próprio Ponteiro Inteligente</a></h3>
-<p>Vamos construir um smart pointer parecido com o tipo <code>Box&lt;T&gt;</code> fornecido pela
+<p>Vamos construir um ponteiro inteligente parecido com o tipo <code>Box&lt;T&gt;</code> fornecido pela
 biblioteca padrão para vermos como ponteiros inteligentes, por padrão, se
 comportam diferente de referências. Em seguida, veremos como adicionar a
 habilidade de usar o operador de desreferência.</p>

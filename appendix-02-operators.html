@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -184,178 +184,178 @@
                         <h2 id="apêndice-b-operadores-e-símbolos"><a class="header" href="#apêndice-b-operadores-e-símbolos">Apêndice B: Operadores e Símbolos</a></h2>
 <p>Este apêndice contém um glossário da sintaxe do Rust, incluindo operadores e
 outros símbolos que aparecem sozinhos ou no contexto de caminhos, genéricos,
-Limites trait, macros, atributos, comentários, tuplas e colchetes.</p>
-<h3 id="operators"><a class="header" href="#operators">Operators</a></h3>
+trait bounds, macros, atributos, comentários, tuplas e colchetes.</p>
+<h3 id="operadores"><a class="header" href="#operadores">Operadores</a></h3>
 <p>A Tabela B-1 contém os operadores em Rust, um exemplo de como o operador
-aparecem no contexto, uma breve explicação e se esse operador é
-sobrecarregável. Se um operador for sobrecarregável, o trait relevante a ser usado para
-sobrecarga que o operador está listado.</p>
+aparece em contexto, uma breve explicação e se esse operador pode ser
+sobrecarregado. Se um operador puder ser sobrecarregado, o trait relevante para
+essa sobrecarga estará listado.</p>
 <p><span class="caption">Tabela B-1: Operadores</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Operator</th><th>Example</th><th>Explanation</th><th>Overloadable?</th></tr>
+<tr><th>Operador</th><th>Exemplo</th><th>Explicação</th><th>Sobrecarregável?</th></tr>
 </thead>
 <tbody>
-<tr><td><code>!</code></td><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Macro expansion</td><td></td></tr>
-<tr><td><code>!</code></td><td><code>!expr</code></td><td>Bitwise or logical complement</td><td><code>Not</code></td></tr>
-<tr><td><code>!=</code></td><td><code>expr != expr</code></td><td>Nonequality comparison</td><td><code>PartialEq</code></td></tr>
-<tr><td><code>%</code></td><td><code>expr % expr</code></td><td>Arithmetic remainder</td><td><code>Rem</code></td></tr>
+<tr><td><code>!</code></td><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Expansão de macro</td><td></td></tr>
+<tr><td><code>!</code></td><td><code>!expr</code></td><td>Complemento bit a bit ou lógico</td><td><code>Not</code></td></tr>
+<tr><td><code>!=</code></td><td><code>expr != expr</code></td><td>Comparação de desigualdade</td><td><code>PartialEq</code></td></tr>
+<tr><td><code>%</code></td><td><code>expr % expr</code></td><td>Resto aritmético</td><td><code>Rem</code></td></tr>
 <tr><td><code>%=</code></td><td><code>var %= expr</code></td><td>Resto aritmético e atribuição</td><td><code>RemAssign</code></td></tr>
 <tr><td><code>&amp;</code></td><td><code>&amp;expr</code>, <code>&amp;mut expr</code></td><td>Borrow</td><td></td></tr>
-<tr><td><code>&amp;</code></td><td><code>&amp;type</code>, <code>&amp;mut type</code>, <code>&amp;'a type</code>, <code>&amp;'a mut type</code></td><td>Borrowed pointer type</td><td></td></tr>
+<tr><td><code>&amp;</code></td><td><code>&amp;type</code>, <code>&amp;mut type</code>, <code>&amp;'a type</code>, <code>&amp;'a mut type</code></td><td>Tipo de ponteiro emprestado</td><td></td></tr>
 <tr><td><code>&amp;</code></td><td><code>expr &amp; expr</code></td><td>E bit a bit</td><td><code>BitAnd</code></td></tr>
 <tr><td><code>&amp;=</code></td><td><code>var &amp;= expr</code></td><td>AND bit a bit e atribuição</td><td><code>BitAndAssign</code></td></tr>
-<tr><td><code>&amp;&amp;</code></td><td><code>expr &amp;&amp; expr</code></td><td>Curto-circuito lógico AND</td><td></td></tr>
-<tr><td><code>*</code></td><td><code>expr * expr</code></td><td>Arithmetic multiplication</td><td><code>Mul</code></td></tr>
+<tr><td><code>&amp;&amp;</code></td><td><code>expr &amp;&amp; expr</code></td><td>AND lógico com curto-circuito</td><td></td></tr>
+<tr><td><code>*</code></td><td><code>expr * expr</code></td><td>Multiplicação aritmética</td><td><code>Mul</code></td></tr>
 <tr><td><code>*=</code></td><td><code>var *= expr</code></td><td>Multiplicação e atribuição aritmética</td><td><code>MulAssign</code></td></tr>
-<tr><td><code>*</code></td><td><code>*expr</code></td><td>Dereference</td><td><code>Deref</code></td></tr>
-<tr><td><code>*</code></td><td><code>*const type</code>, <code>*mut type</code></td><td>Raw pointer</td><td></td></tr>
+<tr><td><code>*</code></td><td><code>*expr</code></td><td>Dereferência</td><td><code>Deref</code></td></tr>
+<tr><td><code>*</code></td><td><code>*const type</code>, <code>*mut type</code></td><td>Ponteiro bruto</td><td></td></tr>
 <tr><td><code>+</code></td><td><code>trait + trait</code>, <code> 'a + trait</code></td><td>Restrição de tipo composto</td><td></td></tr>
-<tr><td><code>+</code></td><td><code>expr + expr</code></td><td>Arithmetic addition</td><td><code>Add</code></td></tr>
+<tr><td><code>+</code></td><td><code>expr + expr</code></td><td>Adição aritmética</td><td><code>Add</code></td></tr>
 <tr><td><code>+=</code></td><td><code>var += expr</code></td><td>Adição e atribuição aritmética</td><td><code>AddAssign</code></td></tr>
 <tr><td><code>,</code></td><td><code>expr, expr</code></td><td>Separador de argumentos e elementos</td><td></td></tr>
-<tr><td><code>-</code></td><td><code>- expr</code></td><td>Arithmetic negation</td><td><code>Neg</code></td></tr>
-<tr><td><code>-</code></td><td><code>expr - expr</code></td><td>Arithmetic subtraction</td><td><code>Sub</code></td></tr>
+<tr><td><code>-</code></td><td><code>- expr</code></td><td>Negação aritmética</td><td><code>Neg</code></td></tr>
+<tr><td><code>-</code></td><td><code>expr - expr</code></td><td>Subtração aritmética</td><td><code>Sub</code></td></tr>
 <tr><td><code>-=</code></td><td><code>var -= expr</code></td><td>Subtração e atribuição aritmética</td><td><code>SubAssign</code></td></tr>
-<tr><td><code>-&gt;</code></td><td><code>fn(...) -&gt; type</code>, <code>|…| -&gt; type</code></td><td>Function and closure return type</td><td></td></tr>
-<tr><td><code>.</code></td><td><code>expr.ident</code></td><td>Field access</td><td></td></tr>
-<tr><td><code>.</code></td><td><code>expr.ident(expr, ...)</code></td><td>Method call</td><td></td></tr>
-<tr><td><code>.</code></td><td><code>expr.0</code>, <code> expr.1</code>e assim por diante</td><td>Indexação de tupla</td><td></td></tr>
-<tr><td><code>..</code></td><td><code>..</code>, <code>expr..</code>, <code>..expr</code>, <code>expr..expr</code></td><td>Right-exclusive range literal</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>..=</code></td><td><code>..=expr</code>, <code>expr..=expr</code></td><td>Right-inclusive range literal</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>..</code></td><td><code>..expr</code></td><td>Struct literal update syntax</td><td></td></tr>
-<tr><td><code>..</code></td><td><code>variant(x,..)</code>, <code> struct_type { x,.. }</code></td><td>Encadernação de padrão “E o resto”</td><td></td></tr>
+<tr><td><code>-&gt;</code></td><td><code>fn(...) -&gt; type</code>, <code>|…| -&gt; type</code></td><td>Tipo de retorno de função e closure</td><td></td></tr>
+<tr><td><code>.</code></td><td><code>expr.ident</code></td><td>Acesso a campo</td><td></td></tr>
+<tr><td><code>.</code></td><td><code>expr.ident(expr, ...)</code></td><td>Chamada de método</td><td></td></tr>
+<tr><td><code>.</code></td><td><code>expr.0</code>, <code>expr.1</code> e assim por diante</td><td>Indexação de tupla</td><td></td></tr>
+<tr><td><code>..</code></td><td><code>..</code>, <code>expr..</code>, <code>..expr</code>, <code>expr..expr</code></td><td>Literal de intervalo exclusivo à direita</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>..=</code></td><td><code>..=expr</code>, <code>expr..=expr</code></td><td>Literal de intervalo inclusivo à direita</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>..</code></td><td><code>..expr</code></td><td>Sintaxe de atualização de literal de struct</td><td></td></tr>
+<tr><td><code>..</code></td><td><code>variant(x, ..)</code>, <code>struct_type { x, .. }</code></td><td>Binding de padrão “e o restante”</td><td></td></tr>
 <tr><td><code>...</code></td><td><code>expr...expr</code></td><td>(Obsoleto, use <code>..=</code>) Em um padrão: padrão de intervalo inclusivo</td><td></td></tr>
-<tr><td><code>/</code></td><td><code>expr / expr</code></td><td>Arithmetic division</td><td><code>Div</code></td></tr>
+<tr><td><code>/</code></td><td><code>expr / expr</code></td><td>Divisão aritmética</td><td><code>Div</code></td></tr>
 <tr><td><code>/=</code></td><td><code>var /= expr</code></td><td>Divisão e atribuição aritmética</td><td><code>DivAssign</code></td></tr>
-<tr><td><code>:</code></td><td><code>pat: type</code>, <code>ident: type</code></td><td>Constraints</td><td></td></tr>
-<tr><td><code>:</code></td><td><code>ident: expr</code></td><td>Struct field initializer</td><td></td></tr>
-<tr><td><code>:</code></td><td><code>'a: loop {...}</code></td><td>Loop label</td><td></td></tr>
+<tr><td><code>:</code></td><td><code>pat: type</code>, <code>ident: type</code></td><td>Restrições</td><td></td></tr>
+<tr><td><code>:</code></td><td><code>ident: expr</code></td><td>Inicializador de campo de struct</td><td></td></tr>
+<tr><td><code>:</code></td><td><code>'a: loop {...}</code></td><td>Rótulo de loop</td><td></td></tr>
 <tr><td><code>;</code></td><td><code>expr;</code></td><td>Terminador de declaração e item</td><td></td></tr>
-<tr><td><code>;</code></td><td><code>[...; len]</code></td><td>Part of fixed-size array syntax</td><td></td></tr>
-<tr><td><code>&lt;&lt;</code></td><td><code>expr &lt;&lt; expr</code></td><td>Left-shift</td><td><code>Shl</code></td></tr>
+<tr><td><code>;</code></td><td><code>[...; len]</code></td><td>Parte da sintaxe de array de tamanho fixo</td><td></td></tr>
+<tr><td><code>&lt;&lt;</code></td><td><code>expr &lt;&lt; expr</code></td><td>Deslocamento à esquerda</td><td><code>Shl</code></td></tr>
 <tr><td><code>&lt;&lt;=</code></td><td><code>var &lt;&lt;= expr</code></td><td>Deslocamento à esquerda e atribuição</td><td><code>ShlAssign</code></td></tr>
-<tr><td><code>&lt;</code></td><td><code>expr &lt; expr</code></td><td>Less than comparison</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>&lt;=</code></td><td><code>expr &lt;= expr</code></td><td>Less than or equal to comparison</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>=</code></td><td><code>var = expr</code>, <code>ident = type</code></td><td>Assignment/equivalence</td><td></td></tr>
-<tr><td><code>==</code></td><td><code>expr == expr</code></td><td>Equality comparison</td><td><code>PartialEq</code></td></tr>
-<tr><td><code>=&gt;</code></td><td><code>pat =&gt; expr</code></td><td>Part of match arm syntax</td><td></td></tr>
-<tr><td><code>&gt;</code></td><td><code>expr &gt; expr</code></td><td>Greater than comparison</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>&gt;=</code></td><td><code>expr &gt;= expr</code></td><td>Greater than or equal to comparison</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>&gt;&gt;</code></td><td><code>expr &gt;&gt; expr</code></td><td>Right-shift</td><td><code>Shr</code></td></tr>
+<tr><td><code>&lt;</code></td><td><code>expr &lt; expr</code></td><td>Comparação “menor que”</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>&lt;=</code></td><td><code>expr &lt;= expr</code></td><td>Comparação “menor ou igual a”</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>=</code></td><td><code>var = expr</code>, <code>ident = type</code></td><td>Atribuição/equivalência</td><td></td></tr>
+<tr><td><code>==</code></td><td><code>expr == expr</code></td><td>Comparação de igualdade</td><td><code>PartialEq</code></td></tr>
+<tr><td><code>=&gt;</code></td><td><code>pat =&gt; expr</code></td><td>Parte da sintaxe de um braço de <code>match</code></td><td></td></tr>
+<tr><td><code>&gt;</code></td><td><code>expr &gt; expr</code></td><td>Comparação “maior que”</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>&gt;=</code></td><td><code>expr &gt;= expr</code></td><td>Comparação “maior ou igual a”</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>&gt;&gt;</code></td><td><code>expr &gt;&gt; expr</code></td><td>Deslocamento à direita</td><td><code>Shr</code></td></tr>
 <tr><td><code>&gt;&gt;=</code></td><td><code>var &gt;&gt;= expr</code></td><td>Deslocamento à direita e atribuição</td><td><code>ShrAssign</code></td></tr>
-<tr><td><code>@</code></td><td><code>ident @ pat</code></td><td>Encadernação de padrão</td><td></td></tr>
-<tr><td><code>^</code></td><td><code>expr ^ expr</code></td><td>Bitwise exclusive OR</td><td><code>BitXor</code></td></tr>
+<tr><td><code>@</code></td><td><code>ident @ pat</code></td><td>Binding de padrão</td><td></td></tr>
+<tr><td><code>^</code></td><td><code>expr ^ expr</code></td><td>OU exclusivo bit a bit</td><td><code>BitXor</code></td></tr>
 <tr><td><code>^=</code></td><td><code>var ^= expr</code></td><td>OR exclusivo bit a bit e atribuição</td><td><code>BitXorAssign</code></td></tr>
-<tr><td><code>|</code></td><td><code>pat | pat</code></td><td>Pattern alternatives</td><td></td></tr>
-<tr><td><code>|</code></td><td><code>expr | expr</code></td><td>Bitwise OR</td><td><code>BitOr</code></td></tr>
-<tr><td><code>|=</code></td><td><code>var |= expr</code></td><td>Bitwise OR and assignment</td><td><code>BitOrAssign</code></td></tr>
-<tr><td><code>||</code></td><td><code>expr || expr</code></td><td>Short-circuiting logical OR</td><td></td></tr>
-<tr><td><code>?</code></td><td><code>expr?</code></td><td>Error propagation</td><td></td></tr>
+<tr><td><code>|</code></td><td><code>pat | pat</code></td><td>Alternativas de padrão</td><td></td></tr>
+<tr><td><code>|</code></td><td><code>expr | expr</code></td><td>OU bit a bit</td><td><code>BitOr</code></td></tr>
+<tr><td><code>|=</code></td><td><code>var |= expr</code></td><td>OU bit a bit e atribuição</td><td><code>BitOrAssign</code></td></tr>
+<tr><td><code>||</code></td><td><code>expr || expr</code></td><td>OU lógico com curto-circuito</td><td></td></tr>
+<tr><td><code>?</code></td><td><code>expr?</code></td><td>Propagação de erro</td><td></td></tr>
 </tbody>
 </table>
 </div>
-<h3 id="non-operator-symbols"><a class="header" href="#non-operator-symbols">Non-operator Symbols</a></h3>
-<p>As tabelas a seguir contêm todos os símbolos que não funcionam como operadores; isso
+<h3 id="símbolos-que-não-são-operadores"><a class="header" href="#símbolos-que-não-são-operadores">Símbolos que não são operadores</a></h3>
+<p>As tabelas a seguir contêm todos os símbolos que não funcionam como operadores;
 isto é, eles não se comportam como uma chamada de função ou método.</p>
-<p>A Tabela B-2 mostra símbolos que aparecem sozinhos e são válidos em uma variedade de
-locais.</p>
+<p>A Tabela B-2 mostra símbolos que aparecem sozinhos e são válidos em diversos
+contextos.</p>
 <p><span class="caption">Tabela B-2: Sintaxe independente</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Symbol</th><th>Explanation</th></tr>
+<tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>'ident</code></td><td>Named lifetime or loop label</td></tr>
-<tr><td>Digits immediately followed by <code>u8</code>, <code>i32</code>, <code>f64</code>, <code>usize</code>, and so on</td><td>Numeric literal of specific type</td></tr>
-<tr><td><code>"..."</code></td><td>String literal</td></tr>
-<tr><td><code>r"..."</code>, <code>r#"..."#</code>, <code>r##"..."##</code>, and so on</td><td>Raw string literal; escape characters not processed</td></tr>
-<tr><td><code>b"..."</code></td><td>Byte string literal; constructs an array of bytes instead of a string</td></tr>
-<tr><td><code>br"..."</code>, <code> br#"..."#</code>, <code> br##"..."##</code>e assim por diante</td><td>Literal de string de bytes brutos; combinação de literal bruto e de string de bytes</td></tr>
-<tr><td><code>'...'</code></td><td>Character literal</td></tr>
-<tr><td><code>b'...'</code></td><td>ASCII byte literal</td></tr>
+<tr><td><code>'ident</code></td><td>Lifetime nomeado ou rótulo de loop</td></tr>
+<tr><td>Dígitos seguidos imediatamente por <code>u8</code>, <code>i32</code>, <code>f64</code>, <code>usize</code> e assim por diante</td><td>Literal numérico de tipo específico</td></tr>
+<tr><td><code>"..."</code></td><td>Literal de string</td></tr>
+<tr><td><code>r"..."</code>, <code>r#"..."#</code>, <code>r##"..."##</code>, e assim por diante</td><td>Literal de string bruta; caracteres de escape não são processados</td></tr>
+<tr><td><code>b"..."</code></td><td>Literal de string de bytes; constrói um array de bytes em vez de uma string</td></tr>
+<tr><td><code>br"..."</code>, <code>br#"..."#</code>, <code>br##"..."##</code>, e assim por diante</td><td>Literal de string de bytes bruta; combinação de literal bruto e literal de string de bytes</td></tr>
+<tr><td><code>'...'</code></td><td>Literal de caractere</td></tr>
+<tr><td><code>b'...'</code></td><td>Literal de byte ASCII</td></tr>
 <tr><td><code>|…| expr</code></td><td>Closure</td></tr>
-<tr><td><code>!</code></td><td>Tipo de fundo sempre vazio para funções divergentes</td></tr>
-<tr><td><code>_</code></td><td>“Ignored” pattern binding; also used to make integer literals readable</td></tr>
+<tr><td><code>!</code></td><td>Tipo bottom, sempre vazio, para funções divergentes</td></tr>
+<tr><td><code>_</code></td><td>Binding de padrão “ignorado”; também usado para tornar literais inteiros mais legíveis</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-3 mostra símbolos que aparecem no contexto de um caminho através do módulo
-hierarquia para um item.</p>
+<p>A Tabela B-3 mostra símbolos que aparecem no contexto de um caminho pela
+hierarquia de módulos até um item.</p>
 <p><span class="caption">Tabela B-3: Sintaxe relacionada a caminhos</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Symbol</th><th>Explanation</th></tr>
+<tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>ident::ident</code></td><td>Namespace path</td></tr>
-<tr><td><code>::path</code></td><td>Caminho relativo à raiz crate (ou seja, um caminho explicitamente absoluto)</td></tr>
+<tr><td><code>ident::ident</code></td><td>Caminho de namespace</td></tr>
+<tr><td><code>::path</code></td><td>Caminho relativo à raiz do crate (ou seja, um caminho explicitamente absoluto)</td></tr>
 <tr><td><code>self::path</code></td><td>Caminho relativo ao módulo atual (ou seja, um caminho explicitamente relativo)</td></tr>
 <tr><td><code>super::path</code></td><td>Caminho relativo ao pai do módulo atual</td></tr>
 <tr><td><code>type::ident</code>, <code> &lt;type as trait&gt;::ident</code></td><td>Constantes, funções e tipos associados</td></tr>
-<tr><td><code>&lt;type&gt;::...</code></td><td>Item associado para um tipo que não pode ser nomeado diretamente (por exemplo, <code>&lt;&amp;T&gt;::...</code>, <code> &lt;[T]&gt;::...</code>e assim por diante)</td></tr>
-<tr><td><code>trait::method(...)</code></td><td>Desambiguando uma chamada de método nomeando trait que a define</td></tr>
-<tr><td><code>type::method(...)</code></td><td>Desambiguando uma chamada de método nomeando o tipo para o qual ela está definida</td></tr>
-<tr><td><code>&lt;type as trait&gt;::method(...)</code></td><td>Desambiguando uma chamada de método nomeando trait e digitando</td></tr>
+<tr><td><code>&lt;type&gt;::...</code></td><td>Item associado para um tipo que não pode ser nomeado diretamente (por exemplo, <code>&lt;&amp;T&gt;::...</code>, <code>&lt;[T]&gt;::...</code> e assim por diante)</td></tr>
+<tr><td><code>trait::method(...)</code></td><td>Desambiguação de uma chamada de método ao nomear o trait que a define</td></tr>
+<tr><td><code>type::method(...)</code></td><td>Desambiguação de uma chamada de método ao nomear o tipo para o qual ela está definida</td></tr>
+<tr><td><code>&lt;type as trait&gt;::method(...)</code></td><td>Desambiguação de uma chamada de método ao nomear o trait e o tipo</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-4 mostra símbolos que aparecem no contexto do uso de tipos genéricos
-parâmetros.</p>
+<p>A Tabela B-4 mostra símbolos que aparecem no contexto do uso de parâmetros de
+tipo genéricos.</p>
 <p><span class="caption">Tabela B-4: Genéricos</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Symbol</th><th>Explanation</th></tr>
+<tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>path&lt;...&gt;</code></td><td>Specifies parameters to a generic type in a type (for example, <code>Vec&lt;u8&gt;</code>)</td></tr>
-<tr><td><code>path::&lt;...&gt;</code>, <code>method::&lt;...&gt;</code></td><td>Specifies parameters to a generic type, function, or method in an expression; often referred to as <em>turbofish</em> (for example, <code>"42".parse::&lt;i32&gt;()</code>)</td></tr>
-<tr><td><code>fn ident&lt;...&gt; ...</code></td><td>Define generic function</td></tr>
-<tr><td><code>struct ident&lt;...&gt; ...</code></td><td>Define generic structure</td></tr>
-<tr><td><code>enum ident&lt;...&gt; ...</code></td><td>Define generic enumeration</td></tr>
-<tr><td><code>impl&lt;...&gt; ...</code></td><td>Define generic implementation</td></tr>
-<tr><td><code>for&lt;...&gt; type</code></td><td>Limites lifetime com classificação mais alta</td></tr>
-<tr><td><code>type&lt;ident=type&gt;</code></td><td>A generic type where one or more associated types have specific assignments (for example, <code>Iterator&lt;Item=T&gt;</code>)</td></tr>
+<tr><td><code>path&lt;...&gt;</code></td><td>Especifica parâmetros para um tipo genérico dentro de um tipo, como em <code>Vec&lt;u8&gt;</code></td></tr>
+<tr><td><code>path::&lt;...&gt;</code>, <code>method::&lt;...&gt;</code></td><td>Especifica parâmetros para um tipo genérico, função ou método em uma expressão; frequentemente chamado de <em>turbofish</em>, como em <code>"42".parse::&lt;i32&gt;()</code></td></tr>
+<tr><td><code>fn ident&lt;...&gt; ...</code></td><td>Define função genérica</td></tr>
+<tr><td><code>struct ident&lt;...&gt; ...</code></td><td>Define struct genérica</td></tr>
+<tr><td><code>enum ident&lt;...&gt; ...</code></td><td>Define enum genérico</td></tr>
+<tr><td><code>impl&lt;...&gt; ...</code></td><td>Define implementação genérica</td></tr>
+<tr><td><code>for&lt;...&gt; type</code></td><td>Limites de lifetime de ordem superior</td></tr>
+<tr><td><code>type&lt;ident=type&gt;</code></td><td>Um tipo genérico em que um ou mais tipos associados têm atribuições específicas (por exemplo, <code>Iterator&lt;Item=T&gt;</code>)</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-5 mostra símbolos que aparecem no contexto de restrição de tipo genérico
-parâmetros com limites trait.</p>
+<p>A Tabela B-5 mostra símbolos que aparecem no contexto de restringir parâmetros
+de tipo genéricos com trait bounds.</p>
 <p><span class="caption">Tabela B-5: Restrições de trait bounds</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Symbol</th><th>Explanation</th></tr>
+<tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
 <tr><td><code>T: U</code></td><td>Parâmetro genérico <code>T</code> restrito a tipos que implementam <code>U</code></td></tr>
 <tr><td><code>T: 'a</code></td><td>O tipo genérico <code>T</code> deve sobreviver ao lifetime <code>'a</code> (o que significa que o tipo não pode conter transitivamente nenhuma referência com lifetimes menor que <code>'a</code>)</td></tr>
-<tr><td><code>T: 'static</code></td><td>Generic type <code>T</code> contains no borrowed references other than <code>'static</code> ones</td></tr>
-<tr><td><code>'b: 'a</code></td><td>Generic lifetime <code>'b</code> must outlive lifetime <code>'a</code></td></tr>
-<tr><td><code>T: ?Sized</code></td><td>Allow generic type parameter to be a dynamically sized type</td></tr>
+<tr><td><code>T: 'static</code></td><td>O tipo genérico <code>T</code> não contém referências emprestadas além daquelas com lifetime <code>'static</code></td></tr>
+<tr><td><code>'b: 'a</code></td><td>O lifetime genérico <code>'b</code> deve durar mais que o lifetime <code>'a</code></td></tr>
+<tr><td><code>T: ?Sized</code></td><td>Permite que o parâmetro de tipo genérico seja um tipo de tamanho dinâmico</td></tr>
 <tr><td><code>'a + trait</code>, <code> trait + trait</code></td><td>Restrição de tipo composto</td></tr>
 </tbody>
 </table>
 </div>
 <p>A Tabela B-6 mostra símbolos que aparecem no contexto de chamada ou definição
-macros e especificação de atributos em um item.</p>
+de macros e de especificação de atributos em um item.</p>
 <p><span class="caption">Tabela B-6: Macros e atributos</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Symbol</th><th>Explanation</th></tr>
+<tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>#[meta]</code></td><td>Outer attribute</td></tr>
-<tr><td><code>#![meta]</code></td><td>Inner attribute</td></tr>
-<tr><td><code>$ident</code></td><td>Macro substitution</td></tr>
-<tr><td><code>$ident:kind</code></td><td>Macro metavariable</td></tr>
-<tr><td><code>$(...)...</code></td><td>Macro repetition</td></tr>
-<tr><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Macro invocation</td></tr>
+<tr><td><code>#[meta]</code></td><td>Atributo externo</td></tr>
+<tr><td><code>#![meta]</code></td><td>Atributo interno</td></tr>
+<tr><td><code>$ident</code></td><td>Substituição de macro</td></tr>
+<tr><td><code>$ident:kind</code></td><td>Metavariável de macro</td></tr>
+<tr><td><code>$(...)...</code></td><td>Repetição de macro</td></tr>
+<tr><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Invocação de macro</td></tr>
 </tbody>
 </table>
 </div>
@@ -364,15 +364,15 @@ macros e especificação de atributos em um item.</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Symbol</th><th>Explanation</th></tr>
+<tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>//</code></td><td>Line comment</td></tr>
-<tr><td><code>//!</code></td><td>Inner line doc comment</td></tr>
-<tr><td><code>///</code></td><td>Outer line doc comment</td></tr>
-<tr><td><code>/*...*/</code></td><td>Block comment</td></tr>
-<tr><td><code>/*!...*/</code></td><td>Inner block doc comment</td></tr>
-<tr><td><code>/**...*/</code></td><td>Outer block doc comment</td></tr>
+<tr><td><code>//</code></td><td>Comentário de linha</td></tr>
+<tr><td><code>//!</code></td><td>Comentário interno de documentação em linha</td></tr>
+<tr><td><code>///</code></td><td>Comentário externo de documentação em linha</td></tr>
+<tr><td><code>/*...*/</code></td><td>Comentário de bloco</td></tr>
+<tr><td><code>/*!...*/</code></td><td>Comentário interno de documentação em bloco</td></tr>
+<tr><td><code>/**...*/</code></td><td>Comentário externo de documentação em bloco</td></tr>
 </tbody>
 </table>
 </div>
@@ -381,16 +381,16 @@ macros e especificação de atributos em um item.</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Symbol</th><th>Explanation</th></tr>
+<tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
 <tr><td><code>()</code></td><td>Tupla vazia (também conhecida como unidade), literal e tipo</td></tr>
-<tr><td><code>(expr)</code></td><td>Parenthesized expression</td></tr>
-<tr><td><code>(expr,)</code></td><td>Single-element tuple expression</td></tr>
-<tr><td><code>(type,)</code></td><td>Single-element tuple type</td></tr>
-<tr><td><code>(expr, ...)</code></td><td>Tuple expression</td></tr>
-<tr><td><code>(type, ...)</code></td><td>Tuple type</td></tr>
-<tr><td><code>expr(expr, ...)</code></td><td>Function call expression; also used to initialize tuple <code>struct</code>s and tuple <code>enum</code> variants</td></tr>
+<tr><td><code>(expr)</code></td><td>Expressão entre parênteses</td></tr>
+<tr><td><code>(expr,)</code></td><td>Expressão de tupla com um único elemento</td></tr>
+<tr><td><code>(type,)</code></td><td>Tipo de tupla com um único elemento</td></tr>
+<tr><td><code>(expr, ...)</code></td><td>Expressão de tupla</td></tr>
+<tr><td><code>(type, ...)</code></td><td>Tipo de tupla</td></tr>
+<tr><td><code>expr(expr, ...)</code></td><td>Expressão de chamada de função; também usada para inicializar <code>struct</code>s de tupla e variantes de <code>enum</code> do tipo tupla</td></tr>
 </tbody>
 </table>
 </div>
@@ -399,11 +399,11 @@ macros e especificação de atributos em um item.</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Context</th><th>Explanation</th></tr>
+<tr><th>Contexto</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>{...}</code></td><td>Block expression</td></tr>
-<tr><td><code>Type {...}</code></td><td>Struct literal</td></tr>
+<tr><td><code>{...}</code></td><td>Expressão de bloco</td></tr>
+<tr><td><code>Type {...}</code></td><td>Literal de struct</td></tr>
 </tbody>
 </table>
 </div>
@@ -412,14 +412,14 @@ macros e especificação de atributos em um item.</p>
 <div class="table-wrapper">
 <table>
 <thead>
-<tr><th>Context</th><th>Explanation</th></tr>
+<tr><th>Contexto</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>[...]</code></td><td>Array literal</td></tr>
-<tr><td><code>[expr; len]</code></td><td>Array literal containing <code>len</code> copies of <code>expr</code></td></tr>
-<tr><td><code>[type; len]</code></td><td>Array type containing <code>len</code> instances of <code>type</code></td></tr>
-<tr><td><code>expr[expr]</code></td><td>Collection indexing; overloadable (<code>Index</code>, <code>IndexMut</code>)</td></tr>
-<tr><td><code>expr[..]</code>, <code> expr[a..]</code>, <code> expr[..b]</code>, <code> expr[a..b]</code></td><td>Indexação de coleção fingindo ser fatiamento de coleção, usando <code> Range</code>, <code> RangeFrom</code>, <code> RangeTo</code>ou <code> RangeFull</code>como “índice”</td></tr>
+<tr><td><code>[...]</code></td><td>Literal de array</td></tr>
+<tr><td><code>[expr; len]</code></td><td>Literal de array contendo <code>len</code> cópias de <code>expr</code></td></tr>
+<tr><td><code>[type; len]</code></td><td>Tipo de array contendo <code>len</code> instâncias de <code>type</code></td></tr>
+<tr><td><code>expr[expr]</code></td><td>Indexação de coleção; pode ser sobrecarregada (<code>Index</code>, <code>IndexMut</code>)</td></tr>
+<tr><td><code>expr[..]</code>, <code>expr[a..]</code>, <code>expr[..b]</code>, <code>expr[a..b]</code></td><td>Indexação de coleção simulando o fatiamento da coleção, usando <code>Range</code>, <code>RangeFrom</code>, <code>RangeTo</code> ou <code>RangeFull</code> como “índice”</td></tr>
 </tbody>
 </table>
 </div>

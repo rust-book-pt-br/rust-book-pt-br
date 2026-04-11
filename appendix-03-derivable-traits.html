@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,13 +181,13 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="apêndice-c-características-deriváveis"><a class="header" href="#apêndice-c-características-deriváveis">Apêndice C: Características Deriváveis</a></h2>
+                        <h2 id="apêndice-c-traits-deriváveis"><a class="header" href="#apêndice-c-traits-deriváveis">Apêndice C: Traits Deriváveis</a></h2>
 <p>Em vários lugares do livro, discutimos o atributo <code>derive</code>, que
-você pode aplicar a uma definição de struct ou enum. O atributo <code> derive</code>gera
-código que implementará um trait com sua própria implementação padrão no
-tipo que você anotou com a sintaxe <code> derive</code>.</p>
-<p>Neste apêndice, fornecemos uma referência de todos os traits no padrão
-biblioteca que você pode usar com <code>derive</code>. Cada seção cobre:</p>
+você pode aplicar a uma definição de struct ou enum. O atributo <code>derive</code> gera
+código que implementará um trait com sua própria implementação padrão no tipo
+que você anotou com a sintaxe <code>derive</code>.</p>
+<p>Neste apêndice, fornecemos uma referência de todos os traits da biblioteca
+padrão que você pode usar com <code>derive</code>. Cada seção cobre:</p>
 <ul>
 <li>Quais operadores e métodos derivados deste trait permitirão</li>
 <li>O que faz a implementação do trait fornecido pelo <code>derive</code></li>
@@ -196,133 +196,140 @@ biblioteca que você pode usar com <code>derive</code>. Cada seção cobre:</p>
 <li>Exemplos de operações que requerem o trait</li>
 </ul>
 <p>Se desejar um comportamento diferente daquele fornecido pelo atributo <code>derive</code>,
-consult the <a href="../std/index.html">standard library documentation</a><!-- ignore -->
-para cada trait para obter detalhes sobre como implementá-los manualmente.</p>
+consulte a <a href="../std/index.html">documentação da biblioteca padrão</a><!-- ignore -->
+de cada trait para obter detalhes sobre como implementá-los manualmente.</p>
 <p>Os traits listados aqui são os únicos definidos pela biblioteca padrão que
-pode ser implementado em seus tipos usando <code>derive</code>. Outros traits definidos no
-biblioteca padrão não tem comportamento padrão sensato, então cabe a você
-implemente-os da maneira que faça sentido para o que você está tentando realizar.</p>
-<p>Um exemplo de trait que não pode ser derivado é <code>Display</code>, que trata
-formatação para usuários finais. Você deve sempre considerar a maneira apropriada de
-exibir um tipo para um usuário final. Quais partes do tipo um usuário final deve ser
-permitido ver? Que partes eles considerariam relevantes? Qual formato dos dados
-seria mais relevante para eles? O compilador Rust não tem esse insight, então
+podem ser implementados em seus tipos usando <code>derive</code>. Outros traits definidos
+na biblioteca padrão não têm um comportamento padrão sensato, então cabe a você
+implementá-los da maneira que faça sentido para o que você está tentando
+realizar.</p>
+<p>Um exemplo de trait que não pode ser derivado é <code>Display</code>, que trata da
+formatação para usuários finais. Você deve sempre considerar a maneira
+apropriada de exibir um tipo para um usuário final. Quais partes do tipo um usuário final
+deveria poder ver? Que partes ele consideraria relevantes? Qual formato dos
+dados seria mais relevante para ele? O compilador Rust não tem esse insight, então
 ele não pode fornecer um comportamento padrão apropriado para você.</p>
-<p>A lista de traits deriváveis fornecida neste apêndice não é abrangente:
-As bibliotecas podem implementar <code>derive</code> para seu próprio traits, tornando a lista de
-traits você pode usar <code>derive</code> com verdadeiramente aberto. Implementando <code>derive</code>
-envolve o uso de uma macro processual, que é abordada no <a href="ch20-05-macros.html#custom-derive-macros">“Custom <code> derive</code>
-Macros”</a><!-- ignore --> no Capítulo 20.</p>
+<p>A lista de traits deriváveis fornecida neste apêndice não é exaustiva: as
+bibliotecas podem implementar <code>derive</code> para seus próprios traits, tornando
+verdadeiramente aberta a lista de traits com os quais você pode usar
+<code>derive</code>. Implementar <code>derive</code> envolve o uso de uma macro procedural, assunto
+abordado na seção <a href="ch20-05-macros.html#custom-derive-macros">“Macros <code>derive</code>
+Personalizadas”</a><!-- ignore --> no Capítulo 20.</p>
 <h3 id="debug-para-saída-do-programador"><a class="header" href="#debug-para-saída-do-programador"><code>Debug</code> para saída do programador</a></h3>
-<p>O <code>Debug</code> trait permite a formatação de depuração em strings de formato, que você
-indique adicionando <code>:?</code> aos espaços reservados <code>{}</code>.</p>
-<p>O <code>Debug</code> trait permite imprimir instâncias de um tipo para depuração
-propósitos, para que você e outros programadores que usam seu tipo possam inspecionar uma instância
-em um ponto específico da execução de um programa.</p>
-<p>O <code>Debug</code> trait é necessário, por exemplo, no uso do <code>assert_eq!</code>
-macro. Esta macro imprime os valores das instâncias dadas como argumentos se o
-a afirmação de igualdade falha para que os programadores possam ver por que as duas instâncias
-não eram iguais.</p>
+<p>O trait <code>Debug</code> permite formatação de depuração em strings de formato, o que
+você indica adicionando <code>:?</code> aos placeholders <code>{}</code>.</p>
+<p>O trait <code>Debug</code> permite imprimir instâncias de um tipo para fins de depuração,
+de modo que você e outros programadores que usam seu tipo possam inspecionar
+uma instância em um ponto específico da execução de um programa.</p>
+<p>O trait <code>Debug</code> é necessário, por exemplo, ao usar a macro <code>assert_eq!</code>. Essa
+macro imprime os valores das instâncias fornecidas como argumentos se a
+asserção de igualdade falhar, para que os programadores possam ver por que as
+duas instâncias não eram iguais.</p>
 <h3 id="partialeq-e-eq-para-comparações-de-igualdade"><a class="header" href="#partialeq-e-eq-para-comparações-de-igualdade"><code>PartialEq</code> e <code>Eq</code> para comparações de igualdade</a></h3>
-<p>O <code>PartialEq</code> trait permite comparar instâncias de um tipo para verificar
+<p>O trait <code>PartialEq</code> permite comparar instâncias de um tipo para verificar
 igualdade e permite o uso dos operadores <code>==</code> e <code>!=</code>.</p>
-<p>A derivação de <code>PartialEq</code> implementa o método <code>eq</code>. Quando <code> PartialEq</code>é derivado de
-estruturas, duas instâncias são iguais apenas se <em>todos</em> os campos forem iguais, e o
-as instâncias não são iguais se <em>qualquer</em> campo não for igual. Quando derivado de enums,
-cada variante é igual a si mesma e não é igual às outras variantes.</p>
-<p>O <code>PartialEq</code> trait é necessário, por exemplo, com o uso do
-Macro <code>assert_eq!</code>, que precisa ser capaz de comparar duas instâncias de um tipo
-pela igualdade.</p>
-<p>O <code>Eq</code> trait não possui métodos. Seu objetivo é sinalizar que para cada valor de
-o tipo anotado, o valor é igual a si mesmo. O <code>Eq</code> trait só pode ser
-aplicado a tipos que também implementam <code>PartialEq</code>, embora nem todos os tipos que
-implementar <code> PartialEq</code>pode implementar <code> Eq</code>. Um exemplo disso é o ponto flutuante
-tipos de números: A implementação de números de ponto flutuante afirma que dois
-as instâncias do valor não-um-número (<code> NaN</code>) não são iguais entre si.</p>
-<p>Um exemplo de quando <code>Eq</code> é necessário é para chaves em um <code>HashMap&lt;K, V&gt;</code> para que
-o <code>HashMap&lt;K, V&gt;</code> pode dizer se duas chaves são iguais.</p>
-<h3 id="partialord-e-ord-para-comparações-de-pedidos"><a class="header" href="#partialord-e-ord-para-comparações-de-pedidos"><code>PartialOrd</code> e <code>Ord</code> para comparações de pedidos</a></h3>
-<p>O <code>PartialOrd</code> trait permite comparar instâncias de um tipo para classificação
-propósitos. Um tipo que implementa <code>PartialOrd</code> pode ser usado com <code>&lt;</code>, <code> &gt;</code>,
-Operadores <code> &lt;=</code>e <code> &gt;=</code>. Você só pode aplicar o <code> PartialOrd</code>trait aos tipos
-que também implementam <code> PartialEq</code>.</p>
-<p>Derivando <code>PartialOrd</code> implementa o método <code>partial_cmp</code>, que retorna um
-<code>Option&lt;Ordering&gt;</code>que será<code>None</code>quando os valores fornecidos não produzirem um
-encomenda. Um exemplo de valor que não produz uma ordenação, embora
-a maioria dos valores desse tipo podem ser comparados, é o valor de ponto flutuante<code>NaN</code>.
-Chamando<code>partial_cmp</code>com qualquer número de ponto flutuante e o<code>NaN</code>
-o valor de ponto flutuante retornará<code> None</code>.</p>
-<p>Quando derivado em estruturas, <code>PartialOrd</code> compara duas instâncias comparando o
-valor em cada campo na ordem em que os campos aparecem na estrutura
-definição. Quando derivadas de enums, variantes do enum declaradas anteriormente no
-definição de enum são consideradas inferiores às variantes listadas posteriormente.</p>
-<p>O <code>PartialOrd</code> trait é necessário, por exemplo, para o método <code>gen_range</code>
-do <code> rand</code>crate que gera um valor aleatório no intervalo especificado por um
+<p>Derivar <code>PartialEq</code> implementa o método <code>eq</code>. Quando <code>PartialEq</code> é derivado em
+structs, duas instâncias são iguais apenas se <em>todos</em> os campos forem iguais, e
+as instâncias não são iguais se <em>qualquer</em> campo não for igual. Quando
+derivado em enums, cada variante é igual a si mesma e diferente das outras
+variantes.</p>
+<p>O trait <code>PartialEq</code> é necessário, por exemplo, ao usar a macro <code>assert_eq!</code>,
+que precisa ser capaz de comparar duas instâncias de um tipo quanto à
+igualdade.</p>
+<p>O trait <code>Eq</code> não possui métodos. Seu objetivo é sinalizar que, para cada valor
+do tipo anotado, esse valor é igual a si mesmo. O trait <code>Eq</code> só pode ser
+aplicado a tipos que também implementam <code>PartialEq</code>, embora nem todos os tipos
+que implementam <code>PartialEq</code> possam implementar <code>Eq</code>. Um exemplo disso são os
+tipos numéricos de ponto flutuante: a implementação de números de ponto
+flutuante estabelece que duas instâncias do valor not-a-number (<code>NaN</code>) não são
+iguais entre si.</p>
+<p>Um exemplo de quando <code>Eq</code> é necessário é em chaves de <code>HashMap&lt;K, V&gt;</code>, para que
+o <code>HashMap&lt;K, V&gt;</code> consiga determinar se duas chaves são iguais.</p>
+<h3 id="partialord-e-ord-para-comparações-de-ordenação"><a class="header" href="#partialord-e-ord-para-comparações-de-ordenação"><code>PartialOrd</code> e <code>Ord</code> para comparações de ordenação</a></h3>
+<p>O trait <code>PartialOrd</code> permite comparar instâncias de um tipo para fins de
+ordenação. Um tipo que implementa <code>PartialOrd</code> pode ser usado com os operadores
+<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code> e <code>&gt;=</code>. Você só pode aplicar o trait <code>PartialOrd</code> a tipos que
+também implementam <code>PartialEq</code>.</p>
+<p>Derivar <code>PartialOrd</code> implementa o método <code>partial_cmp</code>, que retorna um
+<code>Option&lt;Ordering&gt;</code> e será <code>None</code> quando os valores fornecidos não produzirem
+uma ordenação. Um exemplo de valor que não produz uma ordenação, embora a
+maioria dos valores desse tipo possa ser comparada, é o valor de ponto
+flutuante <code>NaN</code>. Chamar <code>partial_cmp</code> com qualquer número de ponto flutuante e
+o valor de ponto flutuante <code>NaN</code> retornará <code>None</code>.</p>
+<p>Quando derivado em structs, <code>PartialOrd</code> compara duas instâncias comparando o
+valor de cada campo na ordem em que os campos aparecem na definição da struct.
+Quando derivado em enums, variantes declaradas antes na definição do enum são
+consideradas menores do que as variantes listadas depois.</p>
+<p>O trait <code>PartialOrd</code> é necessário, por exemplo, para o método <code>gen_range</code> do
+crate <code>rand</code>, que gera um valor aleatório no intervalo especificado por uma
 expressão de intervalo.</p>
-<p>O <code>Ord</code> trait permite saber que para quaisquer dois valores do anotado
-tipo, existirá uma ordem válida. O <code>Ord</code> trait implementa o método <code>cmp</code>,
-que retorna um <code> Ordering</code>em vez de um <code> Option&lt;Ordering&gt;</code>porque um valor válido
-encomendar sempre será possível. Você só pode aplicar o <code> Ord</code>trait aos tipos
-que também implementam <code> PartialOrd</code>e <code> Eq</code>(e <code> Eq</code>requer <code> PartialEq</code>). Quando
-derivado em structs e enums, <code> cmp</code>se comporta da mesma maneira que o derivado
-implementação para <code> partial_cmp</code>faz com <code> PartialOrd</code>.</p>
+<p>O trait <code>Ord</code> permite saber que, para quaisquer dois valores do tipo anotado,
+existirá uma ordenação válida. O trait <code>Ord</code> implementa o método <code>cmp</code>, que
+retorna um <code>Ordering</code> em vez de um <code>Option&lt;Ordering&gt;</code>, porque uma ordenação
+válida sempre será possível. Você só pode aplicar o trait <code>Ord</code> a tipos que
+também implementam <code>PartialOrd</code> e <code>Eq</code> e, por sua vez, <code>Eq</code> requer
+<code>PartialEq</code>. Quando derivado em structs e enums, <code>cmp</code> se comporta da mesma
+forma que a implementação derivada de <code>partial_cmp</code> se comporta com
+<code>PartialOrd</code>.</p>
 <p>Um exemplo de quando <code>Ord</code> é necessário é ao armazenar valores em um <code>BTreeSet&lt;T&gt;</code>,
 uma estrutura de dados que armazena dados com base na ordem de classificação dos valores.</p>
 <h3 id="clone-e-copy-para-duplicação-de-valores"><a class="header" href="#clone-e-copy-para-duplicação-de-valores"><code>Clone</code> e <code>Copy</code> para duplicação de valores</a></h3>
-<p>O <code>Clone</code> trait permite criar explicitamente uma cópia profunda de um valor e
-o processo de duplicação pode envolver a execução de código arbitrário e a cópia de heap
-dados. Consulte a seção <a href="ch04-01-what-is-ownership.html#variables-and-data-interacting-with-clone">“Variáveis e Dados Interagindo com
-Clone”</a>seção <!-- ignore --> em
-Capítulo 4 para obter mais informações sobre <code>Clone</code>.</p>
-<p>A derivação de <code>Clone</code> implementa o método <code>clone</code>, que quando implementado para o
-tipo inteiro, chama <code> clone</code>em cada uma das partes do tipo. Isto significa que todos os
-campos ou valores no tipo também devem implementar <code> Clone</code>para derivar <code> Clone</code>.</p>
+<p>O trait <code>Clone</code> permite criar explicitamente uma cópia profunda de um valor, e
+o processo de duplicação pode envolver a execução de código arbitrário e a
+cópia de dados na heap. Consulte a seção <a href="ch04-01-what-is-ownership.html#variables-and-data-interacting-with-clone">“Variáveis e Dados Interagindo com
+Clone”</a><!-- ignore --> no Capítulo 4
+para obter mais informações sobre <code>Clone</code>.</p>
+<p>Derivar <code>Clone</code> implementa o método <code>clone</code>, que, quando implementado para o
+tipo inteiro, chama <code>clone</code> em cada uma das partes do tipo. Isso significa que
+todos os campos ou valores do tipo também devem implementar <code>Clone</code> para que
+seja possível derivar <code>Clone</code>.</p>
 <p>Um exemplo de quando <code>Clone</code> é necessário é ao chamar o método <code>to_vec</code> em um
-slice. O slice não possui as instâncias de tipo que contém, mas o vetor
+slice. O slice não possui as instâncias do tipo que contém, mas o vetor
 retornado de <code>to_vec</code> precisará possuir suas instâncias, então <code>to_vec</code> chama
-<code>clone </code> em cada item. Assim, o tipo armazenado no slice deve implementar<code>Clone</code>.</p>
-<p>O <code>Copy</code> trait permite duplicar um valor copiando apenas os bits armazenados em
-a pilha; nenhum código arbitrário é necessário. Consulte <a href="ch04-01-what-is-ownership.html#stack-only-data-copy">“Dados somente de pilha:
-Copie”</a>seção <!-- ignore --> no Capítulo 4 para obter mais
-informações sobre <code>Copy</code>.</p>
-<p>O <code>Copy</code> trait não define nenhum método para impedir que os programadores
-sobrecarregando esses métodos e violando a suposição de que nenhum código arbitrário
-está sendo executado. Dessa forma, todos os programadores podem assumir que copiar um valor será
-muito rápido.</p>
-<p>Você pode derivar <code>Copy</code> em qualquer tipo cujas partes implementem <code>Copy</code>. Um tipo que
-implementa <code> Copy</code>também deve implementar <code> Clone</code>porque um tipo que implementa
-<code>Copy</code>possui uma implementação trivial de<code>Clone</code>que executa a mesma tarefa que
-<code> Copy</code>.</p>
-<p>O <code>Copy</code> trait raramente é necessário; tipos que implementam <code>Copy</code> têm
-otimizações disponíveis, o que significa que você não precisa chamar <code>clone</code>, o que torna
-o código mais conciso.</p>
-<p>Tudo o que é possível com <code>Copy</code> você também pode realizar com <code>Clone</code>, mas o
-o código pode ser mais lento ou ter que usar <code> clone</code>em alguns lugares.</p>
-<h3 id="hash-for-mapping-a-value-to-a-value-of-fixed-size"><a class="header" href="#hash-for-mapping-a-value-to-a-value-of-fixed-size"><code>Hash</code> for Mapping a Value to a Value of Fixed Size</a></h3>
-<p>O <code>Hash</code> trait permite que você pegue uma instância de um tipo de tamanho arbitrário e
-mapeie essa instância para um valor de tamanho fixo usando uma função hash. Derivando
-<code>Hash </code> implementa o método<code>hash </code>. A implementação derivada do<code>hash</code>
-método combina o resultado da chamada de<code>hash</code>em cada uma das partes do tipo,
-o que significa que todos os campos ou valores também devem implementar<code>Hash</code>para derivar<code> Hash</code>.</p>
-<p>An example of when <code>Hash</code> is required is in storing keys in a <code>HashMap&lt;K, V&gt;</code>
-to store data efficiently.</p>
+<code>clone</code> em cada item. Assim, o tipo armazenado no slice deve implementar
+<code>Clone</code>.</p>
+<p>O trait <code>Copy</code> permite duplicar um valor copiando apenas os bits armazenados na
+stack; nenhum código arbitrário é necessário. Consulte a seção <a href="ch04-01-what-is-ownership.html#stack-only-data-copy">“Dados Somente
+de Stack: Copy”</a><!-- ignore --> no Capítulo 4 para obter
+mais informações sobre <code>Copy</code>.</p>
+<p>O trait <code>Copy</code> não define nenhum método, para impedir que programadores
+sobrecarreguem esses métodos e violem a suposição de que nenhum código
+arbitrário está sendo executado. Dessa forma, todos podem assumir que copiar um
+valor será muito rápido.</p>
+<p>Você pode derivar <code>Copy</code> em qualquer tipo cujas partes implementem <code>Copy</code>. Um
+tipo que implementa <code>Copy</code> também deve implementar <code>Clone</code>, porque um tipo que
+implementa <code>Copy</code> possui uma implementação trivial de <code>Clone</code> que executa a
+mesma tarefa que <code>Copy</code>.</p>
+<p>O trait <code>Copy</code> raramente é necessário; tipos que implementam <code>Copy</code> têm
+otimizações disponíveis, o que significa que você não precisa chamar <code>clone</code>,
+deixando o código mais conciso.</p>
+<p>Tudo o que é possível com <code>Copy</code> também pode ser feito com <code>Clone</code>, mas o
+código pode ser mais lento ou exigir <code>clone</code> em alguns pontos.</p>
+<h3 id="hash-para-mapear-um-valor-para-outro-de-tamanho-fixo"><a class="header" href="#hash-para-mapear-um-valor-para-outro-de-tamanho-fixo"><code>Hash</code> para mapear um valor para outro de tamanho fixo</a></h3>
+<p>O trait <code>Hash</code> permite que você pegue uma instância de um tipo de tamanho
+arbitrário e a mapeie para um valor de tamanho fixo usando uma função hash.
+Derivar <code>Hash</code> implementa o método <code>hash</code>. A implementação derivada do método
+<code>hash</code> combina o resultado da chamada de <code>hash</code> em cada uma das partes do
+tipo, o que significa que todos os campos ou valores também devem implementar
+<code>Hash</code> para que seja possível derivar <code>Hash</code>.</p>
+<p>Um exemplo de quando <code>Hash</code> é necessário é ao armazenar chaves em um
+<code>HashMap&lt;K, V&gt;</code> para guardar dados com eficiência.</p>
 <h3 id="default-para-valores-padrão"><a class="header" href="#default-para-valores-padrão"><code>Default</code> para valores padrão</a></h3>
-<p>O <code>Default</code> trait permite criar um valor padrão para um tipo. Derivando
-<code>Default </code> implementa a função<code>default </code>. A implementação derivada do
-A função<code>default</code>chama a função<code>default</code>em cada parte do tipo,
-o que significa que todos os campos ou valores no tipo também devem implementar<code>Default</code>para
-derivar<code> Default</code>.</p>
-<p>A função <code>Default::default</code> é comumente usada em combinação com a estrutura
-sintaxe de atualização discutida em <a href="ch05-01-defining-structs.html#creating-instances-from-other-instances-with-struct-update-syntax">“Criando Instâncias a partir de Outras Instâncias com
-Atualização de estrutura
-Sintaxe”</a><!--
-ignore --> no Capítulo 5. Você pode personalizar alguns campos de uma estrutura e
-em seguida, defina e use um valor padrão para o restante dos campos usando
+<p>O trait <code>Default</code> permite criar um valor padrão para um tipo. Derivar
+<code>Default</code> implementa a função <code>default</code>. A implementação derivada da função
+<code>default</code> chama a função <code>default</code> em cada parte do tipo, o que significa que
+todos os campos ou valores do tipo também devem implementar <code>Default</code> para que
+seja possível derivar <code>Default</code>.</p>
+<p>A função <code>Default::default</code> é comumente usada em combinação com a sintaxe de
+atualização de struct discutida em <a href="ch05-01-defining-structs.html#creating-instances-from-other-instances-with-struct-update-syntax">“Criando Instâncias a partir de Outras
+Instâncias com Sintaxe de Atualização de Struct”</a><!--
+ignore --> no Capítulo 5. Você pode personalizar alguns campos de uma struct e
+depois definir e usar um valor padrão para o restante dos campos usando
 <code>..Default::default()</code>.</p>
-<p>O <code>Default</code> trait é necessário quando você usa o método <code>unwrap_or_default</code> em
-Instâncias <code>Option&lt;T&gt;</code>, por exemplo. Se <code> Option&lt;T&gt;</code>for <code> None</code>, o método
-<code>unwrap_or_default</code>retornará o resultado de<code>Default::default</code>para o tipo
-<code>T</code>armazenado no<code> Option&lt;T&gt;</code>.</p>
+<p>O trait <code>Default</code> é necessário quando você usa o método <code>unwrap_or_default</code> em
+instâncias de <code>Option&lt;T&gt;</code>, por exemplo. Se o <code>Option&lt;T&gt;</code> for <code>None</code>, o método
+<code>unwrap_or_default</code> retornará o resultado de <code>Default::default</code> para o tipo
+<code>T</code> armazenado no <code>Option&lt;T&gt;</code>.</p>
 
                     </main>
 

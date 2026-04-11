@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -215,8 +215,8 @@ que um teste é marcado como falha, chamar <code>unwrap</code> ou <code>expect</
 deveria acontecer.</p>
 <h3 id="casos-em-que-você-tem-mais-informação-que-o-compilador"><a class="header" href="#casos-em-que-você-tem-mais-informação-que-o-compilador">Casos em que Você Tem Mais Informação Que o Compilador</a></h3>
 <p>Seria também apropriado chamar <code>unwrap</code> quando você tem outra lógica que
-assegura que o <code>Result</code> vai ter um valor <code>Ok</code>, mas essa lógica não é algo
-que o compilador entenda. Você ainda vai ter um valor de <code>Result</code> que precisa
+assegura que o <code>Result</code> terá um valor <code>Ok</code>, mas essa lógica não é algo
+que o compilador entenda. Você ainda terá um valor <code>Result</code> com o qual precisa
 lidar: seja qual for a operação que você está chamando, ela ainda tem uma possibilidade
 de falhar em geral, mesmo que seja logicamente impossível que isso ocorra nessa
 situação particular. Se você consegue assegurar ao inspecionar manualmente o código que
@@ -228,7 +228,7 @@ Aqui temos um exemplo:</p>
 
 let home = "127.0.0.1".parse::&lt;IpAddr&gt;().unwrap();
 <span class="boring">}</span></code></pre>
-<p>Nós estamos criando uma instância <code>IpAddr</code> ao analisar uma string <em>hardcoded</em>. Nós
+<p>Estamos criando uma instância <code>IpAddr</code> ao analisar uma string <em>hardcoded</em>. Nós
 podemos ver que <code>127.0.0.1</code> é um endereço de IP válido, então é aceitável usar
 <code>unwrap</code> aqui. No entanto, ter uma string válida <em>hardcoded</em> não muda o tipo retornado
 pelo método <code>parse</code>: ainda teremos um valor de <code>Result</code>, e o compilador ainda
@@ -238,11 +238,11 @@ possibilidade, porque o compilador não é inteligente o bastante para ver que e
 de ser <em>hardcoded</em> no programa, e portanto, de fato tivesse uma possibilidade de falha, nós
 definitivamente iríamos querer tratar o <code>Result</code> de uma forma mais robusta.</p>
 <h3 id="diretrizes-para-tratamento-de-erro"><a class="header" href="#diretrizes-para-tratamento-de-erro">Diretrizes para Tratamento de Erro</a></h3>
-<p>É aconselhável fazer que seu código entre em <code>panic!</code> quando é possível que
+<p>É aconselhável fazer com que seu código entre em <code>panic!</code> quando é possível que
 ele entre em um mau estado. Nesse contexto, mau estado é quando
 alguma hipótese, garantia, contrato ou invariante foi quebrada, tal como
-valores inválidos, valores contraditórios, ou valores faltando que são passados
-a seu código - além de um ou mais dos seguintes:</p>
+valores inválidos, valores contraditórios ou valores faltando que são passados
+ao seu código, além de um ou mais dos seguintes:</p>
 <ul>
 <li>O mau estado não é algo que é <em>esperado</em> que aconteça ocasionalmente.</li>
 <li>Seu código após certo ponto precisa confiar que ele não está nesse mau estado.</li>
@@ -294,7 +294,7 @@ para adivinhar um número entre 1 e 100. Nós nunca validamos que o chute do usu
 fosse entre esses números antes de compará-lo com o número secreto; nós somente
 validamos que o chute era positivo. Nesse caso, as consequências não foram tão
 drásticas: nosso output de “Muito alto” ou “Muito baixo” ainda estariam corretos. Seria
-uma melhoria útil guiar o usuário para chutes válidos, e ter um comportamento distinto
+seria uma melhoria útil guiar o usuário para chutes válidos, e ter um comportamento distinto
 quando um usuário chuta um número fora do limite e quando um usuário digita letras, por exemplo.</p>
 <p>Uma maneira de fazer isso seria interpretar o chute como um <code>i32</code> em vez de
 somente um <code>u32</code> para permitir números potencialmente negativos, e então adicionar
@@ -308,7 +308,7 @@ uma checagem se o número está dentro dos limites, conforme a seguir:</p>
     };
 
     if palpite &lt; 1 || palpite &gt; 100 {
-        println!("O número secreto vai estar entre 1 e 100.");
+        println!("O número secreto estará entre 1 e 100.");
         continue;
     }
 

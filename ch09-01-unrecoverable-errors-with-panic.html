@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,20 +182,20 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="erros-irrecuperáveis-com-panic"><a class="header" href="#erros-irrecuperáveis-com-panic">Erros Irrecuperáveis com <code>panic!</code></a></h2>
-<p>Às vezes coisas ruins acontecem no seu código, e não há nada que você possa fazer
+<p>Às vezes, coisas ruins acontecem no seu código, e não há nada que você possa fazer
 sobre isso. Nesses casos, Rust tem a macro <code>panic!</code>. Quando ela é executada, seu
-programa vai imprimir uma mensagem de falha, resolver e limpar a pilha e então
+programa vai imprimir uma mensagem de falha, desenrolar e limpar a pilha, e então
 terminar. A situação mais comum em que isso acontece é quando algum tipo de bug
 foi detectado, e não é claro para o programador como tratar esse erro.</p>
 <section class="note" aria-role="note">
-<h3 id="resolver-a-pilha-ou-abortar-em-resposta-a-panic"><a class="header" href="#resolver-a-pilha-ou-abortar-em-resposta-a-panic">Resolver a Pilha ou Abortar em Resposta a <code>panic!</code></a></h3>
-<p>Por padrão, quando acontece um <code>panic!</code>, o programa começa a <em>resolver</em> a pilha,
+<h3 id="desenrolar-a-pilha-ou-abortar-em-resposta-a-panic"><a class="header" href="#desenrolar-a-pilha-ou-abortar-em-resposta-a-panic">Desenrolar a Pilha ou Abortar em Resposta a <code>panic!</code></a></h3>
+<p>Por padrão, quando acontece um <code>panic!</code>, o programa começa a <em>desenrolar</em> a pilha,
 o que significa que Rust percorre a pilha e limpa os dados de cada função que encontra.
 Mas essa limpeza dá bastante trabalho. A alternativa é imediatamente <em>abortar</em>,
 que termina o programa sem fazer a limpeza. A memória que o programa estava usando vai então
 precisar ser limpada pelo sistema operacional. Se no seu projeto você precisa tornar
-o binário final o menor possível, você pode deixar de resolver e sim abortar no <em>panic</em>
-adicionando <code>panic = 'abort'</code> à seção apropriadada de <code>[profile]</code> no seu arquivo
+o binário final o menor possível, você pode deixar de desenrolar e passar a abortar em caso de <em>panic</em>
+adicionando <code>panic = 'abort'</code> à seção apropriada de <code>[profile]</code> no seu arquivo
 <em>Cargo.toml</em>. Por exemplo, se você quiser abortar no <em>panic</em> no modo de <em>release</em>, adicione
 isso:</p>
 <pre><code class="language-toml">[profile.release]
@@ -207,7 +207,7 @@ panic = 'abort'
 <pre class="playground"><code class="language-rust should_panic edition2024">fn main() {
     panic!("Quebra tudo");
 }</code></pre>
-<p>Quando você roda o programa, verá algo como isso:</p>
+<p>Quando você executar o programa, verá algo como isto:</p>
 <pre><code class="language-text">$ cargo run
    Compiling panic v0.1.0 (file:///projects/panic)
     Finished dev [unoptimized + debuginfo] target(s) in 0.25 secs
@@ -223,7 +223,7 @@ arquivo <em>src/main.rs</em>.</p>
 <p>Nesse caso, a linha indicada é parte do nosso código, e se formos àquela linha
 veremos a chamada à macro <code>panic!</code>. Em outros casos, a chamada a <code>panic!</code> pode
 estar em código que nosso código chama. O nome do arquivo e número de linha
-reportado pela mensagem de erro será no código de outra pessoa quando a macro
+reportado pela mensagem de erro estará no código de outra pessoa quando a macro
 <code>panic!</code> for chamada, não a linha do nosso código que eventualmente levou a chamada
 de <code>panic!</code>. Podemos usar o <em>backtrace</em> das funções de onde veio a chamada a <code>panic!</code>
 para entender qual parte de nosso código está causando o problema. Vamos discutir

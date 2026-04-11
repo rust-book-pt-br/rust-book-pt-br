@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,10 +182,10 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="características-das-linguagens-orientadas-a-objetos"><a class="header" href="#características-das-linguagens-orientadas-a-objetos">Características das linguagens orientadas a objetos</a></h2>
-<p>Não há consenso na comunidade de programação sobre o que caracteriza um
-a linguagem deve ser considerada orientada a objetos. Rust é influenciado por muitos
+<p>Não há consenso na comunidade de programação sobre o que caracteriza uma
+linguagem como orientada a objetos. Rust é influenciado por muitos
 paradigmas de programação, incluindo OOP; por exemplo, exploramos os recursos
-que veio da programação funcional no Capítulo 13. Indiscutivelmente, linguagens OOP
+que vieram da programação funcional no Capítulo 13. Indiscutivelmente, linguagens OOP
 compartilham certas características comuns - ou seja, objetos, encapsulamento e
 herança. Vejamos o que cada uma dessas características significa e se
 Rust suporta isso.</p>
@@ -199,18 +199,18 @@ padrões de projeto orientados a objetos. Ele define OOP desta forma:</p>
 dados e os procedimentos que operam nesses dados. Os procedimentos são
 normalmente chamados de <strong>métodos</strong> ou <strong>operações</strong>.</p>
 </blockquote>
-<p>Usando esta definição, Rust é orientado a objetos: estruturas e enumerações possuem dados,
-e os blocos <code>impl</code> fornecem métodos em estruturas e enumerações. Mesmo que estruturas e
-enums com métodos não são objetos <em>chamados</em>, eles fornecem o mesmo
+<p>Usando esta definição, Rust é orientado a objetos: structs e enums possuem dados,
+e os blocos <code>impl</code> fornecem métodos em structs e enums. Mesmo que structs e
+enums com métodos não sejam chamados de objetos, eles fornecem a mesma
 funcionalidade, de acordo com a definição de objetos da Gangue dos Quatro.</p>
 <h3 id="encapsulamento-que-oculta-detalhes-de-implementação"><a class="header" href="#encapsulamento-que-oculta-detalhes-de-implementação">Encapsulamento que oculta detalhes de implementação</a></h3>
-<p>Outro aspecto comumente associado à OOP é a ideia de <em>encapsulação</em>,
-o que significa que os detalhes de implementação de um objeto não são acessíveis para
-código usando esse objeto. Portanto, a única maneira de interagir com um objeto é
-através de sua API pública; o código que usa o objeto não deve ser capaz de acessar
-as partes internas do objeto e alteram dados ou comportamento diretamente. Isso permite que
-programador para alterar e refatorar os componentes internos de um objeto sem a necessidade
-altere o código que usa o objeto.</p>
+<p>Outro aspecto comumente associado à OOP é a ideia de <em>encapsulamento</em>,
+o que significa que os detalhes de implementação de um objeto não são acessíveis ao
+código que usa esse objeto. Portanto, a única maneira de interagir com um objeto é
+por meio de sua API pública; o código que usa o objeto não deve ser capaz de acessar
+as partes internas do objeto nem alterar dados ou comportamento diretamente. Isso permite que o
+programador altere e refatore os componentes internos de um objeto sem a necessidade de
+alterar o código que usa o objeto.</p>
 <p>Discutimos como controlar o encapsulamento no Capítulo 7: Podemos usar o <code>pub</code>
 palavra-chave para decidir quais módulos, tipos, funções e métodos em nosso código
 deve ser público e, por padrão, todo o resto é privado. Por exemplo, nós

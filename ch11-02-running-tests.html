@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,54 +181,57 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="controlling-how-tests-are-run"><a class="header" href="#controlling-how-tests-are-run">Controlling How Tests Are Run</a></h2>
+                        <h2 id="controlando-como-os-testes-são-executados"><a class="header" href="#controlando-como-os-testes-são-executados">Controlando Como os Testes São Executados</a></h2>
 <p>Assim como <code>cargo run</code> compila seu código e executa o binário resultante,
-<code>cargo test </code> compila seu código em modo de teste e executa o teste resultante
-binário. O comportamento padrão do binário produzido por<code>cargo test</code> é executar
-todos os testes em paralelo e capturar a saída gerada durante as execuções de teste,
-impedindo que a saída seja exibida e facilitando a leitura do
-saída relacionada aos resultados do teste. Você pode, no entanto, especificar a linha de comando
-opções para alterar esse comportamento padrão.</p>
-<p>Algumas opções de linha de comando vão para <code>cargo test</code> e outras vão para o teste resultante
-binário. Para separar esses dois tipos de argumentos, você lista os argumentos que
-vá para <code>cargo test</code> seguido do separador <code>--</code> e depois os que vão para
-o binário de teste. Executar <code>cargo test --help</code> exibe as opções que você pode usar
-com <code>cargo test</code> e executar <code>cargo test -- --help</code> exibe as opções que você
-pode usar após o separador. Essas opções também estão documentadas em <a href="https://doc.rust-lang.org/rustc/tests/index.html">os “Testes”
-seção do _Livro <code>rustc</code> _</a>.</p>
-<h3 id="executando-testes-em-paralelo-ou-consecutivamente"><a class="header" href="#executando-testes-em-paralelo-ou-consecutivamente">Executando testes em paralelo ou consecutivamente</a></h3>
-<p>Quando você executa vários testes, por padrão eles são executados em paralelo usando threads,
-o que significa que eles terminam a execução mais rapidamente e você recebe feedback mais cedo. Porque
-os testes estão sendo executados ao mesmo tempo, você deve garantir que seus testes não
-dependem uns dos outros ou de qualquer estado compartilhado, incluindo um ambiente compartilhado,
-como o diretório de trabalho atual ou variáveis de ambiente.</p>
-<p>Por exemplo, digamos que cada um dos seus testes execute algum código que cria um arquivo no disco
-chamado <em>test-output.txt</em> e grava alguns dados nesse arquivo. Então, cada teste
-lê os dados nesse arquivo e afirma que o arquivo contém um determinado
-valor, que é diferente em cada teste. Como os testes são executados ao mesmo tempo,
-um teste pode substituir o arquivo no intervalo entre o momento em que outro teste é
-escrevendo e lendo o arquivo. O segundo teste falhará então, não porque o
-o código está incorreto, mas porque os testes interferiram uns nos outros enquanto
-correndo em paralelo. Uma solução é garantir que cada teste grave em um
-arquivo diferente; outra solução é executar os testes um de cada vez.</p>
-<p>Se você não quiser executar os testes em paralelo ou se quiser mais detalhes
-controle sobre o número de threads usado, você pode enviar o sinalizador <code>--test-threads</code>
-e o número de threads que você deseja usar para o binário de teste. Dê uma olhada
-o seguinte exemplo:</p>
+<code>cargo test</code> compila seu código em modo de teste e executa o binário de testes
+resultante. O comportamento padrão do binário produzido por <code>cargo test</code> é
+executar todos os testes em paralelo e capturar a saída gerada durante a
+execução deles, impedindo que ela seja exibida e tornando mais fácil ler as
+informações relacionadas aos resultados dos testes. No entanto, você pode
+especificar opções de linha de comando para alterar esse comportamento padrão.</p>
+<p>Algumas opções de linha de comando vão para <code>cargo test</code>, e outras vão para o
+binário de testes resultante. Para separar esses dois tipos de argumentos, você
+lista os argumentos destinados a <code>cargo test</code>, seguidos do separador <code>--</code>, e
+depois aqueles que vão para o binário de testes. Executar <code>cargo test --help</code>
+exibe as opções que você pode usar com <code>cargo test</code>, e executar
+<code>cargo test -- --help</code> exibe as opções que você pode usar após o separador.
+Essas opções também estão documentadas na <a href="https://doc.rust-lang.org/rustc/tests/index.html">seção “Tests” de <em>The <code>rustc</code>
+Book</em></a>.</p>
+<h3 id="executando-testes-em-paralelo-ou-em-sequência"><a class="header" href="#executando-testes-em-paralelo-ou-em-sequência">Executando Testes em Paralelo ou em Sequência</a></h3>
+<p>Quando você executa vários testes, por padrão eles são executados em paralelo
+usando threads, o que significa que terminam mais rapidamente e você recebe
+feedback mais cedo. Como os testes estão sendo executados ao mesmo tempo, você
+precisa garantir que eles não dependam uns dos outros nem de qualquer estado
+compartilhado, incluindo um ambiente compartilhado, como o diretório de
+trabalho atual ou variáveis de ambiente.</p>
+<p>Por exemplo, imagine que cada um dos seus testes execute algum código que cria
+um arquivo no disco chamado <em>test-output.txt</em> e grave dados nesse arquivo.
+Depois, cada teste lê os dados desse arquivo e verifica se ele contém um certo
+valor, que é diferente em cada teste. Como os testes são executados ao mesmo
+tempo, um teste pode sobrescrever o arquivo no intervalo entre o momento em que
+outro teste está escrevendo nele e o momento em que está lendo. O segundo
+teste então falhará, não porque o código esteja incorreto, mas porque os
+testes interferiram uns nos outros enquanto rodavam em paralelo. Uma solução é
+garantir que cada teste escreva em um arquivo diferente; outra é executar os
+testes um de cada vez.</p>
+<p>Se você não quiser executar os testes em paralelo, ou se quiser um controle
+mais fino sobre o número de threads usado, pode passar a flag
+<code>--test-threads</code>, seguida do número de threads desejado, para o binário de
+testes. Veja o exemplo a seguir:</p>
 <pre><code class="language-console">$ cargo test -- --test-threads=1
 </code></pre>
-<p>Definimos o número de testes threads como <code>1</code>, informando ao programa para não usar nenhum
-paralelismo. A execução dos testes usando um thread levará mais tempo do que a execução
-em paralelo, mas os testes não interferirão entre si se compartilharem
-estado.</p>
-<h3 id="showing-function-output"><a class="header" href="#showing-function-output">Showing Function Output</a></h3>
-<p>Por padrão, se um teste for aprovado, a biblioteca de testes do Rust captura qualquer coisa impressa no
-saída padrão. Por exemplo, se chamarmos <code>println!</code> em um teste e o teste
-passa, não veremos a saída <code>println!</code> no terminal; veremos apenas o
-linha que indica que o teste foi aprovado. Se um teste falhar, veremos o que foi
-impresso na saída padrão com o restante da mensagem de falha.</p>
-<p>Como exemplo, a Listagem 11.10 tem uma função boba que imprime o valor de seu
-parâmetro e retorna 10, bem como um teste que passa e um teste que falha.</p>
+<p>Definimos o número de threads de teste como <code>1</code>, dizendo ao programa para não
+usar paralelismo. Executar os testes com uma única thread levará mais tempo do
+que executá-los em paralelo, mas eles não interferirão uns nos outros caso
+compartilhem estado.</p>
+<h3 id="exibindo-a-saída-das-funções"><a class="header" href="#exibindo-a-saída-das-funções">Exibindo a Saída das Funções</a></h3>
+<p>Por padrão, se um teste passar, a biblioteca de testes de Rust captura tudo o
+que for impresso na saída padrão. Por exemplo, se chamarmos <code>println!</code> em um
+teste e ele passar, não veremos a saída de <code>println!</code> no terminal; veremos
+apenas a linha indicando que o teste passou. Se um teste falhar, veremos tudo
+o que foi impresso na saída padrão junto com o restante da mensagem de falha.</p>
+<p>Como exemplo, a Listagem 11-10 tem uma função boba que imprime o valor do seu
+parâmetro e retorna 10, bem como um teste que passa e outro que falha.</p>
 <figure class="listing" id="listing-11-10">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust panics noplayground">fn prints_and_returns_10(a: i32) -&gt; i32 {
@@ -254,7 +257,7 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-11-10">Listing 11-10</a>: Testes para uma função que chama <code>println!</code></figcaption>
 </figure>
-<p>Quando executarmos esses testes com <code>cargo test</code>, veremos o seguinte resultado:</p>
+<p>Quando executamos esses testes com <code>cargo test</code>, vemos a seguinte saída:</p>
 <pre><code class="language-console">$ cargo test
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
@@ -283,16 +286,16 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Observe que em nenhum lugar desta saída vemos <code>I got the value 4</code>, que é
-impresso quando o teste aprovado é executado. Essa saída foi capturada. O
-a saída do teste que falhou, <code> I got the value 8</code>, aparece na seção
-da saída do resumo do teste, que também mostra a causa da falha do teste.</p>
-<p>Se quisermos ver os valores impressos para passar nos testes também, podemos dizer ao Rust para
-também mostra o resultado de testes bem-sucedidos com <code>--show-output</code>:</p>
+<p>Observe que em nenhum lugar dessa saída aparece <code>I got the value 4</code>, que é
+impresso quando o teste que passa é executado. Essa saída foi capturada. A
+saída do teste que falhou, <code>I got the value 8</code>, aparece na seção do resumo dos
+testes, que também mostra a causa da falha.</p>
+<p>Se quisermos ver também os valores impressos nos testes que passam, podemos
+pedir a Rust que mostre a saída dos testes bem-sucedidos com <code>--show-output</code>:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
 </code></pre>
-<p>Quando executamos os testes da Listagem 11.10 novamente com o sinalizador <code>--show-output</code>,
-veja a seguinte saída:</p>
+<p>Quando executamos novamente os testes da Listagem 11-10 com a flag
+<code>--show-output</code>, vemos a seguinte saída:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
@@ -330,13 +333,15 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<h3 id="executando-um-subconjunto-de-testes-por-nome"><a class="header" href="#executando-um-subconjunto-de-testes-por-nome">Executando um subconjunto de testes por nome</a></h3>
-<p>A execução de um conjunto de testes completo às vezes pode levar muito tempo. Se você estiver trabalhando
-código em uma área específica, talvez você queira executar apenas os testes pertencentes a
-esse código. Você pode escolher quais testes executar passando o nome <code>cargo test</code>
-ou nomes dos testes que você deseja executar como argumento.</p>
-<p>Para demonstrar como executar um subconjunto de testes, primeiro criaremos três testes para
-nossa função <code>add_two</code>, conforme mostrado na Listagem 11-11, e escolha quais delas serão executadas.</p>
+<h3 id="executando-um-subconjunto-de-testes-pelo-nome"><a class="header" href="#executando-um-subconjunto-de-testes-pelo-nome">Executando um Subconjunto de Testes pelo Nome</a></h3>
+<p>Executar a suíte de testes completa às vezes pode levar bastante tempo. Se
+você estiver trabalhando no código de uma área específica, talvez queira
+executar apenas os testes relacionados àquele código. Você pode escolher quais
+testes executar passando a <code>cargo test</code> o nome, ou parte do nome, dos testes
+que deseja rodar.</p>
+<p>Para demonstrar como executar um subconjunto de testes, criaremos primeiro três
+testes para a nossa função <code>add_two</code>, como mostrado na Listagem 11-11, e
+depois escolheremos quais deles executar.</p>
 <figure class="listing" id="listing-11-11">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub fn add_two(a: u64) -&gt; u64 {
@@ -367,8 +372,8 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-11-11">Listing 11-11</a>: Três testes com três nomes diferentes</figcaption>
 </figure>
-<p>Se executarmos os testes sem passar nenhum argumento, como vimos anteriormente, todos os
-os testes serão executados em paralelo:</p>
+<p>Se executarmos os testes sem passar nenhum argumento, como vimos antes, todos
+eles serão executados em paralelo:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
@@ -388,8 +393,9 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<h4 id="executando-testes-únicos"><a class="header" href="#executando-testes-únicos">Executando testes únicos</a></h4>
-<p>Podemos passar o nome de qualquer função de teste para <code>cargo test</code> para executar apenas esse teste:</p>
+<h4 id="executando-um-teste-específico"><a class="header" href="#executando-um-teste-específico">Executando um Teste Específico</a></h4>
+<p>Podemos passar o nome de qualquer função de teste para <code>cargo test</code> para
+executar apenas esse teste:</p>
 <pre><code class="language-console">$ cargo test one_hundred
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.69s
@@ -401,15 +407,16 @@ test tests::one_hundred ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Somente o teste com o nome <code>one_hundred</code> foi executado; os outros dois testes não match
-esse nome. A saída do teste nos informa que tivemos mais testes que não foram executados
-exibindo <code>2 filtered out</code> no final.</p>
-<p>Não podemos especificar os nomes de vários testes desta forma; apenas o primeiro valor
-fornecido a <code>cargo test</code> será usado. Mas existe uma maneira de executar vários testes.</p>
-<h4 id="filtering-to-run-multiple-tests"><a class="header" href="#filtering-to-run-multiple-tests">Filtering to Run Multiple Tests</a></h4>
-<p>Podemos especificar parte do nome de um teste e qualquer teste cujo nome corresponda a esse valor
-será executado. Por exemplo, como dois dos nomes dos nossos testes contêm <code>add</code>, podemos
-execute esses dois executando <code> cargo test add</code>:</p>
+<p>Somente o teste chamado <code>one_hundred</code> foi executado; os outros dois testes não
+corresponderam a esse nome. A saída nos informa que houve outros testes não
+executados exibindo <code>2 filtered out</code> ao final.</p>
+<p>Não podemos especificar os nomes de vários testes dessa maneira; apenas o
+primeiro valor fornecido a <code>cargo test</code> será usado. Mas existe uma forma de
+executar vários testes.</p>
+<h4 id="filtrando-para-executar-vários-testes"><a class="header" href="#filtrando-para-executar-vários-testes">Filtrando para Executar Vários Testes</a></h4>
+<p>Podemos especificar parte do nome de um teste, e qualquer teste cujo nome
+corresponda a esse valor será executado. Por exemplo, como dois dos nossos
+testes contêm <code>add</code> no nome, podemos executar esses dois com <code>cargo test add</code>:</p>
 <pre><code class="language-console">$ cargo test add
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
@@ -422,19 +429,19 @@ test tests::add_two_and_two ... ok
 test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Este comando executou todos os testes com <code>add</code> no nome e filtrou o teste
-chamado <code>one_hundred</code>. Observe também que o módulo no qual um teste aparece torna-se
-parte do nome do teste, para que possamos executar todos os testes em um módulo filtrando
-no nome do módulo.</p>
+<p>Esse comando executou todos os testes cujo nome contém <code>add</code> e filtrou o teste
+chamado <code>one_hundred</code>. Observe também que o módulo em que um teste aparece se
+torna parte do nome do teste, de modo que podemos executar todos os testes de
+um módulo filtrando pelo nome desse módulo.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ignoring-some-tests-unless-specifically-requested"></a></p>
-<h3 id="ignoring-tests-unless-specifically-requested"><a class="header" href="#ignoring-tests-unless-specifically-requested">Ignoring Tests Unless Specifically Requested</a></h3>
-<p>Às vezes, alguns testes específicos podem levar muito tempo para serem executados, então você
-talvez você queira excluí-los durante a maioria das execuções do <code>cargo test</code>. Em vez de
-listando como argumentos todos os testes que você deseja executar, você pode anotar o
-testes demorados usando o atributo <code> ignore</code>para excluí-los, conforme mostrado
-aqui:</p>
-<p><span class="filename">Filename: src/lib.rs</span></p>
+<h3 id="ignorando-testes-a-menos-que-sejam-solicitados-especificamente"><a class="header" href="#ignorando-testes-a-menos-que-sejam-solicitados-especificamente">Ignorando Testes, a Menos que Sejam Solicitados Especificamente</a></h3>
+<p>Às vezes, alguns testes específicos podem demorar bastante para serem
+executados, então talvez você queira excluí-los da maior parte das execuções de
+<code>cargo test</code>. Em vez de listar como argumentos todos os testes que deseja
+executar, você pode anotar os testes demorados com o atributo <code>ignore</code> para
+excluí-los, como mostrado aqui:</p>
+<p><span class="filename">Arquivo: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub fn add(left: u64, right: u64) -&gt; u64 {
 </span><span class="boring">    left + right
 </span><span class="boring">}
@@ -455,8 +462,9 @@ mod tests {
         // code that takes an hour to run
     }
 }</code></pre>
-<p>Após <code>#[test]</code>, adicionamos a linha <code> #[ignore]</code>ao teste que queremos excluir.
-Agora, quando executamos nossos testes, o <code> it_works</code>é executado, mas o <code> expensive_test</code>não:</p>
+<p>Depois de <code>#[test]</code>, adicionamos a linha <code>#[ignore]</code> ao teste que queremos
+excluir. Agora, quando executamos nossos testes, <code>it_works</code> roda, mas
+<code>expensive_test</code> não:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
@@ -475,8 +483,8 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>A função <code>expensive_test</code> está listada como <code>ignored</code>. Se quisermos correr apenas
-os testes ignorados, podemos usar <code> cargo test -- --ignored</code>:</p>
+<p>A função <code>expensive_test</code> aparece listada como <code>ignored</code>. Se quisermos
+executar apenas os testes ignorados, podemos usar <code>cargo test -- --ignored</code>:</p>
 <pre><code class="language-console">$ cargo test -- --ignored
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
@@ -494,11 +502,12 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Ao controlar quais testes são executados, você pode garantir que os resultados do <code>cargo test</code>
-será devolvido rapidamente. Quando você chega a um ponto em que faz sentido verificar
-os resultados dos testes <code> ignored</code>e você tem tempo para aguardar os resultados,
-você pode executar <code> cargo test -- --ignored</code>. Se você quiser executar todos os testes
-sejam eles ignorados ou não, você pode executar <code> cargo test -- --include-ignored</code>.</p>
+<p>Ao controlar quais testes são executados, você pode garantir que os resultados
+de <code>cargo test</code> cheguem rapidamente. Quando você estiver em um ponto em que
+faça sentido verificar os resultados dos testes <code>ignored</code>, e tiver tempo para
+esperar, poderá executar <code>cargo test -- --ignored</code>. Se quiser executar todos os
+testes, estejam eles ignorados ou não, pode usar
+<code>cargo test -- --include-ignored</code>.</p>
 
                     </main>
 

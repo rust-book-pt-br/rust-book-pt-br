@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,15 +182,15 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="controle-de-fluxo"><a class="header" href="#controle-de-fluxo">Controle de fluxo</a></h2>
-<p>Decidir se deve ou não executar algum código, dependendo se uma condição é verdadeira
+<p>Decidir se deve ou não executar algum código, dependendo de uma condição ser verdadeira,
 e decidir executar algum código repetidamente enquanto uma condição é verdadeira,
 são blocos de construção básicos na maioria das linguagens de programação. As construções
 mais comuns que permitem controlar o fluxo de execução do código Rust são as expressões <code>if</code> e
 laços de repetição.</p>
 <h3 id="expressão-if"><a class="header" href="#expressão-if">Expressão <code>if</code></a></h3>
 <p>Uma expressão <code>if</code> permite ramificar seu código dependendo das condições. Você
-fornece uma condição e, em seguida, estado, “Se esta condição for cumprida, execute este bloco
-de código. Se a condição não for atendida, não execute este bloco de código. ”</p>
+fornece uma condição e, em seguida, diz: “Se esta condição for satisfeita,
+execute este bloco de código. Se não for, não execute este bloco.”</p>
 <p>Crie um novo projeto chamado <em>branches</em> no seu diretório <em>projects</em> para explorar
 a expressão <code>if</code>. No arquivo <em>src/main.rs</em>, digite o seguinte:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
@@ -206,17 +206,17 @@ a expressão <code>if</code>. No arquivo <em>src/main.rs</em>, digite o seguinte
 <!-- NEXT PARAGRAPH WRAPPED WEIRD INTENTIONALLY SEE #199 -->
 <p>Todas as expressões <code>if</code> começam com a palavra-chave <code>if</code>, que é seguida por uma
 condição. Neste caso, a condição verifica se a variável
-<code>number</code> tem um valor menor que 5. O bloco de código que queremos executar se o
-condição é verdadeira é colocada imediatamente após a condição dentro de chaves.
+<code>numero</code> tem um valor menor que 5. O bloco de código que queremos executar se a
+condição for verdadeira é colocado imediatamente após a condição, entre chaves.
 Blocos de código associados às condições em expressões <code>if</code> são
-às vezes chamado de <em>divisões</em>, assim como as expressões <code>de combinação</code> que nós
+às vezes chamados de <em>braços</em>, assim como as expressões <code>match</code> que nós
 discutimos na seção “Comparando o Palpite ao Número Secreto” de
 Capítulo 2.</p>
 <p>Opcionalmente, também podemos incluir uma expressão <code>else</code>, que escolhemos
-fazer aqui, para dar ao programa um bloco de código alternativo a ser executado, caso a
+usar aqui, para dar ao programa um bloco de código alternativo a ser executado, caso a
 condição seja avaliada como falsa. Se você não fornecer uma expressão <code>else</code> e a
 condição for falsa, o programa simplesmente ignorará o bloco <code>if</code> e passará para o
-próximo bit de código.</p>
+próximo trecho de código.</p>
 <p>Tente executar este código; você deve ver a seguinte saída:</p>
 <pre><code class="language-text">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
@@ -235,7 +235,7 @@ condição era verdadeira
 condição era falsa
 </code></pre>
 <p>Também é importante notar que a condição neste código <em>deve</em> ser um <code>bool</code>. E se
-a condição não é um <code>bool</code>, nós vamos receber um erro. Por exemplo:</p>
+a condição não for um <code>bool</code>, receberemos um erro. Por exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore">fn main() {
     let numero = 3;
@@ -257,8 +257,8 @@ erro:</p>
 </code></pre>
 <p>O erro indica que Rust esperava um <code>bool</code>, mas obteve um inteiro. Ao contrário de
 linguagens como Ruby e JavaScript, o Rust não tentará automaticamente
-converter tipos não-booleanos em um booleano. Você deve explicitar e sempre fornecer
-<code>if</code> com um booleano como sua condição. Se quisermos que o bloco de código <code>if</code> seja executado
+converter tipos não booleanos em um booleano. Você deve ser explícito e sempre fornecer
+ao <code>if</code> um booleano como condição. Se quisermos que o bloco de código <code>if</code> seja executado
 somente quando um número não é igual a <code>0</code>, por exemplo, podemos mudar o <code>if</code>
 para o seguinte:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
@@ -271,7 +271,7 @@ para o seguinte:</p>
 }</code></pre>
 <p>A execução deste código irá imprimir <code>número era algo diferente de zero</code>.</p>
 <h4 id="gerenciando-múltiplas-condições-com-else-if"><a class="header" href="#gerenciando-múltiplas-condições-com-else-if">Gerenciando Múltiplas Condições com <code>else if</code></a></h4>
-<p>Você pode ter várias condições combinando <code>if</code> e<code> else</code> em um <code>else if</code>.
+<p>Você pode ter várias condições combinando <code>if</code> e <code>else</code> em uma expressão <code>else if</code>.
 Por exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -331,7 +331,7 @@ O valor do número é: 5
 <p>Lembre-se de que os blocos de código são avaliados até a última expressão, e os
 números por si mesmos também são expressões. Neste caso, o valor de
 toda a expressão <code>if</code> depende de qual bloco de código é executado. Isso significa que
-os valores que têm o potencial de serem resultados de cada braço do <code>if</code> e que devem ser
+os valores que podem ser resultados de cada braço do <code>if</code> devem ser
 do mesmo tipo; na Listagem 3-2, os resultados do braço <code>if</code> e do <code>else</code>
 eram inteiros <code>i32</code>. Se os tipos forem incompatíveis, como no exemplo a
 seguir, receberemos um erro:</p>

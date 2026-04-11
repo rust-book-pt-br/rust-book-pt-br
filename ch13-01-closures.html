@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -185,18 +185,18 @@
 <p><a id="closures-anonymous-functions-that-can-capture-their-environment"></a>
 <a id="closures-anonymous-functions-that-capture-their-environment"></a></p>
 <h2 id="closures"><a class="header" href="#closures">Closures</a></h2>
-<p>closures do Rust são funções anônimas que você pode salvar em uma variável ou passar como
-argumentos para outras funções. Você pode criar o closure em um só lugar e depois
-chame o closure em outro lugar para avaliá-lo em um contexto diferente. Ao contrário
-funções, closures pode capturar valores do escopo em que estão definidos.
-Demonstraremos como esses recursos do closure permitem a reutilização e comportamento de código
-personalização.</p>
+<p>As closures de Rust são funções anônimas que você pode armazenar em uma
+variável ou passar como argumentos para outras funções. Você pode criar a
+closure em um lugar e depois chamá-la em outro, avaliando-a em um contexto
+diferente. Ao contrário das funções, closures podem capturar valores do escopo
+em que são definidas. Vamos demonstrar como esses recursos permitem reutilizar
+código e personalizar comportamentos.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="creating-an-abstraction-of-behavior-with-closures"></a>
 <a id="refactoring-using-functions"></a>
 <a id="refactoring-with-closures-to-store-code"></a>
 <a id="capturing-the-environment-with-closures"></a></p>
-<h3 id="capturando-o-meio-ambiente"><a class="header" href="#capturando-o-meio-ambiente">Capturando o Meio Ambiente</a></h3>
+<h3 id="capturando-o-ambiente"><a class="header" href="#capturando-o-ambiente">Capturando o Ambiente</a></h3>
 <p>Examinaremos primeiro como podemos usar closures para capturar valores do
 ambiente em que estão definidos para uso posterior. Aqui está o cenário: de vez em quando
 frequentemente, nossa empresa de camisetas distribui uma camisa exclusiva de edição limitada para
@@ -610,14 +610,14 @@ novo vetor vazio se o valor for <code> None</code>. O compilador automaticamente
 implementa qualquer <code> Fn</code>traits aplicável para uma função
 definição.</p>
 </blockquote>
-<p>Agora vamos dar uma olhada no método da biblioteca padrão <code>sort_by_key</code>, definido em slices,
-para ver como isso difere de <code> unwrap_or_else</code>e por que <code> sort_by_key</code>usa
-<code>FnMut</code>em vez de<code>FnOnce</code>para o limite trait. O closure recebe um argumento
-na forma de uma referência ao item atual no slice sendo considerado,
-e retorna um valor do tipo<code>K</code>que pode ser solicitado. Esta função é útil
-quando você deseja classificar um slice por um atributo específico de cada item. Em
-Listagem 13-7, temos uma lista de instâncias<code>Rectangle</code>e usamos<code>sort_by_key</code>
-para ordená-los por seu atributo<code> width</code>de menor para maior.</p>
+<p>Agora, vamos observar o método <code>sort_by_key</code>, da biblioteca padrão, definido em
+slices, para ver como ele difere de <code>unwrap_or_else</code> e por que usa <code>FnMut</code>, em
+vez de <code>FnOnce</code>, como limite de trait. A closure recebe um argumento na forma
+de uma referência ao item atual do slice que está sendo considerado e retorna
+um valor do tipo <code>K</code>, que pode ser ordenado. Essa função é útil quando você
+quer ordenar um slice por um atributo específico de cada item. Na Listagem
+13-7, temos uma lista de instâncias de <code>Rectangle</code> e usamos <code>sort_by_key</code> para
+ordená-las pelo atributo <code>width</code>, da menor para a maior.</p>
 <figure class="listing" id="listing-13-7">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
@@ -658,9 +658,10 @@ fn main() {
     },
 ]
 </code></pre>
-<p>A razão pela qual <code>sort_by_key</code> é definido para receber um <code>FnMut</code> closure é que ele chama
-o closure várias vezes: uma vez para cada item no slice. O closure<code>|r| r.width</code> doesn’t capture, mutate, or move anything out from its environment, so
-ele atende aos requisitos vinculados ao trait.</p>
+<p>A razão pela qual <code>sort_by_key</code> é definido para receber uma closure <code>FnMut</code> é
+que ele a chama várias vezes: uma vez para cada item do slice. A closure
+<code>|r| r.width</code> não captura, não modifica nem move nada para fora do seu
+ambiente, então ela satisfaz os requisitos do limite de trait.</p>
 <p>Em contraste, a Listagem 13-8 mostra um exemplo de closure que implementa apenas
 o <code>FnOnce</code> trait, porque move um valor para fora do ambiente. O
 o compilador não nos permitirá usar este closure com <code>sort_by_key</code>.</p>
@@ -755,10 +756,10 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-13-9">Listing 13-9</a>: Usar uma closure <code>FnMut</code> com <code>sort_by_key</code> é permitido</figcaption>
 </figure>
-<p>Os <code>Fn</code> traits são importantes ao definir ou usar funções ou tipos que
-faça uso do closures. Na próxima seção, discutiremos iterators. Muitos
-Os métodos iterator aceitam argumentos closure, portanto, lembre-se desses detalhes do closure
-enquanto continuamos!</p>
+<p>As traits <code>Fn</code> são importantes ao definir ou usar funções e tipos que façam
+uso de closures. Na próxima seção, discutiremos iteradores. Muitos métodos de
+iteradores recebem closures como argumento, então vale a pena manter esses
+detalhes em mente enquanto continuamos!</p>
 
                     </main>
 

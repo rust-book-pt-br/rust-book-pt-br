@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,28 +182,30 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="refutabilidade-se-um-padrão-pode-não-corresponder"><a class="header" href="#refutabilidade-se-um-padrão-pode-não-corresponder">Refutabilidade: se um padrão pode não corresponder</a></h2>
-<p>Os padrões vêm em duas formas: refutáveis ​​e irrefutáveis. Padrões que serão match
-para qualquer valor possível passado são <em>irrefutáveis</em>. Um exemplo seria <code>x</code> no
-declaração <code>let x = 5;</code> porque <code>x</code> corresponde a qualquer coisa e, portanto, não pode falhar
-para match. Os padrões que podem falhar em match para algum valor possível são
-<em>refutável</em>. Um exemplo seria <code>Some(x)</code> na expressão <code>if let Some(x) = a_value</code> porque se o valor na variável <code>a_value</code> for <code>None</code> em vez de
-<code>Some </code>, o padrão<code> Some(x)</code>não será match.</p>
-<p>Parâmetros de função, instruções <code>let</code> e loops <code>for</code> só podem aceitar
-padrões irrefutáveis porque o programa não pode fazer nada significativo quando
-valores não match. As expressões <code>if let</code> e <code>while let</code> e o
-A instrução <code>let...else</code> aceita padrões refutáveis e irrefutáveis, mas o
-compilador alerta contra padrões irrefutáveis porque, por definição, eles são
-destinado a lidar com possíveis falhas: A funcionalidade de uma condicional está em
-sua capacidade de funcionar de maneira diferente dependendo do sucesso ou do fracasso.</p>
+<p>Os padrões vêm em duas formas: refutáveis e irrefutáveis. Padrões que
+correspondem a qualquer valor possível passado são <em>irrefutáveis</em>. Um exemplo
+é <code>x</code> na instrução <code>let x = 5;</code>, porque <code>x</code> corresponde a qualquer coisa e,
+portanto, não pode falhar. Já os padrões que podem falhar ao corresponder a
+algum valor possível são <em>refutáveis</em>. Um exemplo é <code>Some(x)</code> na expressão
+<code>if let Some(x) = a_value</code>, porque, se o valor na variável <code>a_value</code> for
+<code>None</code> em vez de <code>Some</code>, o padrão <code>Some(x)</code> não corresponderá.</p>
+<p>Parâmetros de função, instruções <code>let</code> e loops <code>for</code> só podem aceitar padrões
+irrefutáveis, porque o programa não pode fazer nada significativo quando os
+valores não correspondem. Já as expressões <code>if let</code> e <code>while let</code>, bem como a
+instrução <code>let...else</code>, aceitam padrões refutáveis e irrefutáveis, mas o
+compilador alerta contra padrões irrefutáveis porque, por definição, essas
+construções servem para lidar com possíveis falhas: a utilidade de uma
+condicional está em sua capacidade de se comportar de maneira diferente
+dependendo do sucesso ou do fracasso.</p>
 <p>Em geral, você não deveria se preocupar com a distinção entre refutável
 e padrões irrefutáveis; no entanto, você precisa estar familiarizado com o conceito
 de refutabilidade para que você possa responder quando vir uma mensagem de erro. Em
 nesses casos, você precisará alterar o padrão ou a construção que está
 usando o padrão com, dependendo do comportamento pretendido do código.</p>
-<p>Vejamos um exemplo do que acontece quando tentamos usar um padrão refutável
-onde Rust requer um padrão irrefutável e vice-versa. A listagem 19-8 mostra um
-declaração <code>let</code>, mas para o padrão, especificamos <code> Some(x)</code>, um refutável
-padrão. Como você poderia esperar, este código não será compilado.</p>
+<p>Vejamos um exemplo do que acontece quando tentamos usar um padrão refutável onde
+Rust exige um padrão irrefutável, e vice-versa. A Listagem 19-8 mostra uma
+instrução <code>let</code>, mas, no padrão, especificamos <code>Some(x)</code>, um padrão refutável.
+Como você pode imaginar, esse código não vai compilar.</p>
 <figure class="listing" id="listing-19-8">
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span><span class="boring">    let some_option_value: Option&lt;i32&gt; = None;
@@ -211,11 +213,12 @@ padrão. Como você poderia esperar, este código não será compilado.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-8">Listing 19-8</a>: Tentando usar um padrão refutável com <code>let</code></figcaption>
 </figure>
-<p>Se <code>some_option_value</code> fosse um valor <code>None</code>, ele falharia em match o padrão
-<code>Some(x)</code>, o que significa que o padrão é refutável. No entanto, a instrução<code>let</code>pode
-só aceita um padrão irrefutável porque não há nada válido que o código possa
-fazer com um valor<code> None</code>. Em tempo de compilação, Rust irá reclamar que tentamos
-use um padrão refutável onde um padrão irrefutável for necessário:</p>
+<p>Se <code>some_option_value</code> fosse um valor <code>None</code>, ele deixaria de corresponder ao
+padrão <code>Some(x)</code>, o que significa que o padrão é refutável. No entanto, a
+instrução <code>let</code> só aceita um padrão irrefutável, porque não existe nada válido
+que o código possa fazer com um valor <code>None</code>. Em tempo de compilação, Rust
+reclamará que tentamos usar um padrão refutável onde um padrão irrefutável é
+necessário:</p>
 <pre><code class="language-console">$ cargo run
    Compiling patterns v0.1.0 (file:///projects/patterns)
 error[E0005]: refutable pattern in local binding
@@ -237,10 +240,10 @@ error: could not compile `patterns` (bin "patterns") due to 1 previous error
 </code></pre>
 <p>Porque não cobrimos (e não poderíamos cobrir!) todos os valores válidos com o
 padrão <code>Some(x)</code>, Rust produz corretamente um erro do compilador.</p>
-<p>If we have a refutable pattern where an irrefutable pattern is needed, we can
-fix it by changing the code that uses the pattern: Instead of using <code>let</code>, we
-pode usar <code> let...else</code>. Then, if the pattern doesn’t match, the code in the curly
-colchetes tratarão do valor. A Listagem 19-9 mostra como corrigir o código em
+<p>Se tivermos um padrão refutável onde é necessário um padrão irrefutável,
+podemos corrigir isso mudando o código que usa o padrão: em vez de usar <code>let</code>,
+podemos usar <code>let...else</code>. Então, se o padrão não corresponder, o código entre
+chaves tratará o valor. A Listagem 19-9 mostra como corrigir o código da
 Listagem 19-8.</p>
 <figure class="listing" id="listing-19-9">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -251,10 +254,10 @@ Listagem 19-8.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-9">Listing 19-9</a>: Usando <code>let...else</code> e um bloco com padrões refutáveis no lugar de <code>let</code></figcaption>
 </figure>
-<p>Demos uma saída ao código! Este código é perfeitamente válido, embora signifique que
-não pode usar um padrão irrefutável sem receber um aviso. Se nós dermos
-<code>let...else </code> um padrão que sempre será match, como<code>x</code>, conforme mostrado na Listagem
-19-10, o compilador dará um aviso.</p>
+<p>Demos uma saída para o código! Esse código é perfeitamente válido, embora isso
+signifique que não podemos usar um padrão irrefutável sem receber um aviso. Se
+passarmos a <code>let...else</code> um padrão que sempre corresponderá, como <code>x</code>, conforme
+mostrado na Listagem 19-10, o compilador emitirá um aviso.</p>
 <figure class="listing" id="listing-19-10">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 5 else {
@@ -281,8 +284,9 @@ warning: `patterns` (bin "patterns") generated 1 warning
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.39s
      Running `target/debug/patterns`
 </code></pre>
-<p>Por esta razão, os braços match devem usar padrões refutáveis, exceto o último
-arm, que deve match quaisquer valores restantes com um padrão irrefutável. Rust
+<p>Por essa razão, os braços de <code>match</code> devem usar padrões refutáveis, exceto o
+último braço, que deve corresponder a quaisquer valores restantes com um padrão
+irrefutável. Rust
 nos permite usar um padrão irrefutável em um <code>match</code> com apenas um braço, mas
 esta sintaxe não é particularmente útil e pode ser substituída por uma mais simples
 Instrução <code>let</code>.</p>

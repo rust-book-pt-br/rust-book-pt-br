@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,13 +181,13 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="um-exemplo-de-um-programa-que-usa-structs"><a class="header" href="#um-exemplo-de-um-programa-que-usa-structs">Um Exemplo de um Programa que usa Structs</a></h2>
+                        <h2 id="um-exemplo-de-programa-que-usa-structs"><a class="header" href="#um-exemplo-de-programa-que-usa-structs">Um Exemplo de Programa que Usa Structs</a></h2>
 <p>Para entender quando podemos querer usar structs, vamos escrever um programa
 que calcula a área de um retângulo. Vamos começar com as variáveis individuais
 e em seguida, refazer o programa até usar structs em vez das variáveis.</p>
-<p>Vamos fazer um novo projeto binário com Cargo, chamado <em>retângulos</em> que terá
-o comprimento e a largura do retângulo especificados em pixels e irá calcular a
-área do retângulo. A Lista 5-8 mostra um programa curto com uma maneira de
+<p>Vamos fazer um novo projeto binário com Cargo, chamado <em>retângulos</em>, que terá
+o comprimento e a largura do retângulo especificados em pixels e calculará a
+área do retângulo. A Listagem 5-8 mostra um programa curto com uma maneira de
 fazer isso no nosso projeto <em>src/main.rs</em>:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -203,23 +203,22 @@ fazer isso no nosso projeto <em>src/main.rs</em>:</p>
 fn area(length: u32, width: u32) -&gt; u32 {
     length * width
 }</code></pre>
-<p><span class="caption">Lista 5-8: Calcular a área de um retângulo
+<p><span class="caption">Listagem 5-8: Calculando a área de um retângulo
 especificado pelo seu comprimento e largura em variáveis separadas</span></p>
 <p>Agora, executamos este programa usando <code>cargo run</code>:</p>
 <pre><code class="language-text">The area of the rectangle is 1500 square pixels.
 </code></pre>
 <h3 id="refazendo-com-tuplas"><a class="header" href="#refazendo-com-tuplas">Refazendo com Tuplas</a></h3>
-<p>Embora a lista 5-8 funcione e descubra a área do retângulo chamando a função
-<code>area</code> com cada dimensão, nós podemos fazer melhor. O comprimento e a largura
+<p>Embora a Listagem 5-8 funcione e descubra a área do retângulo chamando a função
+<code>area</code> com cada dimensão, podemos fazer melhor. O comprimento e a largura
 estão relacionados uns aos outros porque juntos eles descrevem um retângulo.</p>
 <p>O problema com este método é evidente na assinatura de <code>area</code>:</p>
 <pre><code class="language-rust ignore">fn area(length: u32, width: u32) -&gt; u32 {</code></pre>
 <p>A função <code>area</code> supostamente calcula a área de um retângulo, mas a função
 que escrevemos tem dois parâmetros. Os parâmetros estão relacionados, mas isso
-não é indicado em qualquer lugar no nosso programa. Seria mais legível e
-mais gerenciável agrupar comprimento e largura. Já discutimos uma maneira de
-podermos fazer isso no Agrupamento de Valores em Tuplas, na seção do capítulo 3
-na página XX: através do uso de tuplas. Lista 5-9 mostra outra versão do
+não está indicado em nenhum lugar no nosso programa. Seria mais legível e
+mais fácil de manter agrupar comprimento e largura. Já discutimos uma maneira de
+fazer isso ao falar sobre tuplas no Capítulo 3. A Listagem 5-9 mostra outra versão do
 nosso programa que usa tuplas:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -234,22 +233,22 @@ nosso programa que usa tuplas:</p>
 fn area(dimensions: (u32, u32)) -&gt; u32 {
     dimensions.0 * dimensions.1
 }</code></pre>
-<p><span class="caption">Lista 5-8: Especificando o comprimento e a largura de um
-retangulo através de uma Tupla.</span></p>
-<p>Em uma maneira, este programa é melhor. As tuplas deixam-nos adicionar um pouco
-de estrutura, e agora estamos passando apenas um argumento. Mas esta versão é
-menos clara: as tuplas não nomeiam os seus elementos, de modo que nosso cálculo
-tornou-se mais confuso porque temos de indexar as peças da tupla.</p>
-<p>Não importa, para o cálculo da área, trocar-se comprimento e largura, mas
-se queremos desenhar o retângulo na tela, já importa! Temos de ter em
-mente que <code>comprimento</code> é a tupla índice <code>0</code> e <code>largura</code> é o tupla índice <code>1</code>.
-Se alguém trabalhar com este código, terá de descobrir isso e mantê-lo em
-mente. Seria fácil esquecer ou misturar estes valores e causar erros, porque
-não se transmitiu o significado dos nossos dados no nosso código.</p>
-<h3 id="reprogramação-com-structs-adicionando-mais-significado"><a class="header" href="#reprogramação-com-structs-adicionando-mais-significado">Reprogramação com Structs: Adicionando Mais Significado</a></h3>
+<p><span class="caption">Listagem 5-9: Especificando o comprimento e a largura de um
+retângulo por meio de uma tupla.</span></p>
+<p>De certa forma, este programa é melhor. As tuplas nos permitem adicionar um pouco
+de estrutura, e agora estamos passando apenas um argumento. Mas, de outra forma, esta versão é
+menos clara: as tuplas não nomeiam seus elementos, então o cálculo fica
+mais confuso porque precisamos indexar as partes da tupla.</p>
+<p>Para o cálculo da área, trocar comprimento e largura não faria diferença, mas,
+se quisermos desenhar o retângulo na tela, isso já importa! Teríamos de ter em
+mente que <code>comprimento</code> é o índice <code>0</code> da tupla e <code>largura</code> é o índice <code>1</code>.
+Se outra pessoa trabalhar com esse código, também terá de descobrir isso e manter
+essa informação em mente. Seria fácil esquecer ou misturar esses valores e causar erros,
+porque o significado dos dados não está explícito no código.</p>
+<h3 id="refatorando-com-structs-adicionando-mais-significado"><a class="header" href="#refatorando-com-structs-adicionando-mais-significado">Refatorando com Structs: Adicionando Mais Significado</a></h3>
 <p>Usamos structs para dar significado aos dados usando rótulos. Podemos
 transformar a tupla que estamos usando em um tipo de dados, com um nome
-para o conjunto bem como nomes para as partes, como mostra a Lista 5-10:</p>
+para o conjunto bem como nomes para as partes, como mostra a Listagem 5-10:</p>
 <p><span class="filename">Filename: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">struct Rectangle {
     length: u32,
@@ -268,24 +267,23 @@ fn main() {
 fn area(rectangle: &amp;Rectangle) -&gt; u32 {
     rectangle.length * rectangle.width
 }</code></pre>
-<p><span class="caption">Lista 5-10: Definindo um struct <code>Rectangle</code>(Rectangulo)</span></p>
-<p>Aqui temos definido um struct denominado <code>Rectangle</code>. Dentro das <code>{}</code>
-definimos os campos como <code>comprimento</code> e <code>largura</code>, ambas do tipo <code>u32</code>.
-Em <code>main</code>, criamos uma instância específica de um <code>Rectangle</code> que tem um
-comprimento de 50 e largura de 30.</p>
-<p>A nossa função <code>área</code> agora é definida com um parâmetro, que chamamos
-<code>rectangle</code>, cujo tipo é um empréstimo de uma instância da struct imutável
-<code>Rectangle</code>. Como mencionado no capítulo 4, queremos usar a struct, em vez de
-tomar posse dela. Desta forma, <code>main</code> mantém-se a sua proprietaria e pode
-continuar a usar o <code>rect1</code>, que é a razão para usar o <code>&amp;</code> na assinatura
-da função e onde chamamos a função.</p>
-<p>A função <code>área</code> acessa os campos <code>comprimento</code> e <code>largura</code> da instância
-<code>Rectangle</code>. Nossa função assinatura para <code>área</code> agora indica exatamente o que
-queremos dizer: calcular a área de um <code>Rectangle</code> usando os campos <code>lenght</code>
-(comprimento) e <code>width</code> (largura). Transmite que o comprimento e a largura são
-relacionados uns aos outros, e dá nomes descritivos para os valores em vez de
-usar a tupla de valores de índice <code>0</code> e <code>1</code>-uma vitória para uma maior clareza.</p>
-<h3 id="adicionando-funcionalidade-util-com-traits-derivadas"><a class="header" href="#adicionando-funcionalidade-util-com-traits-derivadas">Adicionando Funcionalidade Util com Traits Derivadas</a></h3>
+<p><span class="caption">Listagem 5-10: Definindo uma struct <code>Rectangle</code></span></p>
+<p>Aqui definimos uma struct chamada <code>Rectangle</code>. Dentro das chaves,
+definimos os campos <code>length</code> e <code>width</code>, ambos do tipo <code>u32</code>.
+Em <code>main</code>, criamos uma instância específica de <code>Rectangle</code> que tem
+comprimento 50 e largura 30.</p>
+<p>Nossa função <code>area</code> agora é definida com um parâmetro, que chamamos
+<code>rectangle</code>, cujo tipo é um empréstimo imutável de uma instância da struct
+<code>Rectangle</code>. Como mencionado no Capítulo 4, queremos tomar emprestada a struct,
+em vez de tomar posse dela. Dessa forma, <code>main</code> mantém a propriedade de <code>rect1</code>
+e pode continuar usando esse valor, razão pela qual usamos <code>&amp;</code> tanto na assinatura
+da função quanto na chamada.</p>
+<p>A função <code>area</code> acessa os campos <code>length</code> e <code>width</code> da instância
+<code>Rectangle</code>. A assinatura de <code>area</code> agora expressa exatamente o que queremos
+dizer: calcular a área de um <code>Rectangle</code> usando seus campos <code>length</code> e <code>width</code>.
+Isso transmite que comprimento e largura estão relacionados e dá nomes descritivos
+aos valores, em vez de usar os índices <code>0</code> e <code>1</code> de uma tupla.</p>
+<h3 id="adicionando-funcionalidade-útil-com-traits-derivadas"><a class="header" href="#adicionando-funcionalidade-útil-com-traits-derivadas">Adicionando Funcionalidade Útil com Traits Derivadas</a></h3>
 <p>Seria útil para ser capaz de imprimir uma instância do <code>Rectangle</code> enquanto
 estamos depurando o nosso programa, a fim de consultar os valores para todos
 os seus campos. Lista 5-11 usa a macro ‘println!’ como temos usado nos
@@ -313,7 +311,7 @@ até agora implementam <code>Display</code> por padrão, porque só há uma mane
 deseja mostrar um <code>1</code> ou qualquer outro tipo primitivo para um usuário. Mas com
 Structs, a forma como <code>println!</code> deve formatar a saída é menos clara, pois
 existem mais possibilidades de exibição: você quer vírgulas ou não? Deseja
-imprimir as chavetas <code>{}</code>? Todos os campos devem ser mostrados? Devido a esta
+imprimir as chaves <code>{}</code>? Todos os campos devem ser mostrados? Devido a esta
 ambiguidade, Rust não tenta adivinhar o que queremos e as structs não têm uma
 implementação de <code>Display</code>.</p>
 <p>Se continuarmos a ler os erros, encontramos esta nota explicativa:</p>

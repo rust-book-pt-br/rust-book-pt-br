@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,22 +181,22 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="o-que-é-ownership"><a class="header" href="#o-que-é-ownership">O Que É Ownership?</a></h2>
+                        <h2 id="o-que-é-ownership"><a class="header" href="#o-que-é-ownership">O que é ownership?</a></h2>
 <p>A característica central do Rust é <em>ownership</em>. Embora seja bem direta de
 explicar, ela tem implicações profundas em todo o resto da linguagem.</p>
-<p>Todos os programas têm que decidir de que forma vão usar a memória do computador
+<p>Todos os programas têm de decidir de que forma vão usar a memória do computador
 durante a execução. Algumas linguagens possuem <em>garbage collection</em> (coleta de
 lixo), que constantemente busca segmentos de memória que já não são mais
 utilizados enquanto o programa executa; em outras linguagens, o programador deve
 alocar e liberar memória de forma explícita. Rust usa uma terceira abordagem: a
-memória é gerenciada através de um sistema de posse, que tem um conjunto de
-regras verificadas em tempo de compilação. Nenhuma característica relacionada ao
-ownership implica qualquer custo em tempo de execução.</p>
-<p>Como ownership é um conceito novo para muitos programadores, leva um pouco de
+memória é gerenciada por meio de um sistema de ownership, com um conjunto de
+regras verificadas em tempo de compilação. Nenhuma das características
+relacionadas ao ownership implica qualquer custo em tempo de execução.</p>
+<p>Como ownership é um conceito novo para muitos programadores, leva algum tempo
 tempo para se acostumar. A boa notícia é que quanto mais experiente você se
 torna em Rust e nas regras do sistema de posse, mais você será capaz de
-escrever, naturalmente, código seguro e eficiente. Fique aí!</p>
-<p>Quando você entender ownership, você terá uma fundação sólida para entender as
+escrever, naturalmente, código seguro e eficiente. Continue firme!</p>
+<p>Quando você entender ownership, terá uma base sólida para entender as
 características que fazem o Rust ser único. Neste capítulo, você vai aprender
 ownership trabalhando em alguns exemplos com foco em uma estrutura de dados
 muito comum: <em>strings</em>.</p>
@@ -216,7 +216,7 @@ na ordem inversa. Isto é chamado de <em>last in, first out</em> (último a cheg
 primeiro a sair). Imagine uma pilha de pratos: quando você coloca mais pratos,
 você os põe em cima da pilha, e quando você precisa de um prato, você pega o
 que está no topo. Adicionar ou remover pratos do meio ou do fundo não funciona
-tão bem! Dizemos fazer um <em>push</em> na pilha quando nos refererimos a inserir
+tão bem! Dizemos fazer um <em>push</em> na pilha quando nos referimos a inserir
 dados, e fazer um <em>pop</em> da pilha quando nos referimos a remover dados.</p>
 <p>A pilha é rápida por conta da forma como ela acessa os dados: ela nunca tem
 que procurar um lugar para colocar novos dados, ou um lugar de onde obter
@@ -264,9 +264,9 @@ na heap pode ajudar a explicar como e por que ele funciona.</p>
 regras quando trabalharmos com os exemplos em seguida:</p>
 <blockquote>
 <ol>
-<li>Cada valor em Rust possui uma variável que é dita seu <em>owner</em> (sua dona).</li>
-<li>Pode apenas haver um owner por vez.</li>
-<li>Quando o owner sai fora de escopo, o valor será destruído.</li>
+<li>Cada valor em Rust tem um <em>owner</em>.</li>
+<li>Só pode haver um owner por vez.</li>
+<li>Quando o owner sai de escopo, o valor é descartado.</li>
 </ol>
 </blockquote>
 <h3 id="escopo-de-variáveis"><a class="header" href="#escopo-de-variáveis">Escopo de Variáveis</a></h3>
@@ -318,7 +318,7 @@ nosso programa. Strings literais são convenientes, mas nem sempre são adequada
 para situações em que queremos usar texto. Um motivo é que elas são imutáveis.
 Outro é que nem todos os valores de string são conhecidos enquanto escrevemos
 nosso código: por exemplo, o que fazer se queremos obter uma entrada do usuário
-e armazená-la? Para essas situações, Rust tem um segundo tipo de strings,
+e armazená-la? Para essas situações, Rust tem um segundo tipo de string,
 <code>String</code>. Este tipo é alocado na heap, e como tal, é capaz de armazenar uma
 quantidade de texto que é desconhecida em tempo de compilação. Você pode criar
 uma <code>String</code> de uma string literal usando a função <code>from</code>, da seguinte forma:</p>
@@ -329,9 +329,9 @@ uma <code>String</code> de uma string literal usando a função <code>from</code
 <p>O <code>::</code> é um operador que nos permite indicar que o <em>namespace</em> desta função
 <code>from</code>, em particular, é o tipo <code>String</code>, de forma que não precisamos usar um
 nome específico como <code>string_from</code>. Vamos discutir esta sintaxe na seção
-“Sintaxe do Método” do Capítulo 5, e quando falarmos sobre <em>namespaces</em> com
+“Sintaxe do Método” do Capítulo 5, e quando falarmos sobre <em>namespaces</em> em
 módulos no Capítulo 7.</p>
-<p>Este tipo de string <em>pode</em> ser alterada:</p>
+<p>Esse tipo de string <em>pode</em> ser alterado:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let mut s = String::from("olá");
@@ -383,7 +383,7 @@ escopo da Listagem 4-1 usando uma <code>String</code> em vez de uma string liter
                                    // mais válida
 <span class="boring">}</span></code></pre>
 <p>Existe um ponto natural em que podemos retornar ao sistema operacional a memória
-da qual precisa nossa <code>String</code>: quando <code>s</code> sai de escopo. Quando uma variável
+de que nossa <code>String</code> precisa: quando <code>s</code> sai de escopo. Quando uma variável
 sai de escopo, o Rust chama para nós uma função especial. Essa função é chamada
 <code>drop</code>, e é aí que o autor de <code>String</code> pode colocar o código que retorna
 a memória. Rust chama <code>drop</code> automaticamente ao fechar chaves (<code>}</code>).</p>
@@ -391,7 +391,7 @@ a memória. Rust chama <code>drop</code> automaticamente ao fechar chaves (<code
 <p>Nota: Em C++, esta forma de desalocar recursos no fim do tempo de vida útil de
 um item às vezes é chamado de <em>Resource Acquisition Is Initialization</em> (RAII,
 do inglês, Aquisição de Recurso É Inicialização). A função <code>drop</code> em Rust vai
-lhe ser bastante familar se você já tiver usado padrões RAII.</p>
+lhe ser bastante familiar se você já tiver usado padrões RAII.</p>
 </blockquote>
 <p>Este padrão tem um profundo impacto na forma de escrever código em Rust. Pode
 parecer simples agora, mas o comportamento do código pode ser inesperado em
@@ -407,7 +407,7 @@ let y = x;
 <span class="boring">}</span></code></pre>
 <p><span class="caption">Listagem 4-2: Atribuindo o valor inteiro da variável <code>x</code>
 para <code>y</code>.</span></p>
-<p>Provavelmente podemos advinhar o que isto faz com base nas nossas experiências
+<p>Provavelmente podemos adivinhar o que isso faz com base nas nossas experiências
 com outras linguagens: “Associe o valor <code>5</code> a <code>x</code>; depois faça uma cópia do
 valor em <code>x</code> e a associe a <code>y</code>.” Agora temos duas variáveis, <code>x</code> e <code>y</code>, e ambas
 são iguais a <code>5</code>. É isto mesmo que acontece, porque números inteiros são valores

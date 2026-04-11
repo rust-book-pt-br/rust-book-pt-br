@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,12 +182,12 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="funções"><a class="header" href="#funções">Funções</a></h1>
-<p>Funções são difundidas em códigos em Rust. Você já viu uma das mais
+<p>Funções são comuns em código Rust. Você já viu uma das mais
 importantes funções da linguagem: a função <code>main</code>, que é o
-ponto de entrada de diversos programas. Você também já viu a notação <code>fn</code>, que permite você
+ponto de entrada de muitos programas. Você também já viu a notação <code>fn</code>, que permite
 declarar uma nova função.</p>
 <p>Códigos em Rust usam, por convenção, o estilo <em>snake case</em> para nomes de função e
-variável. No snake case, todas as letras são minúsculas e sublinhado (underline) separa as palavras.
+variável. No <em>snake case</em>, todas as letras são minúsculas e sublinhados separam as palavras.
 Aqui está um programa que contém uma definição de função de exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -199,11 +199,11 @@ Aqui está um programa que contém uma definição de função de exemplo:</p>
 fn outra_funcao() {
     println!("Outra função.");
 }</code></pre>
-<p>As definições de funções em Rust iniciam com <code>fn</code> e tem um par de parênteses
+<p>As definições de funções em Rust começam com <code>fn</code> e têm um par de parênteses
 depois do nome da função. As chaves dizem ao compilador onde o
 corpo da função começa e termina.</p>
 <p>Podemos chamar qualquer função que tenhamos definido, inserindo seu nome, seguido de um
-conjunto de parenteses. Pelo fato da <code>outra_funcao</code> ter sido definida no programa, ela pode
+conjunto de parênteses. Como <code>outra_funcao</code> foi definida no programa, ela pode
 ser chamada dentro da função <code>main</code>. Note que definimos <code>outra_funcao</code>
 <em>depois</em> da função <code>main</code>; poderíamos ter definido antes
 também. Rust não se importa onde você definiu suas funções, apenas que elas foram
@@ -251,8 +251,8 @@ O valor de x é: 5
 <code>println!</code> coloca <code>5</code> onde o par de chaves estava na string
 de formato.</p>
 <p>Nas assinaturas de função, você <em>deve</em> declarar o tipo de cada parâmetro. Essa é
-decisão deliberada no design do Rust: exigir anotações de tipo na definição da função,
-significa que o compilador quase nunca precisará que as use em outro lugar do código
+uma decisão deliberada no design do Rust: exigir anotações de tipo na definição da função
+significa que o compilador quase nunca precisará que elas apareçam em outro lugar do código
 para especificar o que você quer.</p>
 <p>Quando você precisa que uma função tenha vários parâmetros, separe as declarações de parâmetros
 com vírgula, como a seguir:</p>
@@ -278,8 +278,8 @@ com o exemplo anterior e execute-o usando <code>cargo run</code>:</p>
 O valor de x é: 5
 O valor de y é: 6
 </code></pre>
-<p>Porque nós chamamos a função com <code>5</code> sendo o valor de<code> x</code> e <code>6</code> é passado
-como o valor de <code>y</code>, as duas cadeias são impressas com esses valores.</p>
+<p>Como chamamos a função com <code>5</code> como valor de <code>x</code> e <code>6</code> como valor de <code>y</code>,
+as duas linhas são impressas com esses valores.</p>
 <h3 id="corpos-de-função"><a class="header" href="#corpos-de-função">Corpos de função</a></h3>
 <p>Corpos de função são constituídos por uma série de declarações que terminam,
 opcionalmente, em uma expressão. Até agora, foram apresentadas apenas funções sem uma expressão final,
@@ -301,7 +301,7 @@ Na Listagem 3-1, <code>let y = 6;</code> é uma declaração:</p>
 <p><span class="caption">Listagem 3-1: A declaração da função <code>main</code> contendo uma declaração.</span></p>
 <p>Definições de função também são definições; todo o exemplo
 é uma declaração em si.</p>
-<p>Definições não retornam valores. Assim sendo, você não pode atribuir uma declaração <code>let</code> para
+<p>Declarações não retornam valores. Assim sendo, você não pode atribuir uma declaração <code>let</code> a
 outra variável, como o código a seguir tenta fazer; você receberá um erro:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore">fn main() {
@@ -346,8 +346,8 @@ um novo escopo, <code>{}</code>, é uma expressão, por exemplo:</p>
     let x = 3;
     x + 1
 }</code></pre>
-<p>é um bloco que, nesse exemplo, avalia <code>4</code>. Esse valor fica vinculado ao <code>y</code>
-como parte da declaração <code>let</code>. Note o  <code>x + 1</code> sem um ponto e vírgula no final, que é diferente da maioria das linhas vistas até agora.
+<p>é um bloco que, nesse exemplo, avalia para <code>4</code>. Esse valor fica vinculado a <code>y</code>
+como parte da declaração <code>let</code>. Note <code>x + 1</code> sem ponto e vírgula no final, o que é diferente da maioria das linhas vistas até agora.
 Expressões não terminam com ponto e vírgula.
 Se você adicionar um ponto e vírgula ao fim de uma expressão,
 você a transforma em uma declaração, que então não retornará um valor.

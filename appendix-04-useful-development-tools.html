@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,26 +182,26 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="apêndice-d-ferramentas-úteis-de-desenvolvimento"><a class="header" href="#apêndice-d-ferramentas-úteis-de-desenvolvimento">Apêndice D: Ferramentas úteis de desenvolvimento</a></h2>
-<p>Neste apêndice, falamos sobre algumas ferramentas de desenvolvimento úteis que o Rust
-projeto fornece. Veremos a formatação automática e maneiras rápidas de aplicar
+<p>Neste apêndice, falamos sobre algumas ferramentas de desenvolvimento úteis que o projeto
+Rust fornece. Veremos a formatação automática e maneiras rápidas de aplicar
 correções de aviso, um linter e integração com IDEs.</p>
 <h3 id="formatação-automática-com-rustfmt"><a class="header" href="#formatação-automática-com-rustfmt">Formatação automática com <code>rustfmt</code></a></h3>
 <p>A ferramenta <code>rustfmt</code> reformata seu código de acordo com o estilo do código da comunidade.
-Muitos projetos colaborativos usam <code>rustfmt</code> para evitar discussões sobre quais
-estilo a ser usado ao escrever Rust: todos formatam seu código usando a ferramenta.</p>
-<p>As instalações do Rust incluem <code>rustfmt</code> por padrão, então você já deve ter o
+Muitos projetos colaborativos usam <code>rustfmt</code> para evitar discussões sobre qual
+estilo deve ser usado ao escrever Rust: todos formatam seu código usando a ferramenta.</p>
+<p>As instalações do Rust incluem <code>rustfmt</code> por padrão, então você já deve ter os
 programas <code>rustfmt</code> e <code>cargo-fmt</code> em seu sistema. Esses dois comandos são
-análogo a <code>rustc</code> e <code>cargo</code>, pois <code> rustfmt</code>permite um controle mais refinado
-e <code> cargo-fmt</code>entende as convenções de um projeto que usa Cargo. Para formatar
+análogos a <code>rustc</code> e <code>cargo</code>, pois <code>rustfmt</code> permite um controle mais refinado
+e <code>cargo-fmt</code> entende as convenções de um projeto que usa Cargo. Para formatar
 qualquer projeto Cargo, insira o seguinte:</p>
 <pre><code class="language-console">$ cargo fmt
 </code></pre>
-<p>A execução deste comando reformata todo o código Rust no crate atual. Isto
-deve alterar apenas o estilo do código, não a semântica do código. Para mais informações
+<p>A execução deste comando reformata todo o código Rust no crate atual. Isso
+deve alterar apenas o estilo do código, não sua semântica. Para mais informações
 em <code>rustfmt</code>, consulte <a href="https://github.com/rust-lang/rustfmt">sua documentação</a>.</p>
-<h3 id="corrija-seu-código-com-rustfix"><a class="header" href="#corrija-seu-código-com-rustfix">Corrija seu código com <code>rustfix</code></a></h3>
-<p>A ferramenta <code>rustfix</code> está incluída nas instalações do Rust e pode automaticamente
-corrigir avisos do compilador que tenham uma maneira clara de corrigir o problema que está
+<h3 id="corrigindo-seu-código-com-rustfix"><a class="header" href="#corrigindo-seu-código-com-rustfix">Corrigindo seu código com <code>rustfix</code></a></h3>
+<p>A ferramenta <code>rustfix</code> está incluída nas instalações do Rust e pode
+corrigir automaticamente avisos do compilador para os quais exista uma forma clara de corrigir o problema, o que é
 provavelmente o que você deseja. Você provavelmente já viu avisos do compilador antes. Para
 por exemplo, considere este código:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
@@ -209,8 +209,8 @@ por exemplo, considere este código:</p>
     let mut x = 42;
     println!("{x}");
 }</code></pre>
-<p>Aqui, estamos definindo a variável <code>x</code> como mutável, mas na verdade nunca sofremos mutação
-isso. Rust nos avisa sobre isso:</p>
+<p>Aqui, estamos definindo a variável <code>x</code> como mutável, mas na verdade nunca a
+modificamos. Rust nos avisa sobre isso:</p>
 <pre><code class="language-console">$ cargo build
    Compiling myprogram v0.1.0 (file:///projects/myprogram)
 warning: variable does not need to be mutable
@@ -223,8 +223,8 @@ warning: variable does not need to be mutable
   |
   = note: `#[warn(unused_mut)]` on by default
 </code></pre>
-<p>O aviso sugere que removamos a palavra-chave <code>mut</code>. Podemos automaticamente
-aplique essa sugestão usando a ferramenta <code> rustfix</code>executando o comando <code> cargo fix</code>:</p>
+<p>O aviso sugere que removamos a palavra-chave <code>mut</code>. Podemos aplicar essa
+sugestão automaticamente usando a ferramenta <code>rustfix</code>, executando o comando <code>cargo fix</code>:</p>
 <pre><code class="language-console">$ cargo fix
     Checking myprogram v0.1.0 (file:///projects/myprogram)
       Fixing src/main.rs (1 fix)
@@ -242,13 +242,13 @@ código:</p>
 diferentes edições do Rust. As edições são abordadas no <a href="appendix-05-editions.html">Apêndice E</a><!--
 ignore -->.</p>
 <h3 id="mais-lints-com-clippy"><a class="header" href="#mais-lints-com-clippy">Mais lints com Clippy</a></h3>
-<p>A ferramenta Clippy é uma coleção de lints para analisar seu código para que você possa
-detecte erros comuns e melhore seu código Rust. Clippy está incluído com
-instalações Rust padrão.</p>
+<p>A ferramenta Clippy é uma coleção de lints para analisar seu código, de modo que você possa
+detectar erros comuns e melhorar seu código Rust. Clippy está incluído nas
+instalações padrão do Rust.</p>
 <p>Para executar os lints do Clippy em qualquer projeto Cargo, digite o seguinte:</p>
 <pre><code class="language-console">$ cargo clippy
 </code></pre>
-<p>Por exemplo, digamos que você escreve um programa que usa uma aproximação de um
+<p>Por exemplo, digamos que você escreva um programa que usa uma aproximação de uma
 constante matemática, como pi, como este programa faz:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
@@ -269,8 +269,8 @@ constante matemática, como pi, como este programa faz:</p>
   = help: consider using the constant directly
   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#approx_constant
 </code></pre>
-<p>Este erro permite que você saiba que Rust já possui uma constante <code>PI</code> mais precisa
-definido, e que seu programa seria mais correto se você usasse a constante
+<p>Esse erro informa que Rust já possui uma constante <code>PI</code> mais precisa
+definida, e que seu programa seria mais correto se você usasse essa constante
 em vez disso. Você então alteraria seu código para usar a constante <code>PI</code>.</p>
 <p>O código a seguir não resulta em erros ou avisos do Clippy:</p>
 <figure class="listing">
@@ -283,15 +283,15 @@ em vez disso. Você então alteraria seu código para usar a constante <code>PI<
 </figure>
 <p>Para obter mais informações sobre o Clippy, consulte <a href="https://github.com/rust-lang/rust-clippy">sua documentação</a>.</p>
 <h3 id="integração-ide-usando-rust-analyzer"><a class="header" href="#integração-ide-usando-rust-analyzer">Integração IDE usando <code>rust-analyzer</code></a></h3>
-<p>Para ajudar na integração do IDE, a comunidade Rust recomenda usar
-<a href="https://rust-analyzer.github.io"><code>rust-analyzer </code></a><!-- ignore -->. Esta ferramenta é um conjunto de
+<p>Para ajudar na integração com IDEs, a comunidade Rust recomenda usar
+<a href="https://rust-analyzer.github.io"><code>rust-analyzer</code></a><!-- ignore -->. Essa ferramenta é um conjunto de
 utilitários centrados no compilador que falam <a href="http://langserver.org/">Language Server Protocol</a><!--
 ignore -->, que é uma especificação para IDEs e linguagens de programação para
-comunicar uns com os outros. Diferentes clientes podem usar<code> rust-analyzer</code>, como
+se comunicarem. Diferentes clientes podem usar <code>rust-analyzer</code>, como
 <a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">o plug-in do analisador Rust para Visual Studio Code</a>.</p>
-<p>Visit the <code>rust-analyzer</code> project’s <a href="https://rust-analyzer.github.io">home page</a><!-- ignore -->
-para obter instruções de instalação e instale o suporte do servidor de idiomas em seu
-IDE específico. Seu IDE ganhará recursos como preenchimento automático, pular para
+<p>Visite a <a href="https://rust-analyzer.github.io">página inicial do projeto <code>rust-analyzer</code></a><!-- ignore -->
+para obter instruções de instalação e instale o suporte ao servidor de linguagem em sua
+IDE específica. Seu IDE ganhará recursos como preenchimento automático, ir para
 definição e erros inline.</p>
 
                     </main>

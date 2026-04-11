@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -239,7 +239,7 @@ let s = data.to_string();
 let s = "initial contents".to_string();
 <span class="boring">}</span></code></pre>
 <p>Isso cria uma string contendo <code>initial contents</code>.</p>
-<p>Também podemos usar a função <code>String :: from</code> para criar uma<code> String</code> de uma string
+<p>Também podemos usar a função <code>String::from</code> para criar uma <code>String</code> de uma string
 literal. Isso equivale a usar <code>to_string</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -247,11 +247,11 @@ literal. Isso equivale a usar <code>to_string</code>:</p>
 <span class="boring">}</span></code></pre>
 <p>Como as strings são usadas para tantas coisas, existem várias APIs genéricas diferentes
 que podem ser usadas para strings, então há muitas opções. Algumas delas
-podem parecer redundantes, mas todas têm seu lugar! Nesse caso, <code>String :: from</code>
+podem parecer redundantes, mas todas têm seu lugar! Nesse caso, <code>String::from</code>
 e <code>.to_string</code> acabam fazendo exatamente o mesmo, então a que você escolher é uma
 questão de estilo.</p>
-<p>Lembre-se de que as string são codificadas em UTF-8, para que possamos incluir qualquer dados apropriadamente codificados
-neles:</p>
+<p>Lembre-se de que strings são codificadas em UTF-8, então podemos incluir nelas
+quaisquer dados apropriadamente codificados:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello = "السلام عليكم";
@@ -437,8 +437,8 @@ caracter é que as operações de indexação sempre esperam um tempo constante
 entretanto, já que o Rust teria que percorrer todo o conteúdo desde o início
 até o índice para determinar quantos caracteres válidos havia.</p>
 <h3 id="fatiando-strings"><a class="header" href="#fatiando-strings">Fatiando Strings</a></h3>
-<p>Porque não está claro qual seria o tipo de retorno da indexação de string, e
-muitas vezes é uma má idéia indexar uma string, Rust dissuade-o de fazê-lo
+<p>Como não está claro qual seria o tipo de retorno da indexação de string, e
+muitas vezes é uma má ideia indexar uma string, Rust desencoraja isso
 pedindo que você seja mais específico se você realmente precisar disso. Do jeito que você pode ser
 mais específico que a indexação usando <code>[]</code> com um único número é usando <code>[]</code> com
 um intervalo para criar uma fatia de string contendo bytes específicos:</p>

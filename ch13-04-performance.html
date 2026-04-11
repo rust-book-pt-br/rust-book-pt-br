@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -183,50 +183,52 @@
                     <main>
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="comparing-performance-loops-vs-iterators"></a></p>
-<h2 id="performance-in-loops-vs-iterators"><a class="header" href="#performance-in-loops-vs-iterators">Performance in Loops vs. Iterators</a></h2>
-<p>Para determinar se deve usar loops ou iterators, você precisa saber qual
-a implementação é mais rápida: a versão da função <code>search</code> com um explícito
-Loop <code>for</code> ou a versão com iterators.</p>
+<h2 id="desempenho-em-loops-versus-iterators"><a class="header" href="#desempenho-em-loops-versus-iterators">Desempenho em Loops versus Iterators</a></h2>
+<p>Para decidir se deve usar loops ou iterators, você precisa saber qual
+implementação é mais rápida: a versão da função <code>search</code> com um loop <code>for</code>
+explícito ou a versão com iterators.</p>
 <p>Executamos um benchmark carregando todo o conteúdo de <em>The Adventures of
-Sherlock Holmes</em> de Sir Arthur Conan Doyle em um <code>String</code> e procurando o
-palavra <em>the</em> no conteúdo. Aqui estão os resultados do benchmark sobre o
-versão de <code>search</code> usando o loop <code>for</code> e a versão usando iterators:</p>
+Sherlock Holmes</em>, de Sir Arthur Conan Doyle, em uma <code>String</code> e procurando a
+palavra <em>the</em> nesse conteúdo. Aqui estão os resultados do benchmark para a
+versão de <code>search</code> usando o loop <code>for</code> e para a versão usando iterators:</p>
 <pre><code class="language-text">test bench_search_for  ... bench:  19,620,300 ns/iter (+/- 915,700)
 test bench_search_iter ... bench:  19,234,900 ns/iter (+/- 657,200)
 </code></pre>
-<p>As duas implementações têm desempenho semelhante! Não vamos explicar o
-código de referência aqui porque o objetivo não é provar que as duas versões
-são equivalentes, mas para ter uma noção geral de como essas duas implementações
-compare em termos de desempenho.</p>
-<p>Para uma referência mais abrangente, você deve verificar usando vários textos de
-vários tamanhos como o <code>contents</code>, palavras diferentes e palavras de comprimentos diferentes
-como o <code> query</code>e todos os tipos de outras variações. A questão é esta:
-Iteradores, embora sejam uma abstração de alto nível, são compilados aproximadamente até o
-mesmo código como se você mesmo tivesse escrito o código de nível inferior. Iteradores são um
-das <em>abstrações de custo zero</em> do Rust, com o que queremos dizer que usar a abstração
-não impõe nenhuma sobrecarga adicional de tempo de execução. Isso é análogo a como Bjarne
-Stroustrup, o designer e implementador original de C++, define
-sobrecarga zero em sua apresentação principal da ETAPS de 2012 “Foundations of C++”:</p>
+<p>As duas implementações têm desempenho semelhante! Não vamos explicar o código
+do benchmark aqui, porque o objetivo não é provar que as duas versões são
+equivalentes, mas ter uma noção geral de como essas duas implementações se
+comparam em termos de desempenho.</p>
+<p>Para um benchmark mais abrangente, você deveria testar vários textos, de vários
+tamanhos, como <code>contents</code>, diferentes palavras e palavras de comprimentos
+variados como <code>query</code>, além de muitos outros tipos de variação. O ponto é o
+seguinte: iterators, embora sejam uma abstração de alto nível, são compilados
+para algo muito próximo do mesmo código que você escreveria manualmente em um
+nível mais baixo. Iterators são uma das <em>abstrações de custo zero</em> do Rust, o
+que significa que usar a abstração não impõe nenhuma sobrecarga adicional em
+tempo de execução. Isso é análogo à forma como Bjarne Stroustrup, o projetista
+e implementador original de C++, define sobrecarga zero em sua keynote da ETAPS
+de 2012, “Foundations of C++”:</p>
 <blockquote>
-<p>Em geral, as implementações C++ obedecem ao princípio de sobrecarga zero: o que você
-não use, você não paga. E mais: o que você usa, você não poderia entregar
-codifique melhor.</p>
+<p>Em geral, as implementações de C++ obedecem ao princípio da sobrecarga zero:
+o que você não usa, você não paga. E mais: o que você usa, você não conseguiria
+codificar manualmente de forma melhor.</p>
 </blockquote>
-<p>Em muitos casos, o código Rust usando iterators é compilado no mesmo assembly que você
-escreva à mão. Otimizações como desenrolamento de loop e eliminação de limites
-a verificação do acesso ao array se aplica e torna o código resultante extremamente eficiente.
-Agora que você sabe disso, pode usar iterators e closures sem medo! Eles
-faça o código parecer de nível superior, mas não imponha um desempenho de tempo de execução
-penalidade por fazer isso.</p>
+<p>Em muitos casos, o código Rust que usa iterators é compilado para o mesmo
+assembly que você escreveria à mão. Otimizações como desenrolamento de loop e
+eliminação da checagem de limites em acessos a arrays se aplicam e tornam o
+código resultante extremamente eficiente. Agora que você sabe disso, pode usar
+iterators e closures sem medo! Eles fazem o código parecer mais de alto nível,
+mas não impõem penalidade de desempenho em tempo de execução.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Closures e iterators são recursos Rust inspirados na programação funcional
-ideias de linguagem. Eles contribuem para a capacidade do Rust de expressar claramente
-ideias de alto nível com desempenho de baixo nível. As implementações de closures e
-iterators são tais que o desempenho do tempo de execução não é afetado. Isso faz parte
-O objetivo do Rust é se esforçar para fornecer abstrações de custo zero.</p>
-<p>Agora que melhoramos a expressividade do nosso projeto de I/O, vamos dar uma olhada
-mais alguns recursos do <code>cargo</code> que nos ajudarão a compartilhar o projeto com o
-mundo.</p>
+<p>Closures e iterators são recursos do Rust inspirados em ideias de linguagens de
+programação funcional. Eles contribuem para a capacidade do Rust de expressar
+claramente ideias de alto nível com desempenho de baixo nível. As
+implementações de closures e iterators são tais que o desempenho em tempo de
+execução não é afetado. Isso faz parte do objetivo do Rust de se esforçar para
+fornecer abstrações de custo zero.</p>
+<p>Agora que melhoramos a expressividade do nosso projeto de E/S, vamos dar uma
+olhada em mais alguns recursos do <code>cargo</code> que nos ajudarão a compartilhar esse
+projeto com o mundo.</p>
 
                     </main>
 

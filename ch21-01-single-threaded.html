@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,33 +181,33 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="construindo-um-servidor-web-de-thread-único"><a class="header" href="#construindo-um-servidor-web-de-thread-único">Construindo um servidor web de thread único</a></h2>
-<p>Começaremos fazendo com que um web server de thread único funcione. Antes de começarmos,
-vamos dar uma rápida visão geral dos protocolos envolvidos na construção da web
-servidores. Os detalhes desses protocolos estão além do escopo deste livro, mas
+                        <h2 id="construindo-um-servidor-web-single-threaded"><a class="header" href="#construindo-um-servidor-web-single-threaded">Construindo um servidor web single-threaded</a></h2>
+<p>Começaremos fazendo um servidor web single-threaded funcionar. Antes de começarmos,
+vamos ver rapidamente os protocolos envolvidos na construção de servidores web.
+Os detalhes desses protocolos estão além do escopo deste livro, mas
 uma breve visão geral fornecerá as informações de que você precisa.</p>
-<p>Os dois principais protocolos envolvidos em web servers são <em>Hypertext Transfer
-Protocolo</em> <em>(HTTP)</em> e <em>Protocolo de controle de transmissão</em> <em>(TCP)</em>. Ambos os protocolos
-são protocolos <em>solicitação-resposta</em>, o que significa que um <em>cliente</em> inicia solicitações e um
-<em>server</em> escuta as solicitações e fornece uma resposta ao cliente. O
-o conteúdo dessas solicitações e respostas é definido pelos protocolos.</p>
+<p>Os dois principais protocolos envolvidos em servidores web são <em>Hypertext Transfer
+Protocol</em> <em>(HTTP)</em> e <em>Transmission Control Protocol</em> <em>(TCP)</em>. Ambos os protocolos
+são protocolos de <em>requisição e resposta</em>, o que significa que um <em>cliente</em> inicia requisições e um
+<em>server</em> escuta essas solicitações e fornece uma resposta ao cliente. O
+conteúdo dessas solicitações e respostas é definido pelos protocolos.</p>
 <p>TCP é o protocolo de nível inferior que descreve os detalhes de como as informações
-vai de um servidor para outro, mas não especifica quais são essas informações.
+vão de uma máquina para outra, mas não especifica quais são essas informações.
 O HTTP se baseia no TCP, definindo o conteúdo das solicitações e
-respostas. É tecnicamente possível usar HTTP com outros protocolos, mas em
-na grande maioria dos casos, o HTTP envia seus dados por TCP. Trabalharemos com o
+respostas. É tecnicamente possível usar HTTP com outros protocolos, mas, na
+grande maioria dos casos, ele envia seus dados por TCP. Trabalharemos com os
 bytes brutos de solicitações e respostas TCP e HTTP.</p>
-<h3 id="ouvindo-a-conexão-tcp"><a class="header" href="#ouvindo-a-conexão-tcp">Ouvindo a conexão TCP</a></h3>
-<p>Nosso web server precisa escutar uma conexão TCP, então essa é a primeira parte
-vamos trabalhar. A biblioteca padrão oferece um módulo <code>std::net</code> que nos permite fazer
+<h3 id="escutando-a-conexão-tcp"><a class="header" href="#escutando-a-conexão-tcp">Escutando a conexão TCP</a></h3>
+<p>Nosso servidor web precisa escutar uma conexão TCP, então essa é a primeira parte
+com a qual vamos trabalhar. A biblioteca padrão oferece um módulo <code>std::net</code> que nos permite fazer
 isso. Vamos fazer um novo projeto da maneira usual:</p>
 <pre><code class="language-console">$ cargo new hello
      Created binary (application) `hello` project
 $ cd hello
 </code></pre>
-<p>Agora insira o código da Listagem 21-1 em <em>src/main.rs</em> para começar. Este código irá
-escute no endereço local <code>127.0.0.1:7878</code> o TCP de entrada streams. Quando
-recebe um stream de entrada, ele imprimirá <code>Connection established!</code>.</p>
+<p>Agora insira o código da Listagem 21-1 em <em>src/main.rs</em> para começar. Esse código irá
+escutar no endereço local <code>127.0.0.1:7878</code> por streams TCP de entrada. Quando
+receber um stream, ele imprimirá <code>Connection established!</code>.</p>
 <figure class="listing" id="listing-21-1">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust no_run edition2024">use std::net::TcpListener;
@@ -224,79 +224,79 @@ fn main() {
 <figcaption><a href="#listing-21-1">Listing 21-1</a>: Escutando streams de entrada e imprimindo uma mensagem quando recebemos um stream</figcaption>
 </figure>
 <p>Usando <code>TcpListener</code>, podemos escutar conexões TCP no endereço
-<code>127.0.0.1:7878</code>. No endereço, a seção antes dos dois pontos é um endereço IP
-representando o seu computador (é o mesmo em todos os computadores e não
-representam especificamente o computador dos autores) e<code> 7878</code>é a porta. Nós temos
-escolhi esta porta por dois motivos: HTTP normalmente não é aceito nesta porta, então
-é improvável que nosso servidor entre em conflito com qualquer outro web server que você possa ter
-rodando em sua máquina e 7878 é digitado <em>rust</em> em um telefone.</p>
-<p>A função <code>bind</code> neste cenário funciona como a função <code>new</code>, pois
-retornará uma nova instância <code> TcpListener</code>. A função é chamada <code> bind</code>
-porque, em rede, conectar-se a uma porta para escutar é conhecido como “ligação
-para um porto.”</p>
-<p>A função <code>bind</code> retorna um <code>Result&lt;T, E&gt;</code>, que indica que é
-possível que a ligação falhe, por exemplo, se executarmos duas instâncias do nosso
-programa e então tinha dois programas ouvindo a mesma porta. Porque estamos
-escrevendo um servidor básico apenas para fins de aprendizagem, não nos preocuparemos
-lidar com esses tipos de erros; em vez disso, usamos <code> unwrap</code>para parar o programa se
-erros acontecem.</p>
-<p>O método <code>incoming</code> em <code>TcpListener</code> retorna um iterator que nos dá um
+<code>127.0.0.1:7878</code>. Nesse endereço, a parte antes dos dois pontos é um endereço IP
+que representa o seu computador (ele é o mesmo em todos os computadores e não
+representa especificamente o computador dos autores), e <code>7878</code> é a porta. Nós
+escolhemos essa porta por dois motivos: HTTP normalmente não usa essa porta, então
+é improvável que nosso servidor entre em conflito com algum outro servidor web que você tenha
+rodando na máquina; além disso, 7878 corresponde a <em>rust</em> digitado em um telefone.</p>
+<p>A função <code>bind</code>, nesse cenário, funciona como a função <code>new</code>, pois
+retorna uma nova instância de <code>TcpListener</code>. A função se chama <code>bind</code>
+porque, em redes, conectar-se a uma porta para escutá-la é conhecido como “fazer bind
+em uma porta”.</p>
+<p>A função <code>bind</code> retorna um <code>Result&lt;T, E&gt;</code>, o que indica que
+o bind pode falhar, por exemplo, se executarmos duas instâncias do nosso
+programa e acabarmos com dois programas escutando a mesma porta. Como estamos
+escrevendo um servidor básico apenas para fins de aprendizado, não vamos nos preocupar em
+tratar esse tipo de erro; em vez disso, usamos <code>unwrap</code> para interromper o programa se
+algum erro acontecer.</p>
+<p>O método <code>incoming</code> em <code>TcpListener</code> retorna um iterator que nos fornece uma
 sequência de streams (mais especificamente, streams do tipo <code>TcpStream</code>). Um único
 <em>stream</em> representa uma conexão aberta entre o cliente e o servidor.
 <em>Conexão</em> é o nome do processo completo de solicitação e resposta no qual um
 cliente se conecta ao servidor, o servidor gera uma resposta e o servidor
-fecha a conexão. Como tal, leremos o <code> TcpStream</code>para ver o que
-o cliente enviou e então escrevemos nossa resposta para o stream para enviar os dados de volta para
-o cliente. No geral, este loop <code> for</code>processará cada conexão por vez e
-produza uma série de streams para nós manusearmos.</p>
+fecha a conexão. Assim, leremos o <code>TcpStream</code> para ver o que
+o cliente enviou e depois escreveremos nossa resposta no stream para enviar os dados de volta
+ao cliente. No geral, esse loop <code>for</code> processará cada conexão por vez e
+produzirá uma série de streams para tratarmos.</p>
 <p>Por enquanto, nosso tratamento do stream consiste em chamar <code>unwrap</code> para encerrar
 nosso programa se o stream apresentar algum erro; se não houver erros, o
-programa imprime uma mensagem. Adicionaremos mais funcionalidades para o caso de sucesso em
-a próxima listagem. O motivo pelo qual podemos receber erros do método <code>incoming</code>
+programa imprime uma mensagem. Adicionaremos mais funcionalidades para o caso de sucesso na
+próxima listagem. O motivo pelo qual podemos receber erros do método <code>incoming</code>
 quando um cliente se conecta ao servidor é que não estamos realmente iterando
-conexões. Em vez disso, estamos iterando <em>tentativas de conexão</em>. O
-a conexão pode não ser bem-sucedida por vários motivos, muitos deles
-específico do sistema operacional. Por exemplo, muitos sistemas operacionais têm um limite para
-o número de conexões abertas simultâneas que podem suportar; nova conexão
-tentativas além desse número produzirão um erro até que algumas das portas abertas
-as conexões estão fechadas.</p>
-<p>Vamos tentar executar este código! Invoque <code>cargo run</code> no terminal e carregue
-<em>127.0.0.1:7878</em> em um navegador da web. O navegador deve mostrar uma mensagem de erro
+conexões. Em vez disso, estamos iterando sobre <em>tentativas de conexão</em>. A
+conexão pode não ser bem-sucedida por vários motivos, muitos deles
+específicos do sistema operacional. Por exemplo, muitos sistemas operacionais têm um limite para
+o número de conexões abertas simultâneas que podem suportar; novas
+tentativas de conexão acima desse limite produzirão erro até que algumas das
+conexões abertas sejam fechadas.</p>
+<p>Vamos tentar executar esse código! Invoque <code>cargo run</code> no terminal e carregue
+<em>127.0.0.1:7878</em> em um navegador. O navegador deve mostrar uma mensagem de erro
 como “Redefinição de conexão” porque o servidor não está enviando de volta nenhum
-dados. Mas quando você olha para o seu terminal, você verá várias mensagens que
-foram impressos quando o navegador se conectou ao servidor!</p>
+dados. Mas, ao olhar para o terminal, você verá várias mensagens
+impressas quando o navegador se conectou ao servidor.</p>
 <pre><code class="language-text">     Running `target/debug/hello`
 Connection established!
 Connection established!
 Connection established!
 </code></pre>
-<p>Às vezes, você verá várias mensagens impressas para uma solicitação do navegador; o
-o motivo pode ser que o navegador esteja fazendo uma solicitação para a página, bem como um
-solicitação de outros recursos, como o ícone <em>favicon.ico</em> que aparece no
-guia do navegador.</p>
-<p>Também pode ser que o navegador esteja tentando se conectar ao servidor várias vezes.
-vezes porque o servidor não está respondendo com nenhum dado. Quando <code>stream</code> apaga
+<p>Às vezes, você verá várias mensagens impressas para uma única solicitação do navegador; o
+motivo pode ser que o navegador esteja fazendo uma solicitação para a página, bem como uma
+solicitação de outros recursos, como o ícone <em>favicon.ico</em> que aparece na
+aba do navegador.</p>
+<p>Também pode ser que o navegador esteja tentando se conectar ao servidor várias
+vezes porque o servidor não está respondendo com nenhum dado. Quando <code>stream</code> sai
 do escopo e é descartado no final do loop, a conexão é fechada como
-parte da implementação <code>drop</code>. Os navegadores às vezes lidam com
-conexões tentando novamente, pois o problema pode ser temporário.</p>
+parte da implementação de <code>drop</code>. Os navegadores às vezes lidam com
+conexões fechadas tentando novamente, pois o problema pode ser temporário.</p>
 <p>Às vezes, os navegadores também abrem múltiplas conexões com o servidor sem enviar
-quaisquer solicitações para que, se eles <em>fizerem</em> solicitações posteriormente, essas solicitações possam
+quaisquer solicitações para que, se eles <em>fizerem</em> solicitações depois, essas solicitações possam
 acontecer mais rapidamente. Quando isso ocorrer, nosso servidor verá cada conexão,
-independentemente de haver alguma solicitação nessa conexão. Muitos
-versões de navegadores baseados no Chrome fazem isso, por exemplo; você pode desabilitar isso
-otimização usando o modo de navegação privada ou usando um navegador diferente.</p>
-<p>O fator importante é que conseguimos lidar com um TCP
-conexão!</p>
+independentemente de haver alguma solicitação nela. Muitas
+versões de navegadores baseados no Chrome fazem isso, por exemplo; você pode desabilitar essa
+otimização usando o modo de navegação privada ou um navegador diferente.</p>
+<p>O importante é que conseguimos lidar com uma
+conexão TCP.</p>
 <p>Lembre-se de parar o programa pressionando <kbd>ctrl</kbd>-<kbd>C</kbd> quando
-você concluiu a execução de uma versão específica do código. Em seguida, reinicie o programa
-invocando o comando <code>cargo run</code> depois de fazer cada conjunto de alterações de código
+você terminar de executar uma versão específica do código. Em seguida, reinicie o programa
+invocando o comando <code>cargo run</code> depois de cada conjunto de alterações no código
 para ter certeza de que você está executando o código mais recente.</p>
 <h3 id="lendo-a-solicitação"><a class="header" href="#lendo-a-solicitação">Lendo a solicitação</a></h3>
-<p>Vamos implementar a funcionalidade de leitura da solicitação do navegador! Para
-separe as preocupações de primeiro obter uma conexão e depois tomar alguma ação
-com a conexão, iniciaremos uma nova função para processamento de conexões. Em
-esta nova função <code>handle_connection</code>, leremos os dados do TCP stream e
-imprima-o para que possamos ver os dados que estão sendo enviados do navegador. Alterar o
+<p>Vamos implementar a funcionalidade de leitura da solicitação do navegador. Para
+separar as responsabilidades de primeiro obter uma conexão e depois tomar alguma ação
+com ela, criaremos uma nova função para processar conexões. Nessa
+nova função <code>handle_connection</code>, leremos os dados do stream TCP e
+os imprimiremos para que possamos ver o que está sendo enviado pelo navegador. Altere o
 código para se parecer com a Listagem 21-2.</p>
 <figure class="listing" id="listing-21-2">
 <span class="file-name">Filename: src/main.rs</span>
@@ -328,31 +328,32 @@ fn handle_connection(mut stream: TcpStream) {
 <figcaption><a href="#listing-21-2">Listing 21-2</a>: Lendo do <code>TcpStream</code> e imprimindo os dados</figcaption>
 </figure>
 <p>Colocamos <code>std::io::BufReader</code> e <code>std::io::prelude</code> no escopo para obter acesso
-para traits e tipos que nos permitem ler e gravar no stream. No <code>for</code>
-loop na função <code> main</code>, em vez de imprimir uma mensagem dizendo que fizemos um
-conexão, agora chamamos a nova função <code> handle_connection</code>e passamos o
-<code> stream</code>para ele.</p>
-<p>Na função <code>handle_connection</code>, criamos uma nova instância <code> BufReader</code>que
-envolve uma referência ao <code> stream</code>. O <code> BufReader</code>adiciona buffer gerenciando
-chamadas para os métodos <code> std::io::Read</code>trait para nós.</p>
+a traits e tipos que nos permitem ler e escrever no stream. No
+loop <code>for</code> da função <code>main</code>, em vez de imprimir uma mensagem dizendo que recebemos uma
+conexão, agora chamamos a nova função <code>handle_connection</code> e passamos o
+<code>stream</code> para ela.</p>
+<p>Na função <code>handle_connection</code>, criamos uma nova instância de <code>BufReader</code> que
+envolve uma referência a <code>stream</code>. O <code>BufReader</code> adiciona buffering ao gerenciar
+as chamadas aos métodos da trait <code>std::io::Read</code> para nós.</p>
 <p>Criamos uma variável chamada <code>http_request</code> para coletar as linhas da solicitação
-o navegador envia para o nosso servidor. Indicamos que queremos coletar esses
+que o navegador envia ao nosso servidor. Indicamos que queremos coletar essas
 linhas em um vetor adicionando a anotação de tipo <code>Vec&lt;_&gt;</code>.</p>
-<p><code>BufReader </code> implementa o<code>std::io::BufRead </code> trait, que fornece o<code>lines </code>
-método. O método<code>lines</code>retorna um iterator de<code>Result&lt;String, std::io::Error&gt;</code>dividindo o stream de dados sempre que vê uma nova linha
-byte. Para obter cada<code>String</code>, nós<code>map</code>e<code>unwrap</code>cada<code>Result</code>. O<code> Result</code>
-pode haver um erro se os dados não forem UTF-8 válidos ou se houver um problema
-lendo do stream. Novamente, um programa de produção deve lidar com esses erros
-mais graciosamente, mas estamos optando por parar o programa no caso de erro para
+<p><code>BufReader</code> implementa a trait <code>std::io::BufRead</code>, que fornece o método <code>lines</code>.
+O método <code>lines</code> retorna um iterator de <code>Result&lt;String, std::io::Error&gt;</code>,
+dividindo o stream de dados sempre que encontra um byte de nova linha. Para obter cada
+<code>String</code>, aplicamos <code>map</code> e <code>unwrap</code> a cada <code>Result</code>. O <code>Result</code>
+pode conter erro se os dados não forem UTF-8 válidos ou se houver algum problema
+de leitura do stream. Novamente, um programa de produção deveria tratar esses erros
+de forma mais elegante, mas estamos optando por interromper o programa em caso de erro por
 simplicidade.</p>
-<p>O navegador sinaliza o fim de uma solicitação HTTP enviando duas novas linhas
-caracteres seguidos, portanto, para obter uma solicitação do stream, pegamos linhas até
-obtemos uma linha que é a string vazia. Depois de coletarmos as linhas no
-vetor, estamos imprimindo-os usando uma formatação bastante depurada para que possamos
-dê uma olhada nas instruções que o navegador da web está enviando ao nosso servidor.</p>
-<p>Vamos tentar este código! Inicie o programa e faça uma solicitação em um navegador da web
-novamente. Observe que ainda receberemos uma página de erro no navegador, mas nosso
-a saída do programa no terminal agora será semelhante a esta:</p>
+<p>O navegador sinaliza o fim de uma solicitação HTTP enviando dois caracteres de
+nova linha em sequência; portanto, para obter uma solicitação do stream, pegamos linhas até
+encontrarmos uma linha que seja a string vazia. Depois de coletarmos as linhas no
+vetor, nós as imprimimos usando uma formatação de debug mais legível para que possamos
+examinar as instruções que o navegador está enviando ao nosso servidor.</p>
+<p>Vamos testar esse código. Inicie o programa e faça uma solicitação em um navegador
+novamente. Observe que ainda receberemos uma página de erro no navegador, mas a
+saída do programa no terminal agora será semelhante a esta:</p>
 <!-- manual-regeneration
 cd listings/ch21-web-server/listing-21-02
 cargo run
@@ -380,13 +381,13 @@ Request: [
     "Cache-Control: max-age=0",
 ]
 </code></pre>
-<p>Dependendo do seu navegador, você poderá obter resultados ligeiramente diferentes. Agora isso
+<p>Dependendo do seu navegador, você poderá obter resultados ligeiramente diferentes. Agora que
 estamos imprimindo os dados da solicitação, podemos ver por que obtemos várias conexões
 de uma solicitação do navegador observando o caminho após <code>GET</code> na primeira linha
-do pedido. Se todas as conexões repetidas solicitarem <em>/</em>, sabemos o
+da solicitação. Se todas as conexões repetidas solicitarem <em>/</em>, sabemos que
 o navegador está tentando buscar <em>/</em> repetidamente porque não está obtendo resposta
 do nosso programa.</p>
-<p>Vamos analisar esses dados de solicitação para entender o que o navegador está solicitando
+<p>Vamos analisar esses dados da solicitação para entender o que o navegador está pedindo ao
 nosso programa.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="a-closer-look-at-an-http-request"></a>
@@ -399,27 +400,27 @@ message-body
 </code></pre>
 <p>A primeira linha é a <em>linha de solicitação</em> que contém informações sobre o que o
 cliente está solicitando. A primeira parte da linha de solicitação indica o método
-sendo usado, como <code>GET</code> ou <code>POST</code>, que descreve como o cliente está fazendo
-este pedido. Nosso cliente usou uma solicitação <code> GET</code>, o que significa que está solicitando
+em uso, como <code>GET</code> ou <code>POST</code>, que descreve como o cliente está fazendo
+essa solicitação. Nosso cliente usou uma requisição <code>GET</code>, o que significa que está solicitando
 informação.</p>
-<p>A próxima parte da linha de solicitação é <em>/</em>, que indica o recurso <em>uniform
-identificador</em> <em>(URI)</em> que o cliente está solicitando: um URI é quase, mas não exatamente,
-o mesmo que um <em>localizador uniforme de recursos</em> <em>(URL)</em>. A diferença entre URIs
-e URLs não são importantes para nossos propósitos neste capítulo, mas a especificação HTTP
+<p>A próxima parte da linha de solicitação é <em>/</em>, que indica o <em>uniform resource
+identifier</em> <em>(URI)</em> solicitado pelo cliente. Um URI é quase, mas não exatamente,
+o mesmo que um <em>uniform resource locator</em> <em>(URL)</em>. A diferença entre URIs
+e URLs não é importante para nossos propósitos neste capítulo, mas a especificação HTTP
 usa o termo <em>URI</em>, então podemos substituir mentalmente <em>URL</em> por <em>URI</em> aqui.</p>
-<p>A última parte é a versão HTTP que o cliente usa e, em seguida, a linha de solicitação
-termina em uma sequência CRLF. (<em>CRLF</em> significa <em>retorno de carro</em> e <em>alimentação de linha</em>,
-que são termos da época da máquina de escrever!) A sequência CRLF também pode ser
-escrito como <code>\r\n</code>, onde <code> \r</code>é um retorno de carro e <code> \n</code>é um avanço de linha. O
-<em>Sequência CRLF</em> separa a linha de solicitação do restante dos dados da solicitação.
-Observe que quando o CRLF é impresso, vemos o início de uma nova linha em vez de <code> \r\n</code>.</p>
+<p>A última parte é a versão HTTP usada pelo cliente e, em seguida, a linha de solicitação
+termina em uma sequência CRLF. (<em>CRLF</em> significa <em>carriage return</em> e <em>line feed</em>,
+termos da época das máquinas de escrever.) A sequência CRLF também pode ser
+escrita como <code>\r\n</code>, em que <code>\r</code> é um carriage return e <code>\n</code> é um line feed. A
+sequência CRLF separa a linha de solicitação do restante dos dados da requisição.
+Observe que, quando o CRLF é impresso, vemos o início de uma nova linha em vez de <code>\r\n</code>.</p>
 <p>Observando os dados da linha de solicitação que recebemos ao executar nosso programa até agora,
-vemos que <code>GET</code> é o método, <em>/</em> é o URI da solicitação e <code>HTTP/1.1</code> é o
+vemos que <code>GET</code> é o método, <em>/</em> é o URI da solicitação e <code>HTTP/1.1</code> é a
 versão.</p>
 <p>Após a linha de solicitação, as linhas restantes a partir de <code>Host:</code> são
 cabeçalhos. As solicitações <code>GET</code> não possuem corpo.</p>
-<p>Tente fazer uma solicitação de um navegador diferente ou solicitar um navegador diferente.
-endereço, como <em>127.0.0.1:7878/test</em>, para ver como os dados da solicitação mudam.</p>
+<p>Tente fazer uma solicitação usando um navegador diferente ou pedindo um
+endereço diferente, como <em>127.0.0.1:7878/test</em>, para ver como os dados da solicitação mudam.</p>
 <p>Agora que sabemos o que o navegador está pedindo, vamos enviar alguns dados!</p>
 <h3 id="escrevendo-uma-resposta"><a class="header" href="#escrevendo-uma-resposta">Escrevendo uma resposta</a></h3>
 <p>Vamos implementar o envio de dados em resposta a uma requisição do cliente.
@@ -428,19 +429,19 @@ As respostas têm o seguinte formato:</p>
 headers CRLF
 message-body
 </code></pre>
-<p>A primeira linha é uma <em>linha de status</em> que contém a versão HTTP usada no
+<p>A primeira linha é uma <em>linha de status</em> que contém a versão HTTP usada na
 resposta, um código de status numérico que resume o resultado da solicitação e
-uma frase de motivo que fornece uma descrição de texto do código de status. Depois do
-A sequência CRLF são quaisquer cabeçalhos, outra sequência CRLF e o corpo do
+uma reason phrase que fornece uma descrição textual do código de status. Depois da
+sequência CRLF vêm os cabeçalhos, outra sequência CRLF e o corpo da
 resposta.</p>
-<p>Aqui está um exemplo de resposta que usa HTTP versão 1.1 e tem um código de status de
-200, uma frase de motivo OK, sem cabeçalhos e sem corpo:</p>
+<p>Aqui está um exemplo de resposta que usa HTTP versão 1.1 e tem código de status
+200, a reason phrase OK, sem cabeçalhos e sem corpo:</p>
 <pre><code class="language-text">HTTP/1.1 200 OK\r\n\r\n
 </code></pre>
-<p>O código de status 200 é a resposta padrão de sucesso. O texto é um pequeno
-resposta HTTP bem-sucedida. Vamos escrever isso no stream como nossa resposta a um
-solicitação bem sucedida! Na função <code>handle_connection</code>, remova o
-<code> println!</code>que estava imprimindo os dados da solicitação e substitua-os pelo código em
+<p>O código de status 200 é a resposta padrão de sucesso. Esse texto forma uma pequena
+resposta HTTP bem-sucedida. Vamos escrevê-la no stream como resposta a uma
+solicitação bem-sucedida. Na função <code>handle_connection</code>, remova o
+<code>println!</code> que estava imprimindo os dados da solicitação e substitua-o pelo código da
 Listagem 21-3.</p>
 <figure class="listing" id="listing-21-3">
 <span class="file-name">Filename: src/main.rs</span>
@@ -473,21 +474,21 @@ Listagem 21-3.</p>
 }</code></pre>
 <figcaption><a href="#listing-21-3">Listing 21-3</a>: Escrevendo uma pequena resposta HTTP de sucesso no stream</figcaption>
 </figure>
-<p>A primeira nova linha define a variável <code>response</code> que contém o sucesso
-dados da mensagem. Então, chamamos <code>as_bytes</code> em nosso <code>response</code> para converter o
-dados de string em bytes. O método <code>write_all</code> em <code>stream</code> usa um <code>&amp;[u8]</code> e
-envia esses bytes diretamente pela conexão. Porque o <code>write_all</code>
-operação pode falhar, usamos <code> unwrap</code>em qualquer resultado de erro como antes. Novamente, em
-um aplicativo real, você adicionaria tratamento de erros aqui.</p>
+<p>A primeira linha nova define a variável <code>response</code>, que contém os dados da
+mensagem de sucesso. Em seguida, chamamos <code>as_bytes</code> em <code>response</code> para converter a
+string em bytes. O método <code>write_all</code> em <code>stream</code> recebe um <code>&amp;[u8]</code> e
+envia esses bytes diretamente pela conexão. Como a operação <code>write_all</code>
+pode falhar, usamos <code>unwrap</code> em qualquer erro, como antes. Novamente, em
+uma aplicação real, você adicionaria tratamento de erros aqui.</p>
 <p>Com essas alterações, vamos executar nosso código e fazer uma solicitação. Já não estamos
-imprimindo quaisquer dados no terminal, então não veremos nenhuma saída além do
-saída de Cargo. Ao carregar <em>127.0.0.1:7878</em> em um navegador da web, você deve
-obtenha uma página em branco em vez de um erro. Você acabou de codificar manualmente o recebimento de um HTTP
-solicitar e enviar uma resposta!</p>
+imprimindo dados no terminal, então não veremos nenhuma saída além da
+saída do Cargo. Ao carregar <em>127.0.0.1:7878</em> em um navegador, você deve
+obter uma página em branco em vez de um erro. Você acabou de implementar manualmente o recebimento de uma
+solicitação HTTP e o envio de uma resposta.</p>
 <h3 id="retornando-html-de-verdade"><a class="header" href="#retornando-html-de-verdade">Retornando HTML de verdade</a></h3>
-<p>Vamos implementar a funcionalidade para retornar mais que uma página em branco. Criar
+<p>Vamos implementar a funcionalidade de retornar mais do que uma página em branco. Crie
 o novo arquivo <em>hello.html</em> na raiz do diretório do seu projeto, não no
-diretório <em>src</em>. Você pode inserir qualquer HTML que desejar; A Listagem 21-4 mostra um
+diretório <em>src</em>. Você pode colocar qualquer HTML que desejar; a Listagem 21-4 mostra uma
 possibilidade.</p>
 <figure class="listing" id="listing-21-4">
 <span class="file-name">Filename: hello.html</span>
@@ -505,10 +506,10 @@ possibilidade.</p>
 </code></pre>
 <figcaption><a href="#listing-21-4">Listing 21-4</a>: Um arquivo HTML de exemplo para retornar em uma resposta</figcaption>
 </figure>
-<p>Este é um documento HTML5 mínimo com um título e algum texto. Para devolver isso
-do servidor quando uma solicitação for recebida, modificaremos <code>handle_connection</code> como
-mostrado na Listagem 21-5 para ler o arquivo HTML, adicione-o à resposta como um corpo,
-e envie.</p>
+<p>Esse é um documento HTML5 mínimo com um título e algum texto. Para devolvê-lo
+do servidor quando uma solicitação for recebida, modificaremos <code>handle_connection</code>, como
+mostrado na Listagem 21-5, para ler o arquivo HTML, adicioná-lo à resposta como corpo
+e enviá-lo.</p>
 <figure class="listing" id="listing-21-5">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust no_run edition2024">use std::{
@@ -547,31 +548,31 @@ e envie.</p>
 }</code></pre>
 <figcaption><a href="#listing-21-5">Listing 21-5</a>: Enviando o conteúdo de <em>hello.html</em> como corpo da resposta</figcaption>
 </figure>
-<p>Adicionamos <code>fs</code> à instrução <code>use</code> para trazer a biblioteca padrão
-módulo do sistema de arquivos no escopo. O código para ler o conteúdo de um arquivo para um
-string deve parecer familiar; usamos quando lemos o conteúdo de um arquivo para
+<p>Adicionamos <code>fs</code> à instrução <code>use</code> para trazer para o escopo o
+módulo de sistema de arquivos da biblioteca padrão. O código para ler o conteúdo de um arquivo para uma
+string deve parecer familiar; nós o usamos quando lemos o conteúdo de um arquivo para
 nosso projeto de E/S na Listagem 12-4.</p>
-<p>A seguir, usamos <code>format!</code> para adicionar o conteúdo do arquivo como o corpo do sucesso
-resposta. Para garantir uma resposta HTTP válida, adicionamos o cabeçalho <code>Content-Length</code>,
-que é definido para o tamanho do nosso corpo de resposta - neste caso, o tamanho do
-<code> hello.html</code>.</p>
-<p>Execute este código com <code>cargo run</code> e carregue <em>127.0.0.1:7878</em> em seu navegador; você
-deve ver seu HTML renderizado!</p>
+<p>Em seguida, usamos <code>format!</code> para adicionar o conteúdo do arquivo como corpo da
+resposta de sucesso. Para garantir uma resposta HTTP válida, adicionamos o cabeçalho <code>Content-Length</code>,
+que é definido com o tamanho do nosso corpo de resposta; neste caso, o tamanho de
+<code>hello.html</code>.</p>
+<p>Execute esse código com <code>cargo run</code> e carregue <em>127.0.0.1:7878</em> no navegador; você
+deve ver seu HTML renderizado.</p>
 <p>Atualmente, estamos ignorando os dados da solicitação em <code>http_request</code> e apenas enviando
-devolver o conteúdo do arquivo HTML incondicionalmente. Isso significa que se você tentar
-solicitando <em>127.0.0.1:7878/something-else</em> em seu navegador, você ainda receberá
-de volta esta mesma resposta HTML. No momento, nosso servidor é muito limitado e
-não faz o que a maioria dos web servers faz. Queremos personalizar nossas respostas
-dependendo da solicitação e apenas enviar de volta o arquivo HTML para um arquivo bem formado
-solicitação para <em>/</em>.</p>
+de volta o conteúdo do arquivo HTML incondicionalmente. Isso significa que, se você tentar
+solicitar <em>127.0.0.1:7878/something-else</em> no navegador, ainda receberá
+essa mesma resposta HTML. No momento, nosso servidor é muito limitado e
+não faz o que a maioria dos servidores web faz. Queremos personalizar nossas respostas
+dependendo da solicitação e enviar o arquivo HTML apenas para uma
+solicitação bem-formada para <em>/</em>.</p>
 <h3 id="validando-a-solicitação-e-respondendo-seletivamente"><a class="header" href="#validando-a-solicitação-e-respondendo-seletivamente">Validando a solicitação e respondendo seletivamente</a></h3>
-<p>Neste momento, nosso web server retornará o HTML do arquivo, não importa qual seja o
-cliente solicitou. Vamos adicionar funcionalidade para verificar se o navegador está
+<p>Neste momento, nosso servidor web retornará o HTML do arquivo, não importa o que o
+cliente tenha solicitado. Vamos adicionar funcionalidade para verificar se o navegador está
 solicitando <em>/</em> antes de retornar o arquivo HTML e retornar um erro se o
-navegador solicita qualquer outra coisa. Para isso precisamos modificar <code>handle_connection</code>,
+navegador solicitar qualquer outra coisa. Para isso, precisamos modificar <code>handle_connection</code>,
 conforme mostrado na Listagem 21-6. Este novo código verifica o conteúdo da solicitação
-recebido em relação ao que sabemos que é uma solicitação de <em>/</em> e adiciona <code> if</code>e
-Blocos <code> else</code>para tratar solicitações de maneira diferente.</p>
+recebida em relação ao que sabemos ser uma solicitação para <em>/</em> e adiciona blocos <code>if</code>
+e <code>else</code> para tratar requisições de maneira diferente.</p>
 <figure class="listing" id="listing-21-6">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust no_run edition2024"><span class="boring">use std::{
@@ -611,25 +612,25 @@ fn handle_connection(mut stream: TcpStream) {
 }</code></pre>
 <figcaption><a href="#listing-21-6">Listing 21-6</a>: Tratando requisições para <em>/</em> de forma diferente das demais requisições</figcaption>
 </figure>
-<p>Veremos apenas a primeira linha da solicitação HTTP, então, em vez disso,
-do que ler toda a solicitação em um vetor, estamos chamando <code>next</code> para obter o
+<p>Vamos olhar apenas para a primeira linha da solicitação HTTP; então, em vez de
+ler a solicitação inteira em um vetor, chamamos <code>next</code> para obter o
 primeiro item do iterator. O primeiro <code>unwrap</code> cuida do <code>Option</code> e
 interrompe o programa se o iterator não tiver itens. O segundo <code>unwrap</code> lida com o
-<code>Result </code> e tem o mesmo efeito que o<code>unwrap </code> que estava no<code>map</code> adicionado em
+<code>Result</code> e tem o mesmo efeito que o <code>unwrap</code> que estava no <code>map</code> adicionado na
 Listagem 21-2.</p>
-<p>A seguir, verificamos <code>request_line</code> para ver se ele é igual à linha de solicitação de um GET
-solicitação para o caminho <em>/</em>. Se isso acontecer, o bloco <code>if</code> retorna o conteúdo do nosso
-Arquivo HTML.</p>
-<p>Se <code>request_line</code> <em>não</em> for igual à solicitação GET para o caminho <em>/</em>, ele
-significa que recebemos alguma outra solicitação. Adicionaremos código ao bloco <code>else</code> em
-um momento para responder a todos os outros pedidos.</p>
-<p>Execute este código agora e solicite <em>127.0.0.1:7878</em>; você deve obter o HTML
-<em>olá.html</em>. Se você fizer qualquer outra solicitação, como
-<em>127.0.0.1:7878/something-else</em>, você receberá um erro de conexão como aqueles que você
-vi ao executar o código na Listagem 21-1 e na Listagem 21-2.</p>
+<p>Em seguida, verificamos se <code>request_line</code> é igual à linha de solicitação de uma requisição GET
+para o caminho <em>/</em>. Se for esse o caso, o bloco <code>if</code> retorna o conteúdo do nosso
+arquivo HTML.</p>
+<p>Se <code>request_line</code> <em>não</em> for igual à requisição GET para o caminho <em>/</em>,
+isso significa que recebemos alguma outra solicitação. Daqui a pouco adicionaremos
+código ao bloco <code>else</code> para responder a todas as outras requisições.</p>
+<p>Execute esse código agora e solicite <em>127.0.0.1:7878</em>; você deve obter o HTML
+de <em>hello.html</em>. Se fizer qualquer outra solicitação, como
+<em>127.0.0.1:7878/something-else</em>, receberá um erro de conexão como aqueles que você
+viu ao executar o código das Listagens 21-1 e 21-2.</p>
 <p>Agora vamos adicionar o código da Listagem 21-7 ao bloco <code>else</code> para retornar uma resposta
-com o código de status 404, que sinaliza que o conteúdo da solicitação foi
-não encontrado. Também retornaremos algum HTML para uma página ser renderizada no navegador
+com o código de status 404, que sinaliza que o conteúdo solicitado
+não foi encontrado. Também retornaremos algum HTML para que uma página seja renderizada no navegador,
 indicando a resposta ao usuário final.</p>
 <figure class="listing" id="listing-21-7">
 <span class="file-name">Filename: src/main.rs</span>
@@ -678,10 +679,10 @@ indicando a resposta ao usuário final.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-21-7">Listing 21-7</a>: Respondendo com código de status 404 e uma página de erro se qualquer coisa diferente de <em>/</em> for requisitada</figcaption>
 </figure>
-<p>Aqui, nossa resposta tem uma linha de status com o código de status 404 e a frase de motivo
+<p>Aqui, nossa resposta tem uma linha de status com o código 404 e a reason phrase
 <code>NOT FOUND</code>. O corpo da resposta será o HTML do arquivo <em>404.html</em>.
-Você precisará criar um arquivo <em>404.html</em> próximo a <em>hello.html</em> para o erro
-página; novamente, sinta-se à vontade para usar qualquer HTML que desejar ou usar o HTML de exemplo em
+Você precisará criar um arquivo <em>404.html</em> ao lado de <em>hello.html</em> para a
+página de erro; novamente, fique à vontade para usar qualquer HTML que desejar ou o HTML de exemplo da
 Listagem 21-8.</p>
 <figure class="listing" id="listing-21-8">
 <span class="file-name">Filename: 404.html</span>
@@ -700,18 +701,18 @@ Listagem 21-8.</p>
 <figcaption><a href="#listing-21-8">Listing 21-8</a>: Conteúdo de exemplo para a página enviada em qualquer resposta 404</figcaption>
 </figure>
 <p>Com essas alterações, execute seu servidor novamente. Solicitar <em>127.0.0.1:7878</em> deve
-retornar o conteúdo de <em>hello.html</em> e qualquer outra solicitação, como
-<em>127.0.0.1:7878/foo</em>, deve retornar o erro HTML de <em>404.html</em>.</p>
+retornar o conteúdo de <em>hello.html</em>, e qualquer outra solicitação, como
+<em>127.0.0.1:7878/foo</em>, deve retornar a página de erro em <em>404.html</em>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="a-touch-of-refactoring"></a></p>
-<h3 id="refactoring"><a class="header" href="#refactoring">Refactoring</a></h3>
-<p>No momento, os blocos <code>if</code> e <code>else</code> têm muita repetição: são
-tanto lendo arquivos quanto gravando o conteúdo dos arquivos no stream. O
-as únicas diferenças são a linha de status e o nome do arquivo. Vamos tornar o código mais
-conciso, separando essas diferenças em linhas <code>if</code> e <code>else</code> separadas
-isso atribuirá os valores da linha de status e o nome do arquivo às variáveis;
-podemos então usar essas variáveis incondicionalmente no código para ler o arquivo
-e escreva a resposta. A Listagem 21-9 mostra o código resultante após a substituição
+<h3 id="refatorando"><a class="header" href="#refatorando">Refatorando</a></h3>
+<p>No momento, os blocos <code>if</code> e <code>else</code> têm muita repetição: ambos
+leem arquivos e escrevem seu conteúdo no stream. As
+únicas diferenças são a linha de status e o nome do arquivo. Vamos tornar o código mais
+conciso, separando essas diferenças em ramos <code>if</code> e <code>else</code> que
+atribuirão os valores da linha de status e do nome do arquivo a variáveis;
+então poderemos usar essas variáveis incondicionalmente no código que lê o arquivo
+e escreve a resposta. A Listagem 21-9 mostra o código resultante após substituir
 os grandes blocos <code>if</code> e <code>else</code>.</p>
 <figure class="listing" id="listing-21-9">
 <span class="file-name">Filename: src/main.rs</span>
@@ -753,23 +754,23 @@ fn handle_connection(mut stream: TcpStream) {
 }</code></pre>
 <figcaption><a href="#listing-21-9">Listing 21-9</a>: Refatorando os blocos <code>if</code> e <code>else</code> para conter apenas o código que difere entre os dois casos</figcaption>
 </figure>
-<p>Agora os blocos <code>if</code> e <code>else</code> retornam apenas os valores apropriados para o
-linha de status e nome do arquivo em uma tupla; então usamos a desestruturação para atribuir esses
-dois valores para <code>status_line</code> e <code>filename</code> usando um padrão no <code>let</code>
-declaração, conforme discutido no Capítulo 19.</p>
+<p>Agora os blocos <code>if</code> e <code>else</code> retornam apenas os valores apropriados para a
+linha de status e o nome do arquivo em uma tupla; então usamos desestruturação para atribuir esses
+dois valores a <code>status_line</code> e <code>filename</code>, usando um padrão na
+instrução <code>let</code>, como discutido no Capítulo 19.</p>
 <p>O código anteriormente duplicado agora está fora dos blocos <code>if</code> e <code>else</code> e
 usa as variáveis <code>status_line</code> e <code>filename</code>. Isso torna mais fácil ver
-a diferença entre os dois casos, e isso significa que temos apenas um lugar para
-atualize o código se quisermos alterar a forma como a leitura do arquivo e a escrita da resposta
-trabalho. O comportamento do código na Listagem 21-9 será o mesmo daquele em
+a diferença entre os dois casos e significa que temos apenas um lugar para
+atualizar o código caso queiramos mudar a forma como a leitura do arquivo e a escrita da resposta
+funcionam. O comportamento do código da Listagem 21-9 é o mesmo do código da
 Listagem 21-7.</p>
-<p>Incrível! Agora temos um web server simples em aproximadamente 40 linhas de código Rust
+<p>Incrível! Agora temos um servidor web simples em aproximadamente 40 linhas de código Rust
 que responde a uma solicitação com uma página de conteúdo e responde a todas as outras
 solicitações com uma resposta 404.</p>
-<p>Atualmente, nosso servidor roda em um único thread, o que significa que ele só pode servir um
-solicite por vez. Vamos examinar como isso pode ser um problema simulando alguns
-solicitações lentas. Então, vamos consertar isso para que nosso servidor possa lidar com vários
-pedidos de uma só vez.</p>
+<p>Atualmente, nosso servidor roda em uma única thread, o que significa que ele só pode atender uma
+requisição por vez. Vamos examinar como isso pode se tornar um problema simulando algumas
+requisições lentas. Depois, vamos corrigir isso para que nosso servidor possa lidar com vários
+pedidos ao mesmo tempo.</p>
 
                     </main>
 

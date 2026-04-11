@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -232,7 +232,7 @@ antes de movermos para a próxima.</p>
 <p>Abra novamente o arquivo <em>src/main.rs</em>. Escreveremos todo nosso código nele.</p>
 <h2 id="processando-um-palpite"><a class="header" href="#processando-um-palpite">Processando um Palpite</a></h2>
 <p>A primeira parte do programa vai pedir uma entrada ao usuário, processar essa
-entrada, e conferir se ela está no formato esperado. Pra começar, vamos permitir
+entrada e conferir se ela está no formato esperado. Para começar, vamos permitir
 que o jogador entre com um palpite. Coloque este código no arquivo
 <em>src/main.rs</em>:</p>
 <p><span class="filename">Arquivo: src/main.rs</span></p>
@@ -253,8 +253,8 @@ fn main() {
 }</code></pre>
 <p><span class="caption">Listagem 2-1: Código para ler um palpite do usuário e
 imprimí-lo na tela.</span></p>
-<p>Esse código tem muita informação, vamos ver uma parte de cada vez. Para obter a
-entrada do usuário, e então imprimir o resultado como saída, precisaremos trazer
+<p>Esse código tem muita informação, então vamos ver uma parte de cada vez. Para obter a
+entrada do usuário e então imprimir o resultado como saída, precisaremos trazer
 ao escopo a biblioteca <code>io</code> (de entrada/saída). A biblioteca <code>io</code> provém da
 biblioteca padrão (chamada de <code>std</code>):</p>
 <pre><code class="language-rust ignore">use std::io;</code></pre>
@@ -275,7 +275,7 @@ uma string na tela:</p>
 <pre><code class="language-rust ignore">println!("Adivinhe o número!");
 
 println!("Digite o seu palpite.");</code></pre>
-<p>Este código está exibindo uma mensagem que diz de que se trata o jogo e solicitando
+<p>Esse código exibe uma mensagem dizendo do que se trata o jogo e solicita
 uma entrada do usuário.</p>
 <h3 id="armazenando-valores-em-variáveis"><a class="header" href="#armazenando-valores-em-variáveis">Armazenando Valores em Variáveis</a></h3>
 <p>Próximo passo, vamos criar uma variável para armazenar a entrada do usuário:</p>
@@ -284,8 +284,8 @@ uma entrada do usuário.</p>
 pequena linha. Nós usamos a declaração <code>let</code> para criar a <em>variável</em>.
 Segue outro exemplo:</p>
 <pre><code class="language-rust ignore">let maçãs = 5;</code></pre>
-<p>Essa linha cria uma nova variável chamada <code>maçãs</code>, e a vincula ao valor <code>5</code>. Em Rust, variáveis são imutáveis por padrão, ou seja, uma vez vinculado o valor a variável,
-o mesmo não pode ser alterado. Nós vamos discutir este conceito em detalhes
+<p>Essa linha cria uma nova variável chamada <code>maçãs</code> e a vincula ao valor <code>5</code>. Em Rust, variáveis são imutáveis por padrão, ou seja, uma vez vinculado o valor à variável,
+ele não pode ser alterado. Nós vamos discutir este conceito em detalhes
 na seção [“Variáveis e Mutabilidade”][variables] do Capítulo 3. Para criar uma
 variável mutável, nós adicionamos <code>mut</code> antes do nome da variável:
 [variables]: ./ch03-01-variables-and-mutability.html#variables-and-mutability</p>
@@ -300,7 +300,7 @@ Rust ignora tudo o que estiver nos comentários.
 Nós vamos discutir comentários em mais detalhes no <a href="./ch03-04-comments.html">Capítulo 3</a></p>
 </blockquote>
 <p>Agora você sabe que <code>let mut palpite</code> vai introduzir uma variável mutável de
-nome <code>palpite</code>. No outro lado do símbolo <code>=</code> está o valor ao qual <code>palpite</code> está
+nome <code>palpite</code>. Do outro lado do símbolo <code>=</code> está o valor ao qual <code>palpite</code> está
 vinculado, que é o resultado da chamada <code>String::new</code>, uma função que retorna
 uma nova instância de <code>String</code>. <a href="https://doc.rust-lang.org/std/string/struct.String.html"><code>String</code></a><!-- ignore --> é um tipo
 fornecido pela biblioteca padrão que representa uma cadeia expansível de
@@ -360,7 +360,7 @@ da string que passamos como argumento, mas também retorna um valor do tipo <cod
 Os tipos <a href="https://doc.rust-lang.org/std/result/enum.Result.html"><code>Result</code></a> são <a href="ch06-00-enums.html"><em>enumerações</em></a><!-- ignore -->, comumente chamadas
 de <em>enums</em>. Uma enumeração é um tipo que pode ter um conjunto fixo de valores,
 os quais são chamados de <em>variantes</em> da enum.</p>
-<p>O <a href="ch06-00-enums.html">Capítulo 6</a> vai abordar enums em mais detalhes.O propósito destes tipos <code>Result</code> é codificar informações de manipulação de erros.</p>
+<p>O <a href="ch06-00-enums.html">Capítulo 6</a> vai abordar enums em mais detalhes. O propósito desses tipos <code>Result</code> é codificar informações de manipulação de erros.</p>
 <p>As variantes de <code>Result</code> são <code>Ok</code> ou <code>Err</code>. <code>Ok</code> indica que a operação teve
 sucesso, e dentro da variante <code>Ok</code> está o valor resultante. <code>Err</code> significa que
 a operação falhou, e contém informações sobre como ou por que isso ocorreu.</p>
@@ -368,7 +368,7 @@ a operação falhou, e contém informações sobre como ou por que isso ocorreu.
 definidos. Uma instância de <code>Result</code> tem um <a href="https://doc.rust-lang.org/std/result/enum.Result.html#method.expect">método <code>expect</code></a><!-- ignore -->
 que você pode chamar. Se esta instância de <code>Result</code> é um <code>Err</code>, <code>expect</code> vai
 terminar o programa com erro e mostrar a mensagem que você passou como argumento
-ao <code>expect</code>. Se o método <code>read_line</code> retornar um <code>Err</code>, provavelmente seria o
+ao <code>expect</code>. Se o método <code>read_line</code> retornar um <code>Err</code>, provavelmente será o
 resultado de um erro vindo do sistema operacional que está por trás. Se esta
 instância de <code>Result</code> é um <code>Ok</code>, <code>expect</code> vai obter o valor contido no <code>Ok</code>
 e retorná-lo para que você possa usá-lo. Neste caso, o valor é o número de bytes
@@ -393,11 +393,11 @@ que o programa deixou de tratar um possível erro. A maneira correta de suprimir
 o aviso é realmente escrevendo um tratador de erro, mas como queremos que o
 programa seja encerrado caso ocorra um problema, podemos usar <code>expect</code>. Você
 aprenderá sobre recuperação de erros no <a href="./ch09-00-error-handling.html">Capítulo 9</a>.</p>
-<h3 id="exibindo-valores-com-curingas-com-println-placeholders"><a class="header" href="#exibindo-valores-com-curingas-com-println-placeholders">Exibindo Valores com Curingas com <code>println!</code> (<em>placeholders</em>)</a></h3>
+<h3 id="exibindo-valores-com-println-e-placeholders"><a class="header" href="#exibindo-valores-com-println-e-placeholders">Exibindo Valores com <code>println!</code> e placeholders</a></h3>
 <p>Tirando a chave que delimita a função <code>main</code>, há apenas uma linha mais a ser
 discutida no código que fizemos até agora, que é a seguinte:</p>
 <pre><code class="language-rust ignore">println!("Você disse: {palpite}");</code></pre>
-<p>Esta linha imprime a string na qual salvamos os dados inseridos pelo usuário. O <code>{}</code> é um curinga que reserva o lugar de um valor. Para imprimir o valor de uma variável, podemos colocá-la dentro das chaves diretamente na string. Também podemos imprimir o resultado de uma ou mais expressões, colocando chaves vazias nas posições desejadas, string de formatação, e adicionando a lista de expressões separadas por vírgulas e em ordem após a string de formatação. Por exemplo, podemos imprimir uma variável e o resultado de uma expressão em uma única chamada de <code>println!</code> desta forma:</p>
+<p>Essa linha imprime a string na qual salvamos os dados inseridos pelo usuário. O <code>{}</code> é um placeholder que reserva o lugar de um valor. Para imprimir o valor de uma variável, podemos colocá-la diretamente dentro das chaves na string. Também podemos imprimir o resultado de uma ou mais expressões colocando chaves vazias na string de formatação e adicionando, depois dela, uma lista de expressões separadas por vírgulas, na mesma ordem. Por exemplo, podemos imprimir uma variável e o resultado de uma expressão em uma única chamada de <code>println!</code> desta forma:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let x = 5;
@@ -428,7 +428,7 @@ para que o jogo não seja tão difícil. Rust ainda não inclui uma funcionalida
 de geração de números aleatórios em sua biblioteca padrão. Porém, a equipe Rust
 fornece um <a href="https://crates.io/crates/rand">crate <code>rand</code></a>.</p>
 <h3 id="usando-um-crate-para-ter-mais-funcionalidades"><a class="header" href="#usando-um-crate-para-ter-mais-funcionalidades">Usando um Crate para Ter Mais Funcionalidades</a></h3>
-<p>Lembre-se que um <em>crate</em> é um pacote de código Rust. O projeto que estamos
+<p>Lembre-se de que um <em>crate</em> é um pacote de código Rust. O projeto que estamos
 construindo é um <em>crate binário</em>, que é um executável. Já o <code>rand</code> é um
 <em>crate de biblioteca</em>, que contém código cujo objetivo é ser usado por outros
 programas.</p>
@@ -473,14 +473,14 @@ na Listagem 2-2:</p>
 </code></pre>
 <p><span class="caption">Listagem 2-2: Resultado da execução de <code>cargo build</code>
 depois de adicionar o crate <code>rand</code> como dependência.</span></p>
-<p>Talvez pra você apareçam versões diferentes (mas elas são todas compatíveis com
-o código, graças ao Versionamento Semântico!), e as linhas talvez apareçam em
+<p>Talvez para você apareçam versões diferentes, mas todas elas serão compatíveis com
+o código, graças ao Versionamento Semântico, e as linhas talvez apareçam em
 ordem diferente.</p>
-<p>Agora que temos uma dependência externa, Cargo busca as versões mais recentes de
+<p>Agora que temos uma dependência externa, o Cargo busca as versões mais recentes de
 tudo no <em>registro</em>, que é uma cópia dos dados do <a href="https://crates.io">Crates.io</a>.
 Crates.io é onde as pessoas do ecossistema Rust postam seus projetos
 <em>open source</em> para que os outros possam usar.</p>
-<p>Após atualizar o registro, Cargo verifica a seção <code>[dependencies]</code> e baixa todas
+<p>Após atualizar o registro, o Cargo verifica a seção <code>[dependencies]</code> e baixa todas
 as que você não tem ainda. Neste caso, embora tenhamos listado apenas <code>rand</code>
 como dependência, o Cargo também baixa outras crates que <code>rand</code> depende para funcionar. Depois de baixá-las, o Cargo as compila e
 então compila nosso projeto.</p>
@@ -512,7 +512,7 @@ vez que você executou <code>cargo build</code>, e agora está no seu diretório
 Cargo descobre as versões de todas as dependências que preenchem os critérios
 e então as escreve no arquivo <em>Cargo.lock</em>. Quando você compilar o seu projeto
 futuramente, o Cargo verá que o arquivo <em>Cargo.lock</em> existe e usará as versões
-especificadas no mesmo, em vez de refazer todo o trabalho descobrir as versões
+especificadas no mesmo, em vez de refazer todo o trabalho de descobrir as versões
 novamente. Isto lhe permite ter um <em>build</em> reproduzível automaticamente. Em
 outras palavras, seu projeto vai continuar com a versão <code>0.8.5</code> até que você
 faça uma atualização explícita, graças ao arquivo <em>Cargo.lock</em>.</p>
@@ -578,19 +578,19 @@ número aleatório.</span></p>
 que define métodos a serem implementados pelos geradores de números aleatórios,
 e esse trait deve estar dentro do escopo para que possamos usar esses métodos. O
 Capítulo 10 vai abordar traits em mais detalhes.</p>
-<p>Tem outras duas linhas que adicionamos no meio. A função <code>rand::thread_rng</code> nos
+<p>Há outras duas linhas que adicionamos no meio. A função <code>rand::thread_rng</code> nos
 dá o gerador de números aleatórios que vamos usar, um que é local à <em>thread</em>
 corrente e que é inicializado pelo sistema operacional. Depois, vamos chamar o
 método <code>gen_range</code> no gerador de números aleatórios. Esse método está definido
-pelo trait <code>Rng</code> que trouxemos ao escopo por meio do <code>use rand::Rng</code>. Este
-método recebe dois argumentos e gera um número aleatório entre eles. O tipo de argumento que estamos usando aqui tem a forma <code>start..=end</code> que inclui os limites inferiores e superiores. Logo,
+pelo trait <code>Rng</code> que trouxemos ao escopo por meio do <code>use rand::Rng</code>. Esse
+método recebe uma expressão de intervalo como argumento e gera um número aleatório nesse intervalo. O tipo de argumento que estamos usando aqui tem a forma <code>start..=end</code>, que inclui os limites inferior e superior. Logo,
 precisamos especificar <code>1..=100</code> para obter um número de 1 a 100.</p>
 <blockquote>
 <p>Nota: Saber quais traits devem ser usadas e quais funções e métodos de um crate
 devem ser chamados não é nada trivial. As instruções de como usar um crate
 estão na documentação de cada um. Outra coisa boa do Cargo é que você pode rodar
-o comando <code>cargo doc --open</code> que vai construir localmente a documentação
-fornecida por todas as suas dependências e abrí-las no seu navegador. Se você
+o comando <code>cargo doc --open</code>, que vai construir localmente a documentação
+fornecida por todas as suas dependências e abri-la no seu navegador. Se você
 estiver interessado em outras funcionalidades do crate <code>rand</code>, por exemplo,
 execute <code>cargo doc --open</code> e clique em <code>rand</code>, no menu ao lado esquerdo.</p>
 </blockquote>
@@ -619,7 +619,7 @@ Você disse: 5
 <p>Você já deve obter números aleatórios diferentes, e eles devem ser todos entre 1
 e 100. Bom trabalho!</p>
 <h2 id="comparando-o-palpite-com-o-número-secreto"><a class="header" href="#comparando-o-palpite-com-o-número-secreto">Comparando o Palpite com o Número Secreto</a></h2>
-<p>Agora que nós temos a entrada do usuário e o número secreto, vamos compará-los.
+<p>Agora que temos a entrada do usuário e o número secreto, vamos compará-los.
 Esta etapa é mostrada na Listagem 2-4. Observe que este código ainda não compila, como vamos explicar a seguir!</p>
 <p><span class="filename">Arquivo: src/main.rs</span></p>
 <pre>

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -195,7 +195,7 @@ uma de suas variantes. Os endereços de ambas as versões, seja quatro ou seis,
 ainda são, fundamentalmente, endereços IP, e deveriam ser tratados pelo mesmo
 tipo no código em situações que se aplicam a qualquer versão de endereço IP.</p>
 <p>Podemos expressar esse conceito em código definindo uma enum <code>VersaoIp</code> e
-listando os possíveis tipos de que um endereço IP pode ser: <code>V4</code> e <code>V6</code>. Estas
+listando os possíveis tipos que um endereço IP pode ter: <code>V4</code> e <code>V6</code>. Estas
 são as chamadas <em>variantes</em> da enum:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -299,9 +299,9 @@ let loopback = EnderecoIp::V6(String::from("::1"));
 <span class="boring">}</span></code></pre>
 <p>Podemos anexar dados a cada variante da enum diretamente, assim não existe mais
 a necessidade de uma struct adicional.</p>
-<p>Há uma outra vantagem de se usar uma enum em vez de uma struct: cada variante
-pode conter dados de diferentes tipos e quantidades. Os endereços IP da versão
-quatro têm sempre quatro componentes numéricas, cada uma com valor de 0 a 255.
+<p>Há outra vantagem em usar uma enum em vez de uma struct: cada variante
+pode conter dados de tipos e quantidades diferentes. Os endereços IP da versão
+quatro têm sempre quatro componentes numéricos, cada um com valor de 0 a 255.
 Se quiséssemos representar endereços <code>V4</code> como quatro valores <code>u8</code>, e ao mesmo
 tempo manter os endereços <code>V6</code> como uma <code>String</code>, não poderíamos usar uma
 struct. Já as enums podem facilmente atender a este caso:</p>
@@ -324,7 +324,7 @@ documentação em inglês</a><!-- ignore -->). Vamos ver como a biblioteca
 padrão define <code>IpAddr</code>: ele tem basicamente a mesma enum e as mesmas variantes
 que nós definimos e usamos anteriormente, mas os dados do endereço são
 embutidos dentro das variantes na forma de duas structs separadas, que são
-definidas de um jeito diferente pra cada variante.</p>
+definidas de um jeito diferente para cada variante.</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>struct Ipv4Addr {
@@ -344,7 +344,7 @@ enum IpAddr {
 variante de enum: strings, tipos numéricos ou structs, por exemplo. Você pode
 até mesmo incluir outra enum! Além disso, os tipos definidos pela biblioteca
 padrão não são tão mais complicados do que o que talvez você pensaria em fazer.</p>
-<p>Repare que, mesmo havendo um <code>IpAddr</code>definido pela biblioteca padrão, nós ainda
+<p>Repare que, mesmo havendo um <code>IpAddr</code> definido pela biblioteca padrão, nós ainda
 podemos criar e utilizar nossa própria definição (com o mesmo nome, inclusive)
 sem nenhum conflito, porque não trouxemos a definição da biblioteca padrão para
 dentro do nosso escopo. Falaremos mais sobre a inclusão de tipos em um escopo

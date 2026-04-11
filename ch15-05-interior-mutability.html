@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,17 +182,17 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="refcellt-e-o-padrão-de-mutabilidade-interior"><a class="header" href="#refcellt-e-o-padrão-de-mutabilidade-interior"><code>RefCell&lt;T&gt;</code> e o Padrão de Mutabilidade Interior</a></h2>
-<p><em>Mutabilidade interior</em> (<em>interior mutability</em>) é uma design pattern em Rust que
+<p><em>Mutabilidade interior</em> (<em>interior mutability</em>) é um padrão em Rust que
 lhe permite modificar um dado mesmo quando há referências imutáveis a ele:
 normalmente, esta ação é proibida pelas regras de empréstimo. Para fazer isso, a
-pattern usa código <code>unsafe</code> (<em>inseguro</em>) dentro de uma estrutura de dados para
+padrão usa código <code>unsafe</code> (<em>inseguro</em>) dentro de uma estrutura de dados para
 dobrar as regras normais do Rust que governam mutação e empréstimo. Nós ainda
 não cobrimos código unsafe; faremos isso no Capítulo 19. Podemos usar tipos que
-usam a pattern de mutabilidade interior quando podemos garantir que as regras de
+usam o padrão de mutabilidade interior quando podemos garantir que as regras de
 empréstimo serão seguidas em tempo de execução, ainda que o compilador não o
 possa garantir. O código <code>unsafe</code> envolvido é então embrulhado em uma API safe,
 e o tipo exterior permanece imutável.</p>
-<p>Para explorar este conceito, vamos ver o tipo <code>RefCell&lt;T&gt;</code> que segue a pattern
+<p>Para explorar este conceito, vamos ver o tipo <code>RefCell&lt;T&gt;</code> que segue o padrão
 de mutabilidade interior.</p>
 <h3 id="aplicando-regras-de-empréstimo-em-tempo-de-execução-com-o-refcellt"><a class="header" href="#aplicando-regras-de-empréstimo-em-tempo-de-execução-com-o-refcellt">Aplicando Regras de Empréstimo em Tempo de Execução com o <code>RefCell&lt;T&gt;</code></a></h3>
 <p>Diferente do <code>Rc&lt;T&gt;</code>, o tipo <code>RefCell&lt;T&gt;</code> representa posse única sobre o dado
@@ -229,7 +229,7 @@ inconveniência, mas nada catastrófico pode acontecer. O tipo <code>RefCell&lt;
 quando você tem certeza que seu código segue as regras de empréstimo, mas o
 compilador é incapaz de entender e garantir isso.</p>
 <p>Assim como o <code>Rc&lt;T&gt;</code>, o <code>RefCell&lt;T&gt;</code> é apenas para uso em cenários de thread
-única e lhe darão um erro de compilação se você tentar usá-lo em um contexto de
+única e dará a você um erro de compilação se tentar usá-lo em um contexto de
 múltiplas threads. Falaremos sobre como obter a funcionalidade de um
 <code>RefCell&lt;T&gt;</code> em um programa multithread no Capítulo 16.</p>
 <p>Aqui está uma recapitulação das razões para escolher o <code>Box&lt;T&gt;</code>, o <code>Rc&lt;T&gt;</code> ou o
@@ -245,7 +245,7 @@ em tempo de execução.</li>
 execução, nós podemos modificar o valor dentro de um <code>RefCell&lt;T&gt;</code> mesmo quando
 o <code>RefCell&lt;T&gt;</code> é imutável.</li>
 </ul>
-<p>Modificar o valor dentro de um valor imutável é a pattern de <em>mutabilidade
+<p>Modificar o valor dentro de um valor imutável é o padrão de <em>mutabilidade
 interior</em>. Vamos dar uma olhada em uma situação em que a mutabilidade interior é
 útil e examinar como ela é possível.</p>
 <h3 id="mutabilidade-interior-um-empréstimo-mutável-de-um-valor-imutável"><a class="header" href="#mutabilidade-interior-um-empréstimo-mutável-de-um-valor-imutável">Mutabilidade Interior: Um Empréstimo Mutável de um Valor Imutável</a></h3>

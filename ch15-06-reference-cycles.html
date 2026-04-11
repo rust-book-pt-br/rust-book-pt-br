@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="ciclos-de-referências-podem-vazar-memória"><a class="header" href="#ciclos-de-referências-podem-vazar-memória">Ciclos de Referências Podem Vazar Memória</a></h2>
+                        <h2 id="ciclos-de-referência-podem-vazar-memória"><a class="header" href="#ciclos-de-referência-podem-vazar-memória">Ciclos de Referência Podem Vazar Memória</a></h2>
 <p>As garantias de segurança de memória do Rust tornam <em>difícil</em> mas não impossível
 acidentalmente criar memória que nunca é liberada (conhecida como um <em>vazamento
 de memória</em>, ou <em>memory leak</em>). O Rust garante em tempo de compilação que não
@@ -220,7 +220,7 @@ impl List {
     }
 }</code></pre>
 <p><span class="caption">Listagem 15-25: Uma definição de cons list que contém um
-<code>RefCell&lt;T&gt;</code> para que possamos modificar ao que se refere uma variante
+<code>RefCell&lt;T&gt;</code> para que possamos modificar aquilo a que uma variante
 <code>Cons</code></span></p>
 <p>Estamos usando outra variação da definição de <code>List</code> da Listagem 15-5. O segundo
 elemento na variante <code>Cons</code> agora é um <code>RefCell&lt;Rc&lt;List&gt;&gt;</code>, o que significa que
@@ -332,7 +332,7 @@ possuam sua lista, então reorganizar a estrutura de dados não é possível. Va
 dar uma olhada em um exemplo usando grafos feitos de vértices pais e vértices
 filhos para ver quando relações de não posse são um jeito apropriado de evitar
 ciclos de referências.</p>
-<h3 id="prevenindo-ciclos-de-referência-transforme-um-rct-em-um-weakt"><a class="header" href="#prevenindo-ciclos-de-referência-transforme-um-rct-em-um-weakt">Prevenindo Ciclos de Referência: Transforme um <code>Rc&lt;T&gt;</code> em um <code>Weak&lt;T&gt;</code></a></h3>
+<h3 id="prevenindo-ciclos-de-referência-transformando-um-rct-em-um-weakt"><a class="header" href="#prevenindo-ciclos-de-referência-transformando-um-rct-em-um-weakt">Prevenindo Ciclos de Referência: Transformando um <code>Rc&lt;T&gt;</code> em um <code>Weak&lt;T&gt;</code></a></h3>
 <p>Até agora, demonstramos que chamar <code>Rc::clone</code> aumenta a <code>strong_count</code>
 (<em>contagem de referências fortes</em>) de uma instância <code>Rc&lt;T&gt;</code>, e que a instância
 <code>Rc&lt;T&gt;</code> só é liberada se sua <code>strong_count</code> é 0. Também podemos criar uma

@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,16 +181,16 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="processando-uma-série-de-itens-com-iteradores"><a class="header" href="#processando-uma-série-de-itens-com-iteradores">Processando uma série de itens com iteradores</a></h2>
-<p>O padrão iterator permite executar alguma tarefa em uma sequência de itens em
-vire. Um iterator é responsável pela lógica de iteração sobre cada item e
-determinar quando a sequência terminou. Ao usar iterators, você não
-você mesmo terá que reimplementar essa lógica.</p>
-<p>Em Rust, iterators são <em>preguiçosos</em>, o que significa que não têm efeito até que você ligue
-métodos que consomem o iterator para utilizá-lo. Por exemplo, o código em
-A Listagem 13-10 cria um iterator sobre os itens no vetor <code>v1</code> chamando
-o método <code>iter</code> definido em <code>Vec&lt;T&gt;</code>. Este código por si só não faz nada
-útil.</p>
+                        <h2 id="processando-uma-série-de-itens-com-iteradores"><a class="header" href="#processando-uma-série-de-itens-com-iteradores">Processando uma Série de Itens com Iteradores</a></h2>
+<p>O padrão de iterador permite executar alguma tarefa sobre uma sequência de
+itens, um de cada vez. Um iterador é responsável pela lógica de percorrer cada
+item e de determinar quando a sequência terminou. Quando você usa iteradores,
+não precisa reimplementar essa lógica por conta própria.</p>
+<p>Em Rust, iteradores são <em>preguiçosos</em>, o que significa que eles não fazem nada
+até que você chame métodos que consumam o iterador para efetivamente usá-lo.
+Por exemplo, o código da Listagem 13-10 cria um iterador sobre os itens do
+vetor <code>v1</code> chamando o método <code>iter</code> definido em <code>Vec&lt;T&gt;</code>. Sozinho, esse código
+não faz nada de útil.</p>
 <figure class="listing" id="listing-13-10">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -200,15 +200,15 @@ o método <code>iter</code> definido em <code>Vec&lt;T&gt;</code>. Este código 
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-10">Listing 13-10</a>: Criando um iterador</figcaption>
 </figure>
-<p>O iterator é armazenado na variável <code>v1_iter</code>. Depois de criarmos um
-iterator, podemos usá-lo de várias maneiras. Na Listagem 3-5, iteramos
-uma matriz usando um loop <code> for</code>para executar algum código em cada um de seus itens. Abaixo
-o capô, isso criou implicitamente e depois consumiu um iterator, mas nós encobrimos
-sobre como exatamente isso funciona até agora.</p>
-<p>No exemplo da Listagem 13-11, separamos a criação do iterator de
-o uso do iterator no loop <code>for</code>. Quando o loop <code> for</code>é chamado usando
-o iterator em <code> v1_iter</code>, cada elemento no iterator é usado em um
-iteração do loop, que imprime cada valor.</p>
+<p>O iterador é armazenado na variável <code>v1_iter</code>. Depois de criar um iterador,
+podemos usá-lo de várias maneiras. Na Listagem 3-5, iteramos sobre um array
+usando um laço <code>for</code> para executar algum código sobre cada um de seus itens.
+Nos bastidores, isso criou e depois consumiu um iterador de forma implícita,
+mas deixamos de lado como exatamente isso funcionava até agora.</p>
+<p>No exemplo da Listagem 13-11, separamos a criação do iterador do uso do
+iterador no laço <code>for</code>. Quando o laço <code>for</code> é executado usando o iterador em
+<code>v1_iter</code>, cada elemento do iterador é usado em uma iteração do laço, o que
+imprime cada valor.</p>
 <figure class="listing" id="listing-13-11">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -220,20 +220,21 @@ iteração do loop, que imprime cada valor.</p>
         println!("Got: {val}");
     }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-13-11">Listing 13-11</a>: Usando um iterador em um loop <code>for</code></figcaption>
+<figcaption><a href="#listing-13-11">Listing 13-11</a>: Usando um iterador em um laço <code>for</code></figcaption>
 </figure>
-<p>Em linguagens que não possuem iterators fornecido por suas bibliotecas padrão,
-você provavelmente escreveria essa mesma funcionalidade iniciando uma variável no índice
-0, usando essa variável para indexar no vetor para obter um valor, e
-incrementando o valor da variável em um loop até atingir o número total de
+<p>Em linguagens que não têm iteradores fornecidos por suas bibliotecas padrão,
+você provavelmente escreveria essa mesma funcionalidade criando uma variável
+inicializada com índice 0, usando essa variável para indexar o vetor e obter um
+valor, e incrementando a variável em um laço até ela atingir o número total de
 itens no vetor.</p>
-<p>Os iteradores cuidam de toda essa lógica para você, reduzindo o código repetitivo que você
-poderia potencialmente bagunçar. Iteradores oferecem mais flexibilidade para usar o mesmo
-lógica com muitos tipos diferentes de sequências, não apenas estruturas de dados que você pode
-indexar em, como vetores. Vamos examinar como o iterators faz isso.</p>
-<h3 id="a-característica-iterator-e-o-método-next"><a class="header" href="#a-característica-iterator-e-o-método-next">A característica <code>Iterator</code> e o método <code>next</code></a></h3>
-<p>Todos os iterators implementam um trait denominado <code>Iterator</code> que é definido no
-biblioteca padrão. A definição do trait é assim:</p>
+<p>Os iteradores cuidam de toda essa lógica para você, reduzindo a quantidade de
+código repetitivo que você poderia facilmente escrever errado. Eles também dão
+mais flexibilidade para reutilizar a mesma lógica com muitos tipos diferentes
+de sequências, não apenas estruturas de dados que podem ser indexadas, como
+vetores. Vamos ver como os iteradores fazem isso.</p>
+<h3 id="a-trait-iterator-e-o-método-next"><a class="header" href="#a-trait-iterator-e-o-método-next">A Trait <code>Iterator</code> e o Método <code>next</code></a></h3>
+<p>Todos os iteradores implementam uma trait chamada <code>Iterator</code>, definida na
+biblioteca padrão. A definição dessa trait se parece com isto:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub trait Iterator {
@@ -244,19 +245,18 @@ biblioteca padrão. A definição do trait é assim:</p>
     // methods with default implementations elided
 }
 <span class="boring">}</span></code></pre>
-<p>Observe que esta definição usa uma nova sintaxe: <code>type Item</code> e <code>Self::Item</code>,
-que estão definindo um tipo associado a este trait. Nós falaremos sobre
-tipos associados em detalhes no Capítulo 20. Por enquanto, tudo que você precisa saber é que
-este código diz que a implementação do <code> Iterator</code>trait requer que você também defina
-um tipo <code> Item</code>, e este tipo <code> Item</code>é usado no tipo de retorno do <code> next</code>
-método. Em outras palavras, o tipo <code> Item</code>será o tipo retornado do
-iterator.</p>
-<p>O <code>Iterator</code> trait requer apenas que os implementadores definam um método: o
-Método <code>next</code>, que retorna um item do iterator por vez, agrupado em
-<code>Some</code>e, quando a iteração terminar, retorna<code> None</code>.</p>
-<p>Podemos chamar o método <code>next</code> diretamente em iterators; A Listagem 13-12 demonstra
-quais valores são retornados de chamadas repetidas para <code>next</code> no iterator criado
-do vetor.</p>
+<p>Observe que essa definição usa uma sintaxe nova: <code>type Item</code> e <code>Self::Item</code>,
+que definem um tipo associado a essa trait. Falaremos de tipos associados em
+detalhes no Capítulo 20. Por enquanto, tudo o que você precisa saber é que esse
+código diz que implementar a trait <code>Iterator</code> exige que você também defina um
+tipo <code>Item</code>, e esse tipo é usado no valor de retorno do método <code>next</code>. Em
+outras palavras, <code>Item</code> será o tipo retornado pelo iterador.</p>
+<p>A trait <code>Iterator</code> exige apenas que implementadores definam um método: <code>next</code>,
+que retorna um item do iterador por vez, envolvido em <code>Some</code>, e, quando a
+iteração termina, retorna <code>None</code>.</p>
+<p>Podemos chamar o método <code>next</code> diretamente em iteradores; a Listagem 13-12
+demonstra quais valores são retornados por chamadas repetidas a <code>next</code> no
+iterador criado a partir do vetor.</p>
 <figure class="listing" id="listing-13-12">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">#[cfg(test)]
@@ -275,31 +275,29 @@ do vetor.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-12">Listing 13-12</a>: Chamando o método <code>next</code> em um iterador</figcaption>
 </figure>
-<p>Observe que precisávamos tornar <code>v1_iter</code> mutável: Chamando o método <code>next</code> em um
-iterator altera o estado interno que o iterator usa para controlar onde
-está na sequência. Em outras palavras, este código <em>consome</em>, ou esgota, o
-iterator. Cada chamada para <code>next</code> consome um item do iterator. Nós não precisávamos
-para tornar <code>v1_iter</code> mutável quando usamos um loop <code>for</code>, porque o loop demorou
-ownership de <code> v1_iter</code>e tornou-o mutável nos bastidores.</p>
-<p>Observe também que os valores que obtemos das chamadas para <code>next</code> são imutáveis
-referências aos valores no vetor. O método <code>iter</code> produz um iterator
-sobre referências imutáveis. Se quisermos criar um iterator que leve
-ownership de <code>v1</code> e retorna valores próprios, podemos chamar <code>into_iter</code> em vez de
-<code>iter </code>. Da mesma forma, se quisermos iterar sobre referências mutáveis, podemos chamar
-<code>iter_mut</code>em vez de<code> iter</code>.</p>
-<h3 id="métodos-que-consomem-o-iterador"><a class="header" href="#métodos-que-consomem-o-iterador">Métodos que consomem o iterador</a></h3>
-<p>O <code>Iterator</code> trait possui vários métodos diferentes com padrão
-implementações fornecidas pela biblioteca padrão; você pode descobrir mais sobre isso
-métodos consultando a documentação da API da biblioteca padrão para o <code>Iterator</code>
-trait. Alguns desses métodos chamam o método <code> next</code>em sua definição, que
-é por isso que você é obrigado a implementar o método <code> next</code>ao implementar o
-<code> Iterator</code>trait.</p>
-<p>Os métodos que chamam <code>next</code> são chamados de <em>adaptadores de consumo</em> porque chamá-los
-usa o iterator. Um exemplo é o método <code>sum</code>, que leva ownership de
-o iterator e itera pelos itens chamando repetidamente <code> next</code>, assim
-consumindo o iterator. À medida que itera, ele adiciona cada item a uma execução
-total e retorna o total quando a iteração for concluída. A Listagem 13-13 tem um
-teste ilustrando o uso do método <code> sum</code>.</p>
+<p>Observe que tivemos de tornar <code>v1_iter</code> mutável: chamar <code>next</code> em um iterador
+altera o estado interno que ele usa para controlar onde está na sequência. Em
+outras palavras, esse código <em>consome</em>, ou esgota, o iterador. Cada chamada a
+<code>next</code> consome um item do iterador. Não precisamos tornar <code>v1_iter</code> mutável
+quando usamos um laço <code>for</code>, porque o laço tomou ownership de <code>v1_iter</code> e o
+tornou mutável por trás dos panos.</p>
+<p>Observe também que os valores obtidos das chamadas a <code>next</code> são referências
+imutáveis aos valores do vetor. O método <code>iter</code> produz um iterador sobre
+referências imutáveis. Se quisermos criar um iterador que tome ownership de
+<code>v1</code> e retorne valores possuídos, podemos chamar <code>into_iter</code> em vez de <code>iter</code>.
+Da mesma forma, se quisermos iterar sobre referências mutáveis, podemos chamar
+<code>iter_mut</code> em vez de <code>iter</code>.</p>
+<h3 id="métodos-que-consomem-o-iterador"><a class="header" href="#métodos-que-consomem-o-iterador">Métodos que Consomem o Iterador</a></h3>
+<p>A trait <code>Iterator</code> possui vários métodos com implementações padrão fornecidas
+pela biblioteca padrão; você pode conhecê-los consultando a documentação da API
+de <code>Iterator</code>. Alguns desses métodos chamam <code>next</code> em sua definição, e é por
+isso que você precisa implementar <code>next</code> ao implementar a trait <code>Iterator</code>.</p>
+<p>Métodos que chamam <code>next</code> são chamados de <em>adaptadores consumidores</em>, porque
+chamá-los esgota o iterador. Um exemplo é o método <code>sum</code>, que toma ownership do
+iterador e percorre seus itens chamando <code>next</code> repetidamente, consumindo-o.
+Durante a iteração, ele soma cada item a um total acumulado e retorna esse
+total quando a iteração termina. A Listagem 13-13 tem um teste que ilustra o
+uso de <code>sum</code>.</p>
 <figure class="listing" id="listing-13-13">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">#[cfg(test)]
@@ -317,16 +315,16 @@ teste ilustrando o uso do método <code> sum</code>.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-13">Listing 13-13</a>: Chamando o método <code>sum</code> para obter o total de todos os itens do iterador</figcaption>
 </figure>
-<p>Não temos permissão para usar <code>v1_iter</code> após a chamada para <code>sum</code>, porque <code> sum</code>leva
-ownership do iterator que chamamos.</p>
-<h3 id="métodos-que-produzem-outros-iteradores"><a class="header" href="#métodos-que-produzem-outros-iteradores">Métodos que produzem outros iteradores</a></h3>
-<p><em>Adaptadores iteradores</em> são métodos definidos no <code>Iterator</code> trait que não
-consumir o iterator. Em vez disso, eles produzem iterators diferentes alterando
-algum aspecto do iterator original.</p>
-<p>A Listagem 13-14 mostra um exemplo de chamada do método do adaptador iterator <code>map</code>,
-que leva um closure para chamar cada item à medida que os itens são iterados.
-O método <code> map</code>retorna um novo iterator que produz os itens modificados. O
-closure aqui cria um novo iterator no qual cada item do vetor será
+<p>Não temos permissão para usar <code>v1_iter</code> depois da chamada a <code>sum</code>, porque
+<code>sum</code> toma ownership do iterador sobre o qual é chamado.</p>
+<h3 id="métodos-que-produzem-outros-iteradores"><a class="header" href="#métodos-que-produzem-outros-iteradores">Métodos que Produzem Outros Iteradores</a></h3>
+<p><em>Adaptadores de iteradores</em> são métodos definidos na trait <code>Iterator</code> que não
+consomem o iterador. Em vez disso, produzem iteradores diferentes, alterando
+algum aspecto do iterador original.</p>
+<p>A Listagem 13-14 mostra um exemplo de chamada ao método adaptador <code>map</code>, que
+recebe uma closure a ser aplicada a cada item à medida que eles são
+percorridos. O método <code>map</code> retorna um novo iterador que produz os itens
+modificados. A closure aqui cria um novo iterador em que cada item do vetor é
 incrementado em 1.</p>
 <figure class="listing" id="listing-13-14">
 <span class="file-name">Filename: src/main.rs</span>
@@ -337,7 +335,7 @@ incrementado em 1.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-14">Listing 13-14</a>: Chamando o adaptador de iterador <code>map</code> para criar um novo iterador</figcaption>
 </figure>
-<p>No entanto, este código produz um aviso:</p>
+<p>Entretanto, esse código gera um aviso:</p>
 <pre><code class="language-console">$ cargo run
    Compiling iterators v0.1.0 (file:///projects/iterators)
 warning: unused `Map` that must be used
@@ -357,15 +355,15 @@ warning: `iterators` (bin "iterators") generated 1 warning
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.47s
      Running `target/debug/iterators`
 </code></pre>
-<p>O código na Listagem 13-14 não faz nada; o closure que especificamos
-nunca é chamado. O aviso nos lembra o porquê: os adaptadores iteradores são preguiçosos e
-precisamos consumir o iterator aqui.</p>
-<p>Para corrigir este aviso e consumir o iterator, usaremos o método <code>collect</code>,
-que usamos com <code> env::args</code>na Listagem 12-1. Este método consome o
-iterator e coleta os valores resultantes em um tipo de dados de coleção.</p>
-<p>Na Listagem 13-15, coletamos os resultados da iteração sobre o iterator que é
-retornado da chamada para <code>map</code> em um vetor. Este vetor acabará
-contendo cada item do vetor original, incrementado em 1.</p>
+<p>O código da Listagem 13-14 não faz nada; a closure que especificamos nunca é
+chamada. O aviso nos lembra o motivo: adaptadores de iteradores são
+preguiçosos, e aqui precisamos consumir o iterador.</p>
+<p>Para corrigir esse aviso e consumir o iterador, usaremos o método <code>collect</code>,
+que já usamos com <code>env::args</code> na Listagem 12-1. Esse método consome o iterador
+e reúne os valores resultantes em um tipo de coleção.</p>
+<p>Na Listagem 13-15, coletamos os resultados da iteração sobre o iterador
+retornado pela chamada a <code>map</code> em um vetor. Esse vetor acabará contendo cada
+item do vetor original, incrementado em 1.</p>
 <figure class="listing" id="listing-13-15">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -375,28 +373,29 @@ contendo cada item do vetor original, incrementado em 1.</p>
 
     assert_eq!(v2, vec![2, 3, 4]);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-13-15">Listing 13-15</a>: Chamando o método <code>map</code> para criar um novo iterador e depois <code>collect</code> para consumi-lo e criar um vetor</figcaption>
+<figcaption><a href="#listing-13-15">Listing 13-15</a>: Chamando <code>map</code> para criar um novo iterador e depois <code>collect</code> para consumi-lo e criar um vetor</figcaption>
 </figure>
-<p>Como <code>map</code> usa um closure, podemos especificar qualquer operação que desejamos realizar
-em cada item. Este é um ótimo exemplo de como o closures permite personalizar alguns
-comportamento ao reutilizar o comportamento de iteração que o <code>Iterator</code> trait
-fornece.</p>
-<p>Você pode encadear várias chamadas para adaptadores iterator para executar ações complexas em
-uma maneira legível. Mas como todos os iterators são preguiçosos, você precisa ligar para um dos
-consumindo métodos de adaptador para obter resultados de chamadas para adaptadores iterator.</p>
+<p>Como <code>map</code> recebe uma closure, podemos especificar qualquer operação que
+quisermos realizar sobre cada item. Esse é um ótimo exemplo de como closures
+permitem personalizar um comportamento enquanto reutilizam o comportamento de
+iteração fornecido pela trait <code>Iterator</code>.</p>
+<p>Você pode encadear várias chamadas a adaptadores de iteradores para executar
+ações complexas de maneira legível. Mas, como todos os iteradores são
+preguiçosos, é necessário chamar um dos métodos consumidores para obter
+resultados das chamadas a esses adaptadores.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-closures-that-capture-their-environment"></a></p>
-<h3 id="fechamentos-que-capturam-seu-ambiente"><a class="header" href="#fechamentos-que-capturam-seu-ambiente">Fechamentos que capturam seu ambiente</a></h3>
-<p>Muitos adaptadores iterator usam closures como argumentos, e geralmente o closures
-especificaremos como argumentos para os adaptadores iterator que serão closures que capturam
-seu ambiente.</p>
-<p>Para este exemplo, usaremos o método <code>filter</code> que utiliza closure. O
-closure obtém um item do iterator e retorna um <code>bool</code>. Se o closure
-retorna <code> true</code>, o valor será incluído na iteração produzida por
-<code>filter</code>. Se closure retornar<code> false</code>, o valor não será incluído.</p>
-<p>Na Listagem 13-16, usamos <code>filter</code> com um closure que captura o <code>shoe_size</code>
-variável de seu ambiente para iterar sobre uma coleção de estruturas <code> Shoe</code>
-instâncias. Ele retornará apenas sapatos do tamanho especificado.</p>
+<h3 id="closures-que-capturam-o-ambiente"><a class="header" href="#closures-que-capturam-o-ambiente">Closures que Capturam o Ambiente</a></h3>
+<p>Muitos adaptadores de iteradores recebem closures como argumentos, e
+frequentemente as closures que especificamos nesses casos são closures que
+capturam o ambiente onde foram definidas.</p>
+<p>Neste exemplo, usaremos o método <code>filter</code>, que recebe uma closure. A closure
+recebe um item do iterador e retorna um <code>bool</code>. Se a closure retornar <code>true</code>,
+o valor será incluído na iteração produzida por <code>filter</code>. Se retornar <code>false</code>,
+o valor não será incluído.</p>
+<p>Na Listagem 13-16, usamos <code>filter</code> com uma closure que captura a variável
+<code>shoe_size</code> do ambiente para iterar sobre uma coleção de instâncias da struct
+<code>Shoe</code>. Ela retornará apenas os sapatos que tiverem o tamanho especificado.</p>
 <figure class="listing" id="listing-13-16">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">#[derive(PartialEq, Debug)]
@@ -449,19 +448,19 @@ mod tests {
 }</code></pre>
 <figcaption><a href="#listing-13-16">Listing 13-16</a>: Usando o método <code>filter</code> com uma closure que captura <code>shoe_size</code></figcaption>
 </figure>
-<p>A função <code>shoes_in_size</code> pega ownership de um vetor de sapatos e um sapato
-tamanho como parâmetros. Ele retorna um vetor contendo apenas sapatos do especificado
-tamanho.</p>
-<p>No corpo de <code>shoes_in_size</code>, chamamos <code> into_iter</code>para criar um iterator que
-pega ownership do vetor. Então, chamamos <code> filter</code>para adaptar esse iterator
-em um novo iterator que contém apenas elementos para os quais o closure retorna
-<code> true</code>.</p>
-<p>O closure captura o parâmetro <code>shoe_size</code> do ambiente e
-compara o valor com o tamanho de cada sapato, mantendo apenas os sapatos do tamanho
-especificado. Finalmente, chamar <code>collect</code> reúne os valores retornados pelo
-adaptou iterator em um vetor retornado pela função.</p>
-<p>O teste mostra que quando chamamos <code>shoes_in_size</code>, recebemos de volta apenas os sapatos que
-tem o mesmo tamanho que o valor que especificamos.</p>
+<p>A função <code>shoes_in_size</code> toma ownership de um vetor de sapatos e de um tamanho
+de sapato como parâmetros. Ela retorna um vetor contendo apenas os sapatos do
+tamanho especificado.</p>
+<p>No corpo de <code>shoes_in_size</code>, chamamos <code>into_iter</code> para criar um iterador que
+toma ownership do vetor. Em seguida, chamamos <code>filter</code> para adaptar esse
+iterador em um novo iterador que contém apenas os elementos para os quais a
+closure retorna <code>true</code>.</p>
+<p>A closure captura o parâmetro <code>shoe_size</code> do ambiente e compara esse valor com
+o tamanho de cada sapato, mantendo apenas os sapatos do tamanho especificado.
+Por fim, chamar <code>collect</code> reúne os valores retornados pelo iterador adaptado em
+um vetor, que é retornado pela função.</p>
+<p>O teste mostra que, quando chamamos <code>shoes_in_size</code>, recebemos de volta apenas
+os sapatos que têm o mesmo tamanho do valor especificado.</p>
 
                     </main>
 

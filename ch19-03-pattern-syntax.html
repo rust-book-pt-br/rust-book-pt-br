@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -184,9 +184,9 @@
                         <h2 id="sintaxe-do-padrão"><a class="header" href="#sintaxe-do-padrão">Sintaxe do padrão</a></h2>
 <p>Nesta seção, reunimos toda a sintaxe válida em padrões e discutimos
 por que e quando você pode querer usar cada um.</p>
-<h3 id="matching-literals"><a class="header" href="#matching-literals">Matching Literals</a></h3>
-<p>Como você viu no Capítulo 6, você pode comparar padrões match diretamente com literais. O
-o código a seguir fornece alguns exemplos:</p>
+<h3 id="correspondendo-a-literais"><a class="header" href="#correspondendo-a-literais">Correspondendo a literais</a></h3>
+<p>Como você viu no Capítulo 6, pode fazer a correspondência de padrões
+diretamente com literais. O código a seguir mostra alguns exemplos:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 1;
 
@@ -197,20 +197,21 @@ o código a seguir fornece alguns exemplos:</p>
         _ =&gt; println!("anything"),
     }
 <span class="boring">}</span></code></pre>
-<p>Este código imprime <code>one</code> porque o valor em <code>x</code> é <code>1</code>. Esta sintaxe é útil
-quando você deseja que seu código execute uma ação se obtiver uma determinada ação concreta
-valor.</p>
-<h3 id="matching-named-variables"><a class="header" href="#matching-named-variables">Matching Named Variables</a></h3>
-<p>Variáveis nomeadas são padrões irrefutáveis que match qualquer valor, e usamos
-muitas vezes neste livro. No entanto, há uma complicação quando você usa
-variáveis nomeadas em expressões <code>match</code>, <code> if let</code>ou <code> while let</code>. Porque cada
-desses tipos de expressões inicia um novo escopo, variáveis declaradas como parte de
-um padrão dentro dessas expressões irá sombrear aqueles com o mesmo nome fora
-os construtos, como é o caso de todas as variáveis. Na Listagem 19-11, declaramos
-uma variável chamada <code> x</code>com o valor <code> Some(5)</code>e uma variável <code> y</code>com o valor
-<code>10</code>. Em seguida, criamos uma expressão<code>match</code>no valor<code>x</code>. Olhe para o
-padrões nos braços match e<code> println!</code>no final, e tente descobrir
-o que o código irá imprimir antes de executá-lo ou ler mais.</p>
+<p>Este código imprime <code>one</code> porque o valor em <code>x</code> é <code>1</code>. Essa sintaxe é útil
+quando você quer que o código execute uma ação ao receber um determinado
+valor concreto.</p>
+<h3 id="correspondendo-a-variáveis-nomeadas"><a class="header" href="#correspondendo-a-variáveis-nomeadas">Correspondendo a variáveis nomeadas</a></h3>
+<p>Variáveis nomeadas são padrões irrefutáveis que correspondem a qualquer valor,
+e já as usamos muitas vezes neste livro. No entanto, há uma complicação quando
+você usa variáveis nomeadas em expressões <code>match</code>, <code>if let</code> ou <code>while let</code>.
+Como cada um desses tipos de expressão inicia um novo escopo, variáveis
+declaradas como parte de um padrão dentro dessas expressões irão sombrear
+aquelas com o mesmo nome fora delas, como acontece com todas as variáveis. Na
+Listagem 19-11, declaramos uma variável chamada <code>x</code> com o valor <code>Some(5)</code> e uma
+variável <code>y</code> com o valor <code>10</code>. Em seguida, criamos uma expressão <code>match</code> sobre
+o valor <code>x</code>. Observe os padrões nos braços do <code>match</code> e o <code>println!</code> ao final,
+e tente descobrir o que o código imprimirá antes de executá-lo ou continuar a
+leitura.</p>
 <figure class="listing" id="listing-19-11">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -228,35 +229,36 @@ o que o código irá imprimir antes de executá-lo ou ler mais.</p>
 <figcaption><a href="#listing-19-11">Listing 19-11</a>: Uma expressão <code>match</code> com um braço que introduz uma nova variável que sombreia uma variável <code>y</code> existente</figcaption>
 </figure>
 <p>Vejamos o que acontece quando a expressão <code>match</code> é executada. O padrão
-no primeiro braço match não match o valor definido de <code>x</code>, então o código
-continua.</p>
-<p>O padrão no segundo braço match introduz uma nova variável chamada <code>y</code> que
-match qualquer valor dentro de um valor <code>Some</code>. Porque estamos em um novo escopo dentro
-expressão <code> match</code>, esta é uma nova variável <code> y</code>, não o <code> y</code>que declaramos em
-começando com o valor <code> 10</code>. Esta nova ligação <code> y</code>irá match qualquer valor
-dentro de um <code> Some</code>, que é o que temos no <code> x</code>. Portanto, este novo <code> y</code>se liga a
-o valor interno de <code> Some</code>em <code> x</code>. Esse valor é <code> 5</code>, então a expressão para
-esse braço executa e imprime <code> Matched, y = 5</code>.</p>
-<p>Se <code>x</code> fosse um valor <code>None</code> em vez de <code>Some(5)</code>, os padrões no primeiro
-dois braços não teriam correspondido, então o valor teria correspondido ao
-sublinhado. Não introduzimos a variável <code> x</code>no padrão do
-braço de sublinhado, então o <code> x</code>na expressão ainda é o <code> x</code>externo que não foi
-sido sombreado. Neste caso hipotético, <code> match</code>imprimiria <code> Default case, x = None</code>.</p>
-<p>Quando a expressão <code>match</code> é concluída, seu escopo termina, assim como o escopo de
-o <code>y</code> interno. O último <code>println!</code> produz <code>at the end: x = Some(5), y = 10</code>.</p>
-<p>Para criar uma expressão <code>match</code> que compare os valores do <code>x</code> externo e
-<code>y </code>, em vez de introduzir uma nova variável que obscureça o<code> y</code>existente
-variável, precisaríamos usar uma condicional de proteção match. Nós vamos conversar
-sobre os guardas match posteriormente em <a href="#adding-conditionals-with-match-guards">“Adicionando condicionais com correspondência
-Guardas”</a>Seção <!-- ignore -->.</p>
+do primeiro braço não corresponde ao valor armazenado em <code>x</code>, então a
+execução continua.</p>
+<p>O padrão no segundo braço de <code>match</code> introduz uma nova variável chamada <code>y</code>,
+que corresponderá a qualquer valor dentro de um <code>Some</code>. Como estamos em um novo
+escopo dentro da expressão <code>match</code>, essa é uma nova variável <code>y</code>, e não o <code>y</code>
+que declaramos no começo com o valor <code>10</code>. Esse novo binding <code>y</code> corresponderá
+a qualquer valor dentro de um <code>Some</code>, que é exatamente o que temos em <code>x</code>.
+Portanto, esse novo <code>y</code> se vincula ao valor interno de <code>Some</code> em <code>x</code>. Esse
+valor é <code>5</code>, então a expressão desse braço é executada e imprime
+<code>Matched, y = 5</code>.</p>
+<p>Se <code>x</code> fosse <code>None</code> em vez de <code>Some(5)</code>, os padrões dos dois primeiros
+braços não corresponderiam, então o valor cairia no padrão com
+sublinhado. Como não introduzimos a variável <code>x</code> no padrão desse braço,
+o <code>x</code> usado na expressão ainda seria o <code>x</code> externo, que não foi
+sombreado. Nesse caso hipotético, o <code>match</code> imprimiria <code>Default case, x = None</code>.</p>
+<p>Quando a expressão <code>match</code> termina, seu escopo também termina, assim como o
+escopo do <code>y</code> interno. O último <code>println!</code> produz <code>at the end: x = Some(5), y = 10</code>.</p>
+<p>Para criar uma expressão <code>match</code> que compare os valores do <code>x</code> externo e de
+<code>y</code>, em vez de introduzir uma nova variável que sombreie a variável <code>y</code>
+existente, precisaríamos usar uma guarda de <code>match</code>. Falaremos sobre guardas de
+<code>match</code> mais adiante, na seção
+<a href="#adding-conditionals-with-match-guards">“Adicionando condicionais com match guards”</a><!-- ignore -->.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="multiple-patterns"></a></p>
-<h3 id="combinando-vários-padrões"><a class="header" href="#combinando-vários-padrões">Combinando vários padrões</a></h3>
-<p>Nas expressões <code>match</code>, você pode match vários padrões usando a sintaxe <code> |</code>,
-que é o operador padrão <em>ou</em>. Por exemplo, no código a seguir, match
-o valor de <code>x</code> em relação aos braços match, o primeiro dos quais tem uma opção <em>ou</em>,
-ou seja, se o valor de <code>x</code> corresponder a qualquer um dos valores nesse braço, isso
-arm’s code will run:</p>
+<h3 id="correspondendo-a-vários-padrões"><a class="header" href="#correspondendo-a-vários-padrões">Correspondendo a vários padrões</a></h3>
+<p>Em expressões <code>match</code>, você pode corresponder a vários padrões usando a sintaxe
+<code>|</code>, que é o operador de padrão <em>ou</em>. Por exemplo, no código a seguir,
+correspondemos o valor de <code>x</code> com os braços de <code>match</code>, sendo que o primeiro
+deles tem uma opção <em>ou</em>; isto é, se o valor de <code>x</code> corresponder a qualquer um
+dos valores naquele braço, o código desse braço será executado:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 1;
 
@@ -268,9 +270,9 @@ arm’s code will run:</p>
 <span class="boring">}</span></code></pre>
 <p>Este código imprime <code>one or two</code>.</p>
 <h3 id="correspondência-de-intervalos-de-valores-com-"><a class="header" href="#correspondência-de-intervalos-de-valores-com-">Correspondência de intervalos de valores com <code>..=</code></a></h3>
-<p>A sintaxe <code>..=</code> nos permite match para um intervalo inclusivo de valores. No
-código a seguir, quando um padrão corresponde a qualquer um dos valores dentro do determinado
-alcance, esse braço executará:</p>
+<p>A sintaxe <code>..=</code> nos permite corresponder a um intervalo inclusivo de valores.
+No código a seguir, quando um padrão corresponde a qualquer um dos valores
+dentro do intervalo dado, aquele braço será executado:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 5;
 
@@ -279,14 +281,15 @@ alcance, esse braço executará:</p>
         _ =&gt; println!("something else"),
     }
 <span class="boring">}</span></code></pre>
-<p>Se <code>x</code> for <code>1</code>, <code> 2</code>, <code> 3</code>, <code> 4</code>ou <code> 5</code>, o primeiro braço será match. Esta sintaxe é
-mais conveniente para vários valores match do que usar o operador <code>|</code> para
-express the same idea; if we were to use <code>|</code>, we would have to specify <code>1 | 2 | 3 | 4 | 5</code>. Specifying a range is much shorter, especially if we want to match,
-digamos, qualquer número entre 1 e 1.000!</p>
-<p>O compilador verifica se o intervalo não está vazio em tempo de compilação e porque o
-apenas os tipos para os quais Rust pode dizer se um intervalo está vazio ou não são <code>char</code> e
-valores numéricos, os intervalos só são permitidos com valores numéricos ou <code>char</code>.</p>
-<p>Here is an example using ranges of <code>char</code> values:</p>
+<p>Se <code>x</code> for <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code> ou <code>5</code>, o primeiro braço corresponderá. Essa
+sintaxe é mais conveniente para vários valores do que usar o operador <code>|</code> para
+expressar a mesma ideia; se fôssemos usar <code>|</code>, teríamos de especificar
+<code>1 | 2 | 3 | 4 | 5</code>. Especificar um intervalo é bem mais curto, especialmente
+se quisermos corresponder, digamos, a qualquer número entre 1 e 1.000!</p>
+<p>O compilador verifica, em tempo de compilação, se o intervalo não está vazio.
+Como os únicos tipos para os quais Rust consegue determinar isso são <code>char</code> e
+valores numéricos, intervalos só são permitidos com números ou <code>char</code>.</p>
+<p>Eis um exemplo usando intervalos de valores <code>char</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 'c';
 
@@ -297,14 +300,14 @@ valores numéricos, os intervalos só são permitidos com valores numéricos ou 
     }
 <span class="boring">}</span></code></pre>
 <p>Rust pode dizer que <code>'c'</code> está dentro do intervalo do primeiro padrão e imprime <code>early ASCII letter</code>.</p>
-<h3 id="destructuring-to-break-apart-values"><a class="header" href="#destructuring-to-break-apart-values">Destructuring to Break Apart Values</a></h3>
-<p>Também podemos usar padrões para desestruturar estruturas, enumerações e tuplas para usar
-diferentes partes desses valores. Vamos examinar cada valor.</p>
+<h3 id="desestruturando-para-separar-valores"><a class="header" href="#desestruturando-para-separar-valores">Desestruturando para separar valores</a></h3>
+<p>Também podemos usar padrões para desestruturar structs, enums e tuplas, de modo
+a usar partes diferentes desses valores. Vamos examinar cada caso.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="destructuring-structs"></a></p>
 <h4 id="structs"><a class="header" href="#structs">Structs</a></h4>
-<p>A Listagem 19-12 mostra uma estrutura <code>Point</code> com dois campos, <code>x</code> e <code>y</code>, que podemos
-separe usando um padrão com uma instrução <code> let</code>.</p>
+<p>A Listagem 19-12 mostra uma struct <code>Point</code> com dois campos, <code>x</code> e <code>y</code>, que
+podemos separar usando um padrão em uma instrução <code>let</code>.</p>
 <figure class="listing" id="listing-19-12">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Point {
@@ -321,17 +324,17 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-12">Listing 19-12</a>: Desestruturando os campos de uma struct em variáveis separadas</figcaption>
 </figure>
-<p>Este código cria as variáveis <code>a</code> e <code>b</code> que match os valores do <code>x</code>
-e <code> y</code>da estrutura <code> p</code>. Este exemplo mostra que os nomes dos
-variáveis ​​no padrão não precisam match os nomes dos campos da estrutura.
-No entanto, é comum match os nomes das variáveis aos nomes dos campos para torná-lo
-mais fácil lembrar quais variáveis vieram de quais campos. Por causa disso
-uso comum e porque escrever <code> let Point { x: x, y: y } = p;</code>contém um
-muita duplicação, Rust tem uma abreviação para padrões que os campos de estrutura match:
-Você só precisa listar o nome do campo struct e as variáveis criadas
-do padrão terão os mesmos nomes. A Listagem 19-13 se comporta da mesma
-maneira como o código na Listagem 19-12, mas as variáveis criadas no <code> let</code>
-padrão são <code> x</code>e <code> y</code>em vez de <code> a</code>e <code> b</code>.</p>
+<p>Esse código cria as variáveis <code>a</code> e <code>b</code>, que correspondem aos valores dos
+campos <code>x</code> e <code>y</code> da struct <code>p</code>. Este exemplo mostra que os nomes das variáveis
+no padrão não precisam corresponder aos nomes dos campos da struct. No entanto,
+é comum usar os mesmos nomes dos campos para as variáveis, a fim de facilitar a
+lembrança de quais variáveis vieram de quais campos. Por causa desse uso comum,
+e porque escrever <code>let Point { x: x, y: y } = p;</code> contém bastante duplicação,
+Rust tem uma forma abreviada para padrões que correspondem aos campos de uma
+struct: você só precisa listar o nome do campo da struct, e as variáveis
+criadas a partir do padrão terão os mesmos nomes. A Listagem 19-13 se comporta
+da mesma forma que o código da Listagem 19-12, mas as variáveis criadas no
+padrão <code>let</code> são <code>x</code> e <code>y</code> em vez de <code>a</code> e <code>b</code>.</p>
 <figure class="listing" id="listing-19-13">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Point {
@@ -348,16 +351,15 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-13">Listing 19-13</a>: Desestruturando campos de struct usando a forma abreviada de campos</figcaption>
 </figure>
-<p>Este código cria as variáveis <code>x</code> e <code>y</code> que match os campos <code>x</code> e <code>y</code>
-da variável <code> p</code>. O resultado é que as variáveis <code> x</code>e <code> y</code>contêm o
-valores da estrutura <code> p</code>.</p>
-<p>Também podemos desestruturar com valores literais como parte do padrão struct
+<p>Esse código cria as variáveis <code>x</code> e <code>y</code>, que correspondem aos campos <code>x</code> e <code>y</code>
+da variável <code>p</code>. O resultado é que <code>x</code> e <code>y</code> contêm os valores da struct <code>p</code>.</p>
+<p>Também podemos desestruturar usando valores literais como parte do padrão da struct
 em vez de criar variáveis para todos os campos. Fazer isso nos permite testar
 alguns dos campos para valores específicos ao criar variáveis para
 desestruturar os outros campos.</p>
-<p>Na Listagem 19-14, temos uma expressão <code>match</code> que separa os valores <code>Point</code>
-em três casos: pontos que ficam diretamente no eixo <code> x</code>(o que é verdade quando
-<code>y = 0</code>), no eixo<code>y</code>(<code> x = 0</code>) ou em nenhum dos eixos.</p>
+<p>Na Listagem 19-14, temos uma expressão <code>match</code> que separa valores <code>Point</code>
+em três casos: pontos que ficam diretamente no eixo <code>x</code> (o que é verdade quando
+<code>y = 0</code>), no eixo <code>y</code> (<code>x = 0</code>) ou em nenhum dos eixos.</p>
 <figure class="listing" id="listing-19-14">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct Point {
@@ -378,26 +380,26 @@ em três casos: pontos que ficam diretamente no eixo <code> x</code>(o que é ve
 }</code></pre>
 <figcaption><a href="#listing-19-14">Listing 19-14</a>: Desestruturando e comparando valores literais em um único padrão</figcaption>
 </figure>
-<p>O primeiro braço match qualquer ponto que esteja no eixo <code>x</code> especificando que
-o campo <code>y</code> corresponde se seu valor corresponder ao literal <code>0</code>. O padrão ainda
-cria uma variável <code> x</code>que podemos usar no código deste braço.</p>
-<p>Da mesma forma, o segundo braço corresponde a qualquer ponto no eixo <code>y</code> especificando que
-o campo <code>x</code> corresponde se seu valor for <code>0</code> e cria uma variável <code>y</code> para o
+<p>O primeiro braço corresponde a qualquer ponto que esteja no eixo <code>x</code>,
+especificando que o campo <code>y</code> corresponde ao literal <code>0</code>. O padrão ainda
+cria uma variável <code>x</code>, que podemos usar no código desse braço.</p>
+<p>Da mesma forma, o segundo braço corresponde a qualquer ponto no eixo <code>y</code>,
+especificando que o campo <code>x</code> tem valor <code>0</code>, e cria uma variável <code>y</code> para o
 valor do campo <code>y</code>. O terceiro braço não especifica nenhum literal, então
-corresponde a qualquer outro <code> Point</code>e cria variáveis para os campos <code> x</code>e <code> y</code>.</p>
-<p>Neste exemplo, o valor <code>p</code> corresponde ao segundo braço em virtude de <code>x</code>
-contendo um <code> 0</code>, então este código imprimirá <code> On the y axis at 7</code>.</p>
+corresponde a qualquer outro <code>Point</code> e cria variáveis para os campos <code>x</code> e <code>y</code>.</p>
+<p>Neste exemplo, o valor <code>p</code> corresponde ao segundo braço porque <code>x</code>
+contém <code>0</code>, então esse código imprimirá <code>On the y axis at 7</code>.</p>
 <p>Lembre-se de que uma expressão <code>match</code> para de verificar os braços depois de encontrar o
-primeiro padrão correspondente, mesmo que <code>Point { x: 0, y: 0 }</code> esteja no eixo <code>x</code>
-e o eixo <code> y</code>, este código imprimiria apenas <code> On the x axis at 0</code>.</p>
+primeiro padrão correspondente; assim, embora <code>Point { x: 0, y: 0 }</code> esteja no eixo <code>x</code>
+e também no eixo <code>y</code>, esse código imprimiria apenas <code>On the x axis at 0</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="destructuring-enums"></a></p>
 <h4 id="enums"><a class="header" href="#enums">Enums</a></h4>
-<p>Desestruturamos enums neste livro (por exemplo, Listagem 6-5 no Capítulo 6),
+<p>Desestruturamos enums neste livro (por exemplo, na Listagem 6-5 do Capítulo 6),
 mas ainda não discutimos explicitamente que o padrão para desestruturar um enum
-corresponde à forma como os dados armazenados na enumeração são definidos. Como um
-Por exemplo, na Listagem 19-15, usamos o enum <code>Message</code> da Listagem 6-2 e escrevemos
-um <code>match</code> com padrões que irão desestruturar cada valor interno.</p>
+corresponde à maneira como os dados armazenados nele são definidos. Como
+exemplo, na Listagem 19-15 usamos o enum <code>Message</code> da Listagem 6-2 e escrevemos
+um <code>match</code> com padrões que desestruturam cada valor interno.</p>
 <figure class="listing" id="listing-19-15">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">enum Message {
@@ -427,28 +429,27 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-15">Listing 19-15</a>: Desestruturando variantes de enum que guardam diferentes tipos de valores</figcaption>
 </figure>
-<p>Este código imprimirá <code>Change color to red 0, green 160, and blue 255</code>. Experimente
-alterando o valor de <code> msg</code>para ver o código dos outros braços executados.</p>
-<p>Para variantes enum sem quaisquer dados, como <code>Message::Quit</code>, não podemos desestruturar
-o valor ainda mais. Só podemos match no valor literal <code> Message::Quit</code>,
-e nenhuma variável está nesse padrão.</p>
+<p>Esse código imprimirá <code>Change color to red 0, green 160, and blue 255</code>. Experimente
+alterar o valor de <code>msg</code> para ver o código dos outros braços ser executado.</p>
+<p>Para variantes de enum sem dados, como <code>Message::Quit</code>, não podemos
+desestruturar ainda mais o valor. Só podemos corresponder ao valor literal
+<code>Message::Quit</code>, e não há variáveis nesse padrão.</p>
 <p>Para variantes de enum do tipo struct, como <code>Message::Move</code>, podemos usar um padrão
-semelhante ao padrão que especificamos para estruturas match. Após o nome da variante, nós
-coloque colchetes e depois liste os campos com variáveis para que possamos quebrar
-separe as peças para usar no código deste braço. Aqui usamos a abreviatura
-formulário como fizemos na Listagem 19-13.</p>
-<p>Para variantes de enum semelhantes a tupla, como <code>Message::Write</code> que contém uma tupla com um
-elemento e <code>Message::ChangeColor</code> que contém uma tupla com três elementos, o
-padrão é semelhante ao padrão que especificamos para tuplas match. O número de
-variáveis no padrão devem match o número de elementos na variante que estamos
-correspondência.</p>
+semelhante ao que usamos para structs. Após o nome da variante, colocamos
+chaves e listamos os campos com variáveis para separar as partes e usá-las
+no código desse braço. Aqui usamos a forma abreviada, como fizemos na Listagem 19-13.</p>
+<p>Para variantes de enum semelhantes a tuplas, como <code>Message::Write</code>, que contém uma tupla com um
+elemento, e <code>Message::ChangeColor</code>, que contém uma tupla com três elementos, o
+padrão é semelhante ao que usamos para tuplas. O número de
+variáveis no padrão deve corresponder ao número de elementos da variante com a qual estamos
+fazendo a correspondência.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="destructuring-nested-structs-and-enums"></a></p>
 <h4 id="estruturas-e-enums-aninhados"><a class="header" href="#estruturas-e-enums-aninhados">Estruturas e Enums aninhados</a></h4>
-<p>Até agora, todos os nossos exemplos combinaram estruturas ou enums com um nível de profundidade,
-mas a correspondência também pode funcionar em itens aninhados! Por exemplo, podemos refatorar o
-código na Listagem 19-15 para suportar cores RGB e HSV no <code>ChangeColor</code>
-mensagem, conforme mostrado na Listagem 19-16.</p>
+<p>Até agora, todos os nossos exemplos fizeram correspondência com structs ou enums de um único nível,
+mas a correspondência também funciona com itens aninhados. Por exemplo, podemos refatorar o
+código da Listagem 19-15 para dar suporte a cores RGB e HSV na mensagem <code>ChangeColor</code>,
+como mostrado na Listagem 19-16.</p>
 <figure class="listing" id="listing-19-16">
 <pre class="playground"><code class="language-rust edition2024">enum Color {
     Rgb(i32, i32, i32),
@@ -477,18 +478,18 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-19-16">Listing 19-16</a>: Fazendo correspondência em enums aninhadas</figcaption>
 </figure>
-<p>O padrão do primeiro braço na expressão <code>match</code> corresponde a um
-Variante enum <code>Message::ChangeColor</code> que contém uma variante <code>Color::Rgb</code>; então,
-o padrão se liga aos três valores <code> i32</code>internos. O padrão do segundo
-arm também corresponde a uma variante de enum <code> Message::ChangeColor</code>, mas o enum interno
-corresponde a <code> Color::Hsv</code>. Podemos especificar essas condições complexas em um
-Expressão <code> match</code>, mesmo que duas enumerações estejam envolvidas.</p>
+<p>O padrão do primeiro braço na expressão <code>match</code> corresponde a uma
+variante <code>Message::ChangeColor</code> que contém uma variante <code>Color::Rgb</code>; então,
+o padrão associa os três valores internos do tipo <code>i32</code>. O padrão do segundo
+braço também corresponde a uma variante <code>Message::ChangeColor</code>, mas o enum interno
+corresponde a <code>Color::Hsv</code>. Podemos especificar essas condições complexas em uma
+única expressão <code>match</code>, mesmo quando duas enums estão envolvidas.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="destructuring-structs-and-tuples"></a></p>
 <h4 id="estruturas-e-tuplas"><a class="header" href="#estruturas-e-tuplas">Estruturas e Tuplas</a></h4>
-<p>Podemos misturar match e aninhar padrões de desestruturação de maneiras ainda mais complexas.
-O exemplo a seguir mostra uma desestruturação complicada onde aninhamos estruturas e
-tuplas dentro de uma tupla e desestrutura todos os valores primitivos:</p>
+<p>Podemos misturar e aninhar padrões de desestruturação de maneiras ainda mais complexas.
+O exemplo a seguir mostra uma desestruturação complicada em que aninhamos structs e
+tuplas dentro de uma tupla e extraímos todos os valores primitivos:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span><span class="boring">    struct Point {
 </span><span class="boring">        x: i32,
@@ -497,25 +498,25 @@ tuplas dentro de uma tupla e desestrutura todos os valores primitivos:</p>
 </span><span class="boring">
 </span>    let ((feet, inches), Point { x, y }) = ((3, 10), Point { x: 3, y: -10 });
 <span class="boring">}</span></code></pre>
-<p>Este código nos permite dividir tipos complexos em suas partes componentes para que possamos
-use os valores nos quais estamos interessados separadamente.</p>
-<p>A desestruturação com padrões é uma maneira conveniente de usar pedaços de valores, como
-como o valor de cada campo em uma estrutura, separadamente um do outro.</p>
+<p>Esse código nos permite dividir tipos complexos em suas partes componentes para que possamos
+usar separadamente os valores que nos interessam.</p>
+<p>A desestruturação com padrões é uma maneira conveniente de usar partes de valores,
+como o valor de cada campo de uma struct, separadamente umas das outras.</p>
 <h3 id="ignorando-valores-em-um-padrão"><a class="header" href="#ignorando-valores-em-um-padrão">Ignorando valores em um padrão</a></h3>
-<p>Você viu que às vezes é útil ignorar valores em um padrão, como
-no último braço de um <code>match</code>, para obter um resumo que na verdade não funciona
-qualquer coisa, menos leva em conta todos os valores possíveis restantes. Existem alguns
-maneiras de ignorar valores inteiros ou partes de valores em um padrão: usando o <code> _</code>
-padrão (que você viu), usando o padrão <code> _</code>dentro de outro padrão,
-usando um nome que começa com um sublinhado ou usando <code>..</code> para ignorar o restante
-partes de um valor. Vamos explorar como e por que usar cada um desses padrões.</p>
+<p>Você viu que, às vezes, é útil ignorar valores em um padrão, como
+no último braço de um <code>match</code>, para obter um caso genérico que não faz
+nada de fato, mas cobre todos os valores possíveis restantes. Existem algumas
+formas de ignorar valores inteiros ou partes de valores em um padrão: usando o padrão <code>_</code>
+(que você já viu), usando <code>_</code> dentro de outro padrão,
+usando um nome que começa com sublinhado ou usando <code>..</code> para ignorar as
+partes restantes de um valor. Vamos explorar como e por que usar cada um desses padrões.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ignoring-an-entire-value-with-_"></a></p>
 <h4 id="um-valor-inteiro-com-_"><a class="header" href="#um-valor-inteiro-com-_">Um valor inteiro com <code>_</code></a></h4>
-<p>Usamos o sublinhado como um padrão curinga que match qualquer valor, exceto
-não se vincula ao valor. Isto é especialmente útil como o último braço em um <code>match</code>
-expressão, mas também podemos usá-la em qualquer padrão, incluindo função
-parâmetros, conforme mostrado na Listagem 19-17.</p>
+<p>Usamos o sublinhado como um padrão curinga que corresponde a qualquer valor,
+mas não o vincula a uma variável. Isso é especialmente útil como último braço de uma
+expressão <code>match</code>, mas também podemos usá-lo em qualquer padrão, inclusive em
+parâmetros de função, como mostra a Listagem 19-17.</p>
 <figure class="listing" id="listing-19-17">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn foo(_: i32, y: i32) {
@@ -529,22 +530,21 @@ fn main() {
 </figure>
 <p>Este código irá ignorar completamente o valor <code>3</code> passado como primeiro argumento,
 e imprimirá <code>This code only uses the y parameter: 4</code>.</p>
-<p>Na maioria dos casos, quando você não precisa mais de um parâmetro de função específico, você
-mudaria a assinatura para que não incluísse o parâmetro não utilizado.
-Ignorar um parâmetro de função pode ser especialmente útil nos casos em que, por
-Por exemplo, você está implementando um trait quando precisa de um determinado tipo de assinatura, mas
-o corpo da função na sua implementação não precisa de um dos parâmetros.
-Você evita então receber um aviso do compilador sobre parâmetros de função não utilizados, como
-você faria se usasse um nome.</p>
+<p>Na maioria dos casos, quando você não precisa mais de um parâmetro específico de uma função,
+você mudaria a assinatura para não incluí-lo. Ignorar um parâmetro pode ser
+especialmente útil quando, por exemplo, você está implementando uma trait e precisa
+seguir uma determinada assinatura, mas o corpo da sua implementação não usa um dos
+parâmetros. Assim, você evita o aviso do compilador sobre parâmetro não utilizado,
+que apareceria se usasse um nome normal.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ignoring-parts-of-a-value-with-a-nested-_"></a></p>
 <h4 id="partes-de-um-valor-com-um-_-aninhado"><a class="header" href="#partes-de-um-valor-com-um-_-aninhado">Partes de um valor com um <code>_</code> aninhado</a></h4>
 <p>Também podemos usar <code>_</code> dentro de outro padrão para ignorar apenas parte de um valor, por
-Por exemplo, quando queremos testar apenas parte de um valor, mas não temos utilidade para o
-outras partes do código correspondente que queremos executar. A Listagem 19-18 mostra o código
-responsável por gerenciar o valor de uma configuração. Os requisitos de negócios são que
-o usuário não deve ter permissão para substituir uma personalização existente de um
-configuração, mas pode desarmar a configuração e atribuir-lhe um valor se ela estiver atualmente desativada.</p>
+exemplo, quando queremos testar só uma parte dele, mas não precisamos das
+outras partes no código correspondente que será executado. A Listagem 19-18 mostra um código
+responsável por gerenciar o valor de uma configuração. A regra de negócio é que
+o usuário não deve poder sobrescrever uma personalização já existente de uma
+configuração, mas pode definir um valor se ela estiver atualmente sem valor.</p>
 <figure class="listing" id="listing-19-18">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut setting_value = Some(5);
@@ -563,18 +563,18 @@ configuração, mas pode desarmar a configuração e atribuir-lhe um valor se el
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-18">Listing 19-18</a>: Usando sublinhado dentro de padrões que correspondem a variantes <code>Some</code> quando não precisamos usar o valor dentro de <code>Some</code></figcaption>
 </figure>
-<p>Este código irá imprimir <code>Can't overwrite an existing customized value</code> e então
-<code>setting is Some(5) </code>. No primeiro braço match, não precisamos ligar ou usar match
-os valores dentro de qualquer variante<code>Some</code>, mas precisamos testar o caso
-quando<code>setting_value</code>e<code>new_setting_value</code>são a variante<code>Some</code>. Nisso
-caso, imprimimos o motivo para não alterar<code> setting_value</code>, e isso não acontece
-mudou.</p>
-<p>Em todos os outros casos (se <code>setting_value</code> ou <code>new_setting_value</code> for <code>None</code>)
-expresso pelo padrão <code> _</code>no segundo braço, queremos permitir
-<code>new_setting_value</code>para se tornar<code> setting_value</code>.</p>
-<p>Também podemos usar sublinhados em vários lugares dentro de um padrão para ignorar
-valores particulares. A Listagem 19-19 mostra um exemplo de como ignorar o segundo e
-quartos valores em uma tupla de cinco itens.</p>
+<p>Esse código imprimirá <code>Can't overwrite an existing customized value</code> e depois
+<code>setting is Some(5)</code>. No primeiro braço do <code>match</code>, não precisamos vincular nem usar
+os valores dentro das variantes <code>Some</code>, mas precisamos testar o caso
+em que <code>setting_value</code> e <code>new_setting_value</code> sejam ambos <code>Some</code>. Nesse
+caso, imprimimos o motivo para não alterar <code>setting_value</code>, e ele permanece
+inalterado.</p>
+<p>Em todos os outros casos, expressos pelo padrão <code>_</code> no segundo braço
+(ou seja, se <code>setting_value</code> ou <code>new_setting_value</code> for <code>None</code>),
+queremos permitir que <code>new_setting_value</code> se torne <code>setting_value</code>.</p>
+<p>Também podemos usar sublinhados em vários pontos de um padrão para ignorar
+valores específicos. A Listagem 19-19 mostra como ignorar o segundo e o
+quarto valores de uma tupla com cinco itens.</p>
 <figure class="listing" id="listing-19-19">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let numbers = (2, 4, 8, 16, 32);
@@ -587,18 +587,18 @@ quartos valores em uma tupla de cinco itens.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-19">Listing 19-19</a>: Ignorando várias partes de uma tupla</figcaption>
 </figure>
-<p>Este código imprimirá <code>Some numbers: 2, 8, 32</code>, e os valores <code> 4</code>e <code> 16</code>serão
-ser ignorado.</p>
+<p>Esse código imprimirá <code>Some numbers: 2, 8, 32</code>, e os valores <code>4</code> e <code>16</code> serão
+ignorados.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ignoring-an-unused-variable-by-starting-its-name-with-_"></a></p>
-<h4 id="uma-variável-não-utilizada-iniciando-seu-nome-com-_"><a class="header" href="#uma-variável-não-utilizada-iniciando-seu-nome-com-_">Uma variável não utilizada iniciando seu nome com <code>_</code></a></h4>
+<h4 id="uma-variável-não-utilizada-iniciando-com-_"><a class="header" href="#uma-variável-não-utilizada-iniciando-com-_">Uma variável não utilizada iniciando com <code>_</code></a></h4>
 <p>Se você criar uma variável, mas não a usar em lugar nenhum, Rust normalmente emitirá um
-aviso porque uma variável não utilizada pode ser um bug. No entanto, às vezes é
-útil para poder criar uma variável que você ainda não usará, como quando você está
-prototipagem ou apenas iniciando um projeto. Nesta situação, você pode dizer ao Rust
-não avisar sobre a variável não utilizada iniciando o nome da variável
-com um sublinhado. Na Listagem 19-20, criamos duas variáveis não utilizadas, mas quando
-compilarmos este código, só devemos receber um aviso sobre um deles.</p>
+aviso, porque uma variável não utilizada pode indicar um bug. No entanto, às vezes é
+útil criar uma variável que você ainda não vai usar, como quando está
+prototipando ou apenas começando um projeto. Nessa situação, você pode dizer ao Rust
+para não avisar sobre a variável não utilizada iniciando seu nome
+com um sublinhado. Na Listagem 19-20, criamos duas variáveis não utilizadas, mas, quando
+compilarmos esse código, devemos receber aviso apenas sobre uma delas.</p>
 <figure class="listing" id="listing-19-20">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -608,11 +608,11 @@ compilarmos este código, só devemos receber um aviso sobre um deles.</p>
 <figcaption><a href="#listing-19-20">Listing 19-20</a>: Começando o nome de uma variável com sublinhado para evitar avisos de variável não utilizada</figcaption>
 </figure>
 <p>Aqui, recebemos um aviso sobre não usar a variável <code>y</code>, mas não recebemos um
-aviso sobre não usar <code> _x</code>.</p>
+aviso sobre não usar <code>_x</code>.</p>
 <p>Observe que há uma diferença sutil entre usar apenas <code>_</code> e usar um nome
-que começa com um sublinhado. A sintaxe <code>_x</code> ainda vincula o valor ao
-variável, enquanto <code>_</code> não se vincula de forma alguma. Para mostrar um caso em que isso
-distinção é importante, a Listagem 19-21 nos fornecerá um erro.</p>
+que começa com sublinhado. A sintaxe <code>_x</code> ainda vincula o valor à
+variável, enquanto <code>_</code> não vincula nada. Para mostrar um caso em que essa
+distinção é importante, a Listagem 19-21 produzirá um erro.</p>
 <figure class="listing" id="listing-19-21">
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let s = Some(String::from("Hello!"));
@@ -626,9 +626,9 @@ distinção é importante, a Listagem 19-21 nos fornecerá um erro.</p>
 <figcaption><a href="#listing-19-21">Listing 19-21</a>: Uma variável não usada que começa com sublinhado ainda associa o valor, o que pode tomar ownership dele</figcaption>
 </figure>
 <p>Receberemos um erro porque o valor <code>s</code> ainda será movido para <code>_s</code>,
-o que nos impede de usar <code> s</code>novamente. No entanto, usando o sublinhado sozinho
-nunca se vincula ao valor. A Listagem 19-22 será compilada sem erros
-porque <code> s</code>não é movido para <code> _</code>.</p>
+o que nos impede de usar <code>s</code> novamente. Já o sublinhado sozinho
+nunca se vincula ao valor. A Listagem 19-22 compilará sem erros
+porque <code>s</code> não é movido para <code>_</code>.</p>
 <figure class="listing" id="listing-19-22">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s = Some(String::from("Hello!"));
@@ -644,13 +644,13 @@ porque <code> s</code>não é movido para <code> _</code>.</p>
 <p>Esse código funciona perfeitamente porque nunca vinculamos <code>s</code> a nada; ele não é movido.</p>
 <p><a id="ignoring-remaining-parts-of-a-value-with-"></a></p>
 <h4 id="partes-restantes-de-um-valor-com-"><a class="header" href="#partes-restantes-de-um-valor-com-">Partes restantes de um valor com <code>..</code></a></h4>
-<p>Com valores que possuem muitas partes, podemos usar a sintaxe <code>..</code> para usar valores específicos.
-partes e ignore o resto, evitando a necessidade de listar sublinhados para cada
+<p>Em valores com muitas partes, podemos usar a sintaxe <code>..</code> para selecionar
+partes específicas e ignorar o restante, sem precisar listar sublinhados para cada
 valor ignorado. O padrão <code>..</code> ignora qualquer parte de um valor que não tenhamos
-explicitamente correspondido no resto do padrão. Na Listagem 19-23, temos um
-Estrutura <code>Point</code> que contém uma coordenada no espaço tridimensional. No
-Expressão <code>match</code>, queremos operar apenas na coordenada <code> x</code>e ignorar
-os valores nos campos <code> y</code>e <code> z</code>.</p>
+correspondido explicitamente no restante do padrão. Na Listagem 19-23, temos uma
+struct <code>Point</code> que contém uma coordenada no espaço tridimensional. Na
+expressão <code>match</code>, queremos operar apenas sobre a coordenada <code>x</code> e ignorar
+os valores dos campos <code>y</code> e <code>z</code>.</p>
 <figure class="listing" id="listing-19-23">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    struct Point {
@@ -667,10 +667,10 @@ os valores nos campos <code> y</code>e <code> z</code>.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-23">Listing 19-23</a>: Ignorando todos os campos de um <code>Point</code>, exceto <code>x</code>, usando <code>..</code></figcaption>
 </figure>
-<p>Listamos o valor <code>x</code> e depois incluímos apenas o padrão <code>..</code>. Isso é mais rápido
-do que ter que listar <code> y: _</code>e <code> z: _</code>, especialmente quando estamos trabalhando com
-estruturas que possuem muitos campos em situações onde apenas um ou dois campos são
-relevante.</p>
+<p>Listamos o valor <code>x</code> e depois incluímos apenas o padrão <code>..</code>. Isso é mais simples
+do que listar <code>y: _</code> e <code>z: _</code>, especialmente quando estamos trabalhando com
+structs que têm muitos campos em situações em que apenas um ou dois deles são
+relevantes.</p>
 <p>A sintaxe <code>..</code> será expandida para quantos valores forem necessários. Listagem 19-24
 mostra como usar <code>..</code> com uma tupla.</p>
 <figure class="listing" id="listing-19-24">
@@ -686,12 +686,12 @@ mostra como usar <code>..</code> com uma tupla.</p>
 }</code></pre>
 <figcaption><a href="#listing-19-24">Listing 19-24</a>: Fazendo correspondência apenas com o primeiro e o último valores de uma tupla e ignorando todos os demais</figcaption>
 </figure>
-<p>Neste código, o primeiro e o último valores são correspondidos com <code>first</code> e <code>last</code>.
-O <code>..</code> irá match e ignorará tudo no meio.</p>
-<p>No entanto, o uso de <code>..</code> deve ser inequívoco. Se não estiver claro quais valores são
-destinado à correspondência e que deve ser ignorado, Rust nos dará um erro.
-A Listagem 19-25 mostra um exemplo de uso de <code>..</code> de forma ambígua, portanto não
-compilar.</p>
+<p>Nesse código, o primeiro e o último valores são correspondidos com <code>first</code> e <code>last</code>.
+O <code>..</code> corresponderá e ignorará tudo o que estiver no meio.</p>
+<p>No entanto, o uso de <code>..</code> precisa ser inequívoco. Se não ficar claro quais valores
+devem ser correspondidos e quais devem ser ignorados, Rust emitirá um erro.
+A Listagem 19-25 mostra um exemplo de uso ambíguo de <code>..</code> e, por isso, não
+compila.</p>
 <figure class="listing" id="listing-19-25">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
@@ -719,23 +719,23 @@ error: `..` can only be used once per tuple pattern
 error: could not compile `patterns` (bin "patterns") due to 1 previous error
 </code></pre>
 <p>É impossível para Rust determinar quantos valores na tupla devem ser ignorados
-antes de combinar um valor com <code>second</code> e quantos valores adicionais devem ser
-ignorar depois disso. Este código pode significar que queremos ignorar <code>2</code>, vincular
-<code>second</code>para<code>4</code>e, em seguida, ignore<code>8</code>,<code>16</code>e<code>32</code>; ou que queremos ignorar
-<code>2</code>e<code>4</code>, ligue<code>second</code>a<code>8</code>e, em seguida, ignore<code>16</code>e<code>32</code>; e assim por diante.
-O nome da variável<code>second</code>não significa nada de especial para Rust, então obtemos um
-erro do compilador porque usar<code>..</code> em dois lugares como este é ambíguo.</p>
+antes de associar um valor a <code>second</code> e quantos valores adicionais devem ser
+ignorados depois disso. Esse código pode significar que queremos ignorar <code>2</code>, vincular
+<code>second</code> a <code>4</code> e depois ignorar <code>8</code>, <code>16</code> e <code>32</code>; ou que queremos ignorar
+<code>2</code> e <code>4</code>, vincular <code>second</code> a <code>8</code> e depois ignorar <code>16</code> e <code>32</code>; e assim por diante.
+O nome da variável <code>second</code> não tem nenhum significado especial para Rust, então recebemos um
+erro do compilador porque usar <code>..</code> em dois lugares dessa forma é ambíguo.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="extra-conditionals-with-match-guards"></a></p>
-<h3 id="adicionando-condicionais-com-match-guards"><a class="header" href="#adicionando-condicionais-com-match-guards">Adicionando Condicionais com Match Guards</a></h3>
+<h3 id="adicionando-condicionais-com-match-guards"><a class="header" href="#adicionando-condicionais-com-match-guards">Adicionando condicionais com match guards</a></h3>
 <p>Um <em>match guard</em> é uma condição <code>if</code> adicional, especificada após o padrão em
-um braço <code>match</code>, que também deve match para que esse braço seja escolhido. Os guardas da partida são
-útil para expressar ideias mais complexas do que um padrão sozinho permite. Nota,
-no entanto, eles estão disponíveis apenas em expressões <code> match</code>, não em <code> if let</code>ou
-Expressões <code> while let</code>.</p>
-<p>A condição pode usar variáveis ​​criadas no padrão. A listagem 19-26 mostra um
-<code>match </code> onde o primeiro braço possui o padrão<code>Some(x) </code> e também possui um match
-guarda de<code>if x % 2 == 0 </code> (que será<code>true</code> se o número for par).</p>
+um braço <code>match</code>, que também precisa ser satisfeita para que esse braço seja escolhido.
+Match guards são úteis para expressar ideias mais complexas do que um padrão sozinho permite.
+Observe, porém, que eles estão disponíveis apenas em expressões <code>match</code>, não em
+expressões <code>if let</code> ou <code>while let</code>.</p>
+<p>A condição pode usar variáveis criadas no padrão. A Listagem 19-26 mostra um
+<code>match</code> em que o primeiro braço tem o padrão <code>Some(x)</code> e também uma
+guarda <code>if x % 2 == 0</code> (que será <code>true</code> se o número for par).</p>
 <figure class="listing" id="listing-19-26">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let num = Some(4);
@@ -748,23 +748,23 @@ guarda de<code>if x % 2 == 0 </code> (que será<code>true</code> se o número fo
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-26">Listing 19-26</a>: Adicionando uma guarda de match a um padrão</figcaption>
 </figure>
-<p>Este exemplo imprimirá <code>The number 4 is even</code>. Quando <code> num</code>é comparado com o
-padrão no primeiro braço, ele corresponde porque <code> Some(4)</code>corresponde a <code> Some(x)</code>. Então,
-o guarda match verifica se o restante da divisão de <code> x</code>por 2 é igual a
-0 e, por ser assim, o primeiro braço é selecionado.</p>
-<p>Se <code>num</code> fosse <code>Some(5)</code>, a guarda match no primeiro braço seria
-foram <code> false</code>porque o resto de 5 dividido por 2 é 1, o que não é
-igual a 0. Rust iria então para o segundo braço, que seria match porque o
-o segundo braço não possui uma proteção match e, portanto, corresponde a qualquer variante <code> Some</code>.</p>
+<p>Esse exemplo imprimirá <code>The number 4 is even</code>. Quando <code>num</code> é comparado com o
+padrão do primeiro braço, ele corresponde porque <code>Some(4)</code> corresponde a <code>Some(x)</code>. Então,
+a guarda verifica se o resto da divisão de <code>x</code> por 2 é igual a
+0 e, como é esse o caso, o primeiro braço é selecionado.</p>
+<p>Se <code>num</code> fosse <code>Some(5)</code>, a guarda do primeiro braço seria
+<code>false</code>, porque o resto de 5 dividido por 2 é 1, e não
+0. Rust passaria então para o segundo braço, que corresponderia, porque
+ele não tem guarda e portanto corresponde a qualquer variante <code>Some</code>.</p>
 <p>Não há como expressar a condição <code>if x % 2 == 0</code> dentro de um padrão, então
-a guarda match nos dá a capacidade de expressar essa lógica. A desvantagem de
-essa expressividade adicional é que o compilador não tenta verificar
-exaustividade quando expressões de guarda match estão envolvidas.</p>
-<p>Ao discutir a Listagem 19-11, mencionamos que poderíamos usar proteções match para
-resolver nosso problema de sombreamento de padrões. Lembre-se que criamos uma nova variável
-dentro do padrão na expressão <code>match</code> em vez de usar a variável
-fora do <code>match</code>. Essa nova variável significava que não poderíamos testar o valor
-da variável externa. A Listagem 19-27 mostra como podemos usar uma proteção match para corrigir
+a guarda de <code>match</code> nos permite representar essa lógica. A desvantagem dessa
+expressividade adicional é que o compilador não tenta verificar
+a exaustividade quando há match guards envolvidos.</p>
+<p>Ao discutir a Listagem 19-11, mencionamos que poderíamos usar match guards para
+resolver nosso problema de sombreamento de padrões. Lembre-se de que criamos uma nova variável
+dentro do padrão na expressão <code>match</code>, em vez de usar a variável
+externa. Essa nova variável significava que não poderíamos testar o valor
+da variável de fora. A Listagem 19-27 mostra como usar uma guarda de <code>match</code> para corrigir
 esse problema.</p>
 <figure class="listing" id="listing-19-27">
 <span class="file-name">Filename: src/main.rs</span>
@@ -782,23 +782,22 @@ esse problema.</p>
 }</code></pre>
 <figcaption><a href="#listing-19-27">Listing 19-27</a>: Usando uma guarda de <code>match</code> para testar igualdade com uma variável externa</figcaption>
 </figure>
-<p>Este código agora imprimirá <code>Default case, x = Some(5)</code>. O padrão no segundo
-O braço match não introduz uma nova variável <code> y</code>que obscureceria o <code> y</code>externo,
-o que significa que podemos usar o <code> y</code>externo na proteção match. Em vez de especificar o
-padrão como <code> Some(y)</code>, que teria sombreado o <code> y</code>externo, especificamos
-<code>Some(n)</code>. Isso cria uma nova variável<code>n</code>que não oculta nada porque
-não há variável<code>n</code>fora de<code> match</code>.</p>
-<p>A proteção match <code>if n == y</code> não é um padrão e portanto não introduz novos
-variáveis. Este <code>y</code> <em>é</em> o <code>y</code> externo em vez de um novo <code>y</code> o sombreando, e
-podemos procurar um valor que tenha o mesmo valor do <code>y</code> externo comparando
-<code>n </code> para<code>y</code>.</p>
-<p>Você também pode usar o operador <em>or</em> <code>|</code> em uma guarda de <code>match</code> para
-especificar múltiplos padrões; a condição da guarda será aplicada a todos os
-padrões. A Listagem 19-28 mostra a precedência ao combinar um padrão que usa
-<code>|</code> com uma guarda de <code>match</code>. A parte importante deste exemplo é que a guarda
-de <code>match</code> <code>if y</code> se aplica a <code>4</code>, <code>5</code> <em>e</em> <code>6</code>, mesmo que possa parecer que
-<code>if y</code> se aplica apenas
-applies to <code>6</code>.</p>
+<p>Esse código agora imprimirá <code>Default case, x = Some(5)</code>. O padrão no segundo
+braço do <code>match</code> não introduz uma nova variável <code>y</code> que sombrearia o <code>y</code> externo,
+o que significa que podemos usar o <code>y</code> externo na guarda. Em vez de especificar o
+padrão como <code>Some(y)</code>, o que teria sombreado o <code>y</code> externo, especificamos
+<code>Some(n)</code>. Isso cria uma nova variável <code>n</code> que não sombreia nada, porque
+não existe nenhuma variável <code>n</code> fora do <code>match</code>.</p>
+<p>A guarda <code>if n == y</code> não é um padrão e, portanto, não introduz novas
+variáveis. Esse <code>y</code> <em>é</em> o <code>y</code> externo, em vez de um novo <code>y</code> o sombreando, e
+podemos procurar um valor igual ao <code>y</code> externo comparando
+<code>n</code> com <code>y</code>.</p>
+<p>Você também pode usar o operador <em>or</em> <code>|</code> em um braço com guarda de <code>match</code> para
+especificar múltiplos padrões; a condição da guarda será aplicada a todos eles.
+A Listagem 19-28 mostra a precedência ao combinar um padrão com <code>|</code>
+e uma guarda de <code>match</code>. A parte importante deste exemplo é que a guarda
+<code>if y</code> se aplica a <code>4</code>, <code>5</code> <em>e</em> <code>6</code>, embora possa parecer, à primeira vista, que
+ela se aplica apenas a <code>6</code>.</p>
 <figure class="listing" id="listing-19-28">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 4;
@@ -811,30 +810,30 @@ applies to <code>6</code>.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-28">Listing 19-28</a>: Combinando vários padrões com uma guarda de match</figcaption>
 </figure>
-<p>A condição match afirma que o braço só corresponde se o valor de <code>x</code> for
-igual a <code>4</code>, <code> 5</code>ou <code> 6</code><em>e</em> se <code> y</code>for <code> true</code>. Quando esse código é executado, o
-o padrão do primeiro braço corresponde porque <code>x</code> é <code>4</code>, mas o match guarda <code> if y</code>
+<p>A condição diz que o braço só corresponde se o valor de <code>x</code> for
+igual a <code>4</code>, <code>5</code> ou <code>6</code> <em>e</em> se <code>y</code> for <code>true</code>. Quando esse código é executado, o
+padrão do primeiro braço corresponde porque <code>x</code> é <code>4</code>, mas a guarda <code>if y</code>
 é <code>false</code>, então o primeiro braço não é escolhido. O código passa para o segundo
-arm, que faz match, e este programa imprime <code>no</code>. A razão é que
-A condição <code>if</code> se aplica a todo o padrão <code>4 | 5 | 6</code>, não apenas ao último
-value <code>6</code>. In other words, the precedence of a match guard in relation to a
+braço, que corresponde, e o programa imprime <code>no</code>. A razão é que
+a condição <code>if</code> se aplica a todo o padrão <code>4 | 5 | 6</code>, e não apenas ao último
+valor <code>6</code>. Em outras palavras, a precedência de uma guarda de <code>match</code> em relação a um
 padrão se comporta assim:</p>
 <pre><code class="language-text">(4 | 5 | 6) if y =&gt; ...
 </code></pre>
 <p>em vez disso:</p>
 <pre><code class="language-text">4 | 5 | (6 if y) =&gt; ...
 </code></pre>
-<p>Depois de executar o código, o comportamento de precedência fica evidente: Se o guarda match
-foram aplicados apenas ao valor final na lista de valores especificados usando o
-Operador <code>|</code>, o braço teria correspondido e o programa teria impresso
+<p>Depois de executar o código, o comportamento da precedência fica evidente: se a guarda de <code>match</code>
+fosse aplicada apenas ao valor final da lista de valores especificados com o
+operador <code>|</code>, o braço teria correspondido e o programa teria impresso
 <code>yes</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="-bindings"></a></p>
-<h3 id="usando-ligações-"><a class="header" href="#usando-ligações-">Usando ligações <code>@</code></a></h3>
+<h3 id="usando-bindings-"><a class="header" href="#usando-bindings-">Usando bindings <code>@</code></a></h3>
 <p>O operador <em>at</em> <code>@</code> nos permite criar uma variável que contém um valor ao mesmo
-vez que estamos testando esse valor para um padrão match. Na Listagem 19-29, queremos
-teste se um campo <code>Message::Hello</code> <code> id</code>está dentro do intervalo <code> 3..=7</code>. Nós também
-queremos vincular o valor à variável <code> id</code>para que possamos usá-lo no código
+tempo em que testamos esse valor em um padrão. Na Listagem 19-29, queremos
+verificar se o campo <code>id</code> de <code>Message::Hello</code> está dentro do intervalo <code>3..=7</code>. Também
+queremos vincular esse valor à variável <code>id</code> para que possamos usá-lo no código
 associado ao braço.</p>
 <figure class="listing" id="listing-19-29">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -856,27 +855,27 @@ associado ao braço.</p>
 <span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-19-29">Listing 19-29</a>: Usando <code>@</code> para associar um valor em um padrão ao mesmo tempo em que o testa</figcaption>
 </figure>
-<p>Este exemplo imprimirá <code>Found an id in range: 5</code>. Especificando <code> id @</code>antes
-intervalo <code> 3..=7</code>, estamos capturando qualquer valor que corresponda ao intervalo em um
-variável chamada <code> id</code>enquanto testa se o valor corresponde ao padrão de intervalo.</p>
-<p>No segundo braço, onde temos apenas um intervalo especificado no padrão, o código
-associado ao braço não possui uma variável que contenha o valor real
-do campo <code>id</code>. O valor do campo <code> id</code>poderia ter sido 10, 11 ou 12, mas
-o código que acompanha esse padrão não sabe qual é. O código padrão
-não é possível usar o valor do campo <code> id</code>porque não salvamos o
-Valor <code> id</code>em uma variável.</p>
-<p>No último braço, onde especificamos uma variável sem intervalo, temos
-o valor disponível para uso no código do braço em uma variável chamada <code>id</code>. O
-o motivo é que usamos a sintaxe abreviada do campo struct. Mas não temos
-aplicou qualquer teste ao valor no campo <code> id</code>neste braço, como fizemos com o
-primeiros dois braços: Qualquer valor seria match esse padrão.</p>
+<p>Esse exemplo imprimirá <code>Found an id in range: 5</code>. Ao especificar <code>id @</code> antes do
+intervalo <code>3..=7</code>, capturamos qualquer valor que corresponda ao intervalo em uma
+variável chamada <code>id</code>, ao mesmo tempo em que testamos se o valor corresponde ao padrão de intervalo.</p>
+<p>No segundo braço, em que temos apenas um intervalo especificado no padrão, o código
+associado ao braço não possui uma variável contendo o valor real
+do campo <code>id</code>. O valor desse campo poderia ser 10, 11 ou 12, mas
+o código associado a esse padrão não sabe qual deles é. Esse código
+não pode usar o valor do campo <code>id</code>, porque não o salvamos em
+uma variável.</p>
+<p>No último braço, em que especificamos uma variável sem intervalo, temos
+o valor disponível para uso no código do braço em uma variável chamada <code>id</code>. Isso
+acontece porque usamos a sintaxe abreviada do campo da struct. Mas não
+aplicamos nenhum teste ao valor do campo <code>id</code> nesse braço, como fizemos nos
+dois primeiros: qualquer valor corresponderia a esse padrão.</p>
 <p>Usar <code>@</code> nos permite testar um valor e salvá-lo em uma variável dentro de um padrão.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Os padrões do Rust são muito úteis para distinguir entre diferentes tipos de
-dados. Quando usado em expressões <code>match</code>, Rust garante que seus padrões cubram
-todos os valores possíveis, ou seu programa não será compilado. Padrões em <code> let</code>
-instruções e parâmetros de função tornam essas construções mais úteis, permitindo
-a desestruturação de valores em partes menores e a atribuição dessas partes a
+<p>Os padrões de Rust são muito úteis para distinguir entre diferentes tipos de
+dados. Quando usados em expressões <code>match</code>, Rust garante que os padrões cubram
+todos os valores possíveis, ou o programa não compila. Padrões em instruções <code>let</code>
+e em parâmetros de função tornam essas construções mais úteis, permitindo
+desestruturar valores em partes menores e atribuir essas partes a
 variáveis. Podemos criar padrões simples ou complexos para atender às nossas necessidades.</p>
 <p>A seguir, no penúltimo capítulo do livro, veremos alguns
 aspectos de uma variedade de recursos do Rust.</p>

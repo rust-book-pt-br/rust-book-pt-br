@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,21 +182,21 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="hash-maps"><a class="header" href="#hash-maps">Hash Maps</a></h2>
-<p>A última das nossas coleções comuns é o <em>hash map</em>. O tipo <code>HashMap &lt;K, V&gt;</code>
-armazena um mapeamento de chaves do tipo <code>K</code> para valores do tipo<code> V</code>. Ele faz isso através de um
-<em>hashing function</em>, que determina como ele coloca essas chaves e valores em
-memória. Muitas linguagens de programação diferentes suportam este tipo de
-estrutura de dados, mas muitas vezes com um nome diferente: hash, map, object, hash table ou
-associative array, apenas para citar alguns.</p>
-<p>Os Hash maps são úteis para quando você deseja poder procurar dados sem uso de
-índice, como você pode com vetores, mas usando uma chave que pode ser de qualquer tipo. Por
+<p>A última de nossas coleções comuns é o <em>hash map</em>. O tipo <code>HashMap&lt;K, V&gt;</code>
+armazena um mapeamento de chaves do tipo <code>K</code> para valores do tipo <code>V</code>. Ele faz isso por meio de uma
+<em>hashing function</em>, que determina como coloca essas chaves e valores na
+memória. Muitas linguagens de programação dão suporte a esse tipo de
+estrutura de dados, embora muitas vezes sob nomes diferentes: hash, map,
+object, hash table ou associative array, apenas para citar alguns.</p>
+<p>Hash maps são úteis quando você quer procurar dados sem usar um índice,
+como faria com vetores, mas usando uma chave que pode ser de qualquer tipo. Por
 exemplo, em um jogo, você poderia acompanhar a pontuação de cada equipe em um hash map
-onde cada chave é o nome de uma equipe e os valores são cada pontuação da equipe. Dado um
+em que cada chave é o nome de uma equipe e cada valor é a pontuação dessa equipe. Dado o
 nome da equipe, você pode recuperar sua pontuação.</p>
-<p>Examinaremos a API básica dos hash map neste capítulo, mas há muitos
-mais coisas escondidas nas funções definidas no <code>HashMap</code> pela biblioteca
+<p>Examinaremos a API básica dos hash maps neste capítulo, mas há muito
+mais nas funções definidas em <code>HashMap</code> pela biblioteca
 padrão. Como sempre, verifique a documentação da biblioteca padrão para mais
-informação.</p>
+informações.</p>
 <h3 id="criando-um-novo-hash-map"><a class="header" href="#criando-um-novo-hash-map">Criando um novo Hash Map</a></h3>
 <p>Podemos criar um <code>HashMap</code> vazio com <code>new</code>, e adicionar elementos com <code>insert</code>.
 Aqui, estamos acompanhando as pontuações de duas equipes cujos nomes são Blue e
@@ -211,10 +211,10 @@ let mut scores = HashMap::new();
 scores.insert(String::from("Blue"), 10);
 scores.insert(String::from("Yellow"), 50);
 <span class="boring">}</span></code></pre>
-<p>Observe que precisamos primeiro <code>use</code> o <code>HashMap</code> da parte de coleções da
+<p>Observe que precisamos primeiro importar com <code>use</code> o <code>HashMap</code> da parte de coleções da
 biblioteca padrão. De nossas três coleções comuns, esta é a de menor
-frequencia de uso, por isso não está inclusa nos recursos importados automaticamente no
-prelúdio. Os Hash maps também têm menos suporte da biblioteca padrão; não há
+frequência de uso, por isso não está incluída entre os itens importados automaticamente no
+prelúdio. Hash maps também têm menos suporte da biblioteca padrão; não há
 macro embutida para construí-los, por exemplo.</p>
 <p>Assim como os vetores, os mapas hash armazenam seus dados no heap. Este <code>HashMap</code> tem
 chaves do tipo <code>String</code> e valores do tipo <code>i32</code>. Como vetores, os hash maps são
@@ -242,8 +242,8 @@ deseja, a menos que você especifique. Para os parâmetros de tipo, para os tipo
 no entanto, usamos underscores e Rust pode inferir os tipos que o hash map
 contém com base nos tipos de dados no vetor.</p>
 <h3 id="mapas-de-hash-e-propriedade"><a class="header" href="#mapas-de-hash-e-propriedade">Mapas de Hash e Propriedade</a></h3>
-<p>Para os tipos que implementam a <code>Copy</code> trait, como <code>i32</code>, os valores são copiados
-no hash map. Para valores owned como <code>String</code>, os valores serão movidos e
+<p>Para tipos que implementam a trait <code>Copy</code>, como <code>i32</code>, os valores são copiados
+para o hash map. Para valores <code>owned</code> como <code>String</code>, os valores serão movidos e
 o hash map será o owner desses valores:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -256,11 +256,11 @@ let mut map = HashMap::new();
 map.insert(field_name, field_value);
 // field_name e field_value são inválidos neste ponto
 <span class="boring">}</span></code></pre>
-<p>Não poderíamos usar as ligações <code>field_name</code> e<code> field_value</code> depois
+<p>Não poderíamos usar as variáveis <code>field_name</code> e <code>field_value</code> depois
 que foram transferidos para o hash map com a chamada para <code>insert</code>.</p>
-<p>Se inserimos referências a valores no hash map, os próprios valores
-não serão movido para o hash map. Os valores que as referências apontam devem ser
-válidos pelo menos enquanto o hash map seja válido, no entanto. Falaremos mais
+<p>Se inserirmos referências a valores no hash map, os próprios valores
+não serão movidos para o hash map. Os valores para os quais as referências apontam devem ser
+válidos pelo menos enquanto o hash map for válido. Falaremos mais
 sobre esses problemas na seção Lifetimes do Capítulo 10.</p>
 <h3 id="acessando-valores-em-um-hash-map"><a class="header" href="#acessando-valores-em-um-hash-map">Acessando Valores em um Hash Map</a></h3>
 <p>Podemos obter um valor do hash map fornecendo a chave para o método <code>get</code>:</p>

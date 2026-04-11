@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-cb26cce1.js"></script>
+        <script src="toc-77646bdf.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="referências-e-borrowing"><a class="header" href="#referências-e-borrowing">Referências e <em>Borrowing</em></a></h2>
+                        <h2 id="referências-e-borrowing"><a class="header" href="#referências-e-borrowing">Referências e <em>borrowing</em></a></h2>
 <p>O problema de usar tuplas, que vimos no fim da seção anterior, é que precisamos
 retornar a <code>String</code>, de forma que ainda possamos usá-la após a chamada à função
 <code>calcula_tamanho</code>, para dentro da qual a <code>String</code> foi movida.</p>
@@ -209,9 +209,9 @@ sem tomar posse dele. A Figura 4-5 mostra um diagrama.</p>
 <img alt="&amp;String s apontando para String s1" src="img/trpl04-05.svg" class="center" />
 <p><span class="caption">Figura 4-5: <code>&amp;String s</code> apontando para <code>String s1</code></span></p>
 <blockquote>
-<p>Nota: O oposto de referenciar usando <code>&amp;</code> é <em>derreferenciar</em>, feito por meio do
-operador derreferenciador, <code>*</code>. Veremos alguns usos do operador
-derreferenciador no Capítulo 8 e vamos discutir detalhes da derreferenciação
+<p>Nota: O oposto de referenciar usando <code>&amp;</code> é <em>desreferenciar</em>, feito por meio do
+operador de desreferenciação, <code>*</code>. Veremos alguns usos desse operador
+no Capítulo 8 e vamos discutir detalhes da desreferenciação
 no Capítulo 15.</p>
 </blockquote>
 <p>Vamos olhar mais de perto esta chamada de função:</p>
@@ -305,10 +305,10 @@ println!("{}, {}", r1, r2);</code></pre>
 6 | }
   | - first borrow ends here
 </code></pre>
-<p>Esta restrição permite a mutação, mas de uma forma bem controlada. Isto é algo
+<p>Essa restrição permite a mutação, mas de uma forma bem controlada. Isso é algo
 com que novos Rustáceos passam trabalho, porque a maioria das linguagens de
-programação permitem modificar um valor quando você quiser. O benefício de ter
-esta restrição é que o Rust previne <em>data races</em> em tempo de compilação.</p>
+programação permite modificar um valor quando você quiser. O benefício de ter
+essa restrição é que o Rust previne <em>data races</em> em tempo de compilação.</p>
 <p>Um <em>data race</em> é parecido com uma condição de corrida, e acontece quando esses
 três fatores ocorrem:</p>
 <ol>
@@ -316,9 +316,9 @@ três fatores ocorrem:</p>
 <li>Ao menos um dos ponteiros é usado para escrever sobre o dado.</li>
 <li>Não há nenhum mecanismo sendo usado para sincronizar o acesso ao dado.</li>
 </ol>
-<p>Data races causam comportamento indefinido e pode ser difíceis de diagnosticar
+<p>Data races causam comportamento indefinido e podem ser difíceis de diagnosticar
 e corrigir quando você está tentando rastreá-los em tempo de execução. Rust
-previne este problema de acontecer porque não vai nem deixar compilar um código
+previne que esse problema aconteça porque não vai nem deixar compilar um código
 com data races!</p>
 <p>Como sempre, podemos usar chaves (<code>{}</code>) para criar um novo escopo, permitindo
 múltiplas referências mutáveis, mas não <em>simultâneas</em>:</p>
@@ -361,10 +361,10 @@ imutável. Usuários de uma referência imutável não esperam que os valores mu
 de repente! Porém, múltiplas referências imutáveis são permitidas, pois ninguém
 que esteja apenas lendo os dados será capaz de afetar a leitura que está sendo
 feita em outra parte do código.</p>
-<p>Observe que o escopo de uma referência começa de onde é inserida e continua até
+<p>Observe que o escopo de uma referência começa no ponto em que ela é introduzida e continua até
 a última vez que a referência foi usada. Por exemplo, este código será compilado
-porque o último uso das referências imutáveis, ocorrem antes da referência mutável
-ser inserida:</p>
+porque o último uso das referências imutáveis ocorre antes de a referência mutável
+ser introduzida:</p>
 <pre><code class="language-rust ignore">let mut s = String::from("texto");
 
 let r1 = &amp;s; // sem problema
@@ -374,10 +374,10 @@ println!("{} and {}", r1, r2);
 
 let r3 = &amp;mut s; // sem problema
 println!("{}", r3);</code></pre>
-<p>O escopo das referências imutáveis <code>r1</code> e <code>r2</code> terminam após o <code>println!</code> onde eles
-são utilizados pela última vez, que é antes da referência mutável <code>r3</code> ser criada.
+<p>O escopo das referências imutáveis <code>r1</code> e <code>r2</code> termina após o <code>println!</code> em que elas
+são utilizadas pela última vez, que é antes de a referência mutável <code>r3</code> ser criada.
 Esses escopos não se sobrepõem, portanto, este código é permitido.</p>
-<p>Mesmo que esses erros sejam frustrantes às vezes, lembre-se que é o compilador
+<p>Mesmo que esses erros sejam frustrantes às vezes, lembre-se de que é o compilador
 do Rust apontando um bug potencial antecipadamente (em tempo de compilação,
 em vez de execução), e mostrando exatamente onde está o problema, em vez de você
 ter que investigar por que algumas vezes os seus dados não são aquilo que você
