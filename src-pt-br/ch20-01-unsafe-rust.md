@@ -560,11 +560,11 @@ Para uma exploração muito mais profunda de como trabalhar de forma eficaz com 
 Guia oficial do Rust para `unsafe`, [The Rustonomicon][nomicon].
 
 [dangling-references]: ch04-02-references-and-borrowing.html#dangling-references
-[ABI]: ../reference/items/external-blocks.html#abi
+[ABI]: https://doc.rust-lang.org/reference/items/external-blocks.html#abi
 [constants]: ch03-01-variables-and-mutability.html#declaring-constants
 [send-and-sync]: ch16-04-extensible-concurrency-sync-and-send.html
 [the-slice-type]: ch04-03-slices.html#the-slice-type
-[unions]: ../reference/items/unions.html
+[unions]: https://doc.rust-lang.org/reference/items/unions.html
 [miri]: https://github.com/rust-lang/miri
 [editions]: appendix-05-editions.html
 [nightly]: appendix-07-nightly-rust.html

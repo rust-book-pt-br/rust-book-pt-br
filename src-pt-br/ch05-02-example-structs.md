@@ -249,4 +249,4 @@ definido em nosso tipo `Rectangle`.
 [println]: ../std/macro.println.html
 [dbg]: ../std/macro.dbg.html
 [err]: ch12-06-writing-to-stderr-instead-of-stdout.html
-[attributes]: ../reference/attributes.html
+[attributes]: https://doc.rust-lang.org/reference/attributes.html

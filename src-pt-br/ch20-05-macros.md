@@ -537,7 +537,7 @@ capítulo como referência para se orientar em direção a soluções.
 A seguir, colocaremos em prática tudo o que discutimos ao longo do livro e
 faremos mais um projeto!
 
-[ref]: ../reference/macros-by-example.html
+[ref]: https://doc.rust-lang.org/reference/macros-by-example.html
 [tlborm]: https://veykril.github.io/tlborm/
 [syn]: https://crates.io/crates/syn
 [quote]: https://crates.io/crates/quote

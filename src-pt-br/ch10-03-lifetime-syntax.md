@@ -638,4 +638,4 @@ Rust para que você possa ter certeza de que seu código está funcionando como 
 
 [references-and-borrowing]: ch04-02-references-and-borrowing.html#references-and-borrowing
 [string-slices-as-parameters]: ch04-03-slices.html#string-slices-as-parameters
-[reference]: ../reference/trait-bounds.html
+[reference]: https://doc.rust-lang.org/reference/trait-bounds.html

@@ -205,4 +205,4 @@ código que não compile.
 Os arquivos-fonte a partir dos quais este livro é gerado podem ser encontrados
 no [GitHub][book].
 
-[book]: https://github.com/rust-lang/book/tree/main/src
+[book]: https://github.com/rust-book-pt-br/rust-book-pt-br/tree/main/src-pt-br

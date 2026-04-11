@@ -64,7 +64,7 @@ funcionalidade de cada uma.
 - **`while`**: Faz loop condicionalmente com base no resultado de uma
   expressão.
 
-[union]: ../reference/items/unions.html
+[union]: https://doc.rust-lang.org/reference/items/unions.html
 
 ### Palavras-chave reservadas para uso futuro
 
