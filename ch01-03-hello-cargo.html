@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-996f7bd5.js";
+            window.path_to_searchindex_js = "searchindex-cf733e22.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-31482bb5.js"></script>
+        <script src="toc-cb26cce1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -193,17 +193,6 @@
 <pre><code class="language-text">$ cargo new hello_cargo --bin
 $ cd hello_cargo
 </code></pre>
-<!-- Below -- so we always have to start a cargo project with the --bin option
-se quisermos que seja algo que possamos executar e não apenas uma biblioteca, é isso
-right? It might be worth laying that out -->
-<!-- As of Rust 1.21.0 (the version we're using for the book), yes, you must
-sempre especifique `--bin`. Em uma versão do Rust próxima ao future (1.25 ou 1.26),
-binário crates se tornará o tipo padrão de crate que ` cargo new`faz, então
-você não precisará especificar ` --bin`(mas poderá, se quiser, e o comportamento
-será o mesmo). Preferimos não entrar em mais detalhes do que temos aqui
-por causa dessa mudança; Eu acho que "O argumento ` --bin`deve ser passado para ` cargo new`
-cria um aplicativo executável (geralmente chamado apenas de *binário*), em oposição a um
-library." lays this out enough. /Carol -->
 <p>Isso cria um novo executável binário chamado <code>hello_cargo</code>. O argumento <code>--bin</code> transmitido para <code>cargo new</code> cria um aplicativo executável (geralmente chamado apenas de <em>binário</em>), em oposição a uma biblioteca. Atribuímos <code>hello_cargo</code> como o nome do nosso projeto e o Cargo cria seus arquivos em um diretório com o mesmo nome.</p>
 <p>Vá para o diretório <em>hello_cargo</em> e liste os arquivos, e você verá que Cargo gerou dois arquivos e um diretório para nós: um diretório <em>Cargo.toml</em> e <em>src</em> com um arquivo <em>main.rs</em> dentro. Também inicializou um novo repositório git, junto com um arquivo <em>.gitignore</em>.</p>
 <blockquote>

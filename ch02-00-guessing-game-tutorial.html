@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-996f7bd5.js";
+            window.path_to_searchindex_js = "searchindex-cf733e22.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-31482bb5.js"></script>
+        <script src="toc-cb26cce1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -397,10 +397,6 @@ aprenderá sobre recuperação de erros no <a href="./ch09-00-error-handling.htm
 <p>Tirando a chave que delimita a função <code>main</code>, há apenas uma linha mais a ser
 discutida no código que fizemos até agora, que é a seguinte:</p>
 <pre><code class="language-rust ignore">println!("Você disse: {palpite}");</code></pre>
-<!-- Achei meio confuso então dei uma ajeitada, segue o texto original:
-
-Esta linha imprime a string que agora contém a entrada do usuário. O conjunto de chaves {} é um espaço reservado: pense em {} como pequenas pinças de caranguejo que mantêm um valor no lugar. Ao imprimir o valor de uma variável, o nome da variável pode ficar entre chaves. Ao imprimir o resultado da avaliação de uma expressão, coloque colchetes vazios no format string e, em seguida, siga o format string com uma lista de expressões separadas por vírgula para imprimir em cada espaço reservado de colchetes vazio na mesma ordem. Imprimindo uma variável e o resultado de uma expressão em uma chamada para println! ficaria assim:
--->
 <p>Esta linha imprime a string na qual salvamos os dados inseridos pelo usuário. O <code>{}</code> é um curinga que reserva o lugar de um valor. Para imprimir o valor de uma variável, podemos colocá-la dentro das chaves diretamente na string. Também podemos imprimir o resultado de uma ou mais expressões, colocando chaves vazias nas posições desejadas, string de formatação, e adicionando a lista de expressões separadas por vírgulas e em ordem após a string de formatação. Por exemplo, podemos imprimir uma variável e o resultado de uma expressão em uma única chamada de <code>println!</code> desta forma:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -626,9 +622,6 @@ e 100. Bom trabalho!</p>
 <p>Agora que nós temos a entrada do usuário e o número secreto, vamos compará-los.
 Esta etapa é mostrada na Listagem 2-4. Observe que este código ainda não compila, como vamos explicar a seguir!</p>
 <p><span class="filename">Arquivo: src/main.rs</span></p>
-<!-- Adicionar a figura do ferris indicando que o código não compila -->
-<!-- <img src="./img/ferris/does_not_compile.svg" alt= “” width="10%" height="10%" align="right">
--->
 <pre>
 <img src="./img/ferris/does_not_compile.svg" alt="“”" width="10%" height="10%" align="right">
 </pre>

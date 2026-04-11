@@ -40,10 +40,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-996f7bd5.js";
+            window.path_to_searchindex_js = "searchindex-cf733e22.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-31482bb5.js"></script>
+        <script src="toc-cb26cce1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -191,9 +191,10 @@ todos os projetos, para configurá-los de acordo com os idiomatismos da edição
 2024 do Rust. Consulte a <a href="#instalação-1">seção “Instalação” do Capítulo 1</a><!--
 ignore --> para instruções sobre como instalar ou atualizar o Rust, e veja o
 <a href="#e---edições">Apêndice E</a><!-- ignore --> para informações sobre edições.</p>
-<p>O formato HTML está disponível online em
+<p>O formato HTML em inglês está disponível online em
 <a href="https://doc.rust-lang.org/stable/book/">https://doc.rust-lang.org/stable/book/</a>
-e offline com instalações do Rust feitas com <code>rustup</code>; execute <code>rustup doc --book</code> para abrir.</p>
+e offline com instalações do Rust feitas com <code>rustup</code>; execute <code>rustup doc --book</code> para abrir. A edição PT-BR deste fork é publicada em
+<a href="https://rust-book-pt-br.github.io/rust-book-pt-br/">https://rust-book-pt-br.github.io/rust-book-pt-br/</a>.</p>
 <p>Várias [traduções] da comunidade também estão disponíveis.</p>
 <p>Este texto está disponível em <a href="https://nostarch.com/rust-programming-language-3rd-edition">brochura e ebook pela No Starch
 Press</a>.</p>
@@ -381,9 +382,9 @@ não tenha escolhido um dos exemplos em andamento.</p>
 <p>Na maioria das vezes, você será apresentado à versão correta de qualquer código que não compile.</p>
 <h2 id="contribuindo-para-o-livro"><a class="header" href="#contribuindo-para-o-livro">Contribuindo Para o Livro</a></h2>
 <p>Este livro é de código aberto. Se você encontrar um erro, não hesite em registrar um problema
-ou enviar um <em>pull request</em> (solicitação de recebimento) <a href="https://github.com/rust-br/rust-book-pt-br">pt_br on GitHub</a>. Por favor, consulte
-<a href="https://github.com/rust-br/rust-book-pt-br/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> para mais detalhes.</p>
-<p>Para contribuições na língua inglesa veja <a href="https://github.com/rust-lang/book">on GitHub</a> e <a href="https://github.com/rust-lang/book/blob/master/CONTRIBUTING.md">CONTRIBUTING-en-us.md</a>, respectivamente.</p>
+ou enviar um <em>pull request</em> (solicitação de recebimento) <a href="https://github.com/rust-book-pt-br/rust-book-pt-br">pt_br on GitHub</a>. Por favor, consulte
+<a href="https://github.com/rust-book-pt-br/rust-book-pt-br/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> para mais detalhes.</p>
+<p>Para contribuições na língua inglesa veja <a href="https://github.com/rust-lang/book">on GitHub</a> e <a href="https://github.com/rust-lang/book/blob/main/CONTRIBUTING.md">CONTRIBUTING-en-us.md</a>, respectivamente.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="começando"><a class="header" href="#começando">Começando</a></h1>
 <p>Vamos começar sua jornada Rust! Neste capítulo, discutiremos:</p>
@@ -543,17 +544,6 @@ Em seguida, apresentaremos a ferramenta Cargo, que ajudará você a criar progra
 <pre><code class="language-text">$ cargo new hello_cargo --bin
 $ cd hello_cargo
 </code></pre>
-<!-- Below -- so we always have to start a cargo project with the --bin option
-se quisermos que seja algo que possamos executar e não apenas uma biblioteca, é isso
-right? It might be worth laying that out -->
-<!-- As of Rust 1.21.0 (the version we're using for the book), yes, you must
-sempre especifique `--bin`. Em uma versão do Rust próxima ao future (1.25 ou 1.26),
-binário crates se tornará o tipo padrão de crate que ` cargo new`faz, então
-você não precisará especificar ` --bin`(mas poderá, se quiser, e o comportamento
-será o mesmo). Preferimos não entrar em mais detalhes do que temos aqui
-por causa dessa mudança; Eu acho que "O argumento ` --bin`deve ser passado para ` cargo new`
-cria um aplicativo executável (geralmente chamado apenas de *binário*), em oposição a um
-library." lays this out enough. /Carol -->
 <p>Isso cria um novo executável binário chamado <code>hello_cargo</code>. O argumento <code>--bin</code> transmitido para <code>cargo new</code> cria um aplicativo executável (geralmente chamado apenas de <em>binário</em>), em oposição a uma biblioteca. Atribuímos <code>hello_cargo</code> como o nome do nosso projeto e o Cargo cria seus arquivos em um diretório com o mesmo nome.</p>
 <p>Vá para o diretório <em>hello_cargo</em> e liste os arquivos, e você verá que Cargo gerou dois arquivos e um diretório para nós: um diretório <em>Cargo.toml</em> e <em>src</em> com um arquivo <em>main.rs</em> dentro. Também inicializou um novo repositório git, junto com um arquivo <em>.gitignore</em>.</p>
 <blockquote>
@@ -862,10 +852,6 @@ aprenderá sobre recuperação de erros no <a href="#tratamento-de-erros">Capít
 <p>Tirando a chave que delimita a função <code>main</code>, há apenas uma linha mais a ser
 discutida no código que fizemos até agora, que é a seguinte:</p>
 <pre><code class="language-rust ignore">println!("Você disse: {palpite}");</code></pre>
-<!-- Achei meio confuso então dei uma ajeitada, segue o texto original:
-
-Esta linha imprime a string que agora contém a entrada do usuário. O conjunto de chaves {} é um espaço reservado: pense em {} como pequenas pinças de caranguejo que mantêm um valor no lugar. Ao imprimir o valor de uma variável, o nome da variável pode ficar entre chaves. Ao imprimir o resultado da avaliação de uma expressão, coloque colchetes vazios no format string e, em seguida, siga o format string com uma lista de expressões separadas por vírgula para imprimir em cada espaço reservado de colchetes vazio na mesma ordem. Imprimindo uma variável e o resultado de uma expressão em uma chamada para println! ficaria assim:
--->
 <p>Esta linha imprime a string na qual salvamos os dados inseridos pelo usuário. O <code>{}</code> é um curinga que reserva o lugar de um valor. Para imprimir o valor de uma variável, podemos colocá-la dentro das chaves diretamente na string. Também podemos imprimir o resultado de uma ou mais expressões, colocando chaves vazias nas posições desejadas, string de formatação, e adicionando a lista de expressões separadas por vírgulas e em ordem após a string de formatação. Por exemplo, podemos imprimir uma variável e o resultado de uma expressão em uma única chamada de <code>println!</code> desta forma:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -1091,9 +1077,6 @@ e 100. Bom trabalho!</p>
 <p>Agora que nós temos a entrada do usuário e o número secreto, vamos compará-los.
 Esta etapa é mostrada na Listagem 2-4. Observe que este código ainda não compila, como vamos explicar a seguir!</p>
 <p><span class="filename">Arquivo: src/main.rs</span></p>
-<!-- Adicionar a figura do ferris indicando que o código não compila -->
-<!-- <img src="./img/ferris/does_not_compile.svg" alt= “” width="10%" height="10%" align="right">
--->
 <pre>
 <img src="img/ferris/does_not_compile.svg" alt="“”" width="10%" height="10%" align="right">
 </pre>
@@ -18427,7 +18410,6 @@ ferramenta de linha de comando. Você pode descobrir que alguns sites são consi
 do que outros, enquanto em outros casos o site mais rápido varia de execução para execução. Mais
 importante, você aprendeu o básico para trabalhar com futures, então agora podemos
 aprofunde-se no que podemos fazer com async.</p>
-<!-- TODO: map source link version to version of Rust? -->
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="aplicando-concorrência-com-async"><a href="#aplicando-concorrência-com-async" class="header">Aplicando Concorrência com Async</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
@@ -20005,10 +19987,6 @@ método para que possamos fazer exatamente isso:</p>
     // other methods...
 }
 <span class="boring">}</span></code></pre>
-<!--
-TODO: atualize isto se/quando tokio/etc. atualizar seu MSRV e passar a usar funções async
-no traits, pois a falta dele é a razão pela qual ainda não o possuem.
--->
 <blockquote>
 <p>Nota: A definição real que usamos anteriormente neste capítulo parece um pouco
 diferente disso, pois suporta versões do Rust que ainda não
@@ -27573,8 +27551,8 @@ sua jornada com Rust.</p>
 <h2 id="apêndice-a-palavras-chave"><a class="header" href="#apêndice-a-palavras-chave">Apêndice A: Palavras-chave</a></h2>
 <p>As listas a seguir contêm palavras-chave reservadas para uso current ou future
 usado pela linguagem Rust. Como tal, eles não podem ser usados como identificadores (exceto
-como identificadores brutos, conforme discutimos no [“Raw
-Identificadores”][seção raw-identifiers]<!-- ignore -->). <em>Identificadores</em> são nomes
+como identificadores brutos, conforme discutimos em <a href="#raw-identifiers">“Raw
+Identificadores”</a><!-- ignore -->). <em>Identificadores</em> são nomes
 de funções, variáveis, parâmetros, campos struct, módulos, crates, constantes,
 macros, valores estáticos, atributos, tipos, traits ou lifetimes.</p>
 <h3 id="palavras-chave-atualmente-em-uso"><a class="header" href="#palavras-chave-atualmente-em-uso">Palavras-chave atualmente em uso</a></h3>
@@ -28243,7 +28221,7 @@ para atualizar automaticamente seu código para uma nova edição via <code>carg
 andamento; veja <a href="https://github.com/rust-lang/book/issues?q=is%3Aopen+is%3Aissue+label%3ATranslations">a etiqueta Translations</a> para ajudar ou para nos avisar
 sobre uma nova tradução.</p>
 <ul>
-<li><a href="https://github.com/rust-br/rust-book-pt-br">Português (Brasil)</a></li>
+<li><a href="https://github.com/rust-book-pt-br/rust-book-pt-br">Português (Brasil)</a></li>
 <li><a href="https://github.com/nunojesus/rust-book-pt-pt">Português (Portugal)</a></li>
 <li>简体中文: <a href="https://github.com/KaiserY/trpl-zh-cn">KaiserY/trpl-zh-cn</a>, <a href="https://github.com/gnu4cn/rust-lang-Zh_CN">gnu4cn/rust-lang-Zh_CN</a></li>
 <li><a href="https://github.com/rust-tw/book-tw">正體中文</a></li>
