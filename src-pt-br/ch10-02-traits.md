@@ -1,510 +1,374 @@
-## Traits: Definindo Comportamento Compartilhado
+<!-- Old headings. Do not remove or links may break. -->
 
-Traits nos permitem usar outro tipo de abstração: eles nos permitem abstrair
-sobre o comportamento que diferentes tipos têm em comum. Um *trait* informa ao
-compilador do Rust qual funcionalidade um tipo particular possui e pode
-compartilhar com outros tipos. Em situações nas quais usamos parâmetros de
-tipos genéricos, podemos usar *trait bounds* para especificar, em tempo de
-compilação, que o tipo genérico pode ser qualquer tipo que implemente um trait
-e, portanto, tenha o comportamento que queremos usar naquela situação.
+<a id="traits-defining-shared-behavior"></a>
 
-> Nota: *Traits* são similares a um recurso frequentemente chamado de 
-> 'interface' em outras linguagens, com algumas diferenças.
+## Definindo Comportamento Compartilhado com Características
 
-### Definindo um Trait
+Uma _trait_ define a funcionalidade que um determinado tipo possui e com a qual pode compartilhar
+outros tipos. Podemos usar características para definir o comportamento compartilhado de forma abstrata. Nós
+pode usar _limites de características_ para especificar que um tipo genérico pode ser qualquer tipo que tenha
+determinado comportamento.
 
-O comportamento de um tipo consiste nos métodos que podemos chamar nesse tipo.
-Tipos diferentes compartilham o mesmo comportamento quando podemos chamar os
-mesmos métodos em todos eles. Definições de traits são uma forma de agrupar
-assinaturas de métodos para definir um conjunto de comportamentos necessários
-para atingir algum propósito.
+> Nota: As características são semelhantes a um recurso frequentemente chamado de _interfaces_ em outros
+> línguas, embora com algumas diferenças.
 
-Por exemplo, digamos que temos múltiplas structs que contêm vários tipos e
-quantidades de texto: uma struct `ArtigoDeNoticia`, que contém uma notícia
-registrada em algum lugar do mundo, e um `Tweet`, que pode ter no máximo 140
-caracteres em seu conteúdo, além de metadados informando se ele é um retweet ou
-uma resposta a outro tweet.
+### Definindo uma característica
 
-Queremos criar uma biblioteca agregadora de mídia que possa mostrar resumos de
-dados armazenados em uma instância de `ArtigoDeNoticia` ou `Tweet`. O
-comportamento de que precisamos em cada struct é a capacidade de ser resumida,
-para que possamos pedir esse resumo chamando um método `resumo` em uma
-instância. A Listagem 10-12 mostra a definição de um trait `Resumir` que
-expressa esse conceito:
+O comportamento de um tipo consiste nos métodos que podemos chamar nesse tipo. Diferente
+tipos compartilham o mesmo comportamento se pudermos chamar os mesmos métodos em todos esses
+tipos. As definições de características são uma forma de agrupar assinaturas de métodos para
+definir um conjunto de comportamentos necessários para atingir algum propósito.
 
-<span class="filename">Nome do arquivo: lib.rs</span>
+Por exemplo, digamos que temos múltiplas estruturas que contêm vários tipos e
+quantidades de texto: uma estrutura `NewsArticle` que contém uma notícia arquivada em um
+determinado local e um `SocialPost` que pode ter, no máximo, 280 caracteres
+junto com metadados que indicam se foi uma nova postagem, uma repostagem ou uma
+responda a outra postagem.
 
-```rust
-pub trait Resumir {
-    fn resumo(&self) -> String;
-}
+Queremos criar uma caixa de biblioteca agregadora de mídia chamada `aggregator` que possa
+exibir resumos de dados que podem ser armazenados em um `NewsArticle` ou
+`SocialPost` instância. Para fazer isso, precisamos de um resumo de cada tipo, e vamos
+solicite esse resumo chamando um método `summarize` em uma instância. Listagem
+10-12 mostra a definição de um traço público `Summary` que expressa isso
+comportamento.
+
+<Listing number="10-12" file-name="src/lib.rs" caption="A `Summary` trait that consists of the behavior provided by a `summarize` method">
+
+```rust,noplayground
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-12/src/lib.rs}}
 ```
 
-<span class="caption">Listagem 10-12: Definição de um trait `Resumir` que 
-consiste no comportamento fornecido pelo método `resumo`</span>
+</Listing>
 
-Declaramos um trait com a palavra-chave `trait` e, em seguida, damos o nome a
-ele, neste caso `Resumir`. Dentro das chaves, declaramos a assinatura do método
-que descreve o comportamento que os tipos que implementarem esse trait
-precisarão ter, neste caso `fn resumo(&self) -> String;`. Depois da assinatura
-do método, em vez de fornecer uma implementação entre chaves, colocamos um
-ponto e vírgula. Cada tipo que implementar esse trait precisará então fornecer
-seu próprio comportamento personalizado para o corpo do método, mas o
-compilador garantirá que qualquer tipo que tenha o trait `Resumir` terá o
-método `resumo` definido com essa assinatura exata.
+Aqui, declaramos uma característica usando a palavra-chave `trait` e depois o nome da característica,
+que é `Summary` neste caso. Também declaramos a característica como `pub` para que
+caixas dependendo desta caixa também podem fazer uso dessa característica, como veremos em
+alguns exemplos. Dentro das chaves, declaramos as assinaturas dos métodos
+que descrevem os comportamentos dos tipos que implementam essa característica, que em
+este caso é `fn summarize(&self) -> String`.
 
-Um trait pode ter vários métodos no seu corpo, com as assinaturas listadas uma
-por linha e cada linha terminando com um ponto e vírgula.
+Após a assinatura do método, em vez de fornecer uma implementação dentro do curly
+colchetes, usamos ponto e vírgula. Cada tipo que implementa esta característica deve fornecer
+seu próprio comportamento personalizado para o corpo do método. O compilador irá impor
+que qualquer tipo que tenha o traço `Summary` terá o método `summarize`
+definido exatamente com esta assinatura.
 
-### Implementando um Trait em um Tipo
+Uma característica pode ter vários métodos em seu corpo: as assinaturas dos métodos são listadas
+um por linha e cada linha termina com ponto e vírgula.
 
-Agora que definimos o trait `Resumir`, podemos implementá-lo nos tipos do nosso
-agregador de mídia que devem ter esse comportamento. A Listagem
-10-13 mostra uma implementação do trait `Resumir` para a struct
-`ArtigoDeNoticia`, que usa o título, o autor e a localização para criar e
-retornar o valor de `resumo`. Para a struct `Tweet`, escolhemos definir
-`resumo` como o nome de usuário seguido por todo o texto do tweet, assumindo
-que seu conteúdo já esteja limitado a 140 caracteres.
+### Implementando uma característica em um tipo
 
-<span class="filename">Nome do arquivo: lib.rs</span>
+Agora que definimos as assinaturas desejadas dos métodos do trait `Summary`,
+podemos implementá-lo nos tipos do nosso agregador de mídia. Listando 10-13 programas
+uma implementação do traço `Summary` na estrutura `NewsArticle` que usa
+o título, o autor e o local para criar o valor de retorno de
+`summarize`. Para a estrutura `SocialPost`, definimos `summarize` como o nome de usuário
+seguido por todo o texto da postagem, assumindo que o conteúdo da postagem é
+já limitado a 280 caracteres.
 
-```rust
-# pub trait Resumir {
-#     fn resumo(&self) -> String;
-# }
-#
-pub struct ArtigoDeNoticia {
-    pub titulo: String,
-    pub local: String,
-    pub autor: String,
-    pub conteudo: String,
-}
+<Listing number="10-13" file-name="src/lib.rs" caption="Implementing the `Summary` trait on the `NewsArticle` and `SocialPost` types">
 
-impl Resumir for ArtigoDeNoticia {
-    fn resumo(&self) -> String {
-        format!("{}, by {} ({})", self.titulo, self.autor, self.local)
-    }
-}
-
-pub struct Tweet {
-    pub nome_usuario: String,
-    pub conteudo: String,
-    pub resposta: bool,
-    pub retweet: bool,
-}
-
-impl Resumir for Tweet {
-    fn resumo(&self) -> String {
-        format!("{}: {}", self.nome_usuario, self.conteudo)
-    }
-}
+```rust,noplayground
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-13/src/lib.rs:here}}
 ```
 
-<span class="caption">Listagem 10-13: Implementando o trait `Resumir` nos tipos 
-`ArtigoDeNoticia` e `Tweet`</span>
+</Listing>
 
-Implementar um trait em um tipo é parecido com implementar métodos comuns. A
-diferença é que, depois de `impl`, colocamos o nome do trait que queremos
-implementar, depois usamos `for` e então o nome do tipo para o qual queremos
-implementar o trait. Dentro do bloco `impl`, colocamos as assinaturas dos
-métodos definidos pelo trait, mas, em vez de colocar um ponto e vírgula depois
-de cada assinatura, usamos chaves e preenchemos o corpo do método com o
-comportamento específico que queremos para aquele tipo.
+A implementação de uma característica em um tipo é semelhante à implementação de métodos regulares. O
+a diferença é que depois de `impl`, colocamos o nome do trait que queremos implementar,
+em seguida, use a palavra-chave `for` e especifique o nome do tipo que queremos
+implementar a característica para. Dentro do bloco `impl`, colocamos as assinaturas dos métodos
+que a definição do traço definiu. Em vez de adicionar um ponto e vírgula após cada
+assinatura, usamos colchetes e preenchemos o corpo do método com o específico
+comportamento que queremos que os métodos da característica tenham para o tipo específico.
 
-Depois de implementar o trait, podemos chamar esses métodos em instâncias de
-`ArtigoDeNoticia` e `Tweet` da mesma maneira que chamamos métodos que não fazem
-parte de um trait:
+Agora que a biblioteca implementou o traço `Summary` em `NewsArticle` e
+`SocialPost`, os usuários da caixa podem chamar os métodos trait em instâncias de
+`NewsArticle` e `SocialPost` da mesma forma que chamamos métodos regulares. A única
+A diferença é que o usuário deve trazer a característica para o escopo, bem como o
+tipos. Aqui está um exemplo de como uma caixa binária poderia usar nosso `aggregator`
+caixa da biblioteca:
 
 ```rust,ignore
-let tweet = Tweet {
-    nome_usuario: String::from("horse_ebooks"),
-    conteudo: String::from("claro, como vocês provavelmente já sabem,
-    pessoas"),
-    resposta: false,
-    retweet: false,
-};
-
-println!("1 novo tweet: {}", tweet.resumo());
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-01-calling-trait-method/src/main.rs}}
 ```
 
-Isso imprimirá `1 novo tweet: horse_ebooks: claro, como vocês provavelmente já sabem,
-pessoas`
+Este código imprime `1 nova postagem: horse_ebooks: claro, como você provavelmente já
+sabe, gente.
 
-Note que, como definimos o trait `Resumir` e os tipos `ArtigoDeNoticia` e
-`Tweet` todos no mesmo `lib.rs`, mostrado na Listagem 10-13, eles também estão
-todos no mesmo escopo. Se esse `lib.rs` pertencer a um crate que chamamos de
-`agregador`, e outra pessoa quiser usar a funcionalidade do nosso crate e
-implementar o trait `Resumir` em sua struct `PrevisaoTempo`, o código dela
-precisaria primeiro importar o trait `Resumir` para o próprio escopo antes de
-poder implementá-lo, como na Listagem 10-14:
+Outras caixas que dependem da caixa `aggregator` também podem trazer o `Summary`
+trait no escopo para implementar `Summary` em seus próprios tipos. Uma restrição a
+A observação é que só podemos implementar uma característica em um tipo se a característica ou o
+tipo, ou ambos, são locais para nossa caixa. Por exemplo, podemos implementar padrões
+características da biblioteca como `Display` em um tipo personalizado como `SocialPost` como parte de nosso
+`aggregator` funcionalidade crate porque o tipo `SocialPost` é local para nosso
+`aggregator` caixa. Também podemos implementar `Summary` em `Vec<T>` em nosso
+`aggregator` caixa porque a característica `Summary` é local para nosso `aggregator`
+caixa.
 
-<span class="filename">Nome do arquivo: lib.rs</span>
+Mas não podemos implementar características externas em tipos externos. Por exemplo, não podemos
+implementar a característica `Display` em `Vec<T>` dentro de nossa caixa `aggregator`,
+porque `Display` e `Vec<T>` são definidos na biblioteca padrão e
+não são locais da nossa caixa `aggregator`. Esta restrição faz parte de uma propriedade
+chamada _coerência_, e mais especificamente a _regra órfã_, assim chamada porque
+o tipo pai não está presente. Esta regra garante que o código de outras pessoas
+não pode quebrar seu código e vice-versa. Sem a regra, duas caixas poderiam
+implementar a mesma característica para o mesmo tipo, e Rust não saberia qual
+implementação a ser usada.
+
+<!-- Old headings. Do not remove or links may break. -->
+
+<a id="default-implementations"></a>
+
+### Usando implementações padrão
+
+Às vezes é útil ter um comportamento padrão para alguns ou todos os métodos
+em uma característica em vez de exigir implementações para todos os métodos em todos os tipos.
+Então, à medida que implementamos a característica em um tipo específico, podemos manter ou substituir
+o comportamento padrão de cada método.
+
+Na Listagem 10-14, especificamos uma string padrão para o método `summarize` do
+`Summary` trait em vez de apenas definir a assinatura do método, como fizemos em
+Listagem 10-12.
+
+<Listing number="10-14" file-name="src/lib.rs" caption="Defining a `Summary` trait with a default implementation of the `summarize` method">
+
+```rust,noplayground
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-14/src/lib.rs:here}}
+```
+
+</Listing>
+
+Para usar uma implementação padrão para resumir instâncias de `NewsArticle`, nós
+especifique um bloco `impl` vazio com `impl Summary for NewsArticle {}`.
+
+Mesmo que não estejamos mais definindo o método `summarize` em `NewsArticle`
+diretamente, fornecemos uma implementação padrão e especificamos que
+`NewsArticle` implementa a característica `Summary`. Como resultado, ainda podemos chamar
+o método `summarize` em uma instância de `NewsArticle`, assim:
 
 ```rust,ignore
-extern crate aggregator;
-
-use aggregator::Resumir;
-
-struct PrevisaoTempo {
-    alta_temp: f64,
-    baixa_temp: f64,
-    chance_de_chuva: f64,
-}
-
-impl Resumir for PrevisaoTempo {
-    fn resumo(&self) -> String {
-        format!("A alta será de {}, e a baixa de {}. A chance de precipitação é
-        {}%.", self.alta_temp, self.baixa_temp, self.chance_de_chuva)
-    }
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-02-calling-default-impl/src/main.rs:here}}
 ```
 
-<span class="caption">Listagem 10-14: Trazendo o trait `Resumir` do nosso crate 
-`aggregator` para o escopo de outro crate</span>
+Este código imprime `New article available! (Read more...)`.
 
-Esse código também assume que `Resumir` é um trait público, o que é verdade 
-porque colocamos a palavra-chave `pub` antes de `trait` na Listagem 10-12.
+Criar uma implementação padrão não exige que mudemos nada
+a implementação de `Summary` em `SocialPost` na Listagem 10-13. A razão é
+que a sintaxe para substituir uma implementação padrão é a mesma que a
+sintaxe para implementar um método trait que não possui um padrão
+implementação.
 
-Há uma restrição importante ao implementar traits: só podemos implementar um
-trait em um tipo quando o trait ou o tipo for local ao nosso crate. Em outras
-palavras, não temos permissão para implementar traits externos em tipos
-externos. Não podemos implementar o trait `Display` para `Vec`, por exemplo, já
-que tanto `Display` quanto `Vec` são definidos na biblioteca padrão. Temos
-permissão para implementar traits da biblioteca padrão, como `Display`, em um
-tipo personalizado como `Tweet`, como parte da funcionalidade do nosso crate
-`aggregator`. Essa restrição faz parte do que se chama *regra do órfão*. Em
-resumo, ela recebe esse nome porque o tipo "pai" não está presente. Sem essa
-regra, dois crates poderiam implementar o mesmo trait para o mesmo tipo, e as
-duas implementações entrariam em conflito: o Rust não saberia qual
-implementação usar. Como o Rust impõe a regra do órfão, o código de outras
-pessoas não pode quebrar o seu, e vice-versa.
+Implementações padrão podem chamar outros métodos com a mesma característica, mesmo que esses
+outros métodos não possuem uma implementação padrão. Dessa forma, uma característica pode
+fornecem muitas funcionalidades úteis e exigem apenas que os implementadores especifiquem
+uma pequena parte disso. Por exemplo, poderíamos definir a característica `Summary` como tendo um
+`summarize_author` cuja implementação é necessária e, em seguida, defina um
+`summarize` método que possui uma implementação padrão que chama o
+`summarize_author` método:
 
-### Implementações Padrão
-
-Às vezes, é útil ter um comportamento padrão para alguns ou todos os métodos de
-um trait, em vez de exigir uma implementação completa em todo tipo. Quando
-implementamos o trait em um tipo particular, podemos escolher manter ou
-sobrescrever o comportamento padrão de cada método.
-
-A Listagem 10-15 mostra como poderíamos especificar uma string padrão para o
-método `resumo` do trait `Resumir`, em vez de apenas definir a assinatura do
-método como fizemos na Listagem 10-12:
-
-<span class="filename">Nome do arquivo: lib.rs</span>
-
-```rust
-pub trait Resumir {
-    fn resumo(&self) -> String {
-        String::from("(Leia mais...)")
-    }
-}
+```rust,noplayground
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-03-default-impl-calls-other-methods/src/lib.rs:here}}
 ```
 
-<span class="caption">Listagem 10-15: Definição de um trait `Resumir` com a 
-implementação padrão do método `resumo`</span>
-
-Se quiséssemos usar a implementação padrão para resumir as instâncias de
-`ArtigoDeNoticia`, em vez de definir uma implementação personalizada como
-fizemos na Listagem 10-13, especificaríamos um bloco `impl` vazio:
+Para usar esta versão de `Summary`, só precisamos definir `summarize_author`
+quando implementamos a característica em um tipo:
 
 ```rust,ignore
-impl Resumir for ArtigoDeNoticia {}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-03-default-impl-calls-other-methods/src/lib.rs:impl}}
 ```
 
-Mesmo que não estejamos mais definindo o método `resumo` diretamente em
-`ArtigoDeNoticia`, como `resumo` tem uma implementação padrão e especificamos
-que `ArtigoDeNoticia` implementa o trait `Resumir`, ainda podemos chamar o
-método `resumo` em uma instância de `ArtigoDeNoticia`:
+Depois de definirmos `summarize_author`, podemos chamar `summarize` em instâncias do
+`SocialPost` struct, e a implementação padrão de `summarize` chamará o
+definição de `summarize_author` que fornecemos. Porque implementamos
+`summarize_author`, o traço `Summary` nos deu o comportamento do
+`summarize` sem exigir que escrevamos mais nenhum código. Aqui está o que
+isso se parece com:
 
 ```rust,ignore
-let artigo = ArtigoDeNoticia {
-    titulo: String::from("Os Penguins ganham a copa do campeonato Stanley"),
-    lugar: String::from("Pittsburgh, PA, USA"),
-    autor: String::from("Iceburgh"),
-    conteudo: String::from("Os Penguins de Pittsburgh são novamente o melhor
-    time de hockey da NHL."),
-};
-
-println!("Novo artigo disponível! {}", artigo.resumo());
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-03-default-impl-calls-other-methods/src/main.rs:here}}
 ```
 
-Esse código imprime `Novo artigo disponível! (Leia mais...)`
+Este código imprime `1 new post: (Read more from @horse_ebooks...)`.
 
-Mudar o trait `Resumir` para ter uma implementação padrão de `resumo` não exige
-que mudemos nada na implementação de `Resumir` para `Tweet` na Listagem 10-13
-ou para `PrevisaoTempo` na Listagem 10-14: a sintaxe para sobrescrever uma
-implementação padrão é exatamente a mesma usada para implementar um método de
-trait que não tem implementação padrão.
+Observe que não é possível chamar a implementação padrão de um
+substituindo a implementação desse mesmo método.
 
-Implementações padrão podem chamar outros métodos do mesmo trait, mesmo que
-esses outros métodos não tenham implementação padrão. Desse modo, um trait pode
-fornecer muita funcionalidade útil e exigir que os implementadores especifiquem
-apenas uma pequena parte dela. Poderíamos escolher que o trait `Resumir`
-também tivesse o método `resumo_autor`, cuja implementação seria obrigatória, e
-então ter um método `resumo` com implementação padrão que chamasse
-`resumo_autor`:
+<!-- Old headings. Do not remove or links may break. -->
 
-```rust
-pub trait Resumir {
-    fn resumo_autor(&self) -> String;
+<a id="traits-as-parameters"></a>
 
-    fn resumo(&self) -> String {
-        format!("(Leia mais de {}...)", self.resumo_autor())
-    }
-}
-```
+### Usando características como parâmetros
 
-Para usar essa versão de `Resumir`, só precisamos definir `resumo_autor`
-quando implementamos o trait em um tipo:
+Agora que você sabe como definir e implementar características, podemos explorar como usar
+traits para definir funções que aceitam muitos tipos diferentes. Usaremos o
+`Summary` trait que implementamos nos tipos `NewsArticle` e `SocialPost` em
+Listagem 10-13 para definir uma função `notify` que chama o método `summarize`
+em seu parâmetro `item`, que é de algum tipo que implementa o `Summary`
+característica. Para fazer isso, usamos a sintaxe `impl Trait`, assim:
 
 ```rust,ignore
-impl Resumir for Tweet {
-    fn autor_resumo(&self) -> String {
-        format!("@{}", self.nomeusuario)
-    }
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-04-traits-as-parameters/src/lib.rs:here}}
 ```
 
-Uma vez que definimos `resumo_autor`, nós podemos chamar `resumo` em instâncias
-do struct `Tweet`, e a implementação padrão de `resumo` chamará a definição de
-`resumo_autor` que fornecemos.
+Em vez de um tipo concreto para o parâmetro `item`, especificamos o `impl`
+palavra-chave e o nome da característica. Este parâmetro aceita qualquer tipo que implemente o
+característica especificada. No corpo de `notify`, podemos chamar qualquer método em `item`
+que vêm do traço `Summary`, como `summarize`. Podemos ligar para `notify`
+e passe em qualquer instância de `NewsArticle` ou `SocialPost`. Código que chama o
+função com qualquer outro tipo, como `String` ou `i32`, não será compilada,
+porque esses tipos não implementam `Summary`.
 
+<!-- Old headings. Do not remove or links may break. -->
+
+<a id="fixing-the-largest-function-with-trait-bounds"></a>
+
+#### Sintaxe vinculada à característica
+
+A sintaxe `impl Trait` funciona para casos simples, mas na verdade é uma sintaxe
+açúcar para uma forma mais longa conhecida como _traitbound_; é assim:
 
 ```rust,ignore
-let tweet = Tweet {
-    nomeusuario: String::from("horse_ebooks"),
-    conteudo: String::from("claro, como vocês provavelmente já sabem, 
-    pessoas"),
-    resposta: false,
-    retweet: false,
-};
-
-println!("1 novo tweet: {}", tweet.resumo());
+pub fn notify<T: Summary>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
+}
 ```
 
-Isso irá imprimir `1 novo tweet: (Leia mais de @horse_ebooks...)`.
+Esta forma mais longa é equivalente ao exemplo da seção anterior, mas é
+mais detalhado. Colocamos limites de características com a declaração do tipo genérico
+parâmetro após dois pontos e dentro de colchetes angulares.
 
-Note que não é possível chamar a implementação padrão de uma implementação
-primordial.
-
-### Limites do traits
-
-Agora que definimos traits e os implementamos em tipos, podemos usar traits com
-parâmetros de tipos genéricos. Podemos restringir tipos genéricos para que ao
-invés de serem qualquer tipo, o compilador tenha certeza que o tipo estará 
-limitado a aqueles tipos que implementam um trait em particular e por 
-consequência tenham o comportamento que precisamos que os tipos tenham. Isso é
-chamado de especificar os *limites dos traits* em um tipo genérico.
-
-Por exemplo, na Listagem 10-13, nós implementamos o trait `Resumir` nos tipos
-`ArtigoDeNoticia` e `Tweet`. Nós podemos definir uma função `notificar` que chama
-o método `resumo` no seu parâmetro `item`, que é do tipo genérico `T`. Para 
-ser possível chamar `resumo` em `item` sem receber um erro, podemos usar os 
-limites de traits em `T` para especificar que `item` precisa ser de um tipo que
-implementa o trait `Resumir`:
+A sintaxe `impl Trait` é conveniente e proporciona um código mais conciso de maneira simples.
+casos, enquanto a sintaxe mais completa ligada a características pode expressar mais complexidade em outros
+casos. Por exemplo, podemos ter dois parâmetros que implementam `Summary`. Fazendo
+então com a sintaxe `impl Trait` fica assim:
 
 ```rust,ignore
-pub fn notificar<T: Resumir>(item: T) {
-    println!("Notícias de última hora! {}", item.resumo());
-}
+pub fn notify(item1: &impl Summary, item2: &impl Summary) {
 ```
 
-Limites de traits vão juntos com a declaração de um parâmetro de tipo genérico,
-depois de uma vírgula e entre colchetes angulares. Por causa do limite de trait
-em  `T`, nós podemos chamar `notificar` e passar qualquer instância de 
-`ArtigoDeNoticia` ou `Tweet`. O código externo da Listagem 10-14 que está 
-usando nosso crate `aggregator` pode chamar nossa função `notificar` e passar
-uma instância de `PrevisaoTempo`, já que `Resumir` é implementado para 
-`PrevisaoTempo` também. O código que chama `notificar` com qualquer outro tipo,
-como uma `String` ou um `i32`, não compilará, já que esses tipos não 
-implementam `Resumir`.
-
-Nós podemos especificar múltiplos limites de traits em um tipo genérico usando
-`+`. Se nós precisássemos ser capazes de usar mostrar formatação no tipo `T` em
-uma função assim como no método `resumo`, nós podemos usar os limites de trait
-`T: Resumir + Mostrar`. Isso signifca que `T` pode ser qualquer tipo que 
-implemente ambos `Resumir` e `Mostrar`.
-
-Para funções que têm múltiplos parâmetros de tipos genéricos, cada tipo 
-genérico tem seu próprio limite de trait. Especificar muitas informações de 
-limites de trait dentro de chaves angulares entre o nome de uma função e sua
-lista de parâmetros pode tornar o código difícil de ler, então há uma sintaxe 
-alternativa para especificar limites de traits que nos permite movê-los para
-uma cláusula depois da assinatura da função. Então ao invés de:
+Usar `impl Trait` é apropriado se quisermos que esta função permita `item1` e
+`item2` para ter tipos diferentes (desde que ambos os tipos implementem `Summary`). Se
+queremos forçar que ambos os parâmetros tenham o mesmo tipo, porém, devemos usar um
+traço vinculado, assim:
 
 ```rust,ignore
-fn alguma_funcao<T: Mostrar + Clone, U: Clone + Debug>(t: T, u: U) -> i32 {
+pub fn notify<T: Summary>(item1: &T, item2: &T) {
 ```
 
-Nós podemos escrever isso com uma cláusula de `where`:
+O tipo genérico `T` especificado como o tipo de `item1` e `item2`
+parâmetros restringe a função de tal forma que o tipo concreto do valor
+passado como argumento para `item1` e `item2` deve ser o mesmo.
+
+<!-- Old headings. Do not remove or links may break. -->
+
+<a id="specifying-multiple-trait-bounds-with-the--syntax"></a>
+
+#### Vários limites de características com a sintaxe `+`
+
+Também podemos especificar mais de um limite de característica. Digamos que queremos que `notify` use
+formatação de exibição, bem como `summarize` em `item`: especificamos no `notify`
+definição de que `item` deve implementar `Display` e `Summary`. Nós podemos fazer
+então, usando a sintaxe `+`:
 
 ```rust,ignore
-fn alguma_funcao<T, U>(t: T, u: U) -> i32
-    where T: Display + Clone,
-          U: Clone + Debug
-{
+pub fn notify(item: &(impl Summary + Display)) {
 ```
 
-Isso é menos confuso e faz a assinatura da função ficar mais parecida à uma
-função sem ter vários limites de trait, nela o nome da função, a lista de
-parâmetros, e o tipo de retorno estão mais próximos.
-
-### Consertando a Função `maior` com Limites de Traits
-
-Então qualquer hora que você queira usar um comportamento definido por um trait
-em um tipo genérico, você precisa especificar aquele trait nos limites dos
-parâmetros dos tipos genéricos. Agora podemos consertar a definição da função 
-`maior` que usa um parâmetro de tipo genérico da Listagem 10-5! Quando deixamos
-esse código de lado, nós recebemos esse erro:
-
-```text
-error[E0369]: binary operation `>` cannot be applied to type `T`
-  |
-5 |         if item > maior {
-  |            ^^^^
-  |
-note: an implementation of `std::cmp::PartialOrd` might be missing for `T`
-```
-
-No corpo de `maior` nós queríamos ser capazes de comparar dois valores de tipo
-`T` usando o operador maior-que. Esse operador é definido com o método padrão 
-na biblioteca padrão de trait `std::cmp::PartialOrd`. Então para que possamos
-usar o operador maior-que, precisamos especificar `PartialOrd` nos limites do
-trait  para `T` para que a função `maior` funcione em partes de qualquer tipo
-que possa ser comparada. Não precisamos trazer `PartialOrd` para o escopo 
-porque está no prelúdio.
+A sintaxe `+` também é válida com limites de características em tipos genéricos:
 
 ```rust,ignore
-fn maior<T: PartialOrd>(list: &[T]) -> T {
+pub fn notify<T: Summary + Display>(item: &T) {
 ```
 
-Se tentarmos compilar isso, receberemos diferentes erros:
+Com os dois limites de características especificados, o corpo de `notify` pode chamar `summarize`
+e use `{}` para formatar `item`.
 
-```text
-error[E0508]: cannot move out of type `[T]`, a non-copy array
- --> src/main.rs:4:23
-  |
-4 |     let mut maior = list[0];
-  |         -----------   ^^^^^^^ cannot move out of here
-  |         |
-  |         hint: to prevent move, use `ref maior` or `ref mut maior`
+#### Limites de características mais claros com cláusulas `where`
 
-error[E0507]: cannot move out of borrowed content
- --> src/main.rs:6:9
-  |
-6 |     for &item in list.iter() {
-  |         ^----
-  |         ||
-  |         |hint: to prevent move, use `ref item` or `ref mut item`
-  |         cannot move out of borrowed content
+Usar muitos limites de características tem suas desvantagens. Cada genérico tem sua própria característica
+limites, portanto, funções com vários parâmetros de tipo genérico podem conter muitos
+informações vinculadas a características entre o nome da função e sua lista de parâmetros,
+tornando a assinatura da função difícil de ler. Por esta razão, Rust tem alternativas
+sintaxe para especificar limites de características dentro de uma cláusula `where` após a função
+assinatura. Então, em vez de escrever isto:
+
+```rust,ignore
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {
 ```
 
-A chave para esse erro é `cannot move out of type [T], a non-copy array`. Com
-nossas versões não genéricas da função `maior`, nós estávamos apenas tentando
-encontrar o maior `i32` ou `char`. Como discutimos no Capítulo 4, tipos como o
-`i32` e `char` que têm um tamanho conhecido podem ser armazenados na pilha,
-então eles implementam o trait `Copia`. Quando mudamos a função `maior` para 
-ser genérica, agora é possível que o parâmetro `list` poderia ter tipos nele
-que não implementam o trait `Copia`, o que significa que não seríamos capazes 
-de mover o valor para fora de `list[0]` para a variável `maior`.
+podemos usar uma cláusula `where`, assim:
 
-Se quisermos ser capazes de chamar esse código com tipos que são `Copia`, nós
-podemos adicionar `Copia` para os limites de trait de `T`! A Listagem 10-16 
-mostra o código completo de uma função `maior` genérica que compilará desde que
-os tipos dos valores nessa parte que passamos para `maior` implementem ambos os
-traits `PartialOrd` e `Copia`, como `i32` e `char`:
-
-<span class="filename">Nome do arquivo: src/main.rs</span>
-
-```rust
-fn maior<T: PartialOrd + Copy>(list: &[T]) -> T {
-    let mut maior = list[0];
-
-    for &item in list.iter() {
-        if item > maior {
-            maior = item;
-        }
-    }
-
-    maior
-}
-
-fn main() {
-    let lista_numero = vec![34, 50, 25, 100, 65];
-
-    let result = maior(&lista_numero);
-    println!("O maior número é {}", result);
-
-    let lista_char = vec!['y', 'm', 'a', 'q'];
-
-    let result = maior(&lista_char);
-    println!("O maior char é {}", result);
-}
+```rust,ignore
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-07-where-clause/src/lib.rs:here}}
 ```
 
-<span class="caption">Listagem 10-16: Uma definição funcional da função `maior`
-que funciona em qualquer tipo genérico que implementa os traits `PartialOrd` e
-`Copia`</span>
+A assinatura desta função é menos confusa: o nome da função, lista de parâmetros,
+e o tipo de retorno estão próximos, semelhante a uma função sem muitas características
+limites.
 
-Se não quisermos restringir nossa função `maior` para apenas tipos que 
-implementam o trait `Copia`, podemos especificar que `T` tem o limite de trait
-`Clone` ao invés de `Copia` e clonar cada valor na parte quando quisermos que a
-função `maior` tenha domínio. Usando a função `clone` significa que 
-potencialmente estamos fazendo mais alocações no heap, porém, e alocações no 
-heap podem ser vagarosas se estivermos trabalhando com grande quantidade de 
-dados. Outro jeito que podemos implementar `maior` é para a função retornar uma
-referência ao valor de `T` em uma parte. Se retornarmos o tipo de retorno para
-ser `&T` ao invés de `T` e mudar o corpo da função para retornar uma 
-referência, não precisaríamos usar os limites de traits `Clone` ou `Copia` e
-nós não estaríamos fazendo nenhuma alocação de heap.
-Tente implementar essas soluções alternativas você mesmo! 
+### Retornando tipos que implementam características
 
-### Usando Limites de Trait para Implementar Métodos Condicionalmente
+Também podemos usar a sintaxe `impl Trait` na posição de retorno para retornar um
+valor de algum tipo que implementa uma característica, conforme mostrado aqui:
 
-Usando um limite de trait com um bloco `impl` que usa parâmetros de tipos 
-genéricos podemos implementar métodos condicionalmente apenas para tipos que
-implementam os traits específicos. Por exemplo, o tipo `Par<T>` na listagem 
-10-17 sempre implementa o método `novo`, mas `Par<T>` implementa apenas o
-`cmp_display` se seu tipo interno `T` implementa o trait `PartialOrd` que 
-permite a comparação e do trait `Display` que permite a impressão:
-
-```rust
-use std::fmt::Display;
-
-struct Par<T> {
-    x: T,
-    y: T,
-}
-
-impl<T> Par<T> {
-    fn novo(x: T, y: T) -> Self {
-        Self {
-            x,
-            y,
-        }
-    }
-}
-
-impl<T: Display + PartialOrd> Par<T> {
-    fn cmp_display(&self) {
-        if self.x >= self.y {
-            println!("O maior membro é x = {}", self.x);
-        } else {
-            println!("O maior membro é y = {}", self.y);
-        }
-    }
-}
+```rust,ignore
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-05-returning-impl-trait/src/lib.rs:here}}
 ```
 
-<span class="caption">Listagem 10-17: Implementa métodos condicionalmente em um
-tipo genérico dependendo dos limites de trait</span>
+Ao usar `impl Summary` para o tipo de retorno, especificamos que o
+A função `returns_summarizable` retorna algum tipo que implementa `Summary`
+trait sem nomear o tipo concreto. Neste caso, `returns_summarizable`
+retorna `SocialPost`, mas o código que chama esta função não precisa saber
+que.
 
-Podemos também condicionalmente implementar um trait para qualquer tipo que
-implementa um trait. Implementações de trait de qualquer tipo que satisfazem os
-limites de trait são chamadas de *implementações cobertores*, e são 
-extesivamente utilizadas na biblioteca padrão de Rust. Por exemplo, a 
-biblioteca padrão implementa o trait `Display`. Esse bloco `impl` se parece com
-este código:
+A capacidade de especificar um tipo de retorno apenas pela característica que ele implementa é
+especialmente útil no contexto de encerramentos e iteradores, que abordamos em
+Capítulo 13. Closures e iteradores criam tipos que somente o compilador conhece ou
+tipos que são muito longos para especificar. A sintaxe `impl Trait` permite que você concisamente
+especifique que uma função retorna algum tipo que implementa a característica `Iterator`
+sem precisar escrever um tipo muito longo.
+
+No entanto, você só pode usar `impl Trait` se estiver retornando um único tipo. Para
+por exemplo, este código que retorna `NewsArticle` ou `SocialPost` com
+o tipo de retorno especificado como `impl Summary` não funcionaria:
+
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-06-impl-trait-returns-one-type/src/lib.rs:here}}
+```
+
+Não é permitido retornar `NewsArticle` ou `SocialPost` devido a
+restrições sobre como a sintaxe `impl Trait` é implementada no compilador.
+Abordaremos como escrever uma função com esse comportamento na seção [“Usando Trait
+Objetos para abstrair sobre comportamento compartilhado”][trait-objects]<!-- ignore -->
+seção do Capítulo 18.
+
+### Usando limites de características para implementar métodos condicionalmente
+
+Usando uma característica vinculada a um bloco `impl` que usa parâmetros de tipo genérico,
+podemos implementar métodos condicionalmente para tipos que implementam o especificado
+características. Por exemplo, o tipo `Pair<T>` na Listagem 10-15 sempre implementa o
+`new` para retornar uma nova instância de `Pair<T>` (lembre-se do [“Método
+Sintaxe”][methods]<!-- ignore --> seção do Capítulo 5 que `Self` é um tipo
+alias para o tipo do bloco `impl`, que neste caso é `Pair<T>`). Mas
+no próximo bloco `impl`, `Pair<T>` apenas implementa o método `cmp_display` se
+seu tipo interno `T` implementa a característica `PartialOrd` que permite comparação
+_e_ a característica `Display` que permite a impressão.
+
+<Listing number="10-15" file-name="src/lib.rs" caption="Conditionally implementing methods on a generic type depending on trait bounds">
+
+```rust,noplayground
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-15/src/lib.rs}}
+```
+
+</Listing>
+
+Também podemos implementar condicionalmente uma característica para qualquer tipo que implemente
+outra característica. Implementações de uma característica em qualquer tipo que satisfaça a característica
+limites são chamados de _implementações gerais_ e são usados ​​extensivamente no
+Biblioteca padrão Rust. Por exemplo, a biblioteca padrão implementa o
+`ToString` trait em qualquer tipo que implemente o `Display` trait. O `impl`
+bloco na biblioteca padrão é semelhante a este código:
 
 ```rust,ignore
 impl<T: Display> ToString for T {
@@ -512,35 +376,29 @@ impl<T: Display> ToString for T {
 }
 ```
 
-Porque a biblioteca padrão tem essa implementação cobertor, podemos chamar
-o método `to_string` definido pelo tipo `ToString` em qualquer tipo que 
-implemente o trait `Display`. Por exemplo, nós podemos transformar inteiros em
-seus correspondentes valores de `String` do seguinte modo, já que inteiros 
-implementam `Display`:
+Como a biblioteca padrão tem essa implementação geral, podemos chamar o método
+`to_string` método definido pela característica `ToString` em qualquer tipo que implemente
+o traço `Display`. Por exemplo, podemos transformar números inteiros em seus correspondentes
+`String` valores como este porque números inteiros implementam `Display`:
 
 ```rust
 let s = 3.to_string();
 ```
 
-Implementações cobertor aparecem na documentação para traits na seção 
-"Implementadores".
+Implementações gerais aparecem na documentação da característica no
+Seção “Implementadores”.
 
-Traits e limites de traits nos deixam escrever código que usam parâmetros de
-tipos genéricos para reduzir a duplicação, mas ainda sim especificam para o
-compilador exatamente qual o comportamento que nosso código precisa que o tipo
-genérico tenha. Porque demos a informação do limite de trait para o compilador,
-ele pode checar que todos os tipos concretos usados no nosso código 
-proporcionam o comportamento correto. Em linguagens dinamicamente tipadas, se
-nós tentássemos chamar um método em um tipo que não implementamos, nós 
-receberíamos um erro em tempo de execução. O Rust move esses erros para o temp
-de compilação para que possamos ser forçados a resolver os problemas antes que 
-nosso código seja capaz de rodar. Além disso, nós não temos que escrever código
-que checa o comportamento em tempo de execução já que já checamos em tempo de
-compilação, o que melhora o desempenho comparado com outras linguagens sem ter
-que abrir mão da flexibilidade de tipos genéricos. 
+Características e limites de características nos permitem escrever código que usa parâmetros de tipo genérico para
+reduzir a duplicação, mas também especificar ao compilador que queremos o genérico
+tipo para ter um comportamento específico. O compilador pode então usar o trait vinculado
+informações para verificar se todos os tipos concretos usados ​​em nosso código fornecem o
+comportamento correto. Em linguagens de tipo dinâmico, obteríamos um erro em
+tempo de execução se chamarmos um método em um tipo que não definiu o método. Mas ferrugem
+move esses erros para o tempo de compilação para que sejamos forçados a corrigi-los
+antes mesmo que nosso código possa ser executado. Além disso, não precisamos escrever código
+que verifica o comportamento em tempo de execução, porque já verificamos na compilação
+tempo. Fazer isso melhora o desempenho sem ter que abrir mão da flexibilidade
+de genéricos.
 
-Há outro tipo de tipos genéricos que estamos usando sem nem ao menos perceber
-chamados *lifetimes*. Em vez de nos ajudar a garantir que um tipo tenha o
-comportamento que precisamos, lifetimes nos ajudam a garantir que as 
-referências são válidas tanto quanto precisam ser. Vamos aprender como 
-lifetimes fazem isso.
+[trait-objects]: ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior
+[methods]: ch05-03-method-syntax.html#method-syntax

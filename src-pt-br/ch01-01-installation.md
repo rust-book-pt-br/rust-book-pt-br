@@ -1,116 +1,181 @@
 ## Instalação
 
-O primeiro passo é instalar o Rust. Vamos fazer o download do Rust por meio do
-`rustup`, uma ferramenta de linha de comando para gerenciar versões do Rust e
-ferramentas associadas.
-Você precisará de uma conexão com a Internet para o download.
+O primeiro passo é instalar o Rust. Vamos baixar o Rust por meio do `rustup`,
+uma ferramenta de linha de comando para gerenciar versões do Rust e
+ferramentas associadas. Você precisará de uma conexão com a internet para o
+download.
 
-> Nota: Se você preferir não usar o `rustup` por algum motivo, consulte [a página de instalação de Rust](https://www.rust-lang.org/pt-BR/tools/install) para outras opções.
+> Nota: Se por algum motivo você preferir não usar `rustup`, consulte a página
+> [Other Rust Installation Methods][otherinstall] para ver outras opções.
 
-As etapas a seguir instalam a versão estável mais recente do compilador Rust. As garantias de estabilidade de Rust garantem que todos os exemplos do livro que compilam continuem sendo compilados com as versões mais recentes de Rust. A saída pode diferir ligeiramente entre as versões, porque Rust geralmente melhora as mensagens de erro e os avisos. Em outras palavras, qualquer versão mais recente e estável de Rust instalada usando essas etapas deve funcionar conforme o esperado com o conteúdo deste livro.
+Os passos a seguir instalam a versão estável mais recente do compilador Rust.
+As garantias de estabilidade do Rust asseguram que todos os exemplos do livro
+que compilam continuarão compilando em versões mais novas do Rust. A saída pode
+variar um pouco entre versões, porque Rust frequentemente melhora mensagens de
+erro e avisos. Em outras palavras, qualquer versão estável mais nova que você
+instalar seguindo estes passos deve funcionar como esperado com o conteúdo
+deste livro.
 
 > ### Notação de Linha de Comando
 >
-> Neste capítulo e ao longo do livro, mostraremos alguns comandos usados no terminal. As linhas que você deve inserir em um terminal começam com `$`. Você não precisa digitar o caractere `$`; indica o início de cada comando. As linhas que não começam com `$` normalmente mostram a saída do comando anterior. Além disso, exemplos específicos em PowerShell usarão `>` em vez de `$`.
+> Neste capítulo e ao longo do livro, mostraremos alguns comandos usados no
+> terminal. Linhas que você deve digitar em um terminal sempre começam com
+> `$`. Você não precisa digitar o caractere `$`; ele é apenas o prompt de
+> comando, mostrado para indicar o início de cada comando. Linhas que não
+> começam com `$` normalmente mostram a saída do comando anterior. Além disso,
+> exemplos específicos do PowerShell usarão `>` em vez de `$`.
 
-### Instalando `rustup` no Linux ou macOS
+### Instalando o `rustup` no Linux ou no macOS
 
-Se você estiver usando Linux ou macOS, abra um terminal e digite o seguinte comando:
+Se você estiver usando Linux ou macOS, abra um terminal e digite o seguinte
+comando:
 
-```text
-$ curl https://sh.rustup.rs -sSf | sh
+```console
+$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 ```
 
-O comando baixa um script e inicia a instalação da ferramenta `rustup`, que instala a versão estável mais recente de Rust. Você pode ser solicitado a fornecer sua senha. Se a instalação for bem-sucedida, a seguinte linha aparecerá:
+O comando baixa um script e inicia a instalação da ferramenta `rustup`, que
+instala a versão estável mais recente do Rust. Você pode ser solicitado a
+informar sua senha. Se a instalação for bem-sucedida, a seguinte linha
+aparecerá:
 
 ```text
 Rust is installed now. Great!
 ```
 
-Se preferir, faça o download do script e inspecione-o antes de executá-lo.
+Você também precisará de um _linker_, que é um programa que o Rust usa para
+juntar a saída compilada em um único arquivo. É provável que você já tenha um.
+Se receber erros de linker, deve instalar um compilador C, que normalmente já
+inclui um linker. Um compilador C também é útil porque alguns pacotes comuns do
+Rust dependem de código C e precisarão de um compilador desse tipo.
 
-O script de instalação adiciona Rust automaticamente ao PATH do sistema após seu próximo login. Se você deseja começar a usar Rust imediatamente, em vez de reiniciar o terminal, execute o seguinte comando no shell para adicionar Rust ao PATH do sistema manualmente:
+No macOS, você pode obter um compilador C executando:
 
-```text
-$ source $HOME/.cargo/env
+```console
+$ xcode-select --install
 ```
 
-Como alternativa, você pode adicionar a seguinte linha ao seu _~/.bash_profile_:
+Usuários de Linux normalmente devem instalar GCC ou Clang, de acordo com a
+documentação de sua distribuição. Por exemplo, se você usa Ubuntu, pode
+instalar o pacote `build-essential`.
 
-```text
-$ export PATH="$HOME/.cargo/bin:$PATH"
-```
+### Instalando o `rustup` no Windows
 
-Além disso, você precisará de algum tipo de *linker*. Ele provavelmente já está
-instalado, mas, se ao tentar compilar um programa Rust você receber erros
-indicando que um linker não pôde ser executado, isso significa que ele não está
-instalado no seu sistema e você precisará instalá-lo manualmente. Compiladores
-de C geralmente vêm com o linker correto. Verifique a documentação da sua
-plataforma para saber como instalar um compilador C. Além disso, alguns pacotes
-Rust comuns dependem de código C e precisarão de um compilador C. Portanto,
-pode valer a pena instalar um agora.
+No Windows, acesse [https://www.rust-lang.org/tools/install][install]<!-- ignore
+--> e siga as instruções de instalação do Rust. Em algum momento do processo,
+será solicitado que você instale o Visual Studio. Isso fornece um linker e as
+bibliotecas nativas necessárias para compilar programas. Se precisar de mais
+ajuda nessa etapa, veja
+[https://rust-lang.github.io/rustup/installation/windows-msvc.html][msvc]<!--
+ignore -->.
 
-### Instalando `rustup` no Windows
+O restante deste livro usa comandos que funcionam tanto no _cmd.exe_ quanto no
+PowerShell. Se houver diferenças específicas, explicaremos qual usar.
 
-No Windows, vá para [https://www.rust-lang.org/pt-BR/tools/install][install-br]
-e siga as instruções para instalar o Rust. Em algum momento da instalação, você
-receberá uma mensagem explicando que também precisará das ferramentas de
-*build* de C++ para o Visual Studio 2013 ou posterior.
-A maneira mais fácil de adquirir as ferramentas de build é instalar [Ferramentas Integradas do Visual Studio 2019][visualstudio-br]. <!--Diretório mudou: As ferramentas estão na seção: Outras Ferramentas e Estruturas. -->
+### Solucionando problemas
 
-[install]: https://www.rust-lang.org/tools/install
-[visualstudio]: https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2019
+Para verificar se o Rust foi instalado corretamente, abra um shell e execute a
+seguinte linha:
 
-[install-br]: https://www.rust-lang.org/pt-BR/tools/install
-[visualstudio-br]: https://visualstudio.microsoft.com/pt-br/downloads/
-
-O restante deste livro usa comandos que funcionam no _cmd.exe_ e no PowerShell. Se houver diferenças específicas, explicaremos qual usar.
-
-### Atualização e Desinstalação
-
-Depois de instalar o Rust via `rustup`, é fácil atualizar para a versão mais recente. No seu shell, execute o seguinte script de atualização:
-
-```text
-$ rustup update
-```
-
-Para desinstalar o Rust e o `rustup`, execute o seguinte script de desinstalação do seu shell:
-
-```text
-$ rustup self uninstall
-```
-
-### Solução de Problemas
-
-Para verificar se você possui Rust instalado corretamente, abra um shell e digite esta linha:
-
-```text
+```console
 $ rustc --version
 ```
 
-Você deverá ver o número da versão, o *commit* hash e a data do *commit* da
+Você deverá ver o número da versão, o hash do commit e a data do commit da
 versão estável mais recente lançada, no seguinte formato:
 
 ```text
 rustc x.y.z (abcabcabc yyyy-mm-dd)
 ```
 
-Se você visualizar essas informações, instalou o Rust com sucesso! Se elas não
-aparecerem e você estiver no Windows, verifique se o Rust está na variável de
-sistema `%PATH%`. Se tudo estiver correto e o Rust ainda não estiver
-funcionando, há vários lugares onde você pode obter ajuda. O mais fácil é o
-canal `#beginners` no [Discord oficial do Rust][discord]. Lá, você pode
-conversar com outros *Rustáceos* que podem ajudar. Outros ótimos recursos
-incluem o canal no Telegram [Rust Brasil][telegram], além do [fórum de
-usuários][users] e do [Stack Overflow][stackoverflow].
+Se você vir essas informações, o Rust foi instalado com sucesso! Se não
+aparecerem, verifique se o Rust está na variável de sistema `%PATH%`, assim:
 
-[discord]: https://discord.gg/rust-lang
-[users]: https://users.rust-lang.org/
-[stackoverflow]: http://stackoverflow.com/questions/tagged/rust
-[telegram]: https://t.me/rustlangbr
+No CMD do Windows, use:
 
-### Documentação Local
+```console
+> echo %PATH%
+```
 
-O instalador também inclui uma cópia da documentação localmente, para que você possa lê-la offline. Execute `rustup doc` para abrir a documentação local no seu navegador.
+No PowerShell, use:
 
-Sempre que um tipo ou função for fornecida pela biblioteca padrão e você não tiver certeza do que esta faz ou como usá-la, use a documentação da interface de programação de aplicativos (API) para descobrir!
+```powershell
+> echo $env:Path
+```
+
+No Linux e no macOS, use:
+
+```console
+$ echo $PATH
+```
+
+Se isso estiver correto e o Rust ainda assim não funcionar, há vários lugares
+em que você pode conseguir ajuda. Descubra como entrar em contato com outras
+Rustaceans (um apelido brincalhão que usamos para nós mesmos) na [página da
+comunidade][community].
+
+### Atualizando e desinstalando
+
+Depois que o Rust estiver instalado via `rustup`, atualizar para uma versão
+nova é simples. No shell, execute o seguinte script de atualização:
+
+```console
+$ rustup update
+```
+
+Para desinstalar Rust e `rustup`, execute o seguinte script no shell:
+
+```console
+$ rustup self uninstall
+```
+
+<!-- Old headings. Do not remove or links may break. -->
+<a id="local-documentation"></a>
+
+### Lendo a documentação local
+
+A instalação do Rust também inclui uma cópia local da documentação, para que
+você possa lê-la offline. Execute `rustup doc` para abrir essa documentação no
+seu navegador.
+
+Sempre que um tipo ou função for fornecido pela biblioteca padrão e você não
+tiver certeza do que faz ou como usar, recorra à documentação da interface de
+programação de aplicações (API)!
+
+<!-- Old headings. Do not remove or links may break. -->
+<a id="text-editors-and-integrated-development-environments"></a>
+
+### Usando editores de texto e IDEs
+
+Este livro não faz suposições sobre quais ferramentas você usa para escrever
+código Rust. Praticamente qualquer editor de texto dá conta do recado! Ainda
+assim, muitos editores de texto e ambientes de desenvolvimento integrados
+(IDEs) têm suporte embutido para Rust. Você sempre pode encontrar uma lista
+razoavelmente atualizada de vários editores e IDEs na [página de
+ferramentas][tools] do site do Rust.
+
+### Trabalhando offline com este livro
+
+Em vários exemplos, usaremos pacotes Rust além da biblioteca padrão. Para
+acompanhar esses exemplos, você precisará ter conexão com a internet ou já ter
+baixado essas dependências com antecedência. Para baixar as dependências antes,
+você pode executar os comandos a seguir. Mais tarde explicaremos em detalhes o
+que é `cargo` e o que cada um desses comandos faz.
+
+```console
+$ cargo new get-dependencies
+$ cd get-dependencies
+$ cargo add rand@0.8.5 trpl@0.2.0
+```
+
+Isso fará cache dos downloads desses pacotes, então você não precisará
+baixá-los depois. Depois de executar esse comando, você não precisa manter a
+pasta `get-dependencies`. Se tiver executado esse comando, poderá usar a flag
+`--offline` com todos os comandos `cargo` no restante do livro para utilizar
+essas versões em cache em vez de tentar acessar a rede.
+
+[otherinstall]: https://forge.rust-lang.org/infra/other-installation-methods.html
+[install]: https://www.rust-lang.org/tools/install
+[msvc]: https://rust-lang.github.io/rustup/installation/windows-msvc.html
+[community]: https://www.rust-lang.org/community
+[tools]: https://www.rust-lang.org/tools

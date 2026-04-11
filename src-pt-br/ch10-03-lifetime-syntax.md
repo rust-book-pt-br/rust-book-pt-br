@@ -1,787 +1,641 @@
 ## Validando Referências com Tempos de Vida
 
-Quando falamos sobre referências no Capítulo 4, deixamos de fora um detalhe
-importante: toda referência em Rust tem um _lifetime_, que é o escopo durante o
-qual aquela referência é válida. Na maior parte do tempo, os tempos de vida são
-implícitos e inferidos, assim como os tipos também costumam ser. De modo
-semelhante a quando precisamos anotar tipos porque múltiplos tipos são
-possíveis, há casos em que os tempos de vida das referências podem se
-relacionar de maneiras diferentes; então, o Rust exige que anotemos essas
-relações usando parâmetros genéricos de tempo de vida para ter certeza de que
-as referências reais usadas em tempo de execução serão válidas.
+Lifetimes são outro tipo de genérico que já usamos. Em vez de
+do que garantir que um tipo tenha o comportamento que desejamos, as vidas garantem que
+as referências são válidas enquanto precisarmos que sejam.
 
-Sim, isso é um pouco incomum e será diferente do que você talvez tenha usado em
-outras linguagens de programação. Em certo sentido, tempos de vida são uma das
-características mais distintas do Rust.
+Um detalhe que não discutimos no [“Referências e
+A seção Emprestando ”][references-and-borrowing]<!-- ignore --> no Capítulo 4 é
+que toda referência em Rust tem uma vida útil, que é o escopo para o qual
+essa referência é válida. Na maioria das vezes, as vidas são implícitas e inferidas,
+assim como na maioria das vezes, os tipos são inferidos. Só somos obrigados a
+anote tipos quando vários tipos forem possíveis. De maneira semelhante, devemos
+anotar tempos de vida quando os tempos de vida das referências puderem ser relacionados em alguns
+maneiras diferentes. Rust exige que anotemos os relacionamentos usando genéricos
+parâmetros de vida útil para garantir que as referências reais usadas em tempo de execução serão
+definitivamente será válido.
 
-Tempos de vida são um tópico amplo demais para ser coberto por completo neste
-capítulo, então veremos algumas formas comuns em que você pode encontrar a
-sintaxe de tempo de vida, para se familiarizar com os conceitos. O Capítulo 19
-traz informações mais avançadas sobre tudo o que tempos de vida podem fazer.
+Anotar tempos de vida nem é um conceito na maioria das outras linguagens de programação
+tenho, então isso vai parecer estranho. Embora não cubramos vidas em
+na íntegra neste capítulo, discutiremos maneiras comuns que você pode encontrar
+sintaxe vitalícia para que você possa se sentir confortável com o conceito.
 
-### Tempos de Vida Previnem Referências Soltas
+<!-- Old headings. Do not remove or links may break. -->
 
-O principal objetivo dos lifetimes é evitar referências soltas, que fariam o
-programa referenciar dados diferentes daqueles que pretendemos referenciar.
-Considere o programa da Listagem 10-18, com um escopo externo e um interno. O
-escopo externo declara uma variável chamada `r` sem valor inicial, e o escopo
-interno declara uma variável chamada `x` com o valor inicial 5. Dentro do
-escopo interno, tentamos definir o valor de `r` como uma referência para `x`.
-Então o escopo interno termina, e nós tentamos imprimir o valor de `r`:
+<a id="preventing-dangling-references-with-lifetimes"></a>
 
-```rust,ignore
-{
-    let r;
+### Referências pendentes
 
-    {
-        let x = 5;
-        r = &x;
-    }
+O principal objetivo das vidas é evitar referências pendentes, que, se
+pudessem existir, faria com que um programa referenciasse dados diferentes dos
+dados que se pretende referenciar. Considere o programa na Listagem 10-16, que
+tem um escopo externo e um escopo interno.
 
-    println!("r: {}", r);
-}
+<Listing number="10-16" caption="An attempt to use a reference whose value has gone out of scope">
+
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-16/src/main.rs}}
 ```
 
-<span class="caption">Listagem 10-18: Uma tentativa de usar uma referência cujo
-valor saiu de escopo</span>
+</Listing>
 
-> #### Variáveis Não Inicializadas Não Podem Ser Usadas
->
-> Os próximos exemplos declaram variáveis sem lhes dar um valor inicial, então
-> o nome da variável existe no escopo externo. À primeira vista, isso pode
-> parecer entrar em conflito com o fato de Rust não ter null. No entanto, se
-> tentarmos usar uma variável antes de atribuir um valor a ela, teremos um erro
-> em tempo de compilação.
-> Tente!
+> Nota: Os exemplos nas Listagens 10-16, 10-17 e 10-23 declaram variáveis
+> sem dar-lhes um valor inicial, então o nome da variável existe no exterior
+> escopo. À primeira vista, isso pode parecer estar em conflito com o fato de Rust ter
+> sem valores nulos. No entanto, se tentarmos usar uma variável antes de atribuir-lhe um valor,
+> obteremos um erro em tempo de compilação, o que mostra que de fato o Rust não permite
+> valores nulos.
 
-Quando compilarmos esse código, teremos um erro:
+O escopo externo declara uma variável chamada `r` sem valor inicial, e o
+o escopo interno declara uma variável chamada `x` com o valor inicial de `5`. Dentro
+no escopo interno, tentamos definir o valor de `r` como uma referência a `x`.
+Então, o escopo interno termina e tentamos imprimir o valor em `r`. Este código
+não compilará, porque o valor ao qual `r` está se referindo saiu do escopo
+antes de tentarmos usá-lo. Aqui está a mensagem de erro:
 
-```text
-error: `x` does not live long enough
-   |
-6  |         r = &x;
-   |              - borrow occurs here
-7  |     }
-   |     ^ `x` dropped here while still borrowed
-...
-10 | }
-   | - borrowed value needs to live until here
+```console
+{{#include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-16/output.txt}}
 ```
 
-A variável `x` não "vive tempo suficiente". Por quê? Porque `x` sai de escopo
-quando passamos pela chave na linha 7, encerrando o escopo interno. Mas `r`
-continua válida no escopo externo; como seu escopo é maior, dizemos que ela
-"vive mais tempo". Se o Rust permitisse que esse código funcionasse, `r`
-estaria referenciando uma memória que foi desalocada quando `x` saiu de escopo,
-e qualquer tentativa de usar `r` não funcionaria corretamente. Então, como o
-Rust determina que esse código não deve ser permitido?
+A mensagem de erro diz que a variável `x` “não dura o suficiente”. O
+a razão é que `x` estará fora do escopo quando o escopo interno terminar na linha 7.
+Mas `r` ainda é válido para o escopo externo; porque seu escopo é maior, dizemos
+que “vive mais”. Se Rust permitisse que esse código funcionasse, `r` seria
+referenciando a memória que foi desalocada quando `x` saiu do escopo e
+qualquer coisa que tentássemos fazer com `r` não funcionaria corretamente. Então, como é que a ferrugem
+determinar que este código é inválido? Ele usa um verificador de empréstimo.
 
-#### O Verificador de Empréstimos
+### O verificador de empréstimos
 
-A parte do compilador chamada de *verificador de empréstimos* compara escopos
-para determinar se todos os empréstimos são válidos. A Listagem 10-19 mostra o
-mesmo exemplo da Listagem 10-18 com anotações indicando os tempos de vida das
-variáveis.
+O compilador Rust possui um _verificador de empréstimo_ que compara escopos para determinar
+se todos os empréstimos são válidos. A Listagem 10-17 mostra o mesmo código da Listagem
+10-16, mas com anotações mostrando os tempos de vida das variáveis.
 
+<Listing number="10-17" caption="Annotations of the lifetimes of `r` and `x`, named `'a` and `'b`, respectively">
 
-```rust,ignore
-{
-    let r;         // -------+-- 'a
-                   //        |
-    {              //        |
-        let x = 5; // -+-----+-- 'b
-        r = &x;    //  |     |
-    }              // -+     |
-                   //        |
-    println!("r: {}", r); // |
-                   //        |
-                   // -------+
-}
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-17/src/main.rs}}
 ```
 
-<span class="caption">Listagem 10-19: Anotações de tempos de vida de `r` e `x`,
-chamadas de `a` e `b` respectivamente</span>
+</Listing>
 
-Anotamos o tempo de vida de `r` com `'a` e o tempo de vida de `x` com `'b`.
-Como você pode ver, o bloco interno de `'b` é bem menor que o bloco externo de
-tempo de vida `'a`. Em tempo de compilação, o Rust compara o tamanho desses
-dois tempos de vida e vê que `r` tem um tempo de vida `'a`, mas se refere a um
-objeto com tempo de vida `'b`. O programa é rejeitado porque `'b` é mais curto
-do que `'a`: o alvo da referência não vive tanto quanto a própria referência.
+Aqui, anotamos o tempo de vida de `r` com `'a` e o tempo de vida de `x`
+com `'b`. Como você pode ver, o bloco interno `'b` é muito menor que o bloco externo
+`'a` bloco vitalício. Em tempo de compilação, Rust compara o tamanho dos dois
+vidas e vê que `r` tem uma vida útil de `'a` mas que se refere à memória
+com uma vida inteira de `'b`. O programa foi rejeitado porque `'b` é menor que
+`'a`: O assunto da referência não dura tanto quanto a referência.
 
-Vamos olhar para o exemplo na Listagem 10-20 que não tenta fazer uma referência
-solta e compila sem nenhum erro:
+A Listagem 10-18 corrige o código para que ele não tenha uma referência pendente e
+ele compila sem erros.
+
+<Listing number="10-18" caption="A valid reference because the data has a longer lifetime than the reference">
 
 ```rust
-{
-    let x = 5;            // -----+-- 'b
-                          //      |
-    let r = &x;           // --+--+-- 'a
-                          //   |  |
-    println!("r: {}", r); //   |  |
-                          // --+  |
-}                         // -----+
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-18/src/main.rs}}
 ```
 
-<span class="caption">Listagem 10-20: Uma referência válida porque os dados têm
-um tempo de vida maior do que o da referência</span>
+</Listing>
 
-Aqui, `x` tem o tempo de vida `'b`, que neste caso é maior que `'a`. Isso quer
-dizer que `r` pode referenciar `x`: o Rust sabe que a referência em `r` será
-sempre válida enquanto `x` for válido.
+Aqui, `x` tem o tempo de vida `'b`, que neste caso é maior que `'a`. Esse
+significa que `r` pode referenciar `x` porque Rust sabe que a referência em `r` irá
+sempre será válido enquanto `x` for válido.
 
-Agora que vimos onde os tempos de vida das referências aparecem em um exemplo
-concreto e discutimos como o Rust os analisa para garantir que referências
-sejam sempre válidas, vamos falar sobre tempos de vida genéricos em parâmetros
-e valores de retorno no contexto de funções.
+Agora que você sabe onde estão os tempos de vida das referências e como o Rust analisa
+vidas úteis para garantir que as referências serão sempre válidas, vamos explorar
+tempos de vida em parâmetros de função e valores de retorno.
 
-### Tempos de Vida Genéricos em Funções
+### Vidas genéricas em funções
 
-Vamos escrever uma função que retornará o maior entre dois cortes de string.
-Queremos ser capazes de chamar essa função passando dois cortes de string e
-receber de volta um corte de string. O código da Listagem 10-21 deve imprimir
-`A string mais longa é abcd` quando tivermos implementado a função `maior`:
+Escreveremos uma função que retorna a maior das duas fatias de string. Esse
+A função pegará duas fatias de string e retornará uma única fatia de string. Depois
+implementamos a função `longest`, o código na Listagem 10-19 deve
+imprima `The longest string is abcd`.
 
-<span class="filename">Nome do Arquivo: src/main.rs</span>
+<Listing number="10-19" file-name="src/main.rs" caption="A `main` function that calls the `longest` function to find the longer of two string slices">
 
 ```rust,ignore
-fn main() {
-    let string1 = String::from("abcd");
-    let string2 = "xyz";
-
-    let resultado = maior(string1.as_str(), string2);
-    println!("A string mais longa é {}", resultado);
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-19/src/main.rs}}
 ```
 
-<span class="caption">Listagem 10-21: Uma função `main` que chama a função
-`maior` para encontrar a mais longa entre duas strings</span>
+</Listing>
 
-Note que queremos que a função receba cortes de string, que são referências,
-como vimos no Capítulo 4, porque não queremos que a função `maior` tome posse
-de seus argumentos. Queremos que a função seja capaz de aceitar tanto cortes de
-uma `String` (que é o tipo da variável `string1`) quanto literais de string
-(que é o conteúdo da variável `string2`).
+Observe que queremos que a função receba fatias de string, que são referências,
+em vez de strings, porque não queremos que a função `longest` assuma
+propriedade de seus parâmetros. Consulte [“String Slices como
+Parâmetros”][string-slices-as-parameters]<!-- ignore --> no Capítulo 4 para mais
+discussão sobre por que os parâmetros que usamos na Listagem 10-19 são aqueles que
+querer.
 
-Consulte a seção do Capítulo 4, "Cortes de Strings como Parâmetros", para mais
-detalhes sobre por que esses são os argumentos que queremos.
+Se tentarmos implementar a função `longest` conforme mostrado na Listagem 10-20,
+não compilará.
 
-Se tentarmos implementar a função `maior` como mostrado na Listagem 10-22, ela
-não vai compilar:
+<Listing number="10-20" file-name="src/main.rs" caption="An implementation of the `longest` function that returns the longer of two string slices but does not yet compile">
 
-<span class="filename">Nome do arquivo: src/main.rs</span>
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-20/src/main.rs:here}}
+```
+
+</Listing>
+
+Em vez disso, obtemos o seguinte erro que fala sobre tempos de vida:
+
+```console
+{{#include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-20/output.txt}}
+```
+
+O texto de ajuda revela que o tipo de retorno precisa de um parâmetro genérico de vida útil
+nele porque Rust não consegue dizer se a referência retornada se refere a
+`x` ou `y`. Na verdade, também não sabemos, porque o bloco `if` no corpo
+desta função retorna uma referência para `x` e o bloco `else` retorna um
+referência a `y`!
+
+Quando definimos esta função, não sabemos os valores concretos que irão
+ser passado para esta função, então não sabemos se o caso `if` ou o caso
+`else` caso será executado. Também não sabemos a vida útil concreta do
+referências que serão passadas, então não podemos olhar para os escopos como fizemos em
+Listagens 10-17 e 10-18 para determinar se a referência que retornamos será
+seja sempre válido. O verificador de empréstimo também não pode determinar isso, porque
+não sabe como os tempos de vida de `x` e `y` se relacionam com o tempo de vida do
+valor de retorno. Para corrigir esse erro, adicionaremos parâmetros genéricos de vida útil que
+definir o relacionamento entre as referências para que o verificador de empréstimo possa
+realizar sua análise.
+
+### Sintaxe de anotação vitalícia
+
+As anotações vitalícias não alteram a duração de qualquer uma das referências. Em vez de,
+eles descrevem as relações dos tempos de vida de múltiplas referências para cada
+outro sem afetar a vida útil. Assim como as funções podem aceitar qualquer tipo
+quando a assinatura especifica um parâmetro de tipo genérico, as funções podem aceitar
+referências com qualquer tempo de vida especificando um parâmetro de tempo de vida genérico.
+
+As anotações vitalícias têm uma sintaxe um pouco incomum: os nomes das anotações vitalícias
+os parâmetros devem começar com um apóstrofo (`'`) e geralmente estão todos em letras minúsculas
+e muito curtos, como tipos genéricos. A maioria das pessoas usa o nome `'a` para o primeiro
+anotação vitalícia. Colocamos anotações de parâmetro de vida útil após `&` de um
+referência, usando um espaço para separar a anotação do tipo da referência.
+
+Aqui estão alguns exemplos: uma referência a um `i32` sem um parâmetro de tempo de vida, um
+referência a um `i32` que possui um parâmetro de vida útil chamado `'a` e um parâmetro mutável
+referência a um `i32` que também tem o tempo de vida `'a`:
 
 ```rust,ignore
-fn maior(x: &str, y: &str) -> &str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
+&i32        // a reference
+&'a i32     // a reference with an explicit lifetime
+&'a mut i32 // a mutable reference with an explicit lifetime
 ```
 
-<span class="caption">Listagem 10-22: Uma implementação da função `maior` que
-retorna o mais longo de dois cortes de string, mas ele não compila ainda</span>
+Uma anotação vitalícia por si só não tem muito significado, porque o
+anotações têm como objetivo informar ao Rust como os parâmetros genéricos de vida de vários
+referências se relacionam entre si. Vamos examinar como as anotações vitalícias
+relacionam-se entre si no contexto da função `longest`.
 
-Em vez disso, recebemos o seguinte erro, que fala sobre tempos de vida:
+<!-- Old headings. Do not remove or links may break. -->
 
-```text
-error[E0106]: missing lifetime specifier
-   |
-1  | fn maior(x: &str, y: &str) -> &str {
-   |                                 ^ expected lifetime parameter
-   |
-   = help: this function's return type contains a borrowed value, but the
-   signature does not say whether it is borrowed from `x` or `y`
-```
+<a id="lifetime-annotations-in-function-signatures"></a>
 
-O texto de ajuda está nos dizendo que o tipo de retorno precisa de um parâmetro
-genérico de tempo de vida porque o Rust não consegue dizer se a referência
-retornada se refere a `x` ou a `y`. Na verdade, nós também não sabemos, já que
-o bloco `if` no corpo da função retorna uma referência para `x` e o bloco
-`else` retorna uma referência para `y`!
+### Em assinaturas de função
 
-Enquanto definimos essa função, não sabemos quais valores concretos serão
-passados para ela, então não sabemos se o caso `if` ou o caso `else` será
-executado. Também não sabemos quais serão os tempos de vida concretos das
-referências recebidas, então não podemos observar esses escopos como fizemos
-nas Listagens 10-19 e 10-20 para determinar se a referência retornada sempre
-será válida. O verificador de empréstimos também não consegue determinar isso,
-porque não sabe como os tempos de vida de `x` e `y` se relacionam com o tempo
-de vida do valor de retorno. Vamos adicionar parâmetros genéricos de tempo de
-vida que definam a relação entre as referências para que o verificador de
-empréstimos possa fazer sua análise.
+Para usar anotações vitalícias em assinaturas de funções, precisamos declarar o
+parâmetros genéricos de vida útil entre colchetes angulares entre o nome da função e
+a lista de parâmetros, assim como fizemos com parâmetros de tipo genérico.
 
-### Sintaxe de Anotação de Tempo de Vida
+Queremos que a assinatura expresse a seguinte restrição: O valor retornado
+a referência será válida desde que ambos os parâmetros sejam válidos. Isso é
+a relação entre a vida útil dos parâmetros e o valor de retorno.
+Nomearemos o tempo de vida como `'a` e depois o adicionaremos a cada referência, conforme mostrado em
+Listagem 10-21.
 
-Anotações de tempo de vida não mudam por quanto tempo qualquer uma das
-referências envolvidas viverá. Assim como funções podem aceitar qualquer tipo
-quando a assinatura especifica um parâmetro de tipo genérico, funções podem
-aceitar referências com qualquer tempo de vida quando a assinatura especifica
-um parâmetro genérico de tempo de vida. O que as anotações de tempo de vida
-fazem é relacionar entre si os tempos de vida de múltiplas referências.
-
-Anotações de tempo de vida têm uma sintaxe um pouco incomum: os nomes dos
-parâmetros de tempo de vida precisam começar com um apóstrofo (`'`). Esses
-nomes costumam ser todos em minúsculas e, assim como os tipos genéricos,
-geralmente são bem curtos. `'a` é o nome que a maioria das pessoas usa por
-padrão. As anotações de parâmetro de tempo de vida vêm depois do `&` de uma
-referência, e um espaço separa a anotação de tempo de vida do tipo da
-referência.
-
-Aqui estão alguns exemplos: uma referência para um `i32` sem parâmetro de
-tempo de vida e uma referência para um `i32` que tem um parâmetro de tempo de
-vida chamado `'a`:
-
-```rust,ignore
-&i32        // uma referência
-&'a i32     // uma referência com um tempo de vida explícito
-&'a mut i32 // uma referência mutável com um tempo de vida explícito
-```
-
-Uma anotação de tempo de vida, por si só, não tem muito significado:
-anotações de tempo de vida dizem ao Rust como os parâmetros genéricos de tempo
-de vida de múltiplas referências se relacionam entre si. Se tivermos uma
-função com o parâmetro `primeiro`, que é uma referência para um `i32` com tempo
-de vida `'a`, e outro parâmetro chamado `segundo`, que também é uma referência
-para um `i32` com tempo de vida `'a`, essas duas anotações com o mesmo nome
-indicam que as referências `primeiro` e `segundo` precisam ambas viver pelo
-menos tanto quanto esse mesmo tempo de vida genérico.
-
-### Anotações de Tempo de Vida em Assinaturas de Funções
-
-Vamos olhar para anotações de tempo de vida no contexto da função `maior` que
-estamos trabalhando. Assim como parâmetros de tipos genéricos, parâmetros de 
-tempos de vida genéricos precisam ser declarados dentro de colchetes angulares
-entre o nome da função e a lista de parâmetros. A limitação que queremos 
-dar ao Rust é que para as referências nos parâmetros e o valor de retorno devem
-ter o mesmo tempo de vida, o qual nomearemos `'a` e adicionaremos para cada uma
-das referências como mostrado na Listagem 10-23:
-
-<span class="filename">Nome do Arquivo: src/main.rs</span>
+<Listing number="10-21" file-name="src/main.rs" caption="The `longest` function definition specifying that all the references in the signature must have the same lifetime `'a`">
 
 ```rust
-fn maior<'a>(x: &'a str, y: &'a str) -> &'a str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-21/src/main.rs:here}}
 ```
 
-<span class="caption">Listagem 10-23: A definição da função `maior` especifica
-todas as referências na assinatura como tendo o mesmo tempo de vida, `'a`</span>
+</Listing>
 
-Isso compilará e produzirá o resultado que queremos quando usada com a função
-`main` na Listagem 10-21.
+Este código deve compilar e produzir o resultado que desejamos quando o usamos com o
+`main` na Listagem 10-19.
 
-A assinatura de função agora diz que para algum tempo de vida `'a`, a função
-receberá dois parâmetros, ambos serão cortes de string que vivem pelo menos
-tanto quanto o tempo de vida `'a`. A função retornará um corte de string que 
-também vai durar tanto quanto o tempo de vida `'a`. Esse é o contrato que 
-estamos dizendo ao Rust que queremos garantir.
+A assinatura da função agora informa ao Rust que durante algum tempo de vida `'a`, a função
+leva dois parâmetros, sendo que ambos são fatias de string que vivem pelo menos como
+contanto que seja vitalício `'a`. A assinatura da função também informa ao Rust que a string
+a fatia retornada da função durará pelo menos enquanto durar o tempo de vida `'a`.
+Na prática, isso significa que o tempo de vida da referência retornada pelo
+A função `longest` é igual ao menor dos tempos de vida dos valores
+referido pelos argumentos da função. Esses relacionamentos são o que queremos
+Rust para usar ao analisar este código.
 
-Especificando os parâmetros de tempo de vida nessa assinatura de função, não
-estamos modificando os tempos de vida de quaisquer valores passados ou 
-retornados, mas estamos dizendo que quaisquer valores que não concordem com
-esse contrato devem ser rejeitados pelo verificador de empréstimos. Essa função
-não sabe (ou não precisa saber) exatamente quanto tempo `x` e `y` vão viver,
-apenas precisa saber que existe algum escopo que pode ser substituído por `'a`
-que irá satisfazer essa assinatura.
+Lembre-se, quando especificamos os parâmetros de tempo de vida nesta assinatura de função,
+não estamos alterando o tempo de vida de nenhum valor passado ou retornado. Em vez de,
+estamos especificando que o verificador de empréstimo deve rejeitar quaisquer valores que não
+aderir a essas restrições. Observe que a função `longest` não precisa
+sabemos exatamente quanto tempo `x` e `y` viverão, apenas que algum escopo pode ser
+substituído por `'a` que irá satisfazer esta assinatura.
 
-Quando estiver anotando tempos de vidas em funções, as anotações vão na 
-assinatura da função, e não no código no corpo da função. Isso acontece porque
-o Rust consegue analisar o código dentro da função sem nenhuma ajuda, mas 
-quando uma função tem referências para ou de códigos de fora daquela função,
-os tempos de vida dos argumentos ou os valores de retorno poderão ser 
-diferentes cada vez que a função é chamada. Isso seria incrivelmente custoso e
-frequentemente impossível para o Rust descobrir. Nesse caso, precisamos anotar
-os tempos de vida nós mesmos.
+Ao anotar tempos de vida em funções, as anotações vão para a função
+assinatura, não no corpo da função. As anotações vitalícias tornam-se parte
+o contrato da função, bem como os tipos na assinatura. Tendo
+assinaturas de função contêm o contrato vitalício significa a análise do Rust
+compilador pode ser mais simples. Se houver um problema com a forma como uma função é
+anotado ou a forma como é chamado, os erros do compilador podem apontar para a parte do
+nosso código e as restrições com mais precisão. Se, em vez disso, o compilador Rust
+fizemos mais inferências sobre o que pretendíamos com as relações das vidas
+ser, o compilador só poderá apontar para um uso de nosso código em muitas etapas
+longe da causa do problema.
 
-Quando referências concretas são passadas para `maior`, o tempo de vida 
-concreto que é substituído por `'a` é a parte do escopo de `x` que sobrepõe o
-escopo de `y`. Já que escopos sempre se aninham, outra maneira de dizer isso é
-que o tempo de vida genérico `'a` terá um tempo de vida concreto igual ao menor
-dos tempos de vida de `x` e `y`. Porque nós anotamos a referência retornada com
-o mesmo parâmetro `'a`, a referência retornada será portanto garantida de ser
-válida tanto quanto for o tempo de vida mais curto de `x` e `y`.
+Quando passamos referências concretas para `longest`, o tempo de vida concreto que é
+substituído por `'a` é a parte do escopo de `x` que se sobrepõe ao
+escopo de `y`. Em outras palavras, o tempo de vida genérico `'a` obterá o concreto
+tempo de vida que é igual ao menor dos tempos de vida de `x` e `y`. Porque
+anotamos a referência retornada com o mesmo parâmetro de vida útil `'a`,
+a referência retornada também será válida para o comprimento do menor dos
+vidas úteis de `x` e `y`.
 
-Vamos ver como isso restringe o uso da função `maior` passando referências que
-tem diferentes tempos de vida concretos. A Listagem 10-25 é um exemplo direto
-que deve corresponder suas intuições de qualquer linguagem: `string1` é válida
-até o final do escopo exterior, `string2` e a`string2` é válida até o final do 
-escopo interior. Com o verificador de empréstimos aprovando esse código; ele 
-vai compilar e imprimir 
-`A string mais longa é`:
+Vejamos como as anotações vitalícias restringem a função `longest` por
+passando referências que têm diferentes tempos de vida concretos. A Listagem 10-22 é
+um exemplo direto.
 
-<span class="filename">Nome do arquivo: src/main.rs</span>
+<Listing number="10-22" file-name="src/main.rs" caption="Using the `longest` function with references to `String` values that have different concrete lifetimes">
 
 ```rust
-# fn maior<'a>(x: &'a str, y: &'a str) -> &'a str {
-#     if x.len() > y.len() {
-#         x
-#     } else {
-#         y
-#     }
-# }
-#
-fn main() {
-    let string1 = String::from("a string longa é longa");
-
-    {
-        let string2 = String::from("xyz");
-        let resultado = maior(string1.as_str(), string2.as_str());
-        println!("A string mais longa é {}", resultado);
-    }
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-22/src/main.rs:here}}
 ```
 
-<span class="caption">Listagem 10-24: Usando a função `maior` com referências
-para valores de `String` que tem tempos de vida concretos diferentes</span>
+</Listing>
 
-Em seguida, vamos tentar um exemplo que vai mostrar que o tempo de vida da 
-referência em `resultado` precisa ser o menor dos tempos de vida dos dois 
-argumentos. Nós vamos mover a declaração da variável `resultado` para fora do
-escopo interior, mas deixar a atribuição do valor para a variável `resultado`
-dentro do escopo com `string2`. Em seguida, vamos mover o `println!` que usa o
-`resultado` fora do escopo interior, depois que ele terminou. O código na 
-Listagem 10-25 não compilará:
+Neste exemplo, `string1` é válido até o final do escopo externo, `string2`
+é válido até o final do escopo interno e `result` faz referência a algo
+isso é válido até o final do escopo interno. Execute este código e você verá
+que o verificador de empréstimo aprova; ele irá compilar e imprimir `A string mais longa
+é uma string longa é longa`.
 
-<span class="filename">Nome do arquivo: src/main.rs</span>
+A seguir, vamos tentar um exemplo que mostra que o tempo de vida da referência em
+`result` deve ser o menor tempo de vida dos dois argumentos. Nós moveremos o
+declaração da variável `result` fora do escopo interno, mas deixe o
+atribuição do valor à variável `result` dentro do escopo com
+`string2`. Então, moveremos o `println!` que usa `result` para fora do
+escopo interno, após o término do escopo interno. O código na Listagem 10-23 irá
+não compilar.
 
-```rust,ignore
-fn main() {
-    let string1 = String::from("a string longa é longa");
-    let resultado;
-    {
-        let string2 = String::from("xyz");
-        resultado = longest(string1.as_str(), string2.as_str());
-    }
-    println!("A string mais longa é {}", resultado);
-}
+<Listing number="10-23" file-name="src/main.rs" caption="Attempting to use `result` after `string2` has gone out of scope">
+
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-23/src/main.rs:here}}
 ```
 
-<span class="caption">Listagem 10-25: A tentativa de usar `resultado` depois 
-que `string2` saiu de escopo não compilará</span>
+</Listing>
 
-Se tentarmos compilar isso, receberemos esse erro:
+Quando tentamos compilar este código, obtemos este erro:
 
-```text
-error: `string2` does not live long enough
-   |
-6  |         resultado = longest(string1.as_str(), string2.as_str());
-   |                                            ------- borrow occurs here
-7  |     }
-   |     ^ `string2` dropped here while still borrowed
-8  |     println!("The longest string is {}", result);
-9  | }
-   | - borrowed value needs to live until here
+```console
+{{#include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-23/output.txt}}
 ```
 
-O erro está dizendo que para `resultado` ser válido para `println!`, a 
-`string2` teria que ser válida até o final do escopo exterior. Rust sabe disso
-porque nós anotamos os tempos de vida dos parâmetros da função e retornamos
-valores com o mesmo parâmetro do tempo de vida, `'a`.
+O erro mostra que para `result` ser válido para a instrução `println!`,
+`string2` precisaria ser válido até o final do escopo externo. A ferrugem sabe
+isso porque anotamos os tempos de vida dos parâmetros da função e retornamos
+valores usando o mesmo parâmetro de vida útil `'a`.
 
-Nós podemos olhar para esse código como humanos e ver que a `string1` é mais
-longa, e portanto `resultado` conterá a referência para a `string1`. Porque a
-`string1` não saiu de escopo ainda, a referência para `string1` ainda será 
-válida para o `println!`. No entanto, o que dissemos ao Rust com os parâmetros
-de tempo de vida é que o tempo de vida da referência retornado pela função 
-`maior` é o mesmo que o menor dos tempos de vida das referências passadas. 
-Portanto, o verificador de empréstimos não permite o código da Listagem 10-25
-como possível já que tem um referência inválida.
+Como humanos, podemos olhar para este código e ver que `string1` é mais longo que
+`string2` e, portanto, `result` conterá uma referência a `string1`.
+Como `string1` ainda não saiu do escopo, uma referência a `string1` será
+ainda será válido para a instrução `println!`. No entanto, o compilador não pode ver
+que a referência é válida neste caso. Dissemos a Rust que a vida de
+a referência retornada pela função `longest` é igual ao menor dos
+a vida útil das referências transmitidas. Portanto, o verificador de empréstimo
+não permite o código na Listagem 10.23 por possivelmente ter uma referência inválida.
 
-Tente fazer mais alguns experimentos que variam os valores e os tempos de vidas
-das referências passadas para a função `maior` e como a referência retornada é
-usada. Crie hipóteses sobre seus experimentos se eles vão passar pelo 
-verificador de empréstimos ou não antes de você compilar, e então cheque para
-ver se você está certo!
+Tente projetar mais experimentos que variem os valores e a vida útil do
+referências passadas para a função `longest` e como a referência retornada
+é usado. Faça hipóteses sobre se seus experimentos passarão ou não no
+peça emprestado o verificador antes de compilar; então, verifique se você está certo!
 
-### Pensando em Termos de Tempos de Vida
+<!-- Old headings. Do not remove or links may break. -->
 
-O modo exato de especificar parâmetros de tempos de vida depende do que sua 
-função está fazendo. Por exemplo, se mudarmos a implementação da função 
-`maior` para sempre retornar o primeiro argumento ao invés do corte de string
-mais longo, não precisaríamos especificar um tempo de vida no parâmetro `y`.
-Este código compila:
+<a id="thinking-in-terms-of-lifetimes"></a>
 
-<span class="filename">Nome do arquivo: src/main.rs</span>
+### Relacionamentos
+
+A maneira como você precisa especificar os parâmetros de vida útil depende de qual é o seu
+função está fazendo. Por exemplo, se alterássemos a implementação do
+Função `longest` para sempre retornar o primeiro parâmetro em vez do mais longo
+fatia de string, não precisaríamos especificar um tempo de vida no parâmetro `y`. O
+o seguinte código será compilado:
+
+<Listing file-name="src/main.rs">
 
 ```rust
-fn longest<'a>(x: &'a str, y: &str) -> &'a str {
-    x
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-08-only-one-reference-with-lifetime/src/main.rs:here}}
 ```
 
-Nesse exemplo, especificamos o tempo de vida do parâmetro `'a` para o parâmetro
-`x` e o tipo de retorno, mas, não para o parâmetro `y`, já que o tempo de vida 
-de `y` não tem qualquer relação com o tempo de vida `x` ou o valor retornado.
+</Listing>
 
-Quando retornarmos uma referência de um valor em uma função, o parâmetro de tempo de 
-vida para o tipo de retorno precisa combinar o parâmetro do tempo de vida de um
-dos argumentos. Se a referência retornada *não* refere a nenhum dos argumentos,
-a única outra possibilidade é que refira a um valor criado dentro da função, o
-que seria uma referência solta já que o valor sairá de escopo no fim da função.
-Considere essa tentativa da função `maior` que não compilará:
+Especificamos um parâmetro vitalício `'a` para o parâmetro `x` e o retorno
+tipo, mas não para o parâmetro `y`, porque o tempo de vida de `y` não tem
+qualquer relacionamento com o tempo de vida de `x` ou o valor de retorno.
 
-<span class="filename">Nome do arquivo: src/main.rs</span>
+Ao retornar uma referência de uma função, o parâmetro de tempo de vida para o
+o tipo de retorno precisa corresponder ao parâmetro de vida útil de um dos parâmetros. Se
+a referência retornada _não_ se refere a um dos parâmetros, ela deve se referir
+para um valor criado dentro desta função. No entanto, isso seria uma pendência
+referência porque o valor sairá do escopo no final da função.
+Considere esta tentativa de implementação da função `longest` que não
+compilar:
 
-```rust,ignore
-fn maior<'a>(x: &str, y: &str) -> &'a str {
-    let resultado = String::from("string muito longa");
-    resultado.as_str()
-}
+<Listing file-name="src/main.rs">
+
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-09-unrelated-lifetime/src/main.rs:here}}
 ```
 
-Mesmo especificando um parâmetro de tempo de vida `'a` para o tipo de retorno,
-essa implementação falha em compilar porque o valor de retorno do tempo de vida
-não é relacionado com o tempo de vida dos parâmetros de forma alguma. Esta é a
+</Listing>
+
+Aqui, embora tenhamos especificado um parâmetro vitalício `'a` para o retorno
+tipo, esta implementação não será compilada porque o valor de retorno
+a vida útil não está relacionada de forma alguma com a vida útil dos parâmetros. Aqui está o
 mensagem de erro que recebemos:
 
-```text
-error: `resultado` does not live long enough
-  |
-3 |     resultado.as_str()
-  |     ^^^^^^ does not live long enough
-4 | }
-  | - borrowed value only lives until here
-  |
-note: borrowed value must be valid for the lifetime 'a as defined on the block
-at 1:44...
-  |
-1 | fn maior<'a>(x: &str, y: &str) -> &'a str {
-  |                                             ^
+```console
+{{#include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-09-unrelated-lifetime/output.txt}}
 ```
 
-O problema é que `resultado` sairá de escopo e será limpo no final da função 
-`maior`, e estamos tentando retornar uma referência para `resultado` da função.
-Não há nenhum modo que possamos especificar parâmetros de tempo de vida que
-mudariam uma referência solta, e o Rust não nos deixará criar uma referência 
-solta. Nesse caso, a melhor solução seria retornar um tipo de dado com posse
-ao invés de uma referência de modo que a função chamadora é então responsável
-por limpar o valor.
+O problema é que `result` sai do escopo e é limpo no final
+da função `longest`. Também estamos tentando retornar uma referência para `result`
+da função. Não há como especificar parâmetros de vida útil que
+mudaria a referência pendente, e Rust não nos deixaria criar uma referência pendente
+referência. Nesse caso, a melhor solução seria retornar um tipo de dados próprio
+em vez de uma referência para que a função de chamada seja responsável por
+limpando o valor.
 
-Em última análise, a sintaxe de tempo de vida é sobre conectar tempos de vida
-de vários argumentos e retornar valores de funções. Uma vez que estão 
-conectados, o Rust tem informação o suficiente para permitir operações seguras
-de memória e não permitir operações que criariam ponteiros soltos ou outro tipo
-de violação à segurança da memória.
+Em última análise, a sintaxe do tempo de vida trata de conectar os tempos de vida de vários
+parâmetros e valores de retorno de funções. Uma vez conectados, Rust tem
+informações suficientes para permitir operações seguras de memória e proibir operações que
+criaria ponteiros pendentes ou violaria a segurança da memória.
 
-### Anotações de Tempo de Vida em Definições de Struct
+<!-- Old headings. Do not remove or links may break. -->
 
-Até agora, nós só definimos structs para conter tipos com posse. É possível 
-para structs manter referências, mas precisamos adicionar anotações de tempo de
-vida em todas as referências na definição do struct. A Listagem 10-26 tem a 
-struct chamada `ExcertoImportante` que contém um corte de string:
+<a id="lifetime-annotations-in-struct-definitions"></a>
 
-<span class="filename">Nome do arquivo: src/main.rs</span>
+### Em definições de estrutura
+
+Até agora, todas as estruturas que definimos possuem tipos de propriedade. Podemos definir estruturas
+para conter referências, mas, nesse caso, precisaríamos adicionar uma vida inteira
+anotação em cada referência na definição da estrutura. A Listagem 10-24 tem um
+struct chamada `ImportantExcerpt` que contém uma fatia de string.
+
+<Listing number="10-24" file-name="src/main.rs" caption="A struct that holds a reference, requiring a lifetime annotation">
 
 ```rust
-struct ExcertoImportante<'a> {
-    parte: &'a str,
-}
-
-fn main() {
-    let romance = String::from("Chame-me Ishmael. Há alguns anos...");
-    let primeira_sentenca = romance.split('.')
-        .next()
-        .expect("Não pôde achar um '.'");
-    let i = ExcertoImportante { parte: primeira_sentenca };
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-24/src/main.rs}}
 ```
 
-<span class="caption">Listagem 10-26: Um struct que contém uma referência,
-então sua definição precisa de uma anotação de tempo de vida</span>
+</Listing>
 
-Esse struct tem um campo, `parte`, que contém um corte de string, que é uma
-referência. Assim como tipos genéricos de dados, temos que declarar o nome do
-parâmetro genérico de tempo de vida dentro de colchetes angulares depois do
-nome do struct para que possamos usar o parâmetro de tempo de vida no corpo da
-definição do struct.
+Esta estrutura possui o único campo `part` que contém uma fatia de string, que é um
+referência. Tal como acontece com os tipos de dados genéricos, declaramos o nome do genérico
+parâmetro de vida útil entre colchetes angulares após o nome da estrutura para que
+podemos usar o parâmetro tempo de vida no corpo da definição da estrutura. Esse
+anotação significa que uma instância de `ImportantExcerpt` não pode sobreviver à referência
+ele contém em seu campo `part`.
 
-A função `main` cria uma instância da struct `ExcertoImportante` que contém uma
-referência pra a primeira sentença da `String` com posse da variável `romance`.
+A função `main` aqui cria uma instância da estrutura `ImportantExcerpt`
+que contém uma referência à primeira frase do `String` de propriedade do
+variável `novel`. Os dados em `novel` existem antes de `ImportantExcerpt`
+instância é criada. Além disso, `novel` não sai do escopo até depois
+o `ImportantExcerpt` sai do escopo, então a referência no
+`ImportantExcerpt` instância é válida.
 
-### Elisão de Tempo de Vida 
+### Elisão vitalícia
 
-Nessa seção, nós aprendemos que toda referência tem um tempo de vida, e nós
-precisamos especificar os parâmetros dos tempos de vida para funções ou 
-estruturas que usam referências. No entanto, no Capítulo 4 nós tínhamos a 
-função na seção "Cortes de Strings", mostradas novamente na Listagem 10-27, que
-compilam sem anotações de tempo de vida:
+Você aprendeu que toda referência tem uma vida inteira e que você precisa especificar
+parâmetros de vida útil para funções ou estruturas que usam referências. No entanto, nós
+tinha uma função na Listagem 4-9, mostrada novamente na Listagem 10-25, que compilava
+sem anotações vitalícias.
 
-<span class="filename">Nome do arquivo: src/lib.rs</span>
+<Listing number="10-25" file-name="src/lib.rs" caption="A function we defined in Listing 4-9 that compiled without lifetime annotations, even though the parameter and return type are references">
 
 ```rust
-fn primeira_palavra(s: &str) -> &str {
-    let bytes = s.as_bytes();
-
-    for (i, &item) in bytes.iter().enumerate() {
-        if item == b' ' {
-            return &s[0..i];
-        }
-    }
-
-    &s[..]
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-25/src/main.rs:here}}
 ```
 
-<span class="caption">Listagem 10-27: Uma função definida no Capítulo 4 que
-compila sem anotações de tempo de vida, mesmo o parâmetro e o tipo de retorno
-sendo referências</span>
+</Listing>
 
-A razão pela qual essa função compila sem anotações de tempo de vida é 
-histórica: em versões mais antigas de pre Rust-1.0, isso não teria compilado.
-Toda referência precisava de um tempo de vida explícito. Naquele tempo, a 
-assinatura da função teria sido escrita da seguinte forma:
+A razão pela qual esta função é compilada sem anotações de tempo de vida é histórica:
+Nas versões anteriores (pré-1.0) do Rust, este código não teria sido compilado, porque
+cada referência precisava de um tempo de vida explícito. Naquela época, a função
+a assinatura teria sido escrita assim:
 
 ```rust,ignore
-fn primeira_palavra<'a>(s: &'a str) -> &'a str {
+fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
-Depois de escrever muito código em Rust, o time de Rust descobriu que os 
-programadores de Rust estavam digitando as mesmas anotações de tempo de vida
-de novo e de novo. Essas situações eram previsíveis e seguiam alguns padrões
-determinísticos. O time de Rust programou esses padrões no compilador de código 
-de Rust para que o verificador de empréstimos possa inferir os tempos de vida
-dessas situações sem forçar o programador adicionar essas anotações 
-explicitamente.
+Depois de escrever muitos códigos Rust, a equipe Rust descobriu que os programadores Rust
+estavam inserindo as mesmas anotações de vida repetidamente, em particular
+situações. Estas situações eram previsíveis e seguiam algumas regras determinísticas.
+padrões. Os desenvolvedores programaram esses padrões no código do compilador para
+que o verificador de empréstimo poderia inferir o tempo de vida nessas situações e
+não precisaria de anotações explícitas.
 
-Nós mencionamos essa parte da história de Rust porque é inteiramente possível
-que mais padrões determinísticos surgirão e serão adicionado ao compilador. No
-futuro, até menos anotações de tempo de vida serão necessárias.
+Este pedaço da história do Rust é relevante porque é possível que mais
+padrões determinísticos surgirão e serão adicionados ao compilador. No futuro,
+ainda menos anotações vitalícias podem ser necessárias.
 
-Os padrões programados nas análises de referência de Rust são chamados de 
-*regras de elisão de tempo de vida*. Essas não são regras para o programador
-seguir; as regras são um conjunto de casos particular que o compilador irá
-considerar, e se seu código se encaixa nesses casos, você não precisa escrever
-os tempos de vida explicitamente.
+Os padrões programados na análise de referências do Rust são chamados de
+_regras de elisão vitalícias_. Estas não são regras que os programadores devem seguir; eles são
+um conjunto de casos particulares que o compilador irá considerar, e se o seu código
+se encaixa nesses casos, você não precisa escrever os tempos de vida explicitamente.
 
-As regras de elisão não fornecem total inferência:  se o Rust aplicar as regras 
-de forma determinística ainda podem haver ambiguidades como quais tempos 
-de vida as referências restantes deveriam ter. Nesse caso, o compilador dará um
-erro que pode ser solucionado adicionando anotações de tempo de vida que 
-correspondem com as suas intenções para como as referências se relacionam umas
-com as outras.
+As regras de elisão não fornecem inferência completa. Se ainda houver ambiguidade
+sobre quais tempos de vida as referências têm depois que Rust aplica as regras, o
+o compilador não adivinhará qual deveria ser o tempo de vida das referências restantes.
+Em vez de adivinhar, o compilador apresentará um erro que você pode resolver
+adicionando as anotações vitalícias.
 
-Primeiro, algumas definições: Tempos de vida em parâmetros de funções ou 
-métodos são chamados *tempos de vida de entrada*, e tempos de vida em valores
-de retorno são chamados de *tempos de vida de saída*.
+Os tempos de vida nos parâmetros de função ou método são chamados de _tempos de vida de entrada_ e
+os tempos de vida nos valores de retorno são chamados de _tempos de vida de saída_.
 
-Agora, as regras que o compilador usa para descobrir quais referências de 
-tempos de vidas têm quando não há anotações explícitas. A primeira regra se 
-aplica a tempos de vida de entrada, e a segunda regra se aplica a tempos de 
-vida de saída. Se o compilador chega no fim das três regras e ainda há 
-referências que ele não consegue descobrir tempos de vida, o compilador irá
-parar com um erro.
+O compilador usa três regras para descobrir o tempo de vida das referências
+quando não há anotações explícitas. A primeira regra se aplica à entrada
+tempos de vida, e a segunda e terceira regras se aplicam aos tempos de vida de saída. Se o
+compilador chega ao final das três regras e ainda há referências para
+que não consegue calcular os tempos de vida, o compilador irá parar com um erro.
+Essas regras se aplicam a definições `fn`, bem como a blocos `impl`.
 
-1. Cada parâmetro que é uma referência tem seu próprio parâmetro de tempo de
-  vida. Em outras palavras, uma função com um parâmetro tem um parâmetro de 
-  tempo de vida: `fn foo<'a>(x: &'a i32)`, uma função com dois argumentos 
-  recebe dois parâmetros de tempo de vida separados: 
-  `fn foo<'a, 'b>(x: &'a i32, y: &'b i32)`, e assim por diante.
+A primeira regra é que o compilador atribua um parâmetro de tempo de vida a cada
+parâmetro que é uma referência. Em outras palavras, uma função com um parâmetro
+obtém um parâmetro de vida útil: `fn foo<'a>(x: &'a i32)`; uma função com dois
+parâmetros obtém dois parâmetros de vida útil separados: `fn foo<'a, 'b>(x: &'a i32,
+y: &'b i32)`; e assim por diante.
 
-2. Se há exatamente uma entrada de parâmetro de tempo de vida, aquele tempo de
-  vida é atribuído para todos os parâmetros de saída do tempo de vida:
-  `fn foo<'a>(x: &'a i32) -> &'a i32`.
+A segunda regra é que, se houver exatamente um parâmetro de tempo de vida de entrada, esse
+tempo de vida é atribuído a todos os parâmetros de tempo de vida de saída: `fn foo<'a>(x: &'a i32)
+-> &'a i32`.
 
-3. Se há múltiplas entradas de parâmetros de tempo de vida, mas uma delas é
-  `&self` ou `&mut self` porque é um método, então o tempo de vida de `self` é
-  atribuído para todos os parâmetro de tempo de vida de saída. Isso melhora a
-  escrita de métodos
+A terceira regra é que, se houver vários parâmetros de tempo de vida de entrada, mas
+um deles é `&self` ou `&mut self` porque este é um método, a vida útil de
+`self` é atribuído a todos os parâmetros de vida útil de saída. Esta terceira regra faz
+métodos muito mais agradáveis ​​de ler e escrever porque são necessários menos símbolos.
 
-Vamos fingir que somos o compilador e aplicamos essas regras para descobrir 
-quais os tempos de vida das referências na assinatura da função 
-`primeira_palavra` na Listagem 10-27. A assinatura começa sem nenhum tempo de 
-vida associado com as referências:
+Vamos fingir que somos o compilador. Aplicaremos essas regras para descobrir o
+tempos de vida das referências na assinatura da função `first_word` em
+Listagem 10-25. A assinatura começa sem nenhum tempo de vida associado ao
+referências:
 
 ```rust,ignore
-fn primeira_palavra(s: &str) -> &str {
+fn first_word(s: &str) -> &str {
 ```
 
-Então nós (como o compilador) aplicamos a primeira regra, que diz que cada 
-parâmetro tem seu próprio tempo de vida. Nós vamos chamá-lo de `'a` como é 
-usual, então agora a assinatura é:
+Então, o compilador aplica a primeira regra, que especifica que cada parâmetro
+obtém sua própria vida útil. Vamos chamá-lo de `'a` como sempre, então agora a assinatura é
+esse:
 
 ```rust,ignore
-fn primeira_palavra<'a>(s: &'a str) -> &str {
+fn first_word<'a>(s: &'a str) -> &str {
 ```
 
-À segunda regra, que se aplica porque existe apenas um tempo de vida. A
-segunda regra diz que o tempo de vida de um parâmetro de entrada é atribuído
-a um tempo de vida de saída, então agora a assinatura é:
+A segunda regra se aplica porque há exatamente um tempo de vida de entrada. O segundo
+regra especifica que o tempo de vida de um parâmetro de entrada é atribuído a
+o tempo de vida da saída, então a assinatura agora é esta:
 
 ```rust,ignore
-fn primeira_palavra<'a>(s: &'a str) -> &'a str {
+fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
-Agora todas as referências nessa assinatura de função possuem tempos de vida, e
-o compilador pode continuar sua análise sem precisar que o programador anote os
-tempos de vida na assinatura dessa função.
+Agora todas as referências nesta assinatura de função têm vida útil, e o
+compilador pode continuar sua análise sem precisar que o programador faça anotações
+os tempos de vida nesta assinatura de função.
 
-Vamos fazer outro exemplo, dessa vez com a função `maior` que não tinha 
-parâmetros de tempo de vida quando começamos a trabalhar com ela na Listagem 
-10-22:
+Vejamos outro exemplo, desta vez usando a função `longest` que tinha
+nenhum parâmetro de tempo de vida quando começamos a trabalhar com ele na Listagem 10-20:
 
 ```rust,ignore
-fn maior(x: &str, y: &str) -> &str {
+fn longest(x: &str, y: &str) -> &str {
 ```
 
-Fingindo que somos o compilador novamente, vamos aplicar a primeira regra: cada
-parâmetro tem seu próprio tempo de vida. Dessa vez temos dois parâmetros, então
-temos dois tempos de vida:
+Vamos aplicar a primeira regra: cada parâmetro tem seu próprio tempo de vida. Desta vez nós
+temos dois parâmetros em vez de um, então temos dois tempos de vida:
 
 ```rust,ignore
-fn maior<'a, 'b>(x: &'a str, y: &'b str) -> &str {
+fn longest<'a, 'b>(x: &'a str, y: &'b str) -> &str {
 ```
 
-Olhando para a segunda regra, ela não se aplica já que há mais de uma entrada 
-de tempo de vida. Olhando para a terceira regra, ela também não se aplica 
-porque isso é uma função e não um método, então nenhum dos parâmetros são 
-`self`. Então, acabaram as regras, mas não descobrimos qual é o tempo de vida 
-do tipo de retorno. É por isso que recebemos um erro quando tentamos
-compilar o código da Listagem 10-22: o compilador usou as regras de elisão de
-tempo de vida que sabia, mas ainda sim não conseguiu descobrir todos os tempos
-de vida das referências na assinatura.
+Você pode ver que a segunda regra não se aplica, porque há mais de um
+vida útil da entrada. A terceira regra também não se aplica, porque `longest` é um
+função em vez de um método, portanto nenhum dos parâmetros é `self`. Depois
+trabalhando com todas as três regras, ainda não descobrimos qual será o retorno
+a vida útil do tipo é. É por isso que recebemos um erro ao tentar compilar o código em
+Listagem 10-20: O compilador trabalhou através das regras de elisão vitalícia, mas ainda assim
+não consegui descobrir todos os tempos de vida das referências na assinatura.
 
-Porque a terceira regra só se aplica em assinaturas de métodos, vamos olhar
-tempos de vida nesse contexto agora, e ver porque a terceira regra significa 
-que não temos que anotar tempos de vida em assinaturas de métodos muito 
-frequentemente.
+Como a terceira regra só se aplica a assinaturas de métodos, veremos
+vidas nesse contexto, veja a seguir por que a terceira regra significa que não precisamos
+anote tempos de vida em assinaturas de métodos com muita frequência.
 
-### Anotações de Tempo de Vida em Definições de Métodos
+<!-- Old headings. Do not remove or links may break. -->
 
-Quando implementamos métodos em uma struct com tempos de vida, a sintaxe é
-novamente a mesma da de parâmetros de tipos genéricos que mostramos na Listagem
-10-11: o lugar que parâmetros de tempos de vida são declarados e usados depende
-se o parâmetro de tempo de vida é relacionado aos campos do struct ou aos
-argumentos dos métodos e dos valores de retorno.
+<a id="lifetime-annotations-in-method-definitions"></a>
 
-Nomes de tempos de vida para campos de estruturas sempre precisam ser 
-declarados após a palavra-chave `impl` e então usadas após o nome da struct,
-já que esses tempos de vida são partes do tipo da struct.
+### Em Definições de Método
 
-Em assinaturas de métodos dentro do bloco `impl`, as referências podem estar
-amarradas às referências de tempo de vida nos campos de struct, ou elas podem
-ser independentes. Além disso, as regras de elisão de tempo de vida 
-constantemente fazem com que anotações não sejam necessárias em assinaturas de
-métodos. Vamos ver alguns exemplos usando a struct chamada `ExcertoImportante`
-que definimos na Listagem 10-26.
+Quando implementamos métodos em uma estrutura com tempos de vida, usamos a mesma sintaxe que
+o dos parâmetros de tipo genérico, conforme mostrado na Listagem 10-11. Onde declaramos
+e usar os parâmetros de vida útil depende se eles estão relacionados ao
+campos struct ou os parâmetros do método e valores de retorno.
 
-Primeiro, aqui há um método chamado `level`. O único parâmetro é uma referência
-para `self`, e o valor de retorno é apenas um `i32`, não uma referência para
-nada:
+Nomes vitalícios para campos struct sempre precisam ser declarados após `impl`
+palavra-chave e usada após o nome da estrutura porque esses tempos de vida fazem parte
+do tipo da estrutura.
+
+Nas assinaturas de métodos dentro do bloco `impl`, as referências podem estar vinculadas ao
+vida útil das referências nos campos da estrutura, ou elas podem ser independentes. Em
+Além disso, as regras de elisão vitalícia geralmente fazem com que as anotações vitalícias
+não são necessários em assinaturas de métodos. Vejamos alguns exemplos usando o
+struct chamada `ImportantExcerpt` que definimos na Listagem 10-24.
+
+Primeiro, usaremos um método chamado `level` cujo único parâmetro é uma referência a
+`self` e cujo valor de retorno é `i32`, que não é referência a nada:
 
 ```rust
-# struct ExcertoImportante<'a> {
-#     part: &'a str,
-# }
-#
-impl<'a> ExcertoImportante<'a> {
-    fn level(&self) -> i32 {
-        3
-    }
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-10-lifetimes-on-methods/src/main.rs:1st}}
 ```
 
-A declaração do parâmetro de tempo de vida depois de `impl` e uso depois do 
-tipo de nome é obrigatório, mas nós não necessariamente precisamos de anotar o
-tempo de vida da referência `self` por causa da primeira regra da elisão.
+A declaração do parâmetro vitalício após `impl` e seu uso após o nome do tipo
+são obrigatórios, mas por causa da primeira regra de elisão, não somos obrigados a
+anote o tempo de vida da referência a `self`.
 
-Aqui vai um exemplo onde a terceira regra da elisão de tempo de vida se aplica:
+Aqui está um exemplo onde a terceira regra de elisão vitalícia se aplica:
 
 ```rust
-# struct ExcertoImportante<'a> {
-#     part: &'a str,
-# }
-#
-impl<'a> ExcertoImportante<'a> {
-    fn anuncio_e_parte_de_retorno(&self, anuncio: &str) -> &str {
-        println!("Atenção por favor: {}", anuncio);
-        self.part
-    }
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-10-lifetimes-on-methods/src/main.rs:3rd}}
 ```
 
-Há dois tempos de vida de entrada, então o Rust aplica a primeira regra de 
-elisão de tempos de vida e dá ambos ao `&self` e ao `anuncio` seus próprios
-tempos de vida. Então, porque um dos parâmetros é `self`, o tipo de retorno
-tem o tempo de vida de `&self` e todos os tempos de vida foram contabilizados.
+Existem dois tempos de vida de entrada, então Rust aplica a primeira regra de elisão de tempo de vida
+e dá a `&self` e `announcement` suas próprias vidas. Então, porque
+um dos parâmetros é `&self`, o tipo de retorno obtém o tempo de vida de `&self`,
+e todas as vidas foram contabilizadas.
 
-### O Tempo de Vida Estático
+### A vida estática
 
-Há *um* tipo especial de tempo de vida que precisamos discutir: `'static`. O
-tempo de vida `static` é a duração completa do programa. Todos os literais de
-string têm um tempo de vida `static`, o qual podemos escolher anotar como o
-seguinte:
+Uma vida especial que precisamos discutir é `'static`, o que denota que o
+a referência afetada _pode_ permanecer ativa durante toda a duração do programa. Todos
+literais de string têm o tempo de vida `'static`, que podemos anotar da seguinte forma:
 
 ```rust
-let s: &'static str = "Eu tenho um tempo de vida estático.";
+let s: &'static str = "I have a static lifetime.";
 ```
 
-O texto dessa string é guardado diretamente no binário do seu programa e o
-binário do seu programa está sempre disponível. Logo, o tempo de vida de todas
-as literais de string é `'static`.
+O texto desta string é armazenado diretamente no binário do programa, que é
+sempre disponível. Portanto, o tempo de vida de todos os literais de string é `'static`.
 
-Você pode ver sugestões de usar o tempo de vida `'static` em uma mensagem de 
-ajuda de erro, mas antes de especificar `'static` como o tempo de vida para uma
-referência, pense sobre se a referência que você tem é uma que vive todo o 
-tempo de vida do seu programa ou não (ou mesmo se você quer que ele viva tanto,
-se poderia). Na maior parte do tempo, o problema no código é uma tentativa de 
-criar uma referência solta ou uma incompatibilidade dos tempos de vida 
-disponíveis, e a solução é consertar esses problemas, não especificar um tempo
-de vida `'static`.
+Você pode ver sugestões em mensagens de erro para usar o tempo de vida `'static`. Mas
+antes de especificar `'static` como o tempo de vida de uma referência, pense em
+se a referência que você tem realmente vive ou não toda a vida de
+seu programa e se você deseja. Na maioria das vezes, uma mensagem de erro
+sugerindo os resultados da vida útil `'static` da tentativa de criar um pendente
+referência ou uma incompatibilidade das vidas disponíveis. Nesses casos, a solução
+é corrigir esses problemas, não especificar o tempo de vida `'static`.
 
+<!-- Old headings. Do not remove or links may break. -->
 
-### Parâmetros de Tipos Genéricos, Limites de Trais e Tempos de Vida Juntos
+<a id="generic-type-parameters-trait-bounds-and-lifetimes-together"></a>
 
-Vamos rapidamente olhar para a sintaxe de especificar parâmetros de tipos
-genéricos, limites de traits e tempos de vida todos em uma função!
+## Parâmetros de tipo genérico, limites de características e tempos de vida
+
+Vejamos brevemente a sintaxe de especificação de parâmetros de tipo genérico, trait
+limites e tempos de vida, tudo em uma função!
 
 ```rust
-use std::fmt::Display;
-
-fn maior_com_um_anuncio<'a, T>(x: &'a str, y: &'a str, ann: T) -> &'a str
-    where T: Display
-{
-    println!("Anúncio! {}", ann);
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-11-generics-traits-and-lifetimes/src/main.rs:here}}
 ```
 
-Essa é a função `maior` da Listagem 10-23 que retorna a maior de dois cortes de
-string, mas com um argumento extra chamado `ann`. O tipo de `ann` é o tipo 
-genérico `T`, que pode ser preenchido por qualquer tipo que implemente o trait
-`Display` como está especificado na cláusula `where`. Esse argumento extra será
-impresso antes da função comparar os comprimentos dos cortes de string, que é 
-porque o trait de `Display` possui um limite. Porque tempos de vida são um tipo
-genérico, a declaração de ambos os parâmetros de tempo de vida `'a` e o tipo
-genérico `T` vão na mesma lista com chaves angulares depois do nome da função.
+Esta é a função `longest` da Listagem 10.21 que retorna o maior
+duas fatias de barbante. Mas agora ele tem um parâmetro extra chamado `ann` do genérico
+digite `T`, que pode ser preenchido por qualquer tipo que implemente `Display`
+característica conforme especificado pela cláusula `where`. Este parâmetro extra será impresso
+usando `{}`, e é por isso que o limite de característica `Display` é necessário. Porque
+tempos de vida são um tipo genérico, as declarações do parâmetro de tempo de vida
+`'a` e o parâmetro de tipo genérico `T` vão na mesma lista dentro do ângulo
+colchetes após o nome da função.
 
-## Sumário
+## Resumo
 
-Nós cobrimos várias coisas nesse capítulo! Agora que você sabe sobre parâmetros
-de tipos genéricos, traits e limites de traits, e parâmetros genéricos de tempo
-de vida, você está pronto para escrever código que não é duplicado mas pode ser
-usado em muitas situações. Parâmetros de tipos genéricos significam que o 
-código pode ser aplicado a diferentes tipos. Traits e limites de traits 
-garantem que mesmo que os tipos sejam genéricos, esses tipos terão o 
-comportamento que o código precisa. Relações entre tempos de vida de 
-referências especificadas por anotações de tempo de vida garantem que esse 
-código flexível não terá referências soltas. E tudo isso acontece em tempo de
-compilação para que a performace em tempo de execução não seja afetada!
+Abordamos muito neste capítulo! Agora que você sabe sobre o tipo genérico
+parâmetros, características e limites de características e parâmetros genéricos de vida útil, você está
+pronto para escrever código sem repetição que funcione em muitas situações diferentes.
+Os parâmetros de tipo genérico permitem aplicar o código a diferentes tipos. Características e
+limites de características garantem que, mesmo que os tipos sejam genéricos, eles terão o
+comportamento que o código precisa. Você aprendeu como usar anotações vitalícias para garantir
+que este código flexível não terá referências pendentes. E tudo isso
+a análise acontece em tempo de compilação, o que não afeta o desempenho em tempo de execução!
 
-Acredite ou não, há ainda mais para aprender nessas áreas: Capítulo 17 
-discutirá objetos de trait, que são outro modo de usar traits. O Capítulo 19
-vai cobrir cenários mais complexos envolvendo anotações de tempo de vida. O
-Capítulo 20 vai tratar de alguns tipos avançados de características do sistema.
-Em seguida, porém, vamos falar sobre como escrever testes em Rust para que
-possamos ter certeza que nosso código usando todas essas características está
-funcionando do jeito que queremos!
+Acredite ou não, há muito mais para aprender sobre os tópicos que discutimos em
+neste capítulo: O Capítulo 18 discute objetos de características, que são outra maneira de usar
+características. Existem também cenários mais complexos que envolvem anotações vitalícias
+que você só precisará em cenários muito avançados; para aqueles, você deve ler
+a [Referência de ferrugem][reference]. Mas a seguir, você aprenderá como escrever testes em
+Rust para que você possa ter certeza de que seu código está funcionando como deveria.
+
+[references-and-borrowing]: ch04-02-references-and-borrowing.html#references-and-borrowing
+[string-slices-as-parameters]: ch04-03-slices.html#string-slices-as-parameters
+[reference]: ../reference/trait-bounds.html

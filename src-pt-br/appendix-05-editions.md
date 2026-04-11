@@ -1,59 +1,63 @@
 ## Apêndice E: Edições
 
-No Capítulo 1, você viu que `cargo new` adiciona alguns metadados ao seu
-arquivo _Cargo.toml_ sobre uma edição. Este apêndice explica o que isso significa.
+No Capítulo 1, você viu que `cargo new` adiciona um pouco de metadado ao
+arquivo _Cargo.toml_ sobre uma edição. Este apêndice explica o que isso quer
+dizer!
 
-A linguagem e o compilador Rust têm um ciclo de lançamento de seis semanas, o que significa que os usuários obtêm
-um fluxo constante de novos recursos. Outras linguagens de programação lançam mudanças
-maiores com menos frequência; Rust lança atualizações menores com mais frequência. Depois de um
-tempo, todas essas pequenas mudanças se acumulam. Mas, de lançamento em lançamento, pode ser
-difícil olhar para trás e dizer: “Uau, entre Rust 1.10 e Rust 1.31, Rust
-mudou muito!”
+A linguagem e o compilador Rust têm um ciclo de lançamento de seis semanas, o
+que significa que as pessoas usuárias recebem um fluxo constante de novos
+recursos. Outras linguagens de programação lançam mudanças maiores com menos
+frequência; Rust prefere atualizações menores em intervalos mais curtos. Com o
+tempo, todas essas pequenas mudanças se acumulam. Mas, de uma versão para
+outra, pode ser difícil olhar para trás e dizer: “Nossa, entre Rust 1.10 e
+Rust 1.31, Rust mudou bastante!”
 
-A cada três anos ou mais, a equipe Rust produz uma nova _edição_ do Rust. Cada
-edição reúne os recursos que chegaram em um pacote claro, com
-documentação e ferramentas totalmente atualizadas. Novas edições são lançadas como parte do
-processo de lançamento de seis semanas.
+A cada três anos mais ou menos, a equipe do Rust produz uma nova _edição_ do
+Rust. Cada edição reúne os recursos já lançados em um pacote claro, com
+documentação e ferramentas totalmente atualizadas. As novas edições chegam
+como parte do processo normal de lançamento a cada seis semanas.
 
 As edições servem a propósitos diferentes para pessoas diferentes:
 
-- Para usuários ativos do Rust, uma nova edição reúne alterações incrementais em
-  um pacote fácil de entender.
-- Para quem ainda não usa Rust, uma nova edição sinaliza que alguns avanços importantes foram
-  alcançados, o que pode fazer com que Rust passe a valer uma olhada.
-- Para quem está desenvolvendo Rust, uma nova edição fornece um ponto de encontro para o
-  projeto como um todo.
+- Para quem usa Rust ativamente, uma nova edição reúne mudanças incrementais
+  em um pacote fácil de entender.
+- Para quem ainda não usa Rust, uma nova edição sinaliza que avanços
+  importantes aconteceram, o que pode fazer a linguagem valer uma nova chance.
+- Para quem desenvolve o próprio Rust, uma nova edição oferece um ponto de
+  convergência para o projeto como um todo.
 
-No momento em que este texto foi escrito, quatro edições do Rust estavam disponíveis: Rust 2015, Rust
-2018, Rust 2021 e Rust 2024. Este livro foi escrito usando as
-convenções idiomáticas da edição Rust 2024.
+No momento em que este texto foi escrito, há quatro edições do Rust
+disponíveis: Rust 2015, Rust 2018, Rust 2021 e Rust 2024. Este livro foi
+escrito usando os idioms da edição Rust 2024.
 
-A chave `edition` em _Cargo.toml_ indica qual edição o compilador deve
-usar para o seu código. Se a chave não existir, Rust usa `2015` como edição
-valor por motivos de compatibilidade com versões anteriores.
+A chave `edition` no arquivo _Cargo.toml_ indica qual edição o compilador deve
+usar para o seu código. Se essa chave não existir, Rust usa `2015` como valor
+da edição por razões de compatibilidade retroativa.
 
-Cada projeto pode optar por uma edição diferente da edição padrão de 2015.
-As edições podem conter alterações incompatíveis, como incluir uma nova palavra-chave que
-entra em conflito com identificadores no código. No entanto, a menos que você opte por esses
-alterações, seu código continuará a ser compilado mesmo quando você atualizar o Rust
-versão do compilador que você usa.
+Cada projeto pode optar por usar uma edição diferente da edição padrão de
+2015. Edições podem conter mudanças incompatíveis, como a introdução de uma
+nova palavra-chave que conflita com identificadores no código. Ainda assim, a
+menos que você opte por essas mudanças, seu código continuará compilando mesmo
+que você atualize a versão do compilador Rust que utiliza.
 
-Todas as versões do compilador Rust suportam qualquer edição que existia antes daquele
-lançamento do compilador, e elas podem vincular crates de qualquer edição suportada
-juntos. As alterações de edição afetam apenas a maneira como o compilador analisa inicialmente
-o código. Portanto, se você estiver usando Rust 2015 e uma de suas dependências usar
-Rust 2018, seu projeto será compilado e poderá usar essa dependência. O
-a situação oposta, em que seu projeto usa Rust 2018 e uma dependência usa
-Rust 2015 também funciona.
+Todas as versões do compilador Rust oferecem suporte a qualquer edição que
+existia antes do lançamento daquele compilador, e elas podem ligar entre si
+crates de qualquer edição suportada. As mudanças de edição afetam apenas a
+forma como o compilador faz o parsing inicial do código. Portanto, se você
+estiver usando Rust 2015 e uma de suas dependências usar Rust 2018, seu
+projeto compilará e poderá usar essa dependência. A situação inversa, em que o
+seu projeto usa Rust 2018 e uma dependência usa Rust 2015, também funciona.
 
-Para deixar claro: a maioria dos recursos estará disponível em todas as edições. Desenvolvedores usando
-qualquer edição do Rust continuarão a ver melhorias à medida que novos lançamentos estáveis forem
-feitos. Contudo, em alguns casos, principalmente quando novas palavras-chave são adicionadas, alguns novos
-recursos podem estar disponíveis apenas em edições posteriores. Você precisará mudar
-edições se você quiser aproveitar esses recursos.
+Para deixar claro: a maior parte dos recursos estará disponível em todas as
+edições. Pessoas desenvolvedoras usando qualquer edição do Rust continuarão a
+receber melhorias à medida que novas versões estáveis forem lançadas. No
+entanto, em alguns casos, principalmente quando novas palavras-chave são
+adicionadas, alguns recursos novos podem ficar disponíveis apenas em edições
+mais recentes. Você precisará mudar de edição se quiser aproveitar esse tipo
+de recurso.
 
-Para obter mais detalhes, consulte o [_Guia de Edições do Rust_][edition-guide]. Esse é um
-guia completo que enumera as diferenças entre as edições e explica como
-atualizar automaticamente seu código para uma nova edição via `cargo fix`.
+Para mais detalhes, veja [_The Rust Edition Guide_][edition-guide]. Trata-se
+de um livro completo que enumera as diferenças entre as edições e explica como
+atualizar seu código automaticamente para uma nova edição via `cargo fix`.
 
 [edition-guide]: https://doc.rust-lang.org/stable/edition-guide

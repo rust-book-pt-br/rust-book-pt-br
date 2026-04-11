@@ -1,17 +1,17 @@
 ## Apêndice F: Traduções do Livro
 
-Aqui estão recursos em outros idiomas além do inglês. A maioria ainda está em
-andamento; veja [a etiqueta Translations][label] para ajudar ou para nos avisar
-sobre uma nova tradução.
+Recursos em idiomas além do inglês. A maioria ainda está em andamento; veja a
+[label Translations][label] para ajudar ou para nos avisar sobre uma nova
+tradução!
 
 [label]: https://github.com/rust-lang/book/issues?q=is%3Aopen+is%3Aissue+label%3ATranslations
 
-- [Português (Brasil)](https://github.com/rust-book-pt-br/rust-book-pt-br)
-- [Português (Portugal)](https://github.com/nunojesus/rust-book-pt-pt)
+- [Português](https://github.com/rust-book-pt-br/rust-book-pt-br) (BR)
+- [Português](https://github.com/nunojesus/rust-book-pt-pt) (PT)
 - 简体中文: [KaiserY/trpl-zh-cn](https://github.com/KaiserY/trpl-zh-cn), [gnu4cn/rust-lang-Zh_CN](https://github.com/gnu4cn/rust-lang-Zh_CN)
 - [正體中文](https://github.com/rust-tw/book-tw)
 - [Українська](https://rust-lang-ua.github.io/rustbook_ukrainian)
-- [Español](https://github.com/thecodix/book), [alternativo](https://github.com/ManRR/rust-book-es), [Español por RustLangES](https://github.com/RustLangES/rust-book-es)
+- [Español](https://github.com/thecodix/book), [alternate](https://github.com/ManRR/rust-book-es), [Español por RustLangES](https://github.com/RustLangES/rust-book-es)
 - [Русский](https://github.com/rust-lang-ru/book)
 - [한국어](https://github.com/rust-kr/doc.rust-kr.org)
 - [日本語](https://github.com/rust-lang-ja/book-ja)

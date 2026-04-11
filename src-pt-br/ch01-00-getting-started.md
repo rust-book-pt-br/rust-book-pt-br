@@ -1,7 +1,8 @@
-# Começando
+# Primeiros Passos
 
-Vamos começar sua jornada Rust! Neste capítulo, discutiremos:
+Vamos começar sua jornada com Rust! Há muito a aprender, mas toda jornada
+começa em algum lugar. Neste capítulo, vamos abordar:
 
-- Instalando o Rust no Linux, Mac ou Windows
-- Escrevendo um programa que imprime “Hello, world!”
-- Usando `cargo`, o gerenciador de pacotes e sistema de compilação do Rust
+- A instalação do Rust no Linux, no macOS e no Windows
+- A escrita de um programa que imprime `Hello, world!`
+- O uso do `cargo`, o gerenciador de pacotes e sistema de build do Rust

@@ -1,4 +1,4 @@
-## Organização de testes
+## Organização de teste
 
 Conforme mencionado no início do capítulo, o teste é uma disciplina complexa e
 pessoas diferentes usam terminologia e organização diferentes. A comunidade Rust
@@ -19,49 +19,49 @@ resto do código para identificar rapidamente onde o código está ou não funci
 esperado. Você colocará testes de unidade no diretório _src_ em cada arquivo com o
 código que eles estão testando. A convenção é criar um módulo chamado `tests`
 em cada arquivo para conter as funções de teste e anotar o módulo com
-` cfg(test)`.
+`cfg(test)`.
 
 #### O Módulo `tests` e `#[cfg(test)]`
 
 A anotação `#[cfg(test)]` no módulo `tests` diz ao Rust para compilar e
-execute o código de teste somente ao executar `cargo test`, não ao executar ` cargo
-build`. Isso economiza tempo de compilação quando você deseja apenas construir a biblioteca e
+execute o código de teste somente quando você executar `cargo test`, não quando você executar `cargo
+construir`. Isso economiza tempo de compilação quando você deseja apenas construir a biblioteca e
 economiza espaço no artefato compilado resultante porque os testes não são
 incluído. Você verá isso porque os testes de integração ocorrem de maneira diferente.
-diretório, eles não precisam da anotação ` #[cfg(test)]`. No entanto, porque a unidade
-os testes vão nos mesmos arquivos do código, você usará ` #[cfg(test)]`para especificar
+diretório, eles não precisam da anotação `#[cfg(test)]`. No entanto, porque a unidade
+os testes vão nos mesmos arquivos do código, você usará `#[cfg(test)]` para especificar
 que eles não devem ser incluídos no resultado compilado.
 
 Lembre-se de que quando geramos o novo projeto `adder` na primeira seção do
 neste capítulo, Cargo gerou este código para nós:
 
-<span class="filename">Filename: src/lib.rs</span>
+<span class="filename">Nome do arquivo:src/lib.rs</span>
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-01/src/lib.rs}}
 ```
 
 No módulo `tests` gerado automaticamente, o atributo `cfg` significa
-_configuração_ e informa ao Rust que o seguinte item só deve ser incluído
+_configuração_ e diz ao Rust que o seguinte item só deve ser incluído
 dada uma determinada opção de configuração. Neste caso, a opção de configuração é
-`test `, fornecido pelo Rust para compilar e executar testes. Ao usar o
-Atributo` cfg `, Cargo compila nosso código de teste somente se executarmos ativamente os testes
-com` cargo test `. Isso inclui quaisquer funções auxiliares que possam estar dentro deste
-módulo, além das funções anotadas com` #[test]`.
+`test`, que é fornecido pelo Rust para compilar e executar testes. Ao usar o
+`cfg`, Cargo compila nosso código de teste somente se executarmos ativamente os testes
+com `cargo test`. Isso inclui quaisquer funções auxiliares que possam estar dentro deste
+módulo, além das funções anotadas com `#[test]`.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="testing-private-functions"></a>
 
-#### Private Function Tests
+#### Testes de função privada
 
 Há um debate na comunidade de testes sobre se é ou não privado
 funções devem ser testadas diretamente, e outras linguagens dificultam ou
 impossível testar funções privadas. Independentemente de qual ideologia de teste você
-aderir, as regras de privacidade do Rust permitem que você teste funções privadas.
+aderir, as regras de privacidade do Rust permitem testar funções privadas.
 Considere o código da Listagem 11.12 com a função privada `internal_adder`.
 
-<Listing number="11-12" file-name="src/lib.rs" caption="Testando uma função privada">
+<Listing number="11-12" file-name="src/lib.rs" caption="Testing a private function">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-12/src/lib.rs}}
@@ -70,15 +70,15 @@ Considere o código da Listagem 11.12 com a função privada `internal_adder`.
 </Listing>
 
 Observe que a função `internal_adder` não está marcada como `pub`. Os testes são apenas
-Código Rust, e o módulo ` tests`é apenas outro módulo. Como discutimos em
+Código Rust, e o módulo `tests` é apenas mais um módulo. Como discutimos em
 [“Caminhos para referência a um item na árvore de módulos”][paths]<!-- ignore -->,
-itens em módulos filhos podem usar os itens em seus módulos ancestrais. Neste
-teste, trazemos todos os itens pertencentes ao pai do módulo ` tests`para
-escopo com ` use super::*`e então o teste pode chamar ` internal_adder`. Se você
-não acho que funções privadas devam ser testadas, não há nada em Rust que
+itens em módulos filhos podem usar os itens em seus módulos ancestrais. Nesta
+teste, trazemos todos os itens pertencentes ao pai do módulo `tests` para
+escopo com `use super::*` e então o teste pode chamar `internal_adder`. Se você
+não acho que funções privadas devam ser testadas, não há nada no Rust que
 irá obrigá-lo a fazer isso.
 
-### Integration Tests
+### Testes de Integração
 
 No Rust, os testes de integração são totalmente externos à sua biblioteca. Eles usam o seu
 biblioteca da mesma forma que qualquer outro código faria, o que significa que eles só podem chamar
@@ -92,8 +92,8 @@ testes, primeiro você precisa de um diretório _tests_.
 
 Criamos um diretório _tests_ no nível superior do diretório do nosso projeto, próximo
 para _src_. Cargo sabe procurar arquivos de teste de integração neste diretório. Nós
-podemos então criar quantos arquivos de teste quisermos e o Cargo irá compilar cada um dos
-arquivos como um crate individual.
+podemos então criar quantos arquivos de teste quisermos, e o Cargo irá compilar cada um dos
+arquivos como uma caixa individual.
 
 Vamos criar um teste de integração. Com o código na Listagem 11-12 ainda no
 arquivo _src/lib.rs_, crie um diretório _tests_ e crie um novo arquivo chamado
@@ -111,7 +111,7 @@ adder
 
 Insira o código da Listagem 11.13 no arquivo _tests/integration_test.rs_.
 
-<Listing number="11-13" file-name="tests/integration_test.rs" caption="Um teste de integração de uma função no crate `adder`">
+<Listing number="11-13" file-name="tests/integration_test.rs" caption="An integration test of a function in the `adder` crate">
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-13/tests/integration_test.rs}}
@@ -119,13 +119,13 @@ Insira o código da Listagem 11.13 no arquivo _tests/integration_test.rs_.
 
 </Listing>
 
-Cada arquivo no diretório _tests_ é um crate separado, então precisamos trazer nosso
-biblioteca no escopo de cada teste crate. Por esse motivo, adicionamos `use
-adder::add_two;` no topo do código, o que não precisávamos nos testes unitários.
+Cada arquivo no diretório _tests_ é uma caixa separada, então precisamos trazer nosso
+biblioteca no escopo de cada caixa de teste. Por esse motivo, adicionamos `use
+adder::add_two;` no topo do código, que não precisamos nos testes de unidade.
 
 Não precisamos anotar nenhum código em _tests/integration_test.rs_ com
-`#[cfg(test)] `. Cargo trata o diretório _tests_ especialmente e compila arquivos
-neste diretório somente quando executamos` cargo test `. Execute` cargo test`agora:
+`#[cfg(test)]`. Cargo trata o diretório _tests_ especialmente e compila arquivos
+neste diretório somente quando executamos `cargo test`. Execute `cargo test` agora:
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/listing-11-13/output.txt}}
@@ -142,16 +142,16 @@ para cada teste de unidade (um chamado `internal` que adicionamos na Listagem 11
 em seguida, uma linha de resumo para os testes de unidade.
 
 A seção de testes de integração começa com a linha `Running
-tests/integration_test.rs`. A seguir, há uma linha para cada função de teste em
+testes/integration_test.rs`. A seguir, há uma linha para cada função de teste em
 esse teste de integração e uma linha de resumo para os resultados da integração
-teste logo antes do início da seção ` Doc-tests adder`.
+teste logo antes do início da seção `Doc-tests adder`.
 
-Each integration test file has its own section, so if we add more files in the
-_tests_ directory, there will be more integration test sections.
+Cada arquivo de teste de integração possui sua própria seção, portanto, se adicionarmos mais arquivos no
+_tests_, haverá mais seções de teste de integração.
 
 Ainda podemos executar uma função de teste de integração específica especificando o teste
-nome da função como argumento para `cargo test`. Para executar todos os testes em um
-arquivo de teste de integração específico, use o argumento ` --test`de ` cargo test`
+o nome da função como argumento para `cargo test`. Para executar todos os testes em um
+arquivo de teste de integração específico, use o argumento `--test` de `cargo test`
 seguido do nome do arquivo:
 
 ```console
@@ -160,26 +160,26 @@ seguido do nome do arquivo:
 
 Este comando executa apenas os testes no arquivo _tests/integration_test.rs_.
 
-#### Submodules in Integration Tests
+#### Submódulos em testes de integração
 
 À medida que você adiciona mais testes de integração, você pode querer criar mais arquivos no
 diretório _tests_ para ajudar a organizá-los; por exemplo, você pode agrupar o teste
 funções pela funcionalidade que estão testando. Como mencionado anteriormente, cada arquivo
-no diretório _tests_ é compilado como seu próprio crate separado, o que é útil
+no diretório _tests_ é compilado como sua própria caixa separada, o que é útil
 para criar escopos separados para imitar mais de perto a forma como os usuários finais serão
-usando seu crate. No entanto, isso significa que os arquivos no diretório _tests_ não
+usando sua caixa. No entanto, isso significa que os arquivos no diretório _tests_ não
 compartilham o mesmo comportamento dos arquivos em _src_, como você aprendeu no Capítulo 7
 sobre como separar o código em módulos e arquivos.
 
 O comportamento diferente dos arquivos do diretório _tests_ é mais perceptível quando você
 ter um conjunto de funções auxiliares para usar em vários arquivos de teste de integração e
 você tenta seguir as etapas em [“Separando Módulos em Diferentes
-Arquivos”][separating-modules-into-files]seção <!-- ignore --> do Capítulo 7 para
+Arquivos”][separating-modules-into-files]<!-- ignore --> seção do Capítulo 7 para
 extraia-os em um módulo comum. Por exemplo, se criarmos _tests/common.rs_
-e colocar uma função chamada `setup` nela, podemos adicionar algum código ao `setup` que
+e colocar uma função chamada `setup` nela, podemos adicionar algum código a `setup` que
 queremos chamar várias funções de teste em vários arquivos de teste:
 
-<span class="filename">Filename: tests/common.rs</span>
+<span class="filename">Nome do arquivo: testes/common.rs</span>
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-12-shared-test-code-problem/tests/common.rs}}
@@ -216,13 +216,13 @@ arquivo desta forma diz ao Rust para não tratar o módulo `common` como um test
 arquivo. Quando movemos o código da função `setup` para _tests/common/mod.rs_ e
 exclua o arquivo _tests/common.rs_, a seção na saída do teste não será mais
 aparecer. Arquivos em subdiretórios do diretório _tests_ não são compilados como
-separe o crates ou tenha seções na saída do teste.
+caixas separadas ou ter seções na saída do teste.
 
 Depois de criarmos _tests/common/mod.rs_, podemos usá-lo em qualquer um dos
-arquivos de teste de integração como um módulo. Aqui está um exemplo de chamada de `setup`
-função do teste ` it_adds_two`em _tests/integration_test.rs_:
+arquivos de teste de integração como um módulo. Aqui está um exemplo de como chamar `setup`
+função do teste `it_adds_two` em _tests/integration_test.rs_:
 
-<span class="filename">Filename: tests/integration_test.rs</span>
+<span class="filename">Nome do arquivo: testes/integration_test.rs</span>
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-13-fix-shared-test-code-problem/tests/integration_test.rs}}
@@ -230,20 +230,20 @@ função do teste ` it_adds_two`em _tests/integration_test.rs_:
 
 Observe que a declaração `mod common;` é igual à declaração do módulo
 demonstramos na Listagem 7-21. Então, na função de teste, podemos chamar o
-Função `common::setup()`.
+`common::setup()` função.
 
-#### Testes de integração para crates binários
+#### Testes de integração para caixas binárias
 
-Se nosso projeto for um crate binário que contém apenas um arquivo _src/main.rs_ e
+Se nosso projeto for uma caixa binária que contém apenas um arquivo _src/main.rs_ e
 não possui um arquivo _src/lib.rs_, não podemos criar testes de integração no
 _tests_ e traz as funções definidas no arquivo _src/main.rs_ para
-escopo com uma instrução `use`. Somente a biblioteca crates expõe funções que outras
-crates pode usar; O binário crates deve ser executado por conta própria.
+escopo com uma instrução `use`. Somente as caixas da biblioteca expõem funções que outros
+caixas podem usar; as caixas binárias devem ser executadas por conta própria.
 
 Esta é uma das razões pelas quais os projetos Rust que fornecem um binário têm um
 arquivo _src/main.rs_ direto que chama a lógica que reside no
 arquivo _src/lib.rs_. Usando essa estrutura, os testes de integração _podem_ testar o
-biblioteca crate com `use` para disponibilizar funcionalidades importantes. Se o
+crate da biblioteca com `use` para disponibilizar funcionalidades importantes. Se o
 funcionalidade importante funciona, a pequena quantidade de código no _src/main.rs_
 O arquivo também funcionará e essa pequena quantidade de código não precisa ser testada.
 
@@ -254,8 +254,8 @@ certifique-se de que ele continue funcionando conforme o esperado, mesmo enquant
 os testes exercitam diferentes partes de uma biblioteca separadamente e podem testar
 detalhes de implementação. Os testes de integração verificam se muitas partes da biblioteca
 funcionam juntos corretamente e usam a API pública da biblioteca para testar o código
-da mesma forma que o código externo irá utilizá-lo. Embora o sistema de tipos do Rust e
-As regras ownership ajudam a prevenir alguns tipos de bugs, os testes ainda são importantes para
+da mesma forma que o código externo irá utilizá-lo. Mesmo que o sistema de tipos de Rust e
+regras de propriedade ajudam a prevenir alguns tipos de bugs, os testes ainda são importantes para
 reduza bugs lógicos relacionados ao comportamento esperado do seu código.
 
 Vamos combinar o conhecimento que você aprendeu neste capítulo e nos anteriores

@@ -1,351 +1,263 @@
-## Referências e _borrowing_
+## Referências e empréstimos
 
-O problema de usar tuplas, que vimos no fim da seção anterior, é que precisamos
-retornar a `String`, de forma que ainda possamos usá-la após a chamada à função
-`calcula_tamanho`, para dentro da qual a `String` foi movida.
+O problema com o código da tupla na Listagem 4-5 é que temos que retornar o
+`String` à função de chamada para que ainda possamos usar `String` depois
+a chamada para `calculate_length`, porque `String` foi movido para
+`calculate_length`. Em vez disso, podemos fornecer uma referência ao valor `String`.
+Uma referência é como um ponteiro, pois é um endereço que podemos seguir para acessar
+os dados armazenados nesse endereço; esses dados pertencem a alguma outra variável.
+Ao contrário de um ponteiro, é garantido que uma referência aponte para um valor válido de um
+tipo particular durante a vida dessa referência.
 
-Aqui está uma forma de como você poderia definir e usar uma função
-`calcula_tamanho` que recebe uma *referência* para um objeto como parâmetro, em
-vez de pegar este valor para si:
+Aqui está como você definiria e usaria uma função `calculate_length` que possui um
+referência a um objeto como parâmetro em vez de apropriar-se do valor:
 
-<span class="filename">Arquivo: src/main.rs</span>
-
-```rust
-fn main() {
-    let s1 = String::from("texto");
-
-    let tamanho = calcula_tamanho(&s1);
-
-    println!("O tamanho de '{}' é {}.", s1, tamanho);
-}
-
-fn calcula_tamanho(s: &String) -> usize {
-    s.len()
-}
-```
-
-Primeiro, repare que todo aquele código usando uma tupla na declaração da
-variável e no retorno da função já se foi. Segundo, note que passamos `&s1` para
-`calcula_tamanho`, e na sua definição, temos `&String` em vez de apenas
-`String`.
-
-Esses `&` são *referências*, e eles permitem que você se refira a algum valor
-sem tomar posse dele. A Figura 4-5 mostra um diagrama.
-
-<img alt="&String s apontando para String s1" src="img/trpl04-05.svg" class="center" />
-
-<span class="caption">Figura 4-5: `&String s` apontando para `String s1`</span>
-
-> Nota: O oposto de referenciar usando `&` é *desreferenciar*, feito por meio do
-> operador de desreferenciação, `*`. Veremos alguns usos desse operador
-> no Capítulo 8 e vamos discutir detalhes da desreferenciação
-> no Capítulo 15.
-
-Vamos olhar mais de perto esta chamada de função:
+<Listing file-name="src/main.rs">
 
 ```rust
-# fn calcula_tamanho(s: &String) -> usize {
-#     s.len()
-# }
-let s1 = String::from("texto");
-
-let tamanho = calcula_tamanho(&s1);
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-07-reference/src/main.rs:all}}
 ```
 
-A sintaxe `&s1` nos permite criar uma referência que *se refere* ao valor `s1`,
-mas não o possui. Como ela não o possui, o valor a que ela aponta não será
-destruído quando a referência sair de escopo.
+</Listing>
 
-Da mesma forma, a assinatura da função usa `&` para indicar que o tipo do
-parâmetro `s` é uma referência. Vamos adicionar algumas anotações para explicar:
+Primeiro, observe que todo o código da tupla na declaração da variável e o
+o valor de retorno da função desapareceu. Segundo, observe que passamos `&s1` para
+`calculate_length` e, em sua definição, tomamos `&String` em vez de
+`String`. Esses e comercial representam referências e permitem que você faça referência a
+algum valor sem se apropriar dele. A Figura 4-6 ilustra esse conceito.
+
+<img alt="Três tabelas: a tabela para s contém apenas um ponteiro para a tabela
+para s1. A tabela para s1 contém os dados da pilha para s1 e aponta para o
+dados de string no heap." src="img/trpl04-06.svg" class="center" />
+
+<span class="caption">Figura 4-6: Um diagrama de `&String` `s` apontando para
+`String` `s1`</span>
+
+> Nota: O oposto de referenciar usando `&` é _dereferência_, que é
+> realizado com o operador de desreferência, `*`. Veremos alguns usos do
+> operador de desreferência no Capítulo 8 e discutir detalhes de desreferência no
+> Capítulo 15.
+
+Vamos dar uma olhada mais de perto na chamada de função aqui:
 
 ```rust
-fn calcula_tamanho(s: &String) -> usize { // s é uma referência para uma String
-    s.len()
-} // Aqui, s sai de escopo. Mas como ela não possui o valor a que se refere,
-  // nada acontece.
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-07-reference/src/main.rs:here}}
 ```
 
-O escopo no qual a variável `s` é válida é o mesmo escopo de qualquer parâmetro
-de função, mas não destruímos o valor apontado pela referência quando ela sai de
-escopo, pois ela não tem posse dele. Funções que têm referências como
-parâmetros, em vez dos próprios valores, não precisam retornar os valores para
-devolver a posse deles, já que nunca tiveram esta posse.
+A sintaxe `&s1` nos permite criar uma referência que _refere_ ao valor de `s1`
+mas não o possui. Como a referência não a possui, o valor que ela aponta
+to não será descartado quando a referência parar de ser usada.
 
-Colocar referências como parâmetros de funções é chamado de *borrowing* (do
-inglês, empréstimo). Assim como na vida real, se uma pessoa possui alguma coisa,
-você pode pegar emprestado dela. Quando você termina de usar, você deve
-devolver.
+Da mesma forma, a assinatura da função usa `&` para indicar que o tipo de
+o parâmetro `s` é uma referência. Vamos adicionar algumas anotações explicativas:
 
-E o que acontece se tentarmos modificar alguma coisa que pegamos emprestado?
-Tente rodar o código da Listagem 4-4. Alerta de spoiler: não funciona!
-
-<span class="filename">Arquivo: src/main.rs</span>
-
-```rust,ignore
-fn main() {
-    let s = String::from("texto");
-
-    modifica(&s);
-}
-
-fn modifica(uma_string: &String) {
-    uma_string.push_str(" longo");
-}
+```rust
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-08-reference-with-annotations/src/main.rs:here}}
 ```
 
-<span class="caption">Listagem 4-4: Tentativa de modificar um valor emprestado</span>
+O escopo em que a variável `s` é válida é o mesmo de qualquer função
+escopo do parâmetro, mas o valor apontado pela referência não é descartado
+quando `s` deixa de ser usado, porque `s` não tem propriedade. Quando funções
+tiver referências como parâmetros em vez dos valores reais, não precisaremos
+devolver os valores para devolver a propriedade, porque nunca tivemos
+propriedade.
+
+Chamamos a ação de criar uma referência de _empréstimo_. Como na vida real, se um
+pessoa possui algo, você pode pedir emprestado a ela. Quando terminar, você tem
+para devolvê-lo. Você não é o dono disso.
+
+Então, o que acontece se tentarmos modificar algo que pegamos emprestado? Experimente o código em
+Listagem 4-6. Alerta de spoiler: não funciona!
+
+<Listing number="4-6" file-name="src/main.rs" caption="Attempting to modify a borrowed value">
+
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch04-understanding-ownership/listing-04-06/src/main.rs}}
+```
+
+</Listing>
 
 Aqui está o erro:
 
-```text
-error[E0596]: cannot borrow immutable borrowed content `*uma_string` as mutable
- --> main.rs:8:5
-  |
-7 | fn modifica(uma_string: &String) {
-  |                         ------- use `&mut String` here to make mutable
-8 |     uma_string.push_str(" longo");
-  |     ^^^^^^^^^^ cannot borrow as mutable
+```console
+{{#include ../listings/ch04-understanding-ownership/listing-04-06/output.txt}}
 ```
 
-Assim como as variáveis são imutáveis por padrão, referências também são. Não
-temos permissão para modificar algo para o qual temos uma referência.
+Assim como as variáveis ​​são imutáveis ​​por padrão, as referências também o são. Nós não estamos
+permitido modificar algo ao qual temos uma referência.
 
-### Referências Mutáveis
+### Referências mutáveis
 
-Podemos corrigir o erro no código da Listagem 4-4 com um pequeno ajuste:
+Podemos corrigir o código da Listagem 4-6 para nos permitir modificar um valor emprestado
+com apenas alguns pequenos ajustes que usam, em vez disso, uma _referência mutável_:
 
-<span class="filename">Arquivo: src/main.rs</span>
+<Listing file-name="src/main.rs">
 
 ```rust
-fn main() {
-    let mut s = String::from("texto");
-
-    modifica(&mut s);
-}
-
-fn modifica(uma_string: &mut String) {
-    uma_string.push_str(" longo");
-}
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-09-fixes-listing-04-06/src/main.rs}}
 ```
 
-Primeiro, temos que fazer com que `s` seja `mut`. Depois, temos que criar uma
-referência mutável com `&mut s` e aceitar uma referência mutável com
-`uma_string: &mut String`.
+</Listing>
 
-Mas referências mutáveis possuem uma grande restrição: você só pode ter uma
-referência mutável para um determinado dado em um determinado escopo. Este
-código vai falhar:
+Primeiro, mudamos `s` para `mut`. Então, criamos uma referência mutável com
+`&mut s` onde chamamos a função `change` e atualizamos a assinatura da função
+para aceitar uma referência mutável com `some_string: &mut String`. Isso faz com que
+muito claro que a função `change` irá alterar o valor que ela empresta.
 
-<span class="filename">Arquivo: src/main.rs</span>
+As referências mutáveis ​​têm uma grande restrição: se você tiver uma referência mutável para
+um valor, você não poderá ter outras referências a esse valor. Esse código que
+tentativas de criar duas referências mutáveis ​​para `s` falharão:
 
-```rust,ignore
-let mut s = String::from("texto");
+<Listing file-name="src/main.rs">
 
-let r1 = &mut s;
-let r2 = &mut s;
-
-println!("{}, {}", r1, r2);
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-10-multiple-mut-not-allowed/src/main.rs:here}}
 ```
+
+</Listing>
 
 Aqui está o erro:
 
-```text
-error[E0499]: cannot borrow `s` as mutable more than once at a time
- --> main.rs:5:19
-  |
-4 |     let r1 = &mut s;
-  |                   - first mutable borrow occurs here
-5 |     let r2 = &mut s;
-  |                   ^ second mutable borrow occurs here
-6 | }
-  | - first borrow ends here
+```console
+{{#include ../listings/ch04-understanding-ownership/no-listing-10-multiple-mut-not-allowed/output.txt}}
 ```
 
-Essa restrição permite a mutação, mas de uma forma bem controlada. Isso é algo
-com que novos Rustáceos passam trabalho, porque a maioria das linguagens de
-programação permite modificar um valor quando você quiser. O benefício de ter
-essa restrição é que o Rust previne _data races_ em tempo de compilação.
+Este erro diz que este código é inválido porque não podemos emprestar `s` como
+mutável mais de uma vez por vez. O primeiro empréstimo mutável está em `r1` e deve
+dura até ser usado no `println!`, mas entre a criação desse
+referência mutável e seu uso, tentamos criar outra referência mutável
+em `r2` que empresta os mesmos dados que `r1`.
 
-Um *data race* é parecido com uma condição de corrida, e acontece quando esses
-três fatores ocorrem:
+A restrição que impede múltiplas referências mutáveis ​​aos mesmos dados no
+ao mesmo tempo permite a mutação, mas de uma forma muito controlada. É algo
+que os novos Rustáceos enfrentam porque a maioria das línguas permite que você sofra mutação
+sempre que quiser. A vantagem de ter essa restrição é que o Rust pode
+evitar corridas de dados em tempo de compilação. Uma _corrida de dados_ é semelhante a uma corrida
+condição e acontece quando estes três comportamentos ocorrem:
 
-1. Dois ou mais ponteiros acessam o mesmo dado ao mesmo tempo.
-1. Ao menos um dos ponteiros é usado para escrever sobre o dado.
-1. Não há nenhum mecanismo sendo usado para sincronizar o acesso ao dado.
+- Dois ou mais ponteiros acessam os mesmos dados ao mesmo tempo.
+- Pelo menos um dos ponteiros está sendo usado para gravar nos dados.
+- Não há nenhum mecanismo sendo usado para sincronizar o acesso aos dados.
 
-Data races causam comportamento indefinido e podem ser difíceis de diagnosticar
-e corrigir quando você está tentando rastreá-los em tempo de execução. Rust
-previne que esse problema aconteça porque não vai nem deixar compilar um código
-com data races!
+Corridas de dados causam comportamento indefinido e podem ser difíceis de diagnosticar e corrigir
+quando você está tentando rastreá-los em tempo de execução; A ferrugem evita esse problema ao
+recusando-se a compilar código com corridas de dados!
 
-Como sempre, podemos usar chaves (`{}`) para criar um novo escopo, permitindo
-múltiplas referências mutáveis, mas não *simultâneas*:
+Como sempre, podemos usar chaves para criar um novo escopo, permitindo
+múltiplas referências mutáveis, mas não _simultâneas_:
 
 ```rust
-let mut s = String::from("texto");
-
-{
-    let r1 = &mut s;
-
-} // aqui r1 sai de escopo, então já podemos criar uma nova referência sem
-  // problema nenhum.
-
-let r2 = &mut s;
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-11-muts-in-separate-scopes/src/main.rs:here}}
 ```
 
-Existe uma regra parecida para combinar referências mutáveis e imutáveis. Este
-código resulta em erro:
+Rust impõe uma regra semelhante para combinar referências mutáveis ​​e imutáveis.
+Este código resulta em um erro:
 
-```rust,ignore
-let mut s = String::from("texto");
-
-let r1 = &s; // sem problema
-let r2 = &s; // sem problema
-let r3 = &mut s; // PROBLEMA GRANDE
-
-println!("{}, {}, and {}", r1, r2, r3);
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-12-immutable-and-mutable-not-allowed/src/main.rs:here}}
 ```
 
 Aqui está o erro:
 
-```text
-error[E0502]: cannot borrow `s` as mutable because it is also borrowed as
-immutable
- --> main.rs:6:19
-  |
-4 |     let r1 = &s; // sem problema
-  |               - immutable borrow occurs here
-5 |     let r2 = &s; // sem problema
-6 |     let r3 = &mut s; // PROBLEMA GRANDE
-  |                   ^ mutable borrow occurs here
-7 | }
-  | - immutable borrow ends here
+```console
+{{#include ../listings/ch04-understanding-ownership/no-listing-12-immutable-and-mutable-not-allowed/output.txt}}
 ```
 
-Eita! Nós *também* não podemos ter uma referência mutável enquanto temos uma
-imutável. Usuários de uma referência imutável não esperam que os valores mudem
-de repente! Porém, múltiplas referências imutáveis são permitidas, pois ninguém
-que esteja apenas lendo os dados será capaz de afetar a leitura que está sendo
-feita em outra parte do código.
+Uau! _Também_ não podemos ter uma referência mutável enquanto tivermos uma imutável
+para o mesmo valor.
 
-Observe que o escopo de uma referência começa no ponto em que ela é introduzida e continua até
-a última vez que a referência foi usada. Por exemplo, este código será compilado
-porque o último uso das referências imutáveis ocorre antes de a referência mutável
-ser introduzida:
+Os usuários de uma referência imutável não esperam que o valor mude repentinamente
+debaixo deles! No entanto, múltiplas referências imutáveis ​​são permitidas porque nenhuma
+aquele que está apenas lendo os dados tem a capacidade de afetar a vida de qualquer outra pessoa.
+leitura dos dados.
 
-```rust,ignore
-let mut s = String::from("texto");
+Observe que o escopo de uma referência começa onde ela é introduzida e continua
+até a última vez que essa referência foi usada. Por exemplo, este código irá
+compilar porque o último uso das referências imutáveis ​​está em `println!`,
+antes da referência mutável ser introduzida:
 
-let r1 = &s; // sem problema
-let r2 = &s; // sem problema
-println!("{} and {}", r1, r2);
-// r1 e r2 não serão mais utilizadas a partir deste ponto
-
-let r3 = &mut s; // sem problema
-println!("{}", r3);
+```rust
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-13-reference-scope-ends/src/main.rs:here}}
 ```
-O escopo das referências imutáveis `r1` e `r2` termina após o `println!` em que elas
-são utilizadas pela última vez, que é antes de a referência mutável `r3` ser criada.
-Esses escopos não se sobrepõem, portanto, este código é permitido.
 
-Mesmo que esses erros sejam frustrantes às vezes, lembre-se de que é o compilador
-do Rust apontando um bug potencial antecipadamente (em tempo de compilação,
-em vez de execução), e mostrando exatamente onde está o problema, em vez de você
-ter que investigar por que algumas vezes os seus dados não são aquilo que você
-esperava que fosse.
+Os escopos das referências imutáveis ​​`r1` e `r2` terminam após `println!`
+onde eles foram usados ​​pela última vez, que é antes da referência mutável `r3` ser
+criado. Esses escopos não se sobrepõem, então este código é permitido: O compilador pode
+dizer que a referência não está mais sendo usada em um ponto antes do final do
+o escopo.
 
-### Referências Soltas
+Mesmo que os erros de empréstimo possam às vezes ser frustrantes, lembre-se de que é
+o compilador Rust apontando um bug potencial antecipadamente (em tempo de compilação, em vez
+do que em tempo de execução) e mostrando exatamente onde está o problema. Então, você não
+você precisa descobrir por que seus dados não são o que você pensava.
 
-Em linguagens com ponteiros, é fácil criar erroneamente um *ponteiro solto*, um
-ponteiro que referencia um local na memória que pode ter sido dado para outra
-parte do programa, basta liberar alguma memória e preservar um ponteiro para
-ela. Por outro lado, em Rust, o compilador garante que nenhuma referência será
-uma referência solta: se temos uma referência para algum dado, o compilador vai
-se certificar que esse dado não vai sair de escopo antes da referência.
+### Referências pendentes
 
-Vamos tentar criar uma referência solta, que o Rust vai impedir com um erro em
-tempo de compilação:
+Em linguagens com ponteiros, é fácil criar erroneamente um _dangling
+pointer_ — um ponteiro que faz referência a um local na memória que pode ter sido
+dado a outra pessoa - liberando um pouco de memória enquanto preserva um ponteiro para aquele
+memória. Em Rust, por outro lado, o compilador garante que as referências serão
+nunca fique com referências pendentes: se você tiver uma referência a alguns dados, o
+compilador garantirá que os dados não sairão do escopo antes do
+referência aos dados sim.
 
-<span class="filename">Arquivo: src/main.rs</span>
+Vamos tentar criar uma referência pendente para ver como o Rust os impede com um
+erro em tempo de compilação:
 
-```rust,ignore
-fn main() {
-    let referencia_para_o_nada = soltar();
-}
+<Listing file-name="src/main.rs">
 
-fn soltar() -> &String {
-    let s = String::from("texto");
-
-    &s
-}
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-14-dangling-reference/src/main.rs}}
 ```
+
+</Listing>
 
 Aqui está o erro:
 
-```text
-error[E0106]: missing lifetime specifier
- --> main.rs:5:16
-  |
-5 | fn soltar() -> &String {
-  |                ^ expected lifetime parameter
-  |
-  = help: this function's return type contains a borrowed value, but there is
-  no value for it to be borrowed from
-  = help: consider giving it a 'static lifetime
+```console
+{{#include ../listings/ch04-understanding-ownership/no-listing-14-dangling-reference/output.txt}}
 ```
 
-Esta mensagem de erro se refere a uma característica que não abordamos ainda:
-*lifetimes*. Vamos discutir lifetimes em detalhe no Capítulo 10. Mas, se você
-desconsiderar a parte sobre lifetimes, a mensagem mostra a razão deste código
-ser um problema:
+Esta mensagem de erro refere-se a um recurso que ainda não abordamos: tempos de vida. Bem
+discutiremos os tempos de vida em detalhes no Capítulo 10. Mas, se você desconsiderar as partes
+sobre tempos de vida, a mensagem contém a chave do motivo pelo qual esse código é um problema:
 
 ```text
 this function's return type contains a borrowed value, but there is no value
-for it to be borrowed from.
+for it to be borrowed from
 ```
 
-> Tradução: o tipo de retorno desta função contém um valor emprestado, mas não
-> há nenhum valor que se possa pegar emprestado.
+Vamos dar uma olhada mais de perto no que exatamente está acontecendo em cada estágio do nosso
+`dangle` código:
 
-Vamos dar uma olhada mais de perto no que está acontecendo, exatamente, em cada
-estágio da nossa função `soltar`:
+<Listing file-name="src/main.rs">
 
-```rust,ignore
-fn soltar() -> &String { // soltar retorna uma referência a uma String
-
-    let s = String::from("texto"); // s é uma nova String
-
-    &s // retornamos uma referência a uma String, s
-} // Aqui, s sai de escopo e é destruída. Sua memória é devolvida.
-  // Perigo!
+```rust,ignore,does_not_compile
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-15-dangling-reference-annotated/src/main.rs:here}}
 ```
 
-Como `s` é criada dentro da função `soltar`, quando o código desta função
-termina, `s` é desalocada. Mas nós tentamos retornar uma referência para ela.
-Isto significa que esta referência apontaria para uma `String` inválida! Isso
-não é bom. Rust não vai nos deixar fazer isso.
+</Listing>
 
-A solução aqui é retornar a `String` diretamente:
+Como `s` é criado dentro de `dangle`, quando o código de `dangle` for concluído,
+`s` será desalocado. Mas tentamos retornar uma referência a ele. Isso significa
+esta referência estaria apontando para um `String` inválido. Isso não é bom! Ferrugem
+não nos deixará fazer isso.
+
+A solução aqui é retornar `String` diretamente:
 
 ```rust
-fn nao_soltar() -> String {
-    let s = String::from("texto");
-
-    s
-}
+{{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-16-no-dangle/src/main.rs:here}}
 ```
 
-Isto funciona sem nenhum problema. A `String` é movida para fora, e nada é
+Isso funciona sem problemas. A propriedade é transferida e nada é
 desalocado.
 
-### As Regras de Referências
+### As regras de referências
 
 Vamos recapitular o que discutimos sobre referências:
 
-1. Em um dado momento, você pode ter *um ou outro*, mas não os dois:
-  * Uma referência mutável.
-  * Qualquer número de referências imutáveis.
-2. Referências devem ser válidas sempre.
+- A qualquer momento, você pode ter _ou_ uma referência mutável _ou_ qualquer
+número de referências imutáveis.
+- As referências devem ser sempre válidas.
 
-Em seguida, vamos ver um tipo diferente de referências: _slices_.
+A seguir, veremos um tipo diferente de referência: fatias.

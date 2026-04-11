@@ -1,299 +1,147 @@
-## Controle de Fluxo Conciso com `if let` e `let...else`
+## Fluxo de controle conciso com `if let` e `let...else`
 
-A sintaxe `if let` permite combinar `if` e `let` em uma forma menos verbosa de
-tratar valores que casam com um padrão enquanto ignora os demais. Considere o
-programa da Listagem 6-6, que faz `match` em um valor `Option<u8>` na variável
-`config_max`, mas só quer executar código se o valor for a variante `Some`.
+A sintaxe `if let` permite combinar `if` e `let` de uma forma menos detalhada para
+manipular valores que correspondam a um padrão enquanto ignora o resto. Considere o
+programa na Listagem 6-6 que corresponde a um valor `Option<u8>` no
+`config_max` variável, mas só deseja executar código se o valor for `Some`
+variante.
 
-```rust
-let config_max = Some(3u8);
-match config_max {
-    Some(max) => println!("O máximo configurado é {max}"),
-    _ => (),
-}
-```
-
-<span class="caption">Listagem 6-6: Um `match` que só se importa em executar
-código quando o valor é `Some`</span>
-
-Se o valor for `Some`, imprimimos o valor contido nessa variante associando-o à
-variável `max` no padrão. Não queremos fazer nada com o valor `None`. Para
-satisfazer a expressão `match`, temos de adicionar `_ => ()` depois de tratar
-apenas uma variante, o que acaba sendo um código repetitivo incômodo.
-
-Em vez disso, poderíamos escrever isso de forma mais curta com `if let`. O
-código a seguir se comporta da mesma maneira que o `match` da Listagem 6-6:
+<Listing number="6-6" caption="A `match` that only cares about executing code when the value is `Some`">
 
 ```rust
-# let config_max = Some(3u8);
-if let Some(max) = config_max {
-    println!("O máximo configurado é {max}");
-}
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-06/src/main.rs:here}}
 ```
 
-A sintaxe `if let` recebe um padrão e uma expressão separados por um sinal de
-igual. Ela funciona da mesma forma que um `match`: a expressão seria fornecida
-ao `match`, e o padrão seria o primeiro braço. Neste caso, o padrão é
-`Some(max)`, e `max` fica associado ao valor dentro de `Some`. Em seguida,
-podemos usar `max` no corpo do bloco `if let`, do mesmo modo que faríamos no
-braço correspondente do `match`. O código dentro do `if let` só é executado se
-o valor casar com o padrão.
+</Listing>
 
-Usar `if let` significa menos digitação, menos indentação e menos código
-repetitivo.
-Em compensação, você perde a verificação exaustiva garantida por `match`, que
-assegura que nenhum caso foi esquecido. Escolher entre `match` e `if let`
-depende do que você está fazendo em uma situação específica e se ganhar
-concisão é uma troca aceitável pela perda dessa verificação exaustiva.
+Se o valor for `Some`, imprimimos o valor na variante `Some` ligando
+o valor para a variável `max` no padrão. Não queremos fazer nada
+com o valor `None`. Para satisfazer a expressão `match`, temos que adicionar `_ =>
+()` depois de processar apenas uma variante, o que é um código padrão irritante para
+adicionar.
 
-Em outras palavras, você pode pensar em `if let` como um atalho sintático para
-um
-`match` que executa código quando o valor casa com um único padrão e ignora
-todos os demais.
-
-Também podemos incluir um `else` em um `if let`. O bloco de código do `else` é
-o mesmo bloco que iria no caso `_` da expressão `match` equivalente. Lembre-se
-da definição da enum `Moeda` na Listagem 6-4, em que a variante `Quarter`
-também armazenava um valor `Estado`. Se quiséssemos contar todas as moedas que
-não fossem _quarters_, ao mesmo tempo em que anunciamos o estado dos
-_quarters_, poderíamos fazer isso com uma expressão `match`, assim:
+Em vez disso, poderíamos escrever isso de uma forma mais curta usando `if let`. A seguir
+o código se comporta da mesma forma que `match` na Listagem 6-6:
 
 ```rust
-# #[derive(Debug)]
-# enum Estado {
-#    Alabama,
-#    Alaska,
-# }
-#
-# enum Moeda {
-#    Penny,
-#    Nickel,
-#    Dime,
-#    Quarter(Estado),
-# }
-# let moeda = Moeda::Penny;
-let mut contagem = 0;
-match moeda {
-    Moeda::Quarter(estado) => println!("Quarter do estado {:?}!", estado),
-    _ => contagem += 1,
-}
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-12-if-let/src/main.rs:here}}
 ```
 
-Ou poderíamos usar `if let` com `else`, desta forma:
+A sintaxe `if let` leva um padrão e uma expressão separados por um igual
+sinal. Funciona da mesma forma que `match`, onde a expressão é dada ao
+`match` e o padrão é seu primeiro braço. Neste caso, o padrão é
+`Some(max)`, e `max` se liga ao valor dentro de `Some`. Podemos então
+use `max` no corpo do bloco `if let` da mesma forma que usamos `max` em
+o braço `match` correspondente. O código no bloco `if let` só é executado se o
+o valor corresponde ao padrão.
+
+Usar `if let` significa menos digitação, menos recuo e menos código clichê.
+No entanto, você perde a verificação exaustiva que `match` impõe que garante que
+você não está se esquecendo de lidar com nenhum caso. Escolhendo entre `match` e `if
+let` depende do que você está fazendo em sua situação específica e se
+ganhar concisão é uma compensação apropriada para perder uma verificação exaustiva.
+
+Em outras palavras, você pode pensar em `if let` como açúcar de sintaxe para um `match` que
+executa o código quando o valor corresponde a um padrão e depois ignora todos os outros valores.
+
+Podemos incluir `else` com `if let`. O bloco de código que acompanha o
+`else` é o mesmo bloco de código que acompanharia o caso `_` no
+`match` expressão que é equivalente a `if let` e `else`. Lembre-se do
+`Coin` definição de enum na Listagem 6-4, onde a variante `Quarter` também possuía um
+`UsState` valor. Se quiséssemos contar todas as moedas que não são de um quarto, vemos ao mesmo tempo
+anunciando o estado dos trimestres, poderíamos fazer isso com um `match`
+expressão, assim:
 
 ```rust
-# #[derive(Debug)]
-# enum Estado {
-#    Alabama,
-#    Alaska,
-# }
-#
-# enum Moeda {
-#    Penny,
-#    Nickel,
-#    Dime,
-#    Quarter(Estado),
-# }
-# let moeda = Moeda::Penny;
-let mut contagem = 0;
-if let Moeda::Quarter(estado) = moeda {
-    println!("Quarter do estado {:?}!", estado);
-} else {
-    contagem += 1;
-}
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-13-count-and-announce-match/src/main.rs:here}}
 ```
 
-## Permanecendo no "Caminho Feliz" com `let...else`
-
-Um padrão comum é realizar algum cálculo quando um valor está presente e, caso
-contrário, retornar um valor padrão. Continuando com nosso exemplo das moedas
-com um valor `Estado`, se quiséssemos dizer algo engraçado dependendo de quão
-antigo o estado do _quarter_ é, poderíamos introduzir um método em `Estado`
-para verificar a idade do estado, assim:
+Ou poderíamos usar uma expressão `if let` e `else`, assim:
 
 ```rust
-#[derive(Debug)] // Para podermos inspecionar o estado em instantes
-enum Estado {
-    Alabama,
-    Alaska,
-    // --snip--
-}
-
-impl Estado {
-    fn existia_em(&self, ano: u16) -> bool {
-        match self {
-            Estado::Alabama => ano >= 1819,
-            Estado::Alaska => ano >= 1959,
-            // -- snip --
-        }
-    }
-}
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/no-listing-14-count-and-announce-if-let-else/src/main.rs:here}}
 ```
 
-Então poderíamos usar `if let` para fazer `match` no tipo de moeda,
-introduzindo uma variável `estado` dentro do corpo da condição, como na
-Listagem 6-7:
+## Permanecendo no “Caminho Feliz” com `let...else`
+
+O padrão comum é realizar algum cálculo quando um valor está presente e
+retornar um valor padrão caso contrário. Continuando com nosso exemplo de moedas com
+Valor `UsState`, se quiséssemos dizer algo engraçado dependendo da idade do
+estado no trimestre foi, poderíamos introduzir um método em `UsState` para verificar o
+idade de um estado, assim:
 
 ```rust
-# #[derive(Debug)]
-# enum Estado {
-#     Alabama,
-#     Alaska,
-# }
-#
-# impl Estado {
-#     fn existia_em(&self, ano: u16) -> bool {
-#         match self {
-#             Estado::Alabama => ano >= 1819,
-#             Estado::Alaska => ano >= 1959,
-#         }
-#     }
-# }
-#
-# enum Moeda {
-#     Penny,
-#     Nickel,
-#     Dime,
-#     Quarter(Estado),
-# }
-#
-fn descrever_quarter_do_estado(moeda: Moeda) -> Option<String> {
-    if let Moeda::Quarter(estado) = moeda {
-        if estado.existia_em(1900) {
-            Some(format!("{estado:?} é bem antigo para os EUA!"))
-        } else {
-            Some(format!("{estado:?} é relativamente novo."))
-        }
-    } else {
-        None
-    }
-}
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-07/src/main.rs:state}}
 ```
 
-<span class="caption">Listagem 6-7: Verificando se um estado existia em 1900
-usando condicionais aninhadas em um `if let`</span>
+Então, podemos usar `if let` para combinar o tipo de moeda, introduzindo um `state`
+variável dentro do corpo da condição, como na Listagem 6-7.
 
-Isso resolve o problema, mas desloca o trabalho para dentro do corpo do `if
-let`, e, se o código a ser executado ficar mais complexo, pode ser difícil
-acompanhar exatamente como os ramos de nível superior se relacionam. Também
-podemos aproveitar o fato de que expressões produzem um valor, seja para obter
-o `estado` a partir do `if let`, seja para retornar mais cedo, como na
-Listagem 6-8. Você também poderia fazer algo parecido com `match`.
+<Listing number="6-7" caption="Checking whether a state existed in 1900 by using conditionals nested inside an `if let`">
 
 ```rust
-# #[derive(Debug)]
-# enum Estado {
-#     Alabama,
-#     Alaska,
-# }
-#
-# impl Estado {
-#     fn existia_em(&self, ano: u16) -> bool {
-#         match self {
-#             Estado::Alabama => ano >= 1819,
-#             Estado::Alaska => ano >= 1959,
-#         }
-#     }
-# }
-#
-# enum Moeda {
-#     Penny,
-#     Nickel,
-#     Dime,
-#     Quarter(Estado),
-# }
-#
-fn descrever_quarter_do_estado(moeda: Moeda) -> Option<String> {
-    let estado = if let Moeda::Quarter(estado) = moeda {
-        estado
-    } else {
-        return None;
-    };
-
-    if estado.existia_em(1900) {
-        Some(format!("{estado:?} é bem antigo para os EUA!"))
-    } else {
-        Some(format!("{estado:?} é relativamente novo."))
-    }
-}
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-07/src/main.rs:describe}}
 ```
 
-<span class="caption">Listagem 6-8: Usando `if let` para produzir um valor ou
-retornar cedo</span>
+</Listing>
 
-Essa versão também é um pouco incômoda de acompanhar. Um dos ramos do `if let`
-produz um valor, e o outro retorna da função por completo.
+Isso dá conta do recado, mas empurrou o trabalho para dentro do corpo do “se
+let`, e se o trabalho a ser feito for mais complicado, pode ser
+difícil acompanhar exatamente como as filiais de nível superior se relacionam. Poderíamos também levar
+vantagem do fato de que as expressões produzem um valor para produzir o
+`state` do `if let` ou retornar mais cedo, como na Listagem 6-8. (Você poderia fazer
+algo semelhante com `match` também.)
 
-Para tornar esse padrão comum mais agradável de expressar, Rust tem
-`let...else`. A sintaxe `let...else` recebe um padrão no lado esquerdo e uma
-expressão no lado direito, de forma muito parecida com `if let`, mas não tem
-um ramo `if`, apenas um ramo `else`. Se o padrão casar, o valor do padrão será
-associado no escopo externo. Se o padrão *não* casar, o fluxo do programa
-seguirá para o braço `else`, que precisa retornar da função.
-
-Na Listagem 6-9, você pode ver como a Listagem 6-8 fica ao usar `let...else`
-no lugar de `if let`:
+<Listing number="6-8" caption="Using `if let` to produce a value or return early">
 
 ```rust
-# #[derive(Debug)]
-# enum Estado {
-#     Alabama,
-#     Alaska,
-# }
-#
-# impl Estado {
-#     fn existia_em(&self, ano: u16) -> bool {
-#         match self {
-#             Estado::Alabama => ano >= 1819,
-#             Estado::Alaska => ano >= 1959,
-#         }
-#     }
-# }
-#
-# enum Moeda {
-#     Penny,
-#     Nickel,
-#     Dime,
-#     Quarter(Estado),
-# }
-#
-fn descrever_quarter_do_estado(moeda: Moeda) -> Option<String> {
-    let Moeda::Quarter(estado) = moeda else {
-        return None;
-    };
-
-    if estado.existia_em(1900) {
-        Some(format!("{estado:?} é bem antigo para os EUA!"))
-    } else {
-        Some(format!("{estado:?} é relativamente novo."))
-    }
-}
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-08/src/main.rs:describe}}
 ```
 
-<span class="caption">Listagem 6-9: Usando `let...else` para deixar mais claro
-o fluxo da função</span>
+</Listing>
 
-Repare que, dessa forma, o corpo principal da função permanece no "caminho
-feliz", sem que dois ramos tenham fluxos de controle muito diferentes, como
-acontecia no `if let`.
+No entanto, isso é um pouco chato de seguir à sua maneira! Um ramo do `if
+let` produz um valor, e o outro retorna inteiramente da função.
 
-Se você estiver em uma situação em que a lógica do programa fica verbosa demais
-para ser expressa com `match`, lembre-se de que `if let` e `let...else` também
-fazem parte da sua caixa de ferramentas em Rust.
+Para tornar esse padrão comum mais fácil de expressar, Rust tem `let...else`. O
+A sintaxe `let...else` usa um padrão no lado esquerdo e uma expressão no lado
+certo, muito parecido com `if let`, mas não tem um branch `if`, apenas um
+`else` filial. Se o padrão corresponder, ele vinculará o valor do padrão
+no âmbito externo. Se o padrão _não_ corresponder, o programa fluirá para
+o braço `else`, que deve retornar da função.
+
+Na Listagem 6-9, você pode ver a aparência da Listagem 6-8 ao usar `let...else` em
+lugar de `if let`.
+
+<Listing number="6-9" caption="Using `let...else` to clarify the flow through the function">
+
+```rust
+{{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-09/src/main.rs:describe}}
+```
+
+</Listing>
+
+Observe que ele permanece no “caminho da felicidade” no corpo principal da função
+maneira, sem ter fluxo de controle significativamente diferente para dois ramos, o
+como o `if let` fez.
+
+Se você tiver uma situação em que seu programa possui uma lógica muito detalhada para
+expressar usando `match`, lembre-se de que `if let` e `let...else` estão em seu
+Caixa de ferramentas de ferrugem também.
 
 ## Resumo
 
-Agora já vimos como usar enums para criar tipos customizados que podem assumir
-um dentre vários valores enumerados. Mostramos como o tipo `Option<T>`, da
-biblioteca padrão, ajuda você a usar o sistema de tipos para evitar erros.
-Quando valores de enums contêm dados, você pode usar `match` ou `if let` para
-extrair e usar esses valores, dependendo de quantos casos precisa tratar.
+Agora abordamos como usar enums para criar tipos personalizados que podem ser um de
+conjunto de valores enumerados. Mostramos como o `Option<T>` da biblioteca padrão
+type ajuda você a usar o sistema de tipos para evitar erros. Quando os valores enum têm
+dados dentro deles, você pode usar `match` ou `if let` para extrair e usar esses
+valores, dependendo de quantos casos você precisa tratar.
 
-Seus programas em Rust agora podem expressar conceitos do seu domínio usando
-structs e enums. Criar tipos customizados para a sua API garante segurança de
-tipos: o compilador vai assegurar que suas funções recebam apenas valores do
-tipo esperado por cada uma delas.
+Seus programas Rust agora podem expressar conceitos em seu domínio usando estruturas e
+enumerações. A criação de tipos personalizados para usar em sua API garante a segurança do tipo: O
+compilador garantirá que suas funções obtenham apenas valores do tipo cada
+função espera.
 
-Para fornecer aos seus usuários uma API bem organizada, simples de usar e que
-exponha apenas o que eles realmente precisam, vamos agora voltar nossa atenção
-para os módulos em Rust.
+Para fornecer uma API bem organizada aos seus usuários e que seja simples
+usar e expõe exatamente o que seus usuários precisarão, vamos agora
+Módulos de Rust.

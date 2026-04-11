@@ -2,58 +2,56 @@
 
 <a id="defining-modules-to-control-scope-and-privacy"></a>
 
-## Controlando Escopo e Privacidade com Módulos
+## Controle o escopo e a privacidade com módulos
 
 Nesta seção, falaremos sobre módulos e outras partes do sistema de módulos,
-principalmente _paths_, que permitem nomear itens; a palavra-chave `use`, que
-traz um caminho para o escopo; e a palavra-chave `pub`, para tornar itens
-públicos. Também discutiremos a palavra-chave `as`, pacotes externos e o
-operador glob.
+nomeadamente _paths_, que permitem nomear itens; a palavra-chave `use` que traz um
+caminho para o escopo; e a palavra-chave `pub` para tornar os itens públicos. Também discutiremos
+a palavra-chave `as`, pacotes externos e o operador glob.
 
-### Folha de Referência de Módulos
+### Folha de referências dos módulos
 
-Antes de entrarmos nos detalhes de módulos e caminhos, aqui vai uma referência
-rápida sobre como módulos, caminhos, a palavra-chave `use` e a palavra-chave
-`pub` funcionam no compilador e como a maioria das pessoas organiza seu código.
-Vamos passar por exemplos de cada uma dessas regras ao longo deste capítulo,
-mas esta é uma ótima seção para consultar quando você quiser relembrar como os
-módulos funcionam.
+Antes de entrarmos nos detalhes dos módulos e caminhos, fornecemos aqui uma rápida
+referência sobre como módulos, caminhos, a palavra-chave `use` e a palavra-chave `pub` funcionam
+no compilador e como a maioria dos desenvolvedores organiza seu código. Nós iremos
+através de exemplos de cada uma dessas regras ao longo deste capítulo, mas esta é uma
+ótimo lugar para consultar como um lembrete de como os módulos funcionam.
 
-- **Comece pela raiz do crate**: ao compilar um crate, o compilador primeiro
-  procura no arquivo raiz do crate, geralmente _src/lib.rs_ para um crate de
-  biblioteca e _src/main.rs_ para um crate binário, o código a ser compilado.
-- **Declarando módulos**: no arquivo raiz do crate, você pode declarar novos
-  módulos. Digamos que você declare um módulo `garden` com `mod garden;`. O
-  compilador procurará o código desse módulo nos seguintes lugares:
-  - Inline, entre chaves, substituindo o ponto e vírgula após `mod garden`
-  - No arquivo _src/garden.rs_
-  - No arquivo _src/garden/mod.rs_
-- **Declarando submódulos**: em qualquer arquivo que não seja a raiz do crate,
-  você pode declarar submódulos. Por exemplo, você poderia declarar
-  `mod vegetables;` em _src/garden.rs_. O compilador procurará o código do
-  submódulo dentro do diretório nomeado de acordo com o módulo pai, nos
-  seguintes lugares:
-  - Inline, logo após `mod vegetables`, entre chaves em vez do ponto e vírgula
-  - No arquivo _src/garden/vegetables.rs_
-  - No arquivo _src/garden/vegetables/mod.rs_
-- **Caminhos para código em módulos**: depois que um módulo passa a fazer parte
-  do seu crate, você pode se referir ao código desse módulo de qualquer outro
-  lugar do mesmo crate, desde que as regras de privacidade permitam, usando o
-  caminho até esse código. Por exemplo, um tipo `Asparagus` no módulo
-  `garden::vegetables` seria encontrado em
-  `crate::garden::vegetables::Asparagus`.
-- **Privado versus público**: por padrão, o código dentro de um módulo é
-  privado em relação aos seus módulos pais. Para tornar um módulo público,
-  declare-o com `pub mod` em vez de `mod`. Para tornar públicos também os itens
-  dentro de um módulo público, use `pub` antes de suas declarações.
-- **A palavra-chave `use`**: dentro de um escopo, a palavra-chave `use` cria
-  atalhos para itens, reduzindo a repetição de caminhos longos. Em qualquer
-  escopo que possa se referir a `crate::garden::vegetables::Asparagus`, você
-  pode criar um atalho com `use crate::garden::vegetables::Asparagus;`; a
-  partir daí, basta escrever `Asparagus` para usar esse tipo no escopo.
+- **Comece pela raiz da caixa**: Ao compilar uma caixa, o compilador primeiro
+procura no arquivo raiz da caixa (geralmente _src/lib.rs_ para uma caixa de biblioteca e
+_src/main.rs_ para uma caixa binária) para o código ser compilado.
+- **Declarando módulos**: No arquivo raiz da caixa, você pode declarar novos módulos;
+digamos que você declare um módulo “jardim” com `mod garden;`. O compilador irá parecer
+para o código do módulo nestes locais:
+- Inline, entre chaves que substituem o ponto e vírgula após `mod
+jardim`
+- No arquivo _src/garden.rs_
+- No arquivo _src/garden/mod.rs_
+- **Declarando submódulos**: Em qualquer arquivo que não seja a raiz da caixa, você pode
+declarar submódulos. Por exemplo, você pode declarar `mod vegetables;` em
+_src/garden.rs_. O compilador procurará o código do submódulo dentro do
+diretório nomeado para o módulo pai nestes locais:
+- Inline, seguindo diretamente `mod vegetables`, entre colchetes
+do ponto e vírgula
+- No arquivo _src/garden/vegetables.rs_
+- No arquivo _src/garden/vegetables/mod.rs_
+- **Caminhos para código em módulos**: quando um módulo fizer parte da sua caixa, você poderá
+consulte o código nesse módulo de qualquer outro lugar na mesma caixa, desde que
+conforme as regras de privacidade permitem, usando o caminho para o código. Por exemplo, um
+O tipo `Asparagus` no módulo de hortaliças seria encontrado em
+`crate::garden::vegetables::Asparagus`.
+- **Privado x público**: o código dentro de um módulo é privado de seu pai
+módulos por padrão. Para tornar um módulo público, declare-o com `pub mod`
+em vez de `mod`. Para tornar públicos os itens de um módulo público também, use
+`pub` antes de suas declarações.
+- **A palavra-chave `use`**: Dentro de um escopo, a palavra-chave `use` cria atalhos para
+itens para reduzir a repetição de caminhos longos. Em qualquer escopo que possa se referir a
+`crate::garden::vegetables::Asparagus`, você pode criar um atalho com `use
+crate::garden::vegetables::Asparagus;`, e a partir daí você só precisa
+escreva `Asparagus` para fazer uso desse tipo no escopo.
 
-Aqui, criamos um crate binário chamado `backyard` que ilustra essas regras. O
-diretório do crate, também chamado _backyard_, contém estes arquivos e
+Aqui, criamos uma caixa binária chamada `backyard` que ilustra essas regras.
+O diretório da caixa, também chamado _backyard_, contém esses arquivos e
 diretórios:
 
 ```text
@@ -62,12 +60,12 @@ backyard
 ├── Cargo.toml
 └── src
     ├── garden
-    │   └── vegetables.rs
+    │   └── vegetables.rs
     ├── garden.rs
     └── main.rs
 ```
 
-O arquivo raiz do crate, neste caso, é _src/main.rs_, e ele contém:
+O arquivo raiz da caixa neste caso é _src/main.rs_ e contém:
 
 <Listing file-name="src/main.rs">
 
@@ -77,7 +75,7 @@ O arquivo raiz do crate, neste caso, é _src/main.rs_, e ele contém:
 
 </Listing>
 
-A linha `pub mod garden;` diz ao compilador para incluir o código encontrado em
+A linha `pub mod garden;` diz ao compilador para incluir o código que encontrar
 _src/garden.rs_, que é:
 
 <Listing file-name="src/garden.rs">
@@ -88,43 +86,43 @@ _src/garden.rs_, que é:
 
 </Listing>
 
-Aqui, `pub mod vegetables;` significa que o código em
-_src/garden/vegetables.rs_ também é incluído. Esse código é:
+Aqui, `pub mod vegetables;` significa que o código em _src/garden/vegetables.rs_ é
+incluído também. Esse código é:
 
 ```rust,noplayground,ignore
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/quick-reference-example/src/garden/vegetables.rs}}
 ```
 
-Agora vamos entrar nos detalhes dessas regras e demonstrá-las em ação!
+Agora vamos entrar em detalhes dessas regras e demonstrá-las em ação!
 
-### Agrupando Código Relacionado em Módulos
+### Agrupando código relacionado em módulos
 
-_Módulos_ nos permitem organizar o código dentro de um crate de modo a torná-lo
-mais legível e fácil de reutilizar. Eles também nos permitem controlar a
-_privacidade_ dos itens, porque, por padrão, o código dentro de um módulo é
-privado. Itens privados são detalhes internos de implementação, não disponíveis
-para uso externo. Podemos optar por tornar módulos e os itens dentro deles
-públicos, expondo-os para que código externo possa usá-los e depender deles.
+_Módulos_ nos permitem organizar o código em uma caixa para facilitar a leitura e a reutilização.
+Os módulos também nos permitem controlar a _privacidade_ dos itens porque o código dentro de um
+o módulo é privado por padrão. Itens privados são detalhes de implementação interna
+não disponível para uso externo. Podemos optar por fazer módulos e os itens
+dentro deles públicos, o que os expõe para permitir que código externo use e dependa
+neles.
 
-Como exemplo, vamos escrever um crate de biblioteca que fornece a
-funcionalidade de um restaurante. Definiremos as assinaturas de funções, mas
-deixaremos seus corpos vazios para nos concentrarmos na organização do código,
-e não na implementação de um restaurante.
+Como exemplo, vamos escrever uma caixa de biblioteca que forneça a funcionalidade de um
+restaurante. Definiremos as assinaturas das funções, mas deixaremos seus corpos
+vazio se concentrar na organização do código e não na
+implementação de um restaurante.
 
-Na indústria de restaurantes, algumas partes de um restaurante são chamadas de
-frente da casa e outras de fundos da casa. A _frente da casa_ é onde ficam os
-clientes; isso inclui onde os anfitriões acomodam os clientes, onde os
-atendentes recebem pedidos e pagamentos, e onde os bartenders preparam
-bebidas. Os _fundos da casa_ são onde chefs e cozinheiros trabalham na cozinha,
-onde a louça é lavada e onde gerentes fazem o trabalho administrativo.
+Na indústria de restaurantes, algumas partes de um restaurante são chamadas de frente
+de casa e outros como fundos de casa. _Frente da casa_ é onde estão os clientes;
+isso abrange onde os anfitriões acomodam os clientes, os servidores recebem pedidos e
+pagamento, e os bartenders preparam bebidas. _Nos fundos da casa_ é onde os chefs e
+cozinheiros trabalham na cozinha, máquinas de lavar louça limpam e gerentes fazem tarefas administrativas
+trabalhar.
 
-Para estruturar nosso crate dessa forma, podemos organizar suas funções em
-módulos aninhados. Crie uma nova biblioteca chamada `restaurant` executando
-`cargo new restaurant --lib`. Em seguida, coloque o código da Listagem 7-1 em
-_src/lib.rs_ para definir alguns módulos e assinaturas de função; esse código
-representa a seção de frente da casa.
+Para estruturar nossa caixa dessa forma, podemos organizar suas funções em grupos aninhados.
+módulos. Crie uma nova biblioteca chamada `restaurant` executando `cargo new
+restaurante --lib`. Em seguida, insira o código da Listagem 7-1 em _src/lib.rs_ para
+definir alguns módulos e assinaturas de funções; esse código é a frente da casa
+seção.
 
-<Listing number="7-1" file-name="src/lib.rs" caption="Um módulo `front_of_house` contendo outros módulos, que por sua vez contêm funções">
+<Listing number="7-1" file-name="src/lib.rs" caption="A `front_of_house` module containing other modules that then contain functions">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-01/src/lib.rs}}
@@ -132,27 +130,27 @@ representa a seção de frente da casa.
 
 </Listing>
 
-Definimos um módulo com a palavra-chave `mod`, seguida do nome do módulo, neste
-caso `front_of_house`. O corpo do módulo vai então entre chaves. Dentro de
-módulos, podemos colocar outros módulos, como neste caso com os módulos
-`hosting` e `serving`. Módulos também podem conter definições de outros itens,
-como structs, enums, constantes, traits e, como na Listagem 7-1, funções.
+Definimos um módulo com a palavra-chave `mod` seguida do nome do módulo
+(neste caso, `front_of_house`). O corpo do módulo então vai para dentro do cacheado
+colchetes. Dentro dos módulos podemos colocar outros módulos, como neste caso com o
+módulos `hosting` e `serving`. Os módulos também podem conter definições para outros
+itens, como structs, enums, constantes, traits, e como na Listagem 7-1,
+funções.
 
-Ao usar módulos, podemos agrupar definições relacionadas e dar nome ao motivo
-pelo qual elas se relacionam. Quem usa esse código pode navegar pelo projeto
-com base nos agrupamentos, em vez de ter que ler todas as definições, o que
-facilita encontrar aquelas que são relevantes. Quem adicionar nova
-funcionalidade a esse código saberá onde colocá-la para manter o programa bem
-organizado.
+Ao usar módulos, podemos agrupar definições relacionadas e nomear o porquê
+eles estão relacionados. Os programadores que usam este código podem navegar no código com base no
+grupos em vez de ter que ler todas as definições, tornando mais fácil
+para encontrar as definições relevantes para eles. Programadores adicionando novas funcionalidades
+a este código saberia onde colocar o código para manter o programa organizado.
 
-Antes, mencionamos que _src/main.rs_ e _src/lib.rs_ são chamados de _raízes do
-crate_. O motivo desse nome é que o conteúdo de qualquer um desses arquivos
-forma um módulo chamado `crate`, localizado na raiz da estrutura de módulos do
-crate, conhecida como _árvore de módulos_.
+Anteriormente, mencionamos que _src/main.rs_ e _src/lib.rs_ são chamados de _crate
+raízes_. A razão para o seu nome é que o conteúdo de qualquer um destes dois
+os arquivos formam um módulo chamado `crate` na raiz da estrutura do módulo da caixa,
+conhecida como _árvore de módulos_.
 
-A Listagem 7-2 mostra a árvore de módulos da estrutura da Listagem 7-1.
+A Listagem 7-2 mostra a árvore de módulos para a estrutura da Listagem 7-1.
 
-<Listing number="7-2" caption="A árvore de módulos do código da Listagem 7-1">
+<Listing number="7-2" caption="The module tree for the code in Listing 7-1">
 
 ```text
 crate
@@ -168,17 +166,15 @@ crate
 
 </Listing>
 
-Essa árvore mostra como alguns módulos ficam aninhados dentro de outros; por
-exemplo, `hosting` está aninhado dentro de `front_of_house`. A árvore também
-mostra que alguns módulos são _irmãos_, o que significa que estão definidos no
-mesmo módulo; `hosting` e `serving` são irmãos definidos dentro de
-`front_of_house`. Se o módulo A estiver contido dentro do módulo B, dizemos que
-o módulo A é _filho_ do módulo B, e que o módulo B é _pai_ do módulo A.
-Observe que toda a árvore de módulos está enraizada sob o módulo implícito
-chamado `crate`.
+Esta árvore mostra como alguns módulos se aninham dentro de outros módulos; por exemplo,
+`hosting` aninha-se dentro de `front_of_house`. A árvore também mostra que alguns módulos
+são _irmãos_, o que significa que estão definidos no mesmo módulo; `hosting` e
+`serving` são irmãos definidos em `front_of_house`. Se o módulo A for
+contido dentro do módulo B, dizemos que o módulo A é _filho_ do módulo B e
+que o módulo B é o _pai_ do módulo A. Observe que toda a árvore do módulo
+está enraizado no módulo implícito denominado `crate`.
 
-A árvore de módulos pode lembrar a árvore de diretórios do sistema de arquivos
-do seu computador; e essa comparação é bastante adequada. Assim como você usa
-diretórios em um sistema de arquivos para organizar seus arquivos, você usa
-módulos para organizar seu código. E, da mesma forma que acontece com arquivos
-em um diretório, precisamos de uma maneira de encontrar nossos módulos.
+A árvore de módulos pode lembrá-lo da árvore de diretórios do sistema de arquivos em seu
+computador; esta é uma comparação muito adequada! Assim como os diretórios em um sistema de arquivos,
+você usa módulos para organizar seu código. E assim como os arquivos em um diretório, nós
+precisamos de uma maneira de encontrar nossos módulos.

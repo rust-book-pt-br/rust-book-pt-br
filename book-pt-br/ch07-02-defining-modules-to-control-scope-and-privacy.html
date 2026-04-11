@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Controle de Escopo e Privacidade com Módulos - A Linguagem de Programação Rust (PT-BR)</title>
+        <title>Controlando Escopo e Privacidade com Módulos - A Linguagem de Programação Rust (PT-BR)</title>
 
 
         <!-- Custom HTML head -->
@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cf733e22.js";
+            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-31482bb5.js"></script>
+        <script src="toc-4901e489.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -147,7 +147,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
-                        <a href="https://github.com/rust-lang/book" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/rust-book-pt-br/rust-book-pt-br" title="Git repository" aria-label="Git repository">
                             <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
                         </a>
 
@@ -195,45 +195,39 @@ no compilador e como a maioria dos desenvolvedores organiza seu código. Nós ir
 através de exemplos de cada uma dessas regras ao longo deste capítulo, mas esta é uma
 ótimo lugar para consultar como um lembrete de como os módulos funcionam.</p>
 <ul>
-<li><strong>Comece pela raiz do crate</strong>: Ao compilar um crate, o compilador primeiro
-procura no arquivo raiz crate (geralmente <em>src/lib.rs</em> para uma biblioteca crate e
-<em>src/main.rs</em> para um crate binário) para código a ser compilado.</li>
-<li><strong>Declarando módulos</strong>: No arquivo raiz crate, você pode declarar novos módulos;
+<li><strong>Comece pela raiz da caixa</strong>: Ao compilar uma caixa, o compilador primeiro
+procura no arquivo raiz da caixa (geralmente <em>src/lib.rs</em> para uma caixa de biblioteca e
+<em>src/main.rs</em> para uma caixa binária) para o código ser compilado.</li>
+<li><strong>Declarando módulos</strong>: No arquivo raiz da caixa, você pode declarar novos módulos;
 digamos que você declare um módulo “jardim” com <code>mod garden;</code>. O compilador irá parecer
-para o código do módulo nestes locais:
-<ul>
-<li>Inline, entre chaves que substituem o ponto e vírgula após <code> mod garden</code></li>
+para o código do módulo nestes locais:</li>
+<li>Inline, entre chaves que substituem o ponto e vírgula após <code>mod jardim</code></li>
 <li>No arquivo <em>src/garden.rs</em></li>
 <li>No arquivo <em>src/garden/mod.rs</em></li>
-</ul>
-</li>
-<li><strong>Declarando submódulos</strong>: Em qualquer arquivo diferente da raiz crate, você pode
-declarar submódulos. Por exemplo, você pode declarar <code> mod vegetables;</code>em
+<li><strong>Declarando submódulos</strong>: Em qualquer arquivo que não seja a raiz da caixa, você pode
+declarar submódulos. Por exemplo, você pode declarar <code>mod vegetables;</code> em
 <em>src/garden.rs</em>. O compilador procurará o código do submódulo dentro do
-diretório nomeado para o módulo pai nestes locais:
-<ul>
-<li>Inline, diretamente após <code> mod vegetables</code>, entre colchetes
+diretório nomeado para o módulo pai nestes locais:</li>
+<li>Inline, seguindo diretamente <code>mod vegetables</code>, entre colchetes
 do ponto e vírgula</li>
 <li>No arquivo <em>src/garden/vegetables.rs</em></li>
 <li>No arquivo <em>src/garden/vegetables/mod.rs</em></li>
-</ul>
-</li>
-<li><strong>Caminhos para código em módulos</strong>: Depois que um módulo faz parte do seu crate, você pode
-consulte o código nesse módulo de qualquer outro lugar no mesmo crate, desde que
+<li><strong>Caminhos para código em módulos</strong>: quando um módulo fizer parte da sua caixa, você poderá
+consulte o código nesse módulo de qualquer outro lugar na mesma caixa, desde que
 conforme as regras de privacidade permitem, usando o caminho para o código. Por exemplo, um
-O tipo <code> Asparagus</code>no módulo de hortaliças seria encontrado em
+O tipo <code>Asparagus</code> no módulo de hortaliças seria encontrado em
 <code>crate::garden::vegetables::Asparagus</code>.</li>
-<li><strong>Privado vs. público</strong>: o código dentro de um módulo é privado de seu pai
-módulos por padrão. Para tornar um módulo público, declare-o com<code>pub mod</code>
-em vez de<code>mod</code>. Para tornar públicos os itens de um módulo público também, use
-<code>pub</code>antes de suas declarações.</li>
-<li><strong>A palavra-chave<code>use</code></strong>: dentro de um escopo, a palavra-chave<code>use</code>cria atalhos para
+<li><strong>Privado x público</strong>: o código dentro de um módulo é privado de seu pai
+módulos por padrão. Para tornar um módulo público, declare-o com <code>pub mod</code>
+em vez de <code>mod</code>. Para tornar públicos os itens de um módulo público também, use
+<code>pub</code> antes de suas declarações.</li>
+<li><strong>A palavra-chave <code>use</code></strong>: Dentro de um escopo, a palavra-chave <code>use</code> cria atalhos para
 itens para reduzir a repetição de caminhos longos. Em qualquer escopo que possa se referir a
-<code>crate::garden::vegetables::Asparagus</code>, você pode criar um atalho com<code>use crate::garden::vegetables::Asparagus;</code>, e a partir daí você só precisa
-escreva<code> Asparagus</code>para usar esse tipo no escopo.</li>
+<code>crate::garden::vegetables::Asparagus</code>, você pode criar um atalho com <code>use crate::garden::vegetables::Asparagus;</code>, e a partir daí você só precisa
+escreva <code>Asparagus</code> para fazer uso desse tipo no escopo.</li>
 </ul>
-<p>Aqui, criamos um crate binário denominado <code>backyard</code> que ilustra essas regras.
-O diretório do crate, também denominado <em>backyard</em>, contém esses arquivos e
+<p>Aqui, criamos uma caixa binária chamada <code>backyard</code> que ilustra essas regras.
+O diretório da caixa, também chamado <em>backyard</em>, contém esses arquivos e
 diretórios:</p>
 <pre><code class="language-text">backyard
 ├── Cargo.lock
@@ -244,7 +238,7 @@ diretórios:</p>
     ├── garden.rs
     └── main.rs
 </code></pre>
-<p>O arquivo raiz crate neste caso é <em>src/main.rs</em> e contém:</p>
+<p>O arquivo raiz da caixa neste caso é <em>src/main.rs</em> e contém:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust noplayground ignore">use crate::garden::vegetables::Asparagus;
@@ -256,7 +250,7 @@ fn main() {
     println!("I'm growing {plant:?}!");
 }</code></pre>
 </figure>
-<p>A linha <code>pub mod garden;</code> diz ao compilador para incluir o código que encontra
+<p>A linha <code>pub mod garden;</code> diz ao compilador para incluir o código que encontrar
 <em>src/garden.rs</em>, que é:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/garden.rs</span>
@@ -268,13 +262,13 @@ incluído também. Esse código é:</p>
 pub struct Asparagus {}</code></pre>
 <p>Agora vamos entrar em detalhes dessas regras e demonstrá-las em ação!</p>
 <h3 id="agrupando-código-relacionado-em-módulos"><a class="header" href="#agrupando-código-relacionado-em-módulos">Agrupando código relacionado em módulos</a></h3>
-<p><em>Módulos</em> nos permitem organizar o código em um crate para facilitar a leitura e reutilização.
+<p><em>Módulos</em> nos permitem organizar o código em uma caixa para facilitar a leitura e a reutilização.
 Os módulos também nos permitem controlar a <em>privacidade</em> dos itens porque o código dentro de um
 o módulo é privado por padrão. Itens privados são detalhes de implementação interna
 não disponível para uso externo. Podemos optar por fazer módulos e os itens
 dentro deles públicos, o que os expõe para permitir que código externo use e dependa
 neles.</p>
-<p>Como exemplo, vamos escrever uma biblioteca crate que fornece a funcionalidade de um
+<p>Como exemplo, vamos escrever uma caixa de biblioteca que forneça a funcionalidade de um
 restaurante. Definiremos as assinaturas das funções, mas deixaremos seus corpos
 vazio se concentrar na organização do código e não na
 implementação de um restaurante.</p>
@@ -283,9 +277,9 @@ de casa e outros como fundos de casa. <em>Frente da casa</em> é onde estão os 
 isso abrange onde os anfitriões acomodam os clientes, os servidores recebem pedidos e
 pagamento, e os bartenders preparam bebidas. <em>Nos fundos da casa</em> é onde os chefs e
 cozinheiros trabalham na cozinha, máquinas de lavar louça limpam e gerentes fazem tarefas administrativas
-trabalho.</p>
-<p>Para estruturar nosso crate desta forma, podemos organizar suas funções em
-módulos. Crie uma nova biblioteca chamada <code>restaurant</code> executando <code>cargo new restaurant --lib</code>. Em seguida, insira o código da Listagem 7-1 em <em>src/lib.rs</em> para
+trabalhar.</p>
+<p>Para estruturar nossa caixa dessa forma, podemos organizar suas funções em grupos aninhados.
+módulos. Crie uma nova biblioteca chamada <code>restaurant</code> executando <code>cargo new restaurante --lib</code>. Em seguida, insira o código da Listagem 7-1 em <em>src/lib.rs</em> para
 definir alguns módulos e assinaturas de funções; esse código é a frente da casa
 seção.</p>
 <figure class="listing" id="listing-7-1">
@@ -305,13 +299,13 @@ seção.</p>
         fn take_payment() {}
     }
 }</code></pre>
-<figcaption><a href="#listing-7-1">Listing 7-1</a>: Um módulo <code>front_of_house</code> contendo outros módulos que, por sua vez, contêm funções</figcaption>
+<figcaption><a href="#listing-7-1">Listing 7-1</a>: A <code>front_of_house</code> module containing other modules that then contain functions</figcaption>
 </figure>
 <p>Definimos um módulo com a palavra-chave <code>mod</code> seguida do nome do módulo
 (neste caso, <code>front_of_house</code>). O corpo do módulo então vai para dentro do cacheado
 colchetes. Dentro dos módulos podemos colocar outros módulos, como neste caso com o
-módulos <code> hosting</code>e <code> serving</code>. Os módulos também podem conter definições para outros
-itens, como structs, enums, constantes, traits e como na Listagem 7-1,
+módulos <code>hosting</code> e <code>serving</code>. Os módulos também podem conter definições para outros
+itens, como structs, enums, constantes, traits, e como na Listagem 7-1,
 funções.</p>
 <p>Ao usar módulos, podemos agrupar definições relacionadas e nomear o porquê
 eles estão relacionados. Os programadores que usam este código podem navegar no código com base no
@@ -320,7 +314,7 @@ para encontrar as definições relevantes para eles. Programadores adicionando n
 a este código saberia onde colocar o código para manter o programa organizado.</p>
 <p>Anteriormente, mencionamos que <em>src/main.rs</em> e <em>src/lib.rs</em> são chamados de <em>crate
 raízes</em>. A razão para o seu nome é que o conteúdo de qualquer um destes dois
-os arquivos formam um módulo chamado <code>crate</code> na raiz da estrutura do módulo do crate,
+os arquivos formam um módulo chamado <code>crate</code> na raiz da estrutura do módulo da caixa,
 conhecida como <em>árvore de módulos</em>.</p>
 <p>A Listagem 7-2 mostra a árvore de módulos para a estrutura da Listagem 7-1.</p>
 <figure class="listing" id="listing-7-2">
@@ -334,15 +328,15 @@ conhecida como <em>árvore de módulos</em>.</p>
          ├── serve_order
          └── take_payment
 </code></pre>
-<figcaption><a href="#listing-7-2">Listing 7-2</a>: A árvore de módulos para o código da Listagem 7-1</figcaption>
+<figcaption><a href="#listing-7-2">Listing 7-2</a>: The module tree for the code in Listing 7-1</figcaption>
 </figure>
 <p>Esta árvore mostra como alguns módulos se aninham dentro de outros módulos; por exemplo,
-<code>hosting </code> aninha-se dentro de<code>front_of_house </code>. A árvore também mostra que alguns módulos
-são <em>irmãos</em>, o que significa que estão definidos no mesmo módulo;<code>hosting</code>e
-<code>serving</code>são irmãos definidos em<code>front_of_house</code>. Se o módulo A for
+<code>hosting</code> aninha-se dentro de <code>front_of_house</code>. A árvore também mostra que alguns módulos
+são <em>irmãos</em>, o que significa que estão definidos no mesmo módulo; <code>hosting</code> e
+<code>serving</code> são irmãos definidos em <code>front_of_house</code>. Se o módulo A for
 contido dentro do módulo B, dizemos que o módulo A é <em>filho</em> do módulo B e
 que o módulo B é o <em>pai</em> do módulo A. Observe que toda a árvore do módulo
-está enraizado no módulo implícito denominado<code> crate</code>.</p>
+está enraizado no módulo implícito denominado <code>crate</code>.</p>
 <p>A árvore de módulos pode lembrá-lo da árvore de diretórios do sistema de arquivos em seu
 computador; esta é uma comparação muito adequada! Assim como os diretórios em um sistema de arquivos,
 você usa módulos para organizar seu código. E assim como os arquivos em um diretório, nós
