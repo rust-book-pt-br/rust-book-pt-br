@@ -1,186 +1,120 @@
-# Tipos Genéricos, _Traits_, e Tempos de vida (_Lifetimes_)
+# Tipos Genéricos, Traits e Lifetimes
 
-Cada linguagem de programação tem ferramentas para lidar de forma efetiva com a
-duplicação de conceitos; em Rust, uma dessas ferramentas são os tipos
-genéricos. Tipos genéricos são substitutos abstratos para tipos concretos ou 
-para outras propriedades. Quando estamos escrevendo e compilando o código 
-podemos expressar propriedades de tipos genéricos, como seu comportamento ou 
-como eles se relacionam com outros tipos genéricos, sem precisar saber o que 
-realmente estará no lugar deles.
+Toda linguagem de programação tem ferramentas para lidar de maneira eficiente
+com a duplicação de conceitos. Em Rust, uma dessas ferramentas são os
+_genéricos_: substitutos abstratos para tipos concretos ou outras
+propriedades. Podemos expressar o comportamento de genéricos ou como eles se
+relacionam com outros genéricos sem saber, durante a compilação e a execução,
+o que estará no lugar deles.
 
-Do mesmo modo que uma função aceita parâmetros cujos valores não sabemos
-para escrever código que será processado em múltiplos valores concretos, nós
-podemos escrever funções que recebem parâmetros de alguns tipos genéricos ao
-invés de tipos concretos como `i32` ou `String`. Nós já usamos tipos genéricos
-no Capítulo 6 com `Option<T>`, no Capítulo 8 com `Vec<T>` e `HashMap<K, V>`, e 
-no Capítulo 9 com `Result<T, E>`. Nesse capítulo, vamos explorar como definir
-nossos próprios tipos, funções e métodos usando tipos genéricos!
+Funções podem receber parâmetros de algum tipo genérico, em vez de um tipo
+concreto como `i32` ou `String`, da mesma forma que recebem parâmetros com
+valores desconhecidos para executar o mesmo código em múltiplos valores
+concretos. Na verdade, já usamos genéricos no Capítulo 6 com `Option<T>`, no
+Capítulo 8 com `Vec<T>` e `HashMap<K, V>`, e no Capítulo 9 com `Result<T, E>`.
+Neste capítulo, você verá como definir seus próprios tipos, funções e métodos
+com genéricos!
 
-Primeiro, nós vamos revisar as mecânicas de extrair uma função que reduz
-duplicação de código. Então usaremos a mesma mecânica para fazer uma função
-genérica usando duas funções que só diferem uma da outra nos tipos dos seus
-parâmetros. Nós vamos usar tipos genéricos em definições de struct e enum
-também.
+Primeiro, revisaremos como extrair uma função para reduzir duplicação de
+código. Em seguida, usaremos a mesma técnica para criar uma função genérica a
+partir de duas funções que diferem apenas nos tipos dos seus parâmetros.
+Também explicaremos como usar tipos genéricos em definições de structs e enums.
 
-Depois disso, nós vamos discutir traits, que são um modo de definir
-comportamento de uma forma genérica. Traits podem ser combinados com tipos
-genéricos para restringir um tipo genérico aos tipos que tem um comportamento
-particular ao invés de qualquer tipo.
+Depois, você aprenderá a usar traits para definir comportamento de maneira
+genérica. Você pode combinar traits com tipos genéricos para restringir um tipo
+genérico a aceitar apenas tipos que possuam um comportamento específico, em vez
+de simplesmente qualquer tipo.
 
-Finalmente, nós discutiremos *tempos de vida*, que são um tipo de generalização 
-que nos permite dar ao compilador informações sobre como as referências são
-relacionadas umas com as outras. Tempos de vida são as características em Rust
-que nos permitem pegar valores emprestados em muitas situações e ainda ter a 
-aprovação do compilador de que as referências serão válidas. 
+Por fim, discutiremos _lifetimes_: uma variedade de genéricos que fornece ao
+compilador informações sobre como referências se relacionam entre si. Lifetimes
+nos permitem dar ao compilador informação suficiente sobre valores emprestados
+para que ele possa garantir que as referências serão válidas em mais situações
+do que conseguiria sem a nossa ajuda.
 
 ## Removendo Duplicação por meio da Extração de uma Função
 
-Antes de entrar na sintaxe de tipos genéricos, vamos primeiro revisar uma
-técnica para lidar com duplicatas que não usa tipos genéricos: extraindo uma
-função. Uma vez que isso esteja fresco em nossas mentes, usaremos as mesmas
-mecânicas com tipos genéricos para extrair uma função genérica! Do mesmo modo 
-que você reconhece código duplicado para extrair para uma função, você começará
-a reconhecer código duplicado que pode usar tipos genéricos.
+Genéricos nos permitem substituir tipos específicos por um marcador que
+representa vários tipos, eliminando duplicação de código. Antes de mergulhar na
+sintaxe de genéricos, vamos primeiro ver como remover duplicação de uma forma
+que não envolve tipos genéricos, extraindo uma função que substitui valores
+específicos por um marcador que representa múltiplos valores. Depois,
+aplicaremos a mesma técnica para extrair uma função genérica! Ao observar como
+reconhecer código duplicado que pode ser extraído para uma função, você
+começará a reconhecer código duplicado que pode usar genéricos.
 
-Considere um pequeno programa que acha o maior número em uma lista, mostrado
-na Listagem 10-1:
+Começaremos com o pequeno programa da Listagem 10-1, que encontra o maior
+número em uma lista.
 
-<span class="filename">Nome do arquivo: src/main.rs</span>
-
-```rust
-fn main() {
-    let lista_numero = vec![34, 50, 25, 100, 65];
-
-    let mut maior = lista_numero[0];
-
-    for numero in lista_numero {
-        if numero > maior {
-            maior = numero;
-        }
-    }
-
-    println!("O maior número é {}", maior);
-#  assert_eq!(maior, 100);
-}
-```
-
-<span class="caption">Listagem 10-1: Código para achar o maior número em uma
-lista de números</span>
-
-Esse código recebe uma lista de inteiros, guardados aqui na variável 
-`lista_numero`. Coloca o primeiro item da lista na variável chamada `maior`.
-Então ele itera por todos os números da lista, e se o valor atual é maior que 
-o número guardado em `maior`, substitui o valor em `maior`. Se o valor atual é
-menor que o valor visto até então, `maior` não é mudado. Quando todos os items
-da lista foram considerados, `maior` terá o maior valor, que nesse caso é 100.
-
-Se nós precisássemos encontrar o maior número em duas listas diferentes de
-números, nós poderíamos duplicar o código da Listagem 10-1 e usar a mesma
-lógica nas duas partes do programa, como na Listagem 10-2:
-
-<span class="filename">Nome do arquivo: src/main.rs</span>
+<Listing number="10-1" file-name="src/main.rs" caption="Encontrando o maior número em uma lista de números">
 
 ```rust
-fn main() {
-    let lista_numero = vec![34, 50, 25, 100, 65];
-
-    let mut maior = lista_numero[0];
-
-    for numero in lista_numero {
-        if numero > maior {
-            maior = numero;
-        }
-    }
-
-    println!("O maior número é {}", maior);
-
-    let lista_numero = vec![102, 34, 6000, 89, 54, 2, 43, 8];
-
-    let mut maior = lista_numero[0];
-
-    for numero in lista_numero {
-        if numero > maior {
-            maior = numero;
-        }
-    }
-
-    println!("O maior número é {}", maior);
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-01/src/main.rs:here}}
 ```
 
-<span class="caption">Listagem 10-2: Código para encontrar o maior número em
-duas listas de números</span>
+</Listing>
 
-Ao passo que esse código funciona, duplicar código é tedioso e tende a causar
-erros, e significa que temos múltiplos lugares para atualizar a lógica se
-precisarmos mudá-lo.
+Armazenamos uma lista de inteiros na variável `number_list` e colocamos uma
+referência ao primeiro número da lista em uma variável chamada `largest`.
+Depois, iteramos por todos os números da lista e, se o número atual for maior
+do que o número armazenado em `largest`, substituímos a referência nessa
+variável. No entanto, se o número atual for menor ou igual ao maior número
+visto até então, a variável não muda, e o código passa para o próximo número da
+lista. Depois de considerar todos os números da lista, `largest` deverá
+referenciar o maior número, que neste caso é 100.
 
-Para eliminar essa duplicação, nós podemos criar uma abstração, que nesse caso
-será na forma de uma função que opera em uma lista de inteiros passadas à 
-função como um parâmetro. Isso aumentará a clareza do nosso código e nos
-permitirá comunicar e pensar sobre o conceito de achar o maior número em uma
-lista independentemente do lugar no qual esse conceito é usado.
+Agora recebemos a tarefa de encontrar o maior número em duas listas diferentes
+de números. Para isso, podemos optar por duplicar o código da Listagem 10-1 e
+usar a mesma lógica em dois pontos diferentes do programa, como mostrado na
+Listagem 10-2.
 
-No programa na Listagem 10-3, nós extraímos o código que encontra o maior 
-número para uma função chamada `maior`. Esse programa pode achar o maior número
-em duas listas de números diferentes, mas o código da lista 10-1 existe apenas
-em um lugar:
-
-<span class="filename">Nome do arquivo: src/main.rs</span>
+<Listing number="10-2" file-name="src/main.rs" caption="Código para encontrar o maior número em *duas* listas de números">
 
 ```rust
-fn maior(list: &[i32]) -> i32 {
-    let mut maior = list[0];
-
-    for &item in list.iter() {
-        if item > maior {
-            maior = item;
-        }
-    }
-
-    maior
-}
-
-fn main() {
-    let lista_numero = vec![34, 50, 25, 100, 65];
-
-    let resultado = maior(&lista_numero);
-    println!("O maior número é {}", resultado);
-#    assert_eq!(resultado, 100);
-
-    let lista_numero = vec![102, 34, 6000, 89, 54, 2, 43, 8];
-
-    let resultado = maior(&lista_numero);
-    println!("O maior número é {}", resultado);
-#    assert_eq!(resultado, 6000);
-}
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-02/src/main.rs}}
 ```
 
-<span class="caption">Listagem 10-3: Código abstraído para encontrar o maior
-número em duas listas</span>
+</Listing>
 
-A função tem o parâmetro, `list`, que representa qualquer corte concreto de
-valores `i32` que podemos passar para uma função. O código na definição da
-função opera na representação da `list` de qualquer `&[i32]`. Quando nós
-passamos a função `maior`, o código é executado com os valores específicos
-que nós passamos.
+Embora esse código funcione, duplicar código é tedioso e sujeito a erros. Além
+disso, precisamos nos lembrar de atualizá-lo em múltiplos lugares quando
+quisermos fazer uma mudança.
 
-As mecânicas que usamos da Listagem 10-2 para a Listagem 10-3 foram as
-seguintes:
+Para eliminar essa duplicação, criaremos uma abstração definindo uma função que
+opere sobre qualquer lista de inteiros passada como parâmetro. Essa solução
+torna nosso código mais claro e nos permite expressar de forma abstrata o
+conceito de encontrar o maior número em uma lista.
 
-1. Nós notamos que havia código duplicado.
-2. Nós extraímos o código duplicado para o corpo da função, e especificamos as
-   entradas e os valores de retorno daquele código na assinatura da função.
-3. Nós substituímos os dois locais concretos que tinham código duplicado para
-chamar a função.
+Na Listagem 10-3, extraímos o código que encontra o maior número para uma
+função chamada `largest`. Depois, chamamos essa função para encontrar o maior
+número nas duas listas da Listagem 10-2. Também poderíamos usar essa função em
+qualquer outra lista de valores `i32` que venhamos a ter no futuro.
 
-Nós podemos usar os mesmos passos usando tipos genéricos para reduzir a 
-duplicação de código de diferentes modos em diferentes cenários. Do mesmo modo
-que o corpo da função agora é operado em uma `list` abstrata ao invés de 
-valores concretos, códigos usando tipos genéricos operarão em tipos abstratos. 
-Os conceitos empoderando tipos genéricos são os mesmos conceitos que você já 
-conhece que empodera funções, só que aplicado de modos diferentes.
+<Listing number="10-3" file-name="src/main.rs" caption="Código abstraído para encontrar o maior número em duas listas">
 
-E se nós tivéssemos duas funções, uma que acha o maior item em um _slice_ de 
-valores `i32` e um que acha o maior item em um corte de valores `char`? Como 
-nos livraríamos dessa duplicação? Vamos descobrir!
+```rust
+{{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-03/src/main.rs:here}}
+```
+
+</Listing>
+
+A função `largest` tem um parâmetro chamado `list`, que representa qualquer
+slice concreto de valores `i32` que possamos passar para a função. Como
+resultado, quando chamamos a função, o código opera sobre os valores
+específicos que fornecemos.
+
+Em resumo, estes foram os passos que seguimos para transformar o código da
+Listagem 10-2 no da Listagem 10-3:
+
+1. Identificar o código duplicado.
+1. Extrair o código duplicado para o corpo da função e especificar as entradas
+   e valores de retorno desse código na assinatura da função.
+1. Atualizar as duas ocorrências do código duplicado para chamar a função.
+
+Em seguida, usaremos esses mesmos passos com genéricos para reduzir duplicação
+de código. Da mesma forma que o corpo da função pode operar sobre uma `list`
+abstrata, em vez de valores específicos, genéricos permitem que o código opere
+sobre tipos abstratos.
+
+Por exemplo, digamos que tivéssemos duas funções: uma que encontra o maior item
+em um slice de valores `i32` e outra que encontra o maior item em um slice de
+valores `char`. Como eliminaríamos essa duplicação? Vamos descobrir!

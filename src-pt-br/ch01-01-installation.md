@@ -1,6 +1,8 @@
 ## Instalação
 
-O primeiro passo é instalar Rust. Vamos fazer o download de Rust através do `rustup`, uma ferramenta de linha de comando para gerenciar versões Rust e ferramentas associadas. 
+O primeiro passo é instalar o Rust. Vamos fazer o download do Rust por meio do
+`rustup`, uma ferramenta de linha de comando para gerenciar versões do Rust e
+ferramentas associadas.
 Você precisará de uma conexão com a Internet para o download.
 
 > Nota: Se você preferir não usar o `rustup` por algum motivo, consulte [a página de instalação de Rust](https://www.rust-lang.org/pt-BR/tools/install) para outras opções.
@@ -39,12 +41,21 @@ Como alternativa, você pode adicionar a seguinte linha ao seu _~/.bash_profile_
 $ export PATH="$HOME/.cargo/bin:$PATH"
 ```
 
-Além disso, você precisará de um *linker* de algum tipo. Provavelmente já está instalado, mas quando você tenta compilar um programa Rust e obtem erros, indicando que um linker não pôde executar, isso significa que um linker não está instalado no seu sistema e você precisará instalá-lo manualmente. Os compiladores C geralmente vêm com o linker correto. Verifique a documentação da sua plataforma para saber como instalar 
-um compilador C. Além disso, alguns pacotes Rust comuns dependem do código C e precisarão de um compilador C. Portanto, pode valer a pena instalar um agora.
+Além disso, você precisará de algum tipo de *linker*. Ele provavelmente já está
+instalado, mas, se ao tentar compilar um programa Rust você receber erros
+indicando que um linker não pôde ser executado, isso significa que ele não está
+instalado no seu sistema e você precisará instalá-lo manualmente. Compiladores
+de C geralmente vêm com o linker correto. Verifique a documentação da sua
+plataforma para saber como instalar um compilador C. Além disso, alguns pacotes
+Rust comuns dependem de código C e precisarão de um compilador C. Portanto,
+pode valer a pena instalar um agora.
 
 ### Instalando `rustup` no Windows
 
-No Windows, vá para [https://www.rust-lang.org/pt-BR/tools/install][install-br] e siga as instruções para instalar Rust. Em algum momento da instalação, você receberá uma mensagem explicando que também precisará das ferramentas de *build* do C ++ para o Visual Studio 2013 ou posterior. 
+No Windows, vá para [https://www.rust-lang.org/pt-BR/tools/install][install-br]
+e siga as instruções para instalar o Rust. Em algum momento da instalação, você
+receberá uma mensagem explicando que também precisará das ferramentas de
+*build* de C++ para o Visual Studio 2013 ou posterior.
 A maneira mais fácil de adquirir as ferramentas de build é instalar [Ferramentas Integradas do Visual Studio 2019][visualstudio-br]. <!--Diretório mudou: As ferramentas estão na seção: Outras Ferramentas e Estruturas. -->
 
 [install]: https://www.rust-lang.org/tools/install
@@ -77,14 +88,21 @@ Para verificar se você possui Rust instalado corretamente, abra um shell e digi
 $ rustc --version
 ```
 
-Você deverá ver o número da versão, *commit* hash, e *commit* da data da versão estável mais recente lançada no seguinte formato:
+Você deverá ver o número da versão, o *commit* hash e a data do *commit* da
+versão estável mais recente lançada, no seguinte formato:
 
 ```text
 rustc x.y.z (abcabcabc yyyy-mm-dd)
 ```
 
-Se você visualizar essas informações, instalou Rust com sucesso! Se você não vir essas informações e estiver no Windows, verifique se Rust está na sua variável de sistema `%PATH%`. Se tudo estiver correto e Rust ainda não estiver funcionando, há vários lugares onde você pode obter ajuda. O mais fácil é o canal #beginners em [the official Rust Discord][discord]. Lá, você pode conversar com outros *Rustáceos* (um apelido bobo que chamamos a nós mesmos) que podem ajudá-lo. Outros ótimos recursos 
-incluem o canal no Telegram [Rust Brasil][telegram], além do [the Users forum][users] e [Stack Overflow][stackoverflow].
+Se você visualizar essas informações, instalou o Rust com sucesso! Se elas não
+aparecerem e você estiver no Windows, verifique se o Rust está na variável de
+sistema `%PATH%`. Se tudo estiver correto e o Rust ainda não estiver
+funcionando, há vários lugares onde você pode obter ajuda. O mais fácil é o
+canal `#beginners` no [Discord oficial do Rust][discord]. Lá, você pode
+conversar com outros *Rustáceos* que podem ajudar. Outros ótimos recursos
+incluem o canal no Telegram [Rust Brasil][telegram], além do [fórum de
+usuários][users] e do [Stack Overflow][stackoverflow].
 
 [discord]: https://discord.gg/rust-lang
 [users]: https://users.rust-lang.org/

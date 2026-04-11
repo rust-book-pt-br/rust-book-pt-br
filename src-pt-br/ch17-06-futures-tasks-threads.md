@@ -1,15 +1,15 @@
-## Juntando tudo: Futures, tarefas e threads
+## Juntando Tudo: Futures, Tasks e Threads
 
-Como vimos no [Capítulo 16][ch16]<!-- ignore -->, threads fornecem uma forma de
-concorrência. Neste capítulo vimos outra abordagem: usar async com futures e
-streams. Se você está se perguntando quando escolher um método em vez do outro,
-a resposta é: depende! E, em muitos casos, a escolha não é threads _ou_ async,
-mas sim threads _e_ async.
+Como vimos no [Capítulo 16][ch16]<!-- ignore -->, threads oferecem uma forma de
+concorrência. Neste capítulo, vimos outra abordagem: usar async com futures e
+streams. Se você está se perguntando quando escolher um método em vez do
+outro, a resposta é: depende! E, em muitos casos, a escolha não é threads _ou_
+async, mas sim threads _e_ async.
 
-Há décadas muitos sistemas operacionais oferecem modelos de concorrência
+Há décadas, muitos sistemas operacionais oferecem modelos de concorrência
 baseados em threads e, por isso, muitas linguagens de programação também os
 suportam. No entanto, esses modelos não vêm sem trade-offs. Em muitos sistemas
-operacionais, eles usam uma quantidade considerável de memória por thread.
+operacionais, threads usam uma quantidade considerável de memória por thread.
 Além disso, threads só são uma opção quando o sistema operacional e o hardware
 as suportam. Diferentemente de desktops e dispositivos móveis convencionais,
 alguns sistemas embarcados nem sequer têm sistema operacional e, portanto, não
@@ -18,39 +18,38 @@ têm threads.
 O modelo async oferece um conjunto diferente, e em última análise
 complementar, de trade-offs. No modelo async, operações concorrentes não
 precisam de suas próprias threads. Em vez disso, podem ser executadas em
-tarefas, como quando usamos `trpl::spawn_task` para iniciar trabalho a partir
-de uma função síncrona na seção sobre streams. Uma tarefa é semelhante a uma
+tasks, como quando usamos `trpl::spawn_task` para iniciar trabalho a partir de
+uma função síncrona na seção sobre streams. Uma task é semelhante a uma
 thread, mas, em vez de ser gerenciada pelo sistema operacional, é gerenciada
 por código em nível de biblioteca: o runtime.
 
-Existe um motivo para as APIs de criação de threads e de criação de tarefas
+Existe um motivo para as APIs de criação de threads e de criação de tasks
 serem tão parecidas. Threads funcionam como uma fronteira para conjuntos de
-operações síncronas; a concorrência é possível _entre_ threads. Tarefas
+operações síncronas; a concorrência é possível _entre_ threads. Tasks
 funcionam como uma fronteira para conjuntos de operações _assíncronas_; a
-concorrência é possível tanto _entre_ quanto _dentro_ das tarefas, porque uma
-tarefa pode alternar entre os futures em seu corpo. Por fim, futures são a
+concorrência é possível tanto _entre_ quanto _dentro_ das tasks, porque uma
+task pode alternar entre os futures em seu corpo. Por fim, futures são a
 unidade mais granular de concorrência em Rust, e cada future pode representar
 uma árvore de outros futures. O runtime, mais especificamente seu executor,
-gerencia tarefas, e tarefas gerenciam futures. Nesse sentido, tarefas se
-parecem com threads leves gerenciadas em runtime, com capacidades adicionais
-que surgem do fato de serem gerenciadas por um runtime e não pelo sistema
-operacional.
+gerencia tasks, e tasks gerenciam futures. Nesse sentido, tasks se parecem com
+threads leves gerenciadas em runtime, com capacidades adicionais que surgem do
+fato de serem gerenciadas por um runtime e não pelo sistema operacional.
 
-Isso não significa que tarefas async sejam sempre melhores do que threads, nem
-o contrário. A concorrência com threads é, em alguns aspectos, um modelo de
+Isso não significa que tasks async sejam sempre melhores do que threads, nem o
+contrário. A concorrência com threads é, em alguns aspectos, um modelo de
 programação mais simples do que a concorrência com `async`. Isso pode ser uma
-força ou uma fraqueza. Threads são um pouco "dispare e esqueça": elas não têm
-um equivalente nativo a um future e, portanto, simplesmente executam até o fim,
-sem interrupção, exceto pelo próprio sistema operacional.
+força ou uma fraqueza. Threads são um pouco “dispare e esqueça”: elas não têm
+um equivalente nativo a um future e, portanto, simplesmente executam até o
+fim, sem interrupção, exceto pelo próprio sistema operacional.
 
-E acontece que threads e tarefas muitas vezes funcionam muito bem juntas,
-porque tarefas podem, pelo menos em alguns runtimes, ser movidas entre
-threads. De fato, nos bastidores, o runtime que estamos usando, incluindo as
-funções `spawn_blocking` e `spawn_task`, é multithread por padrão! Muitos
-runtimes usam uma abordagem chamada _work stealing_ para mover tarefas de forma
-transparente entre threads, com base em como elas estão sendo utilizadas no
-momento, a fim de melhorar o desempenho geral do sistema. Essa abordagem, na
-verdade, exige tarefas _e_ threads e, portanto, também futures.
+E acontece que threads e tasks muitas vezes funcionam muito bem juntas, porque
+tasks podem, pelo menos em alguns runtimes, ser movidas entre threads. De
+fato, nos bastidores, o runtime que estamos usando, incluindo as funções
+`spawn_blocking` e `spawn_task`, é multithread por padrão! Muitos runtimes usam
+uma abordagem chamada _work stealing_ para mover tasks de forma transparente
+entre threads, com base em como elas estão sendo utilizadas no momento, a fim
+de melhorar o desempenho geral do sistema. Essa abordagem, na verdade, exige
+tasks _e_ threads e, portanto, também futures.
 
 Ao pensar em qual método usar em cada situação, considere estas regras
 práticas:
@@ -95,7 +94,7 @@ inúmeros exemplos desse tipo de combinação em casos de uso do mundo real.
 Esta não é a última vez que você verá concorrência neste livro. O projeto do
 [Capítulo 21][ch21]<!-- ignore --> vai aplicar esses conceitos em uma situação
 mais realista do que os exemplos mais simples discutidos aqui e comparar de
-forma mais direta a resolução de problemas com threads versus tarefas e
+forma mais direta a resolução de problemas com threads versus tasks e
 futures.
 
 Independentemente de qual dessas abordagens você escolha, Rust oferece as
@@ -103,9 +102,9 @@ ferramentas necessárias para escrever código seguro, rápido e concorrente, se
 para um servidor web de alta vazão, seja para um sistema operacional embarcado.
 
 A seguir, falaremos sobre formas idiomáticas de modelar problemas e estruturar
-soluções à medida que seus programas em Rust ficam maiores. Além disso,
-discutiremos como os idiomas de Rust se relacionam com aqueles com que você
-pode estar familiarizado na programação orientada a objetos.
+soluções à medida que seus programas em Rust ficarem maiores. Além disso,
+discutiremos como os idiomatismos de Rust se relacionam com aqueles que você
+talvez conheça da programação orientada a objetos.
 
 [ch16]: http://localhost:3000/ch16-00-concurrency.html
 [combining-futures]: ch17-03-more-futures.html#building-our-own-async-abstractions

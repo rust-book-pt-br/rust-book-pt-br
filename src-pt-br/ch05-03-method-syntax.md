@@ -1,12 +1,12 @@
 ## Sintaxe do Método
 
-*Methods* (métodos) são semelhantes às funções: eles são declarados com a chave
-`fn` e o seu nome, eles podem ter parâmetros e valor de retorno, e eles contêm 
-algum código que é executado quando eles são chamados de algum outro lugar. 
-No entanto, métodos são diferentes das funções, porque são definidos no contexto
-de uma struct (ou um objeto enum ou uma trait, que nós cobrimos nos Capítulos 6
-e 17, respectivamente), o seu primeiro parâmetro é sempre `self`, que representa
-a instância da struct do método que está a ser chamado.
+Métodos são semelhantes a funções: nós os declaramos com a palavra-chave `fn` e
+um nome, eles podem ter parâmetros e valor de retorno, e contêm código que é
+executado quando são chamados de outro lugar. No entanto, métodos são
+diferentes de funções porque são definidos no contexto de uma struct (ou de um
+enum ou trait object, que cobriremos nos Capítulos 6 e 18, respectivamente), e
+seu primeiro parâmetro é sempre `self`, que representa a instância da struct em
+que o método está sendo chamado.
 
 ### Definindo Métodos
 
@@ -42,28 +42,27 @@ fn main() {
 <span class="caption">Lista 5-13: Definindo um método `area` na struct
 `Rectangle`</span>
 
-Para definir a função dentro do contexto de `Rectangle`, vamos iniciar um bloco
-`impl` (*Implementação*). Depois movemos a função `area` dentro do corpo ({}) 
-do `impl` e alteramos o primeiro (e neste caso, unico) parâmetro a ser `self` na
- assinatura e em todos os lugares dentro do corpo. 
-Em `main`, onde chamamos a função `area` e passamos `ct1` como um argumento,
-podemos usar a *sintaxe de método* (method sintax) para chamar o método `área` 
-na nossa instância `Rectangle`. A sintaxe de método vem em seguida a uma 
-instância: adicionamos um ponto seguido pelo nome do método, parênteses e os
-argumentos.
+Para definir a função dentro do contexto de `Rectangle`, começamos um bloco
+`impl` (implementação). Depois movemos a função `area` para dentro do corpo do
+`impl` e alteramos o primeiro, e neste caso único, parâmetro para `self` na
+assinatura e em todo o corpo. Em `main`, onde chamávamos a função `area` e
+passávamos `rect1` como argumento, podemos usar a *sintaxe de método* para
+chamar o método `area` na nossa instância `Rectangle`. A sintaxe de método vem
+depois de uma instância: adicionamos um ponto seguido do nome do método,
+parênteses e quaisquer argumentos.
 
 Na assinatura de `area`, usamos `&self` em vez de `rectangle: &Rectangle` porque
-Rust sabe que o tipo de `self` é `Rectangle` devido a este método estar dentro do 
+Rust sabe que o tipo de `self` é `Rectangle` devido a este método estar dentro do
 contexto do `impl Rectangle`. Note que ainda precisamos usar o `&` antes de 
 `self`, tal como fizemos em `&Rectangle`. Métodos podem tomar posse de `self`,
-pedir emprestado `self` imutavel como temos feito aqui, ou pedir emprestado `self` 
-mutavel, assim como qualquer outro parâmetro.
+tomar `self` emprestado de forma imutável, como fizemos aqui, ou tomar `self`
+emprestado de forma mutável, assim como qualquer outro parâmetro.
 
-Escolhemos `&selft` aqui pela mesma razão usamos `&Rectangle` na versão função:
-nós não queremos tomar posse, nós apenas queremos ler os dados da struct, 
+Escolhemos `&self` aqui pela mesma razão que usamos `&Rectangle` na versão com função:
+não queremos tomar posse; queremos apenas ler os dados da struct,
 e não escrever nela. Se quisermos mudar a instância da qual chamamos
-o método como parte do que o método faz, usariamos `&mut self` como o 
-primeiro parâmetro. Ter um método que toma posse da instância, usando apenas 
+o método como parte do que ele faz, usaríamos `&mut self` como o
+primeiro parâmetro. Ter um método que toma posse da instância, usando apenas
 `self` como primeiro parâmetro é raro; esta técnica é geralmente utilizada 
 quando o método transforma o `self` em algo mais e queremos evitar que o 
 chamador use a instância original após a transformação.
@@ -80,14 +79,14 @@ lugares na biblioteca que fornecemos.
 Em linguagens como C++, dois operadores diferentes são usados para chamar 
 métodos: você usa `.` se você está chamando um método do objeto diretamente
 e `->` se você está chamando o método em um apontador para o objeto e 
-necessita de `desreferenciar` o apontadr primeiro. Em outras palavras, 
-se `objeto` é um apontador, `objeto->algo()` é semelhante a `(*objeto).algo()`.
+precisa desreferenciar o ponteiro primeiro. Em outras palavras,
+se `objeto` é um ponteiro, `objeto->algo()` é semelhante a `(*objeto).algo()`.
 
 Rust não tem um equivalente para o operador `->`; em vez disso, Rust tem 
 um recurso chamado *referenciamento e desreferenciamento automático*. 
 Chamada de métodos é um dos poucos lugares em Rust que têm este comportamento.
 
-Eis como funciona: quando você chamar um método com `objeto.algo()`, Rust 
+Eis como funciona: quando você chama um método com `objeto.algo()`, Rust
 adiciona automaticamente `&`, `&mut` ou `*` para que `objeto` corresponda
 à assinatura do método. Em outras palavras, as seguintes são as mesmas:
 
@@ -112,14 +111,14 @@ adiciona automaticamente `&`, `&mut` ou `*` para que `objeto` corresponda
  (&p1).distance(&p2);
  ```
 
-O primeiro parece muito mais limpo. Este comportamento de referenciamento 
-automático funciona porque métodos têm um receptor claro- o tipo `self`.
+O primeiro parece muito mais limpo. Este comportamento de referenciamento
+automático funciona porque métodos têm um receptor claro: o tipo `self`.
 Dado o receptor e o nome de um método, Rust pode descobrir definitivamente 
 se o método é leitura (`&self`), mutação (`&mut self`), ou consumo (`self`).
-O fato de que Rust faz o empréstimo para receptores de método implícito é em
-grande parte porque o ownership é ergonomico na prática.
+O fato de Rust tornar implícito o empréstimo de receptores de método é uma
+grande parte do que faz o ownership ser ergonômico na prática.
 
-### Métodos com Mais Parametros
+### Métodos com Mais Parâmetros
 
 Vamos praticar usando métodos através da aplicação de um segundo método sobre 
 o struct `Rectangle` . Desta vez, queremos uma instância de `Rectangle` para 

@@ -1,35 +1,33 @@
 ## Validando Referências com Tempos de Vida
 
-Quandos falamos sobre referências no Capítulo 4, nós deixamos de fora um detalhe
-importante: toda referência em Rust tem um _lifetime_, que é o escopo no qual
-aquela referência é válida. A maior parte das vezes tempos de vida são implícitos e
-inferidos, assim como a maior parte do tempo tipos são inferidos. Similarmente
-quando temos que anotar tipos porque múltiplos tipos são possíveis, há casos em
-que os tempos de vida das referências poderiam estar relacionados de alguns modos
-diferentes, então Rust precisa que nós anotemos as relações usando parâmetros
-genéricos de tempo de vida para que ele tenha certeza que as referênciais reais
-usadas em tempo de execução serão definitivamente válidas.
+Quando falamos sobre referências no Capítulo 4, deixamos de fora um detalhe
+importante: toda referência em Rust tem um _lifetime_, que é o escopo durante o
+qual aquela referência é válida. Na maior parte do tempo, os tempos de vida são
+implícitos e inferidos, assim como os tipos também costumam ser. De modo
+semelhante a quando precisamos anotar tipos porque múltiplos tipos são
+possíveis, há casos em que os tempos de vida das referências podem se
+relacionar de maneiras diferentes; então, o Rust exige que anotemos essas
+relações usando parâmetros genéricos de tempo de vida para ter certeza de que
+as referências reais usadas em tempo de execução serão válidas.
 
-Sim, é um pouco incomum, e será diferente de ferramentas que você usou em 
-outras linguagens de programação. Tempos de vida são, de alguns jeitos, a 
-característica mais distinta de Rust. 
+Sim, isso é um pouco incomum e será diferente do que você talvez tenha usado em
+outras linguagens de programação. Em certo sentido, tempos de vida são uma das
+características mais distintas do Rust.
 
-Tempos de vida são um tópico grande que não poderão ser cobertos inteiramente 
-nesse capítulo, então nós vamos cobrir algumas formas comuns que você pode 
-encontrar a sintaxe de tempo de vida nesse capítulo para que você se 
-familiarize com os conceitos. O Capítulo 19 conterá informações mais avançadas
-sobre tudo que tempos de vida podem fazer.
+Tempos de vida são um tópico amplo demais para ser coberto por completo neste
+capítulo, então veremos algumas formas comuns em que você pode encontrar a
+sintaxe de tempo de vida, para se familiarizar com os conceitos. O Capítulo 19
+traz informações mais avançadas sobre tudo o que tempos de vida podem fazer.
 
 ### Tempos de Vida Previnem Referências Soltas
 
-O principal alvo de lifetimes é prevenir referências soltas, quais fazem com
-que o programa referencie dados quais nós não estamos querendo referenciar.
-Considere o programa na Listagem 10-18, com um escopo exterior e um interior.
-O escopo exterior declara uma variável chamada `r` com nenhum valor inicial, e
-o escopo interior declara uma variável chamada `x` com o valor inicial de 5.
-Dentro do escopo interior, nós tentamos estabelecer o valor de `r` como uma 
-referência para `x`. Então, o escopo interior acaba, e nós tentamos imprimir o
-valor de `r`:
+O principal objetivo dos lifetimes é evitar referências soltas, que fariam o
+programa referenciar dados diferentes daqueles que pretendemos referenciar.
+Considere o programa da Listagem 10-18, com um escopo externo e um interno. O
+escopo externo declara uma variável chamada `r` sem valor inicial, e o escopo
+interno declara uma variável chamada `x` com o valor inicial 5. Dentro do
+escopo interno, tentamos definir o valor de `r` como uma referência para `x`.
+Então o escopo interno termina, e nós tentamos imprimir o valor de `r`:
 
 ```rust,ignore
 {
@@ -44,18 +42,19 @@ valor de `r`:
 }
 ```
 
-<span class="caption">Listagem 10-18: Uma tentativa de usar uma refência cujo
+<span class="caption">Listagem 10-18: Uma tentativa de usar uma referência cujo
 valor saiu de escopo</span>
 
 > #### Variáveis Não Inicializadas Não Podem Ser Usadas
 >
-> Os próximos exemplos declaram variáveis sem darem a elas um valor inicial, 
-> então o nome da variável existe no escopo exterior. Isso pode parecer um 
-> conflito com Rust não ter null. No entanto, se tentarmos usar uma variável
-> antes de atribuir um valor a ela, nós teremos um erro em tempo de compilação.
+> Os próximos exemplos declaram variáveis sem lhes dar um valor inicial, então
+> o nome da variável existe no escopo externo. À primeira vista, isso pode
+> parecer entrar em conflito com o fato de Rust não ter null. No entanto, se
+> tentarmos usar uma variável antes de atribuir um valor a ela, teremos um erro
+> em tempo de compilação.
 > Tente!
 
-Quando compilarmos esse código, nós teremos um erro:
+Quando compilarmos esse código, teremos um erro:
 
 ```text
 error: `x` does not live long enough
@@ -69,19 +68,19 @@ error: `x` does not live long enough
    | - borrowed value needs to live until here
 ```
 
-A variável `x` não "vive o suficiente". Por que não? Bem, `x` vai sair de 
-escopo quando passarmos pela chaves na linha 7, terminando o escopo interior.
-Mas `r` é válida para o escopo exterior; seu escopo é maior e dizemos que ela
-"vive mais tempo". Se Rust permitisse que esse código funcionasse, `r` estaria
-fazendo uma referência à memória que foi desalocada quando `x` saiu de escopo,
-e qualquer coisa que tentássemos fazer com `r` não funcionaria corretamente.
-Então como o Rust determina que esse código não deve ser permitido?
+A variável `x` não "vive tempo suficiente". Por quê? Porque `x` sai de escopo
+quando passamos pela chave na linha 7, encerrando o escopo interno. Mas `r`
+continua válida no escopo externo; como seu escopo é maior, dizemos que ela
+"vive mais tempo". Se o Rust permitisse que esse código funcionasse, `r`
+estaria referenciando uma memória que foi desalocada quando `x` saiu de escopo,
+e qualquer tentativa de usar `r` não funcionaria corretamente. Então, como o
+Rust determina que esse código não deve ser permitido?
 
 #### O Verificador de Empréstimos
 
 A parte do compilador chamada de *verificador de empréstimos* compara escopos
-para determinar que todos os empréstimos são válidos. A Listagem 10-19 mostra o
-mesmo exemplo da Listagem 10-18 com anotações mostrando os tempos de vida das
+para determinar se todos os empréstimos são válidos. A Listagem 10-19 mostra o
+mesmo exemplo da Listagem 10-18 com anotações indicando os tempos de vida das
 variáveis.
 
 
@@ -103,13 +102,12 @@ variáveis.
 <span class="caption">Listagem 10-19: Anotações de tempos de vida de `r` e `x`,
 chamadas de `a` e `b` respectivamente</span>
 
-Nós anotamos o tempo de vida de `r` com `a` e o tempo de vida de `x` com `b`.
-Como você pode ver, o bloco interior de `'b` é bem menor que o bloco de tempo
-de vida do exterior `'a'`. Em tempo de compilação, o Rust compara o tamanho dos
-dois tempos de vida e vê que `r` tem um tempo de vida de `'a`, mas que ele se
-refere a um objeto com um tempo de vida `'b`. O programa é rejeitado porque o 
-tempo de vida de `'b` é mais curto que o tempo de vida de `'a`: o sujeito da
-referência não vive tanto quanto a referência.
+Anotamos o tempo de vida de `r` com `'a` e o tempo de vida de `x` com `'b`.
+Como você pode ver, o bloco interno de `'b` é bem menor que o bloco externo de
+tempo de vida `'a`. Em tempo de compilação, o Rust compara o tamanho desses
+dois tempos de vida e vê que `r` tem um tempo de vida `'a`, mas se refere a um
+objeto com tempo de vida `'b`. O programa é rejeitado porque `'b` é mais curto
+do que `'a`: o alvo da referência não vive tanto quanto a própria referência.
 
 Vamos olhar para o exemplo na Listagem 10-20 que não tenta fazer uma referência
 solta e compila sem nenhum erro:
@@ -128,22 +126,21 @@ solta e compila sem nenhum erro:
 <span class="caption">Listagem 10-20: Uma referência válida porque os dados têm
 um tempo de vida maior do que o da referência</span>
 
-Aqui, `x` tem o tempo de vida de `'b`, que nesse caso tem um tempo de vida 
-maior que o de `'a`. Isso quer dizer que `r` pode referenciar `x`: o Rust sabe
-que a referência em `r` será sempre válida enquanto `x` for válido.
+Aqui, `x` tem o tempo de vida `'b`, que neste caso é maior que `'a`. Isso quer
+dizer que `r` pode referenciar `x`: o Rust sabe que a referência em `r` será
+sempre válida enquanto `x` for válido.
 
-Agora que mostramos onde os tempos de vida de referências estão em um exemplo
-concreto e discutimos como Rust analisa tempos de vida para garantir que
-referências sempre serão válidas, vamos falar sobre tempos de vidas genéricos
-de parâmetros e retornar valores no contexto das funções.
+Agora que vimos onde os tempos de vida das referências aparecem em um exemplo
+concreto e discutimos como o Rust os analisa para garantir que referências
+sejam sempre válidas, vamos falar sobre tempos de vida genéricos em parâmetros
+e valores de retorno no contexto de funções.
 
 ### Tempos de Vida Genéricos em Funções
 
-Vamos escrever uma função que retornará a mais longa de dois cortes de string. 
-Nós queremos ser capazes de chamar essa função passando para ela dois cortes 
-de strings, e queremos que retorne uma string. O código na Listagem 10-21
-deve imprimir `A string mais longa é abcd` uma vez que tivermos implementado a
-função `maior`:
+Vamos escrever uma função que retornará o maior entre dois cortes de string.
+Queremos ser capazes de chamar essa função passando dois cortes de string e
+receber de volta um corte de string. O código da Listagem 10-21 deve imprimir
+`A string mais longa é abcd` quando tivermos implementado a função `maior`:
 
 <span class="filename">Nome do Arquivo: src/main.rs</span>
 
@@ -157,19 +154,19 @@ fn main() {
 }
 ```
 
-<span class="caption">Listagem 10-21: Uma função `main` que chama pela função
-`maior` para achar a mais longa entre duas strings</span>
+<span class="caption">Listagem 10-21: Uma função `main` que chama a função
+`maior` para encontrar a mais longa entre duas strings</span>
 
-Note que queremos que a função pegue cortes de string (que são referências, 
-como falamos no Capítulo 4) já que não queremos que a função `maior` tome posse
-de seus argumentos. Nós queremos que uma função seja capaz de aceitar cortes de
-uma `String` (que é o tipo de variável `string1`) assim como literais de string
-(que é o que a variável `string2` contém).
+Note que queremos que a função receba cortes de string, que são referências,
+como vimos no Capítulo 4, porque não queremos que a função `maior` tome posse
+de seus argumentos. Queremos que a função seja capaz de aceitar tanto cortes de
+uma `String` (que é o tipo da variável `string1`) quanto literais de string
+(que é o conteúdo da variável `string2`).
 
-Recorra à seção do Capítulo 4 "Cortes de Strings como Parâmetros" para mais 
-discussões sobre porque esses são os argumentos que queremos.
+Consulte a seção do Capítulo 4, "Cortes de Strings como Parâmetros", para mais
+detalhes sobre por que esses são os argumentos que queremos.
 
-Se tentarmos implementar a função `maior` como mostrado na Listagem 10-22 ela
+Se tentarmos implementar a função `maior` como mostrado na Listagem 10-22, ela
 não vai compilar:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
@@ -187,7 +184,7 @@ fn maior(x: &str, y: &str) -> &str {
 <span class="caption">Listagem 10-22: Uma implementação da função `maior` que
 retorna o mais longo de dois cortes de string, mas ele não compila ainda</span>
 
-Ao invés disso recebemos o seguinte erro que fala sobre tempos de vida:
+Em vez disso, recebemos o seguinte erro, que fala sobre tempos de vida:
 
 ```text
 error[E0106]: missing lifetime specifier
@@ -200,42 +197,42 @@ error[E0106]: missing lifetime specifier
 ```
 
 O texto de ajuda está nos dizendo que o tipo de retorno precisa de um parâmetro
-de tempo de vida genérico nele porque o Rust não pode dizer se a referência que
-está sendo retornada se refere a `x` ou `y`. Atualmente, nós também não 
-sabemos, já que o bloco `if` no corpo dessa função retorna uma referência para 
-`x` e o bloco `else` retorna uma referência para `y`!
+genérico de tempo de vida porque o Rust não consegue dizer se a referência
+retornada se refere a `x` ou a `y`. Na verdade, nós também não sabemos, já que
+o bloco `if` no corpo da função retorna uma referência para `x` e o bloco
+`else` retorna uma referência para `y`!
 
-Enquanto estamos definindo essa função, não sabemos os valores concretos que 
-serão passados para essa função, então não sabemos se o caso `if` ou o caso
-`else` será executado. Nós também não sabemos os tempos de vida concretos das
-referências que serão passadas, então não podemos olhar para esses escopos como
-fizemos nas Listagem 10-19 e 10-20 afim de determinar que a referência que
-retornaremos sempre será válida. O verificador de empréstimos não consegue 
-determinar isso também porque não sabe como os tempos de vida de `x` e `y` se
-relacionam com o tempo de vida do valor de retorno. Nós vamos adicionar 
-parâmetros genéricos de tempo de vida que definirão a relação entre as 
-referências para que o verificador de empréstimos possa fazer sua análise.
+Enquanto definimos essa função, não sabemos quais valores concretos serão
+passados para ela, então não sabemos se o caso `if` ou o caso `else` será
+executado. Também não sabemos quais serão os tempos de vida concretos das
+referências recebidas, então não podemos observar esses escopos como fizemos
+nas Listagens 10-19 e 10-20 para determinar se a referência retornada sempre
+será válida. O verificador de empréstimos também não consegue determinar isso,
+porque não sabe como os tempos de vida de `x` e `y` se relacionam com o tempo
+de vida do valor de retorno. Vamos adicionar parâmetros genéricos de tempo de
+vida que definam a relação entre as referências para que o verificador de
+empréstimos possa fazer sua análise.
 
 ### Sintaxe de Anotação de Tempo de Vida
 
-Anotações de tempo de vida não mudam quanto tempo qualquer uma das referências
-envolvidas viverão. Do mesmo modo que funções podem aceitar qualquer tipo de 
-assinatura que especifica um parâmetro de tipo genérico, funções podem aceitar
-referências com qualquer tempo de vida quando a assinatura especificar um 
-parâmetro genérico de tempo de vida. O que anotações de tempo de vida fazem é
-relacionar os tempos de vida de múltiplas referências uns com os outros.
+Anotações de tempo de vida não mudam por quanto tempo qualquer uma das
+referências envolvidas viverá. Assim como funções podem aceitar qualquer tipo
+quando a assinatura especifica um parâmetro de tipo genérico, funções podem
+aceitar referências com qualquer tempo de vida quando a assinatura especifica
+um parâmetro genérico de tempo de vida. O que as anotações de tempo de vida
+fazem é relacionar entre si os tempos de vida de múltiplas referências.
 
-Anotações de tempo de vida tem uma sintaxe levemente incomum: os nomes dos
-parâmetros de tempos de vida precisam começar com uma apóstrofe `'`. Os nomes 
-dos parâmetros dos tempos de vida são usualmente todos em caixa baixa, e como 
-tipos genéricos, seu nome usualmente são bem curtos. `'a` é o nome que a maior
-parte das pessoas usam por padrão. Parâmetros de anotações de tempos de vida 
-vão depois do `&` de uma referência, e um espaço separa a anotação de tempo de 
-vida do tipo da referência.
+Anotações de tempo de vida têm uma sintaxe um pouco incomum: os nomes dos
+parâmetros de tempo de vida precisam começar com um apóstrofo (`'`). Esses
+nomes costumam ser todos em minúsculas e, assim como os tipos genéricos,
+geralmente são bem curtos. `'a` é o nome que a maioria das pessoas usa por
+padrão. As anotações de parâmetro de tempo de vida vêm depois do `&` de uma
+referência, e um espaço separa a anotação de tempo de vida do tipo da
+referência.
 
-Aqui vão alguns exemplos: nós temos uma referência para um `i32` sem um 
-parâmetro tempo de vida, uma referência para um `i32` que tem um parâmetro de
-tempo de vida chamado `'a`:
+Aqui estão alguns exemplos: uma referência para um `i32` sem parâmetro de
+tempo de vida e uma referência para um `i32` que tem um parâmetro de tempo de
+vida chamado `'a`:
 
 ```rust,ignore
 &i32        // uma referência
@@ -243,15 +240,14 @@ tempo de vida chamado `'a`:
 &'a mut i32 // uma referência mutável com um tempo de vida explícito
 ```
 
-Uma anotação de tempo de vida por si só não tem muito significado: anotações de
-tempos de vida dizem ao Rust como os parâmetros genéricos de tempos de vida de
-múltiplas referências se relacionam uns com os outros. Se tivermos uma função
-com o parâmetro `primeiro` que é uma referência para um `i32` que tem um tempo
-de vida de `'a`, e a função tem outro parâmetro chamado `segundo` que é outra
-referência para um `i32` que também possui um tempo de vida `'a`, essas duas
-anotações de tempo de vida com o mesmo nome indicam que as referências 
-`primeiro` e `segundo` precisam ambas viver tanto quanto o mesmo tempo de vida
-genérico.
+Uma anotação de tempo de vida, por si só, não tem muito significado:
+anotações de tempo de vida dizem ao Rust como os parâmetros genéricos de tempo
+de vida de múltiplas referências se relacionam entre si. Se tivermos uma
+função com o parâmetro `primeiro`, que é uma referência para um `i32` com tempo
+de vida `'a`, e outro parâmetro chamado `segundo`, que também é uma referência
+para um `i32` com tempo de vida `'a`, essas duas anotações com o mesmo nome
+indicam que as referências `primeiro` e `segundo` precisam ambas viver pelo
+menos tanto quanto esse mesmo tempo de vida genérico.
 
 ### Anotações de Tempo de Vida em Assinaturas de Funções
 

@@ -232,7 +232,7 @@ Observe que a declaração `mod common;` é igual à declaração do módulo
 demonstramos na Listagem 7-21. Então, na função de teste, podemos chamar o
 Função `common::setup()`.
 
-#### Testes de integração para caixas binárias
+#### Testes de integração para crates binários
 
 Se nosso projeto for um crate binário que contém apenas um arquivo _src/main.rs_ e
 não possui um arquivo _src/lib.rs_, não podemos criar testes de integração no

@@ -1,9 +1,9 @@
 ## Apêndice A: Palavras-chave
 
-As listas a seguir contêm palavras-chave reservadas para uso current ou future
-usado pela linguagem Rust. Como tal, eles não podem ser usados como identificadores (exceto
-como identificadores brutos, conforme discutimos em [“Raw
-Identificadores”][raw-identifiers]<!-- ignore -->). _Identificadores_ são nomes
+As listas a seguir contêm palavras-chave reservadas para uso atual ou futuro
+pela linguagem Rust. Como tal, elas não podem ser usadas como identificadores
+(exceto como identificadores brutos, conforme discutimos na seção
+[“Identificadores Brutos”][raw-identifiers]<!-- ignore -->). _Identificadores_ são nomes
 de funções, variáveis, parâmetros, campos struct, módulos, crates, constantes,
 macros, valores estáticos, atributos, tipos, traits ou lifetimes.
 
@@ -11,60 +11,64 @@ macros, valores estáticos, atributos, tipos, traits ou lifetimes.
 
 ### Palavras-chave atualmente em uso
 
-A seguir está uma lista de palavras-chave atualmente em uso, com suas funcionalidades
-descrito.
+A seguir está uma lista de palavras-chave atualmente em uso, com suas
+funcionalidades descritas.
 
-- ** `as` **: Execute a conversão primitiva, desambigua o trait específico
-  contendo um item ou renomeie itens em instruções `use`.
-- ** ` async`**: Retorna um ` Future`em vez de bloquear o thread atual.
-- ** ` await`**: Suspender a execução até que o resultado de um ` Future`esteja pronto.
-- ** ` break`**: Sai de um loop imediatamente.
-- ** ` const`**: Defina itens constantes ou ponteiros brutos constantes.
-- ** ` continue`**: Continue para a próxima iteração do loop.
-- ** ` crate`**: Em um caminho de módulo, refere-se à raiz crate.
-- ** ` dyn`**: Despacho dinâmico para um objeto trait.
-- ** ` else`**: substituto para construções de fluxo de controle ` if`e ` if let`.
-- ** ` enum`**: Defina uma enumeração.
-- ** ` extern`**: Vincular uma função ou variável externa.
-- ** ` false`**: literal booleano falso.
-- ** ` fn`**: Defina uma função ou o tipo de ponteiro de função.
-- ** ` for`**: Faça um loop sobre itens de um iterator, implemente um trait ou especifique um
-  lifetime com classificação mais alta.
-- ** ` if`**: Ramificação baseada no resultado de uma expressão condicional.
-- ** ` impl`**: Implemente funcionalidade inerente ou trait.
-- ** ` in`**: Parte da sintaxe do loop ` for`.
-- ** ` let`**: Vincular uma variável.
-- ** ` loop`**: Loop incondicional.
-- ** ` match`**: Combine um valor com padrões.
-- ** ` mod`**: Defina um módulo.
-- ** ` move`**: Faça um closure tirar ownership de todas as suas capturas.
-- ** ` mut`**: denota mutabilidade em referências, ponteiros brutos ou ligações de padrões.
-- ** ` pub`**: denota visibilidade pública em campos struct, blocos ` impl`ou
+- **`as`**: Executa conversão primitiva, desambigua o trait específico que
+  contém um item ou renomeia itens em instruções `use`.
+- **`async`**: Retorna um `Future` em vez de bloquear a thread atual.
+- **`await`**: Suspende a execução até que o resultado de um `Future` esteja
+  pronto.
+- **`break`**: Sai de um loop imediatamente.
+- **`const`**: Define itens constantes ou ponteiros brutos constantes.
+- **`continue`**: Continua para a próxima iteração do loop.
+- **`crate`**: Em um caminho de módulo, refere-se à raiz do crate.
+- **`dyn`**: Despacho dinâmico para um objeto trait.
+- **`else`**: Alternativa para construções de fluxo de controle `if` e `if let`.
+- **`enum`**: Define uma enumeração.
+- **`extern`**: Vincula uma função ou variável externa.
+- **`false`**: Literal booleano falso.
+- **`fn`**: Define uma função ou o tipo de ponteiro de função.
+- **`for`**: Percorre itens de um iterator, implementa um trait ou especifica
+  um lifetime de ordem superior.
+- **`if`**: Ramifica com base no resultado de uma expressão condicional.
+- **`impl`**: Implementa funcionalidade inerente ou de trait.
+- **`in`**: Parte da sintaxe do loop `for`.
+- **`let`**: Vincula uma variável.
+- **`loop`**: Loop incondicional.
+- **`match`**: Combina um valor com padrões.
+- **`mod`**: Define um módulo.
+- **`move`**: Faz um closure tomar ownership de todas as suas capturas.
+- **`mut`**: Denota mutabilidade em referências, ponteiros brutos ou bindings
+  de padrão.
+- **`pub`**: Denota visibilidade pública em campos de struct, blocos `impl` ou
   módulos.
-- ** ` ref`**: vincular por referência.
-- ** ` return`**: Retorno da função.
-- ** ` Self`**: um alias de tipo para o tipo que estamos definindo ou implementando.
-- ** ` self`**: Assunto do método ou módulo atual.
-- ** ` static`**: Variável global ou lifetime com duração de todo o programa
-  execução.
-- ** ` struct`**: Defina uma estrutura.
-- ** ` super`**: Módulo pai do módulo atual.
-- ** ` trait`**: Defina um trait.
-- ** ` true`**: literal verdadeiro booleano.
-- ** ` type`**: Defina um alias de tipo ou tipo associado.
-- ** ` union`**: Defina uma [união][union]<!-- ignore -->; é uma palavra-chave somente quando
-  usado em uma declaração sindical.
-- ** ` unsafe`**: denota código, funções, traits ou implementações inseguras.
-- ** ` use`**: Coloque os símbolos no escopo.
-- ** ` where`**: denotam cláusulas que restringem um tipo.
-- ** ` while`**: Loop condicionalmente baseado no resultado de uma expressão.
+- **`ref`**: Vincula por referência.
+- **`return`**: Retorna de uma função.
+- **`Self`**: Um alias de tipo para o tipo que estamos definindo ou
+  implementando.
+- **`self`**: Receptor do método ou módulo atual.
+- **`static`**: Variável global ou lifetime que dura toda a execução do
+  programa.
+- **`struct`**: Define uma struct.
+- **`super`**: Módulo pai do módulo atual.
+- **`trait`**: Define um trait.
+- **`true`**: Literal booleano verdadeiro.
+- **`type`**: Define um alias de tipo ou um tipo associado.
+- **`union`**: Define uma [union][union]<!-- ignore -->; é uma palavra-chave
+  apenas quando usada em uma declaração de union.
+- **`unsafe`**: Denota código, funções, traits ou implementações inseguras.
+- **`use`**: Traz símbolos para o escopo.
+- **`where`**: Denota cláusulas que restringem um tipo.
+- **`while`**: Executa um loop condicional com base no resultado de uma
+  expressão.
 
 [union]: ../reference/items/unions.html
 
-### Palavras-chave reservadas para uso do Future
+### Palavras-chave reservadas para uso futuro
 
-As seguintes palavras-chave ainda não possuem nenhuma funcionalidade, mas são reservadas por
-Rust para uso potencial do future:
+As seguintes palavras-chave ainda não possuem nenhuma funcionalidade, mas são
+reservadas por Rust para uso potencial no futuro:
 
 - `abstract`
 - `become`
@@ -81,13 +85,14 @@ Rust para uso potencial do future:
 - `virtual`
 - `yield`
 
-### Raw Identifiers
+### Identificadores Brutos
 
-_Identificadores brutos_ são a sintaxe que permite usar palavras-chave onde não seriam
-normalmente será permitido. Você usa um identificador bruto prefixando uma palavra-chave com `r#`.
+_Identificadores brutos_ são a sintaxe que permite usar palavras-chave onde
+normalmente isso não seria permitido. Você usa um identificador bruto
+prefixando uma palavra-chave com `r#`.
 
-Por exemplo, `match` é uma palavra-chave. Se você tentar compilar a seguinte função
-que usa `match` como nome:
+Por exemplo, `match` é uma palavra-chave. Se você tentar compilar a seguinte
+função que usa `match` como nome:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -107,9 +112,9 @@ error: expected identifier, found keyword `match`
   |    ^^^^^ expected identifier, found keyword
 ```
 
-O erro mostra que você não pode usar a palavra-chave `match` como função
-identificador. Para usar `match` como nome de função, você precisa usar o valor bruto
-sintaxe do identificador, assim:
+O erro mostra que você não pode usar a palavra-chave `match` como identificador
+de função. Para usar `match` como nome de função, você precisa usar a sintaxe
+de identificador bruto, assim:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -123,18 +128,21 @@ fn main() {
 }
 ```
 
-Este código será compilado sem erros. Observe o prefixo `r#` na função
-nome em sua definição, bem como onde a função é chamada em `main`.
+Esse código compila sem erros. Observe o prefixo `r#` no nome da função em sua
+definição, bem como no ponto em que a função é chamada em `main`.
 
-Os identificadores brutos permitem que você use qualquer palavra escolhida como identificador, mesmo que
-essa palavra é uma palavra-chave reservada. Isso nos dá mais liberdade para escolher
-nomes de identificadores, bem como nos permite integrar com programas escritos em um
-idioma onde essas palavras não são palavras-chave. Além disso, os identificadores brutos permitem
-você deve usar bibliotecas escritas em uma edição Rust diferente daquela que seu crate usa.
-Por exemplo, `try` não é uma palavra-chave na edição de 2015, mas é na edição de 2018, 2021,
-e edições de 2024. Se você depende de uma biblioteca escrita usando o 2015
-edição e tem uma função `try`, você precisará usar a sintaxe do identificador bruto,
-` r#try`neste caso, para chamar essa função do seu código em edições posteriores.
+Os identificadores brutos permitem que você use qualquer palavra como
+identificador, mesmo que essa palavra seja uma palavra-chave reservada. Isso
+nos dá mais liberdade para escolher nomes de identificadores, além de permitir
+integração com programas escritos em uma linguagem em que essas palavras não
+são palavras-chave. Além disso, os identificadores brutos permitem que você use
+bibliotecas escritas em uma edição do Rust diferente daquela usada pelo seu
+crate. Por exemplo, `try` não é uma palavra-chave na edição de 2015, mas é nas
+edições de 2018, 2021 e 2024. Se você depende de uma biblioteca escrita na
+edição de 2015 e ela tem uma função `try`, será preciso usar a sintaxe de
+identificador bruto, `r#try`, nesse caso, para chamar essa função a partir do
+seu código em edições posteriores.
+
 Consulte [Apêndice E][appendix-e]<!-- ignore --> para obter mais informações sobre edições.
 
 [appendix-e]: appendix-05-editions.html

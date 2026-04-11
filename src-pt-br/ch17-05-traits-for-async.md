@@ -266,16 +266,17 @@ acesso necessário aos dados que serão usados naquela seção do código-fonte,
 seja tomando ownership desses dados ou obtendo uma
 referência mutável ou imutável a ele.
 
-Até agora, tudo bem: se tivermos algo errado sobre o ownership ou referências em
-um determinado bloco async, o borrow checker nos dirá. Quando queremos nos mover
-em torno do future que corresponde a esse bloco - como movê-lo para um `Vec` para
-passe para `join_all` – as coisas ficam mais complicadas.
+Até aqui, tudo bem: se houver algo errado com ownership ou com referências em
+um determinado bloco async, o borrow checker nos avisará. Quando queremos mover
+o future correspondente a esse bloco, como ao colocá-lo em um `Vec` para
+passá-lo a `join_all`, as coisas ficam mais complicadas.
 
-Quando movemos um future - seja inserindo-o em uma estrutura de dados para usá-lo como
-iterator com `join_all` ou retornando-o de uma função - isso na verdade significa
-mover a máquina de estado que Rust cria para nós. E ao contrário da maioria dos outros tipos em
-Rust, o futures Rust criado para blocos async pode acabar com referências a
-eles mesmos nos campos de qualquer variante, conforme mostrado na ilustração simplificada da Figura 17-4.
+Quando movemos um future, seja inserindo-o em uma estrutura de dados para usá-lo
+com `join_all` ou retornando-o de uma função, isso na verdade significa mover a
+máquina de estados que o Rust cria para nós. E, ao contrário da maioria dos
+outros tipos em Rust, os futures criados pelo Rust para blocos async podem
+acabar contendo referências a si mesmos nos campos de alguma variante, como
+mostra a ilustração simplificada da Figura 17-4.
 
 <figure>
 
@@ -285,14 +286,15 @@ eles mesmos nos campos de qualquer variante, conforme mostrado na ilustração s
 
 </figure>
 
-Por padrão, porém, qualquer objeto que tenha uma referência a si mesmo não é seguro para ser movido,
-porque as referências sempre apontam para o endereço de memória real de tudo o que elas
-consulte (veja a Figura 17-5). Se você mover a própria estrutura de dados, esses
-as referências internas serão deixadas apontando para o local antigo. No entanto, isso
-a localização da memória agora é inválida. Por um lado, o seu valor não será atualizado
-quando você faz alterações na estrutura de dados. Para outra coisa - mais importante,
-o computador agora está livre para reutilizar essa memória para outros fins! Você poderia acabar
-lendo dados completamente não relacionados mais tarde.
+Por padrão, qualquer objeto que tenha uma referência a si mesmo não é seguro
+para ser movido, porque referências sempre apontam para o endereço de memória
+real daquilo a que se referem, como mostra a Figura 17-5. Se você mover a
+própria estrutura de dados, essas referências internas continuarão apontando
+para o lugar antigo. Só que essa posição de memória agora é inválida. Por um
+lado, seu valor não será atualizado quando você modificar a estrutura de dados.
+Mais importante ainda, o computador agora está livre para reutilizar essa
+memória para outros fins. Você pode acabar lendo depois dados completamente sem
+relação.
 
 <figure>
 
@@ -302,18 +304,19 @@ lendo dados completamente não relacionados mais tarde.
 
 </figure>
 
-Teoricamente, o compilador Rust poderia tentar atualizar cada referência para um
-objeto sempre que ele é movido, mas isso pode adicionar muita sobrecarga de desempenho,
-especialmente se toda uma rede de referências precisar ser atualizada. Se pudéssemos, em vez disso, fazer
-certeza de que a estrutura de dados em questão _não se move na memória_, não teríamos
-para atualizar quaisquer referências. É exatamente para isso que serve o borrow checker do Rust:
-em código seguro, evita que você mova qualquer item com uma referência ativa para
-isso.
+Teoricamente, o compilador Rust poderia tentar atualizar cada referência a um
+objeto sempre que ele fosse movido, mas isso poderia adicionar muita sobrecarga
+de desempenho, especialmente se toda uma rede de referências precisasse ser
+atualizada. Se, em vez disso, pudermos garantir que a estrutura de dados em
+questão _não se move na memória_, não precisaremos atualizar referência alguma.
+É exatamente para isso que serve o borrow checker do Rust: em código seguro, ele
+impede que você mova qualquer item que tenha uma referência ativa para ele.
 
-`Pin ` se baseia nisso para nos dar a garantia exata de que precisamos. Quando _fixamos_ um
-valor agrupando um ponteiro para esse valor em`Pin `, ele não poderá mais se mover. Assim,
-se você tiver` Pin<Box<SomeType>> `, você realmente fixa o valor` SomeType `, _não_
-o ponteiro` Box`. A Figura 17-6 ilustra esse processo.
+`Pin` se baseia nisso para nos dar exatamente a garantia de que precisamos.
+Quando _fixamos_ um valor envolvendo um ponteiro para esse valor em `Pin`, ele
+não pode mais ser movido. Assim, se você tiver `Pin<Box<SomeType>>`, na
+verdade estará fixando o valor `SomeType`, e _não_ o ponteiro `Box`. A
+Figura 17-6 ilustra esse processo.
 
 <figure>
 
@@ -323,13 +326,14 @@ o ponteiro` Box`. A Figura 17-6 ilustra esse processo.
 
 </figure>
 
-Na verdade, o ponteiro `Box` ainda pode se mover livremente. Lembre-se: nós nos preocupamos
-garantindo que os dados que estão sendo referenciados permaneçam no lugar. Se um ponteiro
-se move, _mas os dados para os quais ele aponta_ estão no mesmo lugar, como na Figura
-17-7, não há problema potencial. (Como um exercício independente, consulte os documentos
-para os tipos, bem como para o módulo `std::pin` e tente descobrir como você faria
-isso com um `Pin` envolvendo um `Box`.) A chave é que o tipo autorreferencial
-em si não pode se mover, porque ainda está preso.
+Na verdade, o ponteiro `Box` ainda pode se mover livremente. Lembre-se: o que
+nos importa é garantir que os dados referenciados permaneçam no lugar. Se um
+ponteiro se move, _mas os dados para os quais ele aponta_ continuam no mesmo
+lugar, como na Figura 17-7, não há problema potencial. Como exercício
+independente, consulte a documentação desses tipos, bem como a do módulo
+`std::pin`, e tente descobrir como fazer isso com um `Pin` envolvendo um
+`Box`. O ponto principal é que o tipo autorreferencial em si não pode se mover,
+porque continua fixado.
 
 <figure>
 
@@ -339,24 +343,24 @@ em si não pode se mover, porque ainda está preso.
 
 </figure>
 
-No entanto, a maioria dos tipos é perfeitamente segura para se movimentar, mesmo que sejam
-atrás de um ponteiro `Pin`. Só precisamos pensar em fixar quando os itens tiverem
-referências internas. Valores primitivos como números e booleanos são seguros
-porque obviamente não têm referências internas.
-Nem a maioria dos tipos com os quais você normalmente trabalha no Rust. Você pode se movimentar
-um ` Vec`, por exemplo, sem se preocupar. Dado o que vimos até agora, se
-você tem um ` Pin<Vec<String>>`, teria que fazer tudo pelo cofre, mas
-APIs restritivas fornecidas por ` Pin`, mesmo que um ` Vec<String>`seja sempre seguro
-mover se não houver outras referências a ele. Precisamos de uma maneira de dizer ao
-compilador que não há problema em mover itens em casos como este - e isso é
-onde ` Unpin`entra em ação.
+No entanto, a maioria dos tipos é perfeitamente segura para ser movida, mesmo
+quando está por trás de um ponteiro `Pin`. Só precisamos pensar em fixação
+quando os itens têm referências internas. Valores primitivos, como números e
+booleanos, são seguros porque obviamente não têm referências internas. O mesmo
+vale para a maior parte dos tipos com que você normalmente trabalha em Rust.
+Você pode mover um `Vec`, por exemplo, sem se preocupar. Dado o que vimos até
+agora, se você tivesse um `Pin<Vec<String>>`, precisaria fazer tudo por meio
+das APIs seguras, mas restritivas, fornecidas por `Pin`, embora `Vec<String>`
+seja sempre seguro de mover se não houver outras referências a ele. Precisamos
+de uma forma de dizer ao compilador que mover itens em casos como esse não é um
+problema, e é aí que entra `Unpin`.
 
-`Unpin ` é um marcador trait, semelhante ao`Send ` e`Sync ` traits que vimos em
-Capítulo 16 e, portanto, não possui funcionalidade própria. O marcador traits existe apenas
-para informar ao compilador que é seguro usar o tipo que implementa um determinado trait em um
-contexto particular.`Unpin` informa ao compilador que um determinado tipo _não_
-necessidade de manter quaisquer garantias sobre se o valor em questão pode ser transferido com segurança
-movido.
+`Unpin` é uma marker trait, semelhante às traits `Send` e `Sync` que vimos no
+Capítulo 16 e, portanto, não tem funcionalidade própria. Marker traits existem
+apenas para informar ao compilador que é seguro usar o tipo que implementa uma
+determinada trait em um contexto específico. `Unpin` informa ao compilador que
+um determinado tipo _não_ precisa manter garantias especiais sobre se o valor
+em questão pode ser movido com segurança.
 
 <!--
 O `<code>` embutido no próximo bloco é para permitir o `<em>` embutido dentro dele,
@@ -364,23 +368,25 @@ O `<code>` embutido no próximo bloco é para permitir o `<em>` embutido dentro 
   que é algo distinto de um tipo normal.
 -->
 
-Assim como `Send` e `Sync`, o compilador implementa ` Unpin`automaticamente
-para todos os tipos onde possa provar que é seguro. Um caso especial, novamente semelhante ao
-` Send `e` Sync `, é onde` Unpin `_não_ é implementado para um tipo. O
-a notação para isso é <code>impl!Unpin para <em>SomeType</em></code>, onde
-<code><em>SomeType</em></code> é o nome de um tipo que _precisa_ ser mantido
-essas garantias são seguras sempre que um ponteiro para esse tipo for usado em um` Pin`.
+Assim como acontece com `Send` e `Sync`, o compilador implementa `Unpin`
+automaticamente para todos os tipos para os quais consegue provar que isso é
+seguro. Um caso especial, novamente semelhante a `Send` e `Sync`, é quando
+`Unpin` _não_ é implementada para um tipo. A notação para isso é
+<code>impl !Unpin for <em>SomeType</em></code>, em que
+<code><em>SomeType</em></code> é o nome de um tipo que _precisa_ manter essas
+garantias para ser seguro sempre que um ponteiro para ele for usado dentro de
+um `Pin`.
 
-Em outras palavras, há duas coisas a se ter em mente sobre o relacionamento
-entre `Pin` e `Unpin`. Primeiro, ` Unpin`é o caso “normal” e `!Unpin` é
-o caso especial. Segundo, se um tipo implementa `Unpin` ou `!Unpin` _apenas_
-é importante quando você está usando um ponteiro fixado para esse tipo como <code>Pin<&mut
-<em>SomeType</em>></code>.
+Em outras palavras, há duas coisas a ter em mente sobre a relação entre `Pin` e
+`Unpin`. Primeiro, `Unpin` é o caso “normal”, e `!Unpin` é o caso especial.
+Segundo, o fato de um tipo implementar `Unpin` ou `!Unpin` _só_ importa quando
+você está usando um ponteiro fixado para esse tipo, como
+<code>Pin<&mut <em>SomeType</em>></code>.
 
-Para tornar isso concreto, pense em um `String`: ele tem um comprimento e o Unicode
-personagens que o compõem. Podemos agrupar um ` String`em ` Pin`, como pode ser visto na Figura
-17-8. No entanto, ` String`implementa automaticamente ` Unpin`, assim como a maioria dos outros tipos
-em Rust.
+Para tornar isso mais concreto, pense em uma `String`: ela tem um comprimento e
+os caracteres Unicode que a compõem. Podemos envolver uma `String` em `Pin`,
+como mostra a Figura 17-8. No entanto, `String` implementa `Unpin`
+automaticamente, assim como a maioria dos outros tipos em Rust.
 
 <figure>
 
@@ -390,11 +396,11 @@ em Rust.
 
 </figure>
 
-Como resultado, podemos fazer coisas que seriam ilegais se `String` fosse implementado
-`!Unpin `, como substituir uma string por outra exatamente da mesma
-localização na memória como na Figura 17-9. Isso não viola o contrato` Pin `,
-porque` String `não possui referências internas que tornem sua movimentação insegura.
-É exatamente por isso que implementa` Unpin `em vez de`!Unpin`.
+Como resultado, podemos fazer coisas que seriam ilegais se `String`
+implementasse `!Unpin`, como substituir uma string por outra exatamente no
+mesmo local de memória, como na Figura 17-9. Isso não viola o contrato de
+`Pin`, porque `String` não tem referências internas que tornem sua movimentação
+insegura. É justamente por isso que ela implementa `Unpin`, e não `!Unpin`.
 
 <figure>
 
@@ -404,14 +410,15 @@ porque` String `não possui referências internas que tornem sua movimentação 
 
 </figure>
 
-Agora sabemos o suficiente para entender os erros relatados para aquela chamada `join_all`
-da Listagem 17-23. Originalmente, tentamos mover o futures produzido por
-async é bloqueado em ` Vec<Box<dyn Future<Output = ()>>>`, mas como vimos,
-aqueles futures podem ter referências internas, então eles não
-implementar ` Unpin`. Depois de fixá-los, podemos passar o tipo ` Pin`resultante para
-o ` Vec`, confiante de que os dados subjacentes no futures _não_ serão
-movido. A Listagem 17-24 mostra como corrigir o código chamando a macro ` pin!`
-onde cada um dos três futures é definido e ajustando o tipo de objeto trait.
+Agora sabemos o suficiente para entender os erros relatados para aquela chamada
+a `join_all` na Listagem 17-23. Originalmente, tentamos mover os futures
+produzidos por blocos async para dentro de um `Vec<Box<dyn Future<Output = ()>>>`,
+mas, como vimos, esses futures podem ter referências internas, então não
+implementam `Unpin` automaticamente. Depois de fixá-los, podemos passar o tipo
+`Pin` resultante para o `Vec`, confiantes de que os dados subjacentes dos
+futures _não_ serão movidos. A Listagem 17-24 mostra como corrigir o código
+chamando a macro `pin!` no ponto em que cada um dos três futures é definido e
+ajustando o tipo do objeto trait.
 
 <Listing number="17-24" caption="Fixando os futures para permitir movê-los para dentro do vetor">
 
@@ -421,45 +428,47 @@ onde cada um dos três futures é definido e ajustando o tipo de objeto trait.
 
 </Listing>
 
-Este exemplo agora compila e executa, e poderíamos adicionar ou remover futures do
-vector em tempo de execução e junte todos eles.
+Esse exemplo agora compila e executa, e poderíamos adicionar ou remover futures
+do vetor em tempo de execução e então aguardar todos eles.
 
-`Pin ` e`Unpin` são importantes principalmente para a construção de bibliotecas de nível inferior, ou
-quando você está construindo um tempo de execução em si, em vez de usar o código Rust do dia a dia.
-Porém, quando você vir esses traits em mensagens de erro, agora você terá uma melhor
-ideia de como consertar seu código!
+`Pin` e `Unpin` são importantes principalmente na construção de bibliotecas de
+nível mais baixo, ou quando você está construindo um runtime em si, em vez de
+apenas escrever código Rust do dia a dia. Ainda assim, quando você vir essas
+traits em mensagens de erro, agora terá uma ideia melhor de como corrigir seu
+código.
 
 > Nota: Esta combinação de `Pin` e `Unpin` torna possível
 > implementar toda uma classe de tipos complexos em Rust que de outra forma seriam
 > desafiadores porque são autorreferenciais. Tipos que exigem `Pin` aparecem
-> mais comumente em async Rust hoje, mas de vez em quando, você pode ver
->-los em outros contextos também.
+> mais comumente em async Rust hoje, mas, de vez em quando, você também pode
+> vê-los em outros contextos.
 >
-> As especificidades de como `Pin` e `Unpin` funcionam e as regras necessárias
-> para manter, são abordados extensivamente na documentação da API para `std::pin`, então
-> se você estiver interessado em aprender mais, esse é um ótimo lugar para começar.
+> As especificidades de como `Pin` e `Unpin` funcionam, bem como as regras que
+> eles precisam manter, são abordadas extensivamente na documentação da API de
+> `std::pin`, então, se você tiver interesse em aprender mais, esse é um ótimo
+> lugar para começar.
 >
 > Se você quiser entender como as coisas funcionam nos bastidores com ainda mais detalhes,
 > veja os capítulos [2][under-the-hood]<!-- ignore --> e
 > [4][pinning]<!-- ignore --> de
 > [_Programação Assíncrona em Rust_][async-book].
 
-### A característica `Stream`
+### A trait `Stream`
 
-Agora que você tem um conhecimento mais profundo sobre `Future`, ` Pin`e ` Unpin`traits, nós
-podemos voltar nossa atenção para o ` Stream`trait. Como você aprendeu anteriormente no
-capítulo, streams são semelhantes ao iterators assíncrono. Ao contrário de ` Iterator`e
-` Future `, entretanto,` Stream `não tem definição na biblioteca padrão a partir de
-este escrito, mas _exis_ uma definição muito comum do` futures`crate
-usado em todo o ecossistema.
+Agora que você tem uma compreensão mais profunda das traits `Future`, `Pin` e
+`Unpin`, podemos voltar nossa atenção para a trait `Stream`. Como você aprendeu
+anteriormente neste capítulo, streams são semelhantes a iterators assíncronos.
+Ao contrário de `Iterator` e `Future`, porém, `Stream` ainda não tem uma
+definição na biblioteca padrão no momento em que este texto foi escrito. Ainda
+assim, _há_ uma definição muito comum vinda do crate `futures`, usada em todo o
+ecossistema.
 
-Vamos revisar as definições de `Iterator` e `Future` traits antes
-olhando como um `Stream` trait pode mesclá-los. De `Iterator`, nós
-temos a ideia de uma sequência: seu método ` next`fornece uma
-` Option<Self::Item> `. Do` Future `, temos a ideia de prontidão ao longo do tempo:
-seu método` poll `fornece um` Poll<Self::Output> `. Para representar uma sequência de
-itens que ficam prontos com o tempo, definimos um` Stream`trait que coloca esses
-recursos juntos:
+Vamos revisar as definições das traits `Iterator` e `Future` antes de ver como
+uma trait `Stream` pode reuni-las. De `Iterator`, temos a ideia de uma
+sequência: seu método `next` fornece um `Option<Self::Item>`. De `Future`,
+temos a ideia de prontidão ao longo do tempo: seu método `poll` fornece um
+`Poll<Self::Output>`. Para representar uma sequência de itens que ficam prontos
+ao longo do tempo, definimos uma trait `Stream` que combina essas duas ideias:
 
 ```rust
 use std::pin::Pin;
@@ -475,63 +484,65 @@ trait Stream {
 }
 ```
 
-O `Stream` trait define um tipo associado chamado `Item` para o tipo do
-itens produzidos pelo stream. Isto é semelhante ao `Iterator`, onde pode haver
-zero a muitos itens, e ao contrário de ` Future`, onde há sempre um único
-` Output `, mesmo que seja a unidade do tipo` ()`.
+A trait `Stream` define um tipo associado chamado `Item` para o tipo de itens
+produzidos pelo stream. Isso é semelhante a `Iterator`, em que pode haver de
+zero a muitos itens, e diferente de `Future`, em que sempre há um único
+`Output`, mesmo que ele seja o tipo unitário `()`.
 
-`Stream ` também define um método para obter esses itens. Chamamos isso de`poll_next `, para
-deixe claro que ele pesquisa da mesma forma que` Future::poll `faz e produz um
-sequência de itens da mesma forma que` Iterator::next `faz. Seu tipo de retorno
-combina` Poll `com` Option `. O tipo externo é` Poll `, porque deve ser
-verificado quanto à prontidão, assim como faz um future. O tipo interno é` Option`,
-porque precisa sinalizar se há mais mensagens, assim como um iterator
-faz.
+`Stream` também define um método para obter esses itens. Nós o chamamos de
+`poll_next`, para deixar claro que ele faz _poll_ da mesma forma que
+`Future::poll` e produz uma sequência de itens do mesmo modo que
+`Iterator::next`. Seu tipo de retorno combina `Poll` com `Option`. O tipo
+externo é `Poll`, porque ele precisa ser verificado quanto à prontidão, assim
+como acontece com um future. O tipo interno é `Option`, porque precisa
+sinalizar se ainda existem mais mensagens, assim como acontece com um iterator.
 
-Algo muito semelhante a esta definição provavelmente acabará como parte do Rust
-biblioteca padrão. Enquanto isso, faz parte do kit de ferramentas da maioria dos tempos de execução,
-então você pode confiar nele, e tudo o que abordamos a seguir deve ser aplicado em geral!
+Algo muito semelhante a essa definição provavelmente acabará fazendo parte da
+biblioteca padrão do Rust. Enquanto isso, ela faz parte do conjunto de
+ferramentas da maioria dos runtimes, então você pode contar com isso, e tudo o
+que abordaremos a seguir deve se aplicar de modo geral.
 
 Nos exemplos que vimos na seção [“Streams: Futures in Sequence”][streams]<!--
-ignore -->, porém, não usamos `poll_next` _ou_ `Stream`, mas
-em vez disso, usou ` next`e ` StreamExt`. _Poderíamos_ trabalhar diretamente em termos de
-API ` poll_next`escrevendo à mão nossas próprias máquinas de estado ` Stream`, é claro,
-assim como _poderíamos_ trabalhar com futures diretamente por meio do método ` poll`. Usando
-` await `é muito melhor, porém, e o` StreamExt `trait fornece o` next`
-método para que possamos fazer exatamente isso:
+ignore -->, porém, não usamos `poll_next` _nem_ `Stream`; em vez disso,
+usamos `next` e `StreamExt`. _Poderíamos_ trabalhar diretamente com a API
+`poll_next`, escrevendo manualmente nossas próprias máquinas de estados para
+`Stream`, é claro, assim como _poderíamos_ trabalhar com futures diretamente
+por meio do método `poll`. Usar `await` é muito mais agradável, no entanto, e a
+trait `StreamExt` fornece o método `next` para que possamos fazer exatamente
+isso:
 
 ```rust
 {{#rustdoc_include ../listings/ch17-async-await/no-listing-stream-ext/src/lib.rs:here}}
 ```
 
 > Nota: A definição real que usamos anteriormente neste capítulo parece um pouco
-> diferente disso, pois suporta versões do Rust que ainda não
-> suporte ao uso de funções async em traits. Como resultado, fica assim:
+> diferente disso, pois ela dá suporte a versões do Rust que ainda não
+> suportavam o uso de funções async em traits. Como resultado, ela fica assim:
 >
 > ```rust,ignore
 > fn next(&mut self) -> Next<'_, Self> where Self: Unpin;
 > ```
 >
-> Esse tipo `Next` é um `struct` que implementa `Future` e nos permite nomear
-> o lifetime da referência a `self` com `Next<'_, Self>`, para que ` await`
-> pode trabalhar com este método.
+> Esse tipo `Next` é uma `struct` que implementa `Future` e nos permite nomear
+> o lifetime da referência a `self` com `Next<'_, Self>`, para que `await`
+> possa funcionar com esse método.
 
-O `StreamExt` trait também é o lar de todos os métodos interessantes disponíveis
-para usar com streams. `StreamExt` é implementado automaticamente para cada tipo
-que implementa `Stream`, mas estes traits são definidos separadamente para permitir o
-comunidade para iterar em APIs de conveniência sem afetar os fundamentos
-trait.
+A trait `StreamExt` também é o lugar em que vivem todos os métodos interessantes
+disponíveis para uso com streams. `StreamExt` é implementada automaticamente
+para cada tipo que implementa `Stream`, mas essas traits são definidas
+separadamente para permitir que a comunidade evolua APIs de conveniência sem
+afetar a trait fundamental.
 
-Na versão do `StreamExt` usada no `trpl` crate, o trait não apenas
-define o método `next`, mas também fornece uma implementação padrão de ` next`
-que lida corretamente com os detalhes da chamada de ` Stream::poll_next`. Isso significa
-que mesmo quando você precisa escrever seu próprio tipo de dados de streaming, você _apenas_ tem
-para implementar ` Stream`, e então qualquer pessoa que usar seu tipo de dados poderá usar
-` StreamExt`e seus métodos automaticamente.
+Na versão de `StreamExt` usada no crate `trpl`, a trait não apenas define o
+método `next`, como também fornece uma implementação padrão de `next` que lida
+corretamente com os detalhes da chamada a `Stream::poll_next`. Isso significa
+que, mesmo quando você precisa escrever seu próprio tipo de dado de streaming,
+você _só_ precisa implementar `Stream`; depois disso, qualquer pessoa que usar
+esse tipo poderá usar `StreamExt` e seus métodos automaticamente.
 
-Isso é tudo que abordaremos nos detalhes de nível inferior desses traits. Para
-Para finalizar, vamos considerar como futures (incluindo streams), tarefas e threads, todos
-combinem!
+Isso é tudo o que abordaremos sobre os detalhes de mais baixo nível dessas
+traits. Para finalizar, vamos considerar como futures, incluindo streams,
+tarefas e threads se encaixam em conjunto.
 
 [message-passing]: ch17-02-concurrency-with-async.md#sending-data-between-two-tasks-using-message-passing
 [ch-18]: ch18-00-oop.html

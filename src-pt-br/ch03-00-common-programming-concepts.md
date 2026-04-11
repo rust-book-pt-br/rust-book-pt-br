@@ -4,7 +4,7 @@ Este capítulo aborda conceitos que aparecem em quase todas as linguagens de pro
 
 Especificamente, você aprenderá sobre variáveis, tipos básicos, funções, comentários e fluxo de controle. Esses princípios estarão em todos os programas em Rust, e aprendê-los cedo lhe dará uma boa base para começar.
 
-> ### Palavras chaves
+> ### Palavras-chave
 >
 > A linguagem Rust tem uma série de *palavras-chaves* que são reservadas para uso exclusivo
 > da linguagem, como ocorre em outras linguagens. Tenha em mente que você não

@@ -1,12 +1,12 @@
-## Um Exemplo de um Programa que usa Structs
+## Um Exemplo de Programa que Usa Structs
 
-Para entender quando podemos querer usar structs, vamos escrever um programa 
+Para entender quando podemos querer usar structs, vamos escrever um programa
 que calcula a área de um retângulo. Vamos começar com as variáveis individuais
 e em seguida, refazer o programa até usar structs em vez das variáveis.
 
-Vamos fazer um novo projeto binário com Cargo, chamado *retângulos* que terá
-o comprimento e a largura do retângulo especificados em pixels e irá calcular a 
-área do retângulo. A Lista 5-8 mostra um programa curto com uma maneira de 
+Vamos fazer um novo projeto binário com Cargo, chamado *retângulos*, que terá
+o comprimento e a largura do retângulo especificados em pixels e calculará a
+área do retângulo. A Listagem 5-8 mostra um programa curto com uma maneira de
 fazer isso no nosso projeto *src/main.rs*:
 
 <span class="filename">Filename: src/main.rs</span>
@@ -27,7 +27,7 @@ fn area(length: u32, width: u32) -> u32 {
 }
 ```
 
-<span class="caption">Lista 5-8: Calcular a área de um retângulo 
+<span class="caption">Listagem 5-8: Calculando a área de um retângulo
 especificado pelo seu comprimento e largura em variáveis separadas</span>
 
 Agora, executamos este programa usando `cargo run`:
@@ -38,8 +38,8 @@ The area of the rectangle is 1500 square pixels.
 
 ### Refazendo com Tuplas
 
-Embora a lista 5-8 funcione e descubra a área do retângulo chamando a função
-`area` com cada dimensão, nós podemos fazer melhor. O comprimento e a largura 
+Embora a Listagem 5-8 funcione e descubra a área do retângulo chamando a função
+`area` com cada dimensão, podemos fazer melhor. O comprimento e a largura
 estão relacionados uns aos outros porque juntos eles descrevem um retângulo.
 
 O problema com este método é evidente na assinatura de `area`:
@@ -50,10 +50,9 @@ fn area(length: u32, width: u32) -> u32 {
 
 A função `area` supostamente calcula a área de um retângulo, mas a função
 que escrevemos tem dois parâmetros. Os parâmetros estão relacionados, mas isso
-não é indicado em qualquer lugar no nosso programa. Seria mais legível e 
-mais gerenciável agrupar comprimento e largura. Já discutimos uma maneira de
-podermos fazer isso no Agrupamento de Valores em Tuplas, na seção do capítulo 3
-na página XX: através do uso de tuplas. Lista 5-9 mostra outra versão do 
+não está indicado em nenhum lugar no nosso programa. Seria mais legível e
+mais fácil de manter agrupar comprimento e largura. Já discutimos uma maneira de
+fazer isso ao falar sobre tuplas no Capítulo 3. A Listagem 5-9 mostra outra versão do
 nosso programa que usa tuplas:
 
 <span class="filename">Filename: src/main.rs</span>
@@ -73,26 +72,26 @@ fn area(dimensions: (u32, u32)) -> u32 {
 }
 ```
 
-<span class="caption">Lista 5-8: Especificando o comprimento e a largura de um 
-retangulo através de uma Tupla.</span>
+<span class="caption">Listagem 5-9: Especificando o comprimento e a largura de um
+retângulo por meio de uma tupla.</span>
 
-Em uma maneira, este programa é melhor. As tuplas deixam-nos adicionar um pouco
-de estrutura, e agora estamos passando apenas um argumento. Mas esta versão é 
-menos clara: as tuplas não nomeiam os seus elementos, de modo que nosso cálculo
-tornou-se mais confuso porque temos de indexar as peças da tupla.
+De certa forma, este programa é melhor. As tuplas nos permitem adicionar um pouco
+de estrutura, e agora estamos passando apenas um argumento. Mas, de outra forma, esta versão é
+menos clara: as tuplas não nomeiam seus elementos, então o cálculo fica
+mais confuso porque precisamos indexar as partes da tupla.
 
-Não importa, para o cálculo da área, trocar-se comprimento e largura, mas 
-se queremos desenhar o retângulo na tela, já importa! Temos de ter em 
-mente que `comprimento` é a tupla índice `0` e `largura` é o tupla índice `1`.
-Se alguém trabalhar com este código, terá de descobrir isso e mantê-lo em 
-mente. Seria fácil esquecer ou misturar estes valores e causar erros, porque
-não se transmitiu o significado dos nossos dados no nosso código.
+Para o cálculo da área, trocar comprimento e largura não faria diferença, mas,
+se quisermos desenhar o retângulo na tela, isso já importa! Teríamos de ter em
+mente que `comprimento` é o índice `0` da tupla e `largura` é o índice `1`.
+Se outra pessoa trabalhar com esse código, também terá de descobrir isso e manter
+essa informação em mente. Seria fácil esquecer ou misturar esses valores e causar erros,
+porque o significado dos dados não está explícito no código.
 
-### Reprogramação com Structs: Adicionando Mais Significado
+### Refatorando com Structs: Adicionando Mais Significado
 
-Usamos structs para dar significado aos dados usando rótulos. Podemos 
+Usamos structs para dar significado aos dados usando rótulos. Podemos
 transformar a tupla que estamos usando em um tipo de dados, com um nome
-para o conjunto bem como nomes para as partes, como mostra a Lista 5-10:
+para o conjunto bem como nomes para as partes, como mostra a Listagem 5-10:
 
 <span class="filename">Filename: src/main.rs</span>
 
@@ -116,28 +115,27 @@ fn area(rectangle: &Rectangle) -> u32 {
 }
 ```
 
-<span class="caption">Lista 5-10: Definindo um struct `Rectangle`(Rectangulo)</span>
+<span class="caption">Listagem 5-10: Definindo uma struct `Rectangle`</span>
 
-Aqui temos definido um struct denominado `Rectangle`. Dentro das `{}` 
-definimos os campos como `comprimento` e `largura`, ambas do tipo `u32`. 
-Em `main`, criamos uma instância específica de um `Rectangle` que tem um 
-comprimento de 50 e largura de 30.
+Aqui definimos uma struct chamada `Rectangle`. Dentro das chaves,
+definimos os campos `length` e `width`, ambos do tipo `u32`.
+Em `main`, criamos uma instância específica de `Rectangle` que tem
+comprimento 50 e largura 30.
 
-A nossa função `área` agora é definida com um parâmetro, que chamamos 
-`rectangle`, cujo tipo é um empréstimo de uma instância da struct imutável
-`Rectangle`. Como mencionado no capítulo 4, queremos usar a struct, em vez de
-tomar posse dela. Desta forma, `main` mantém-se a sua proprietaria e pode 
-continuar a usar o `rect1`, que é a razão para usar o `&` na assinatura 
-da função e onde chamamos a função.
+Nossa função `area` agora é definida com um parâmetro, que chamamos
+`rectangle`, cujo tipo é um empréstimo imutável de uma instância da struct
+`Rectangle`. Como mencionado no Capítulo 4, queremos tomar emprestada a struct,
+em vez de tomar posse dela. Dessa forma, `main` mantém a propriedade de `rect1`
+e pode continuar usando esse valor, razão pela qual usamos `&` tanto na assinatura
+da função quanto na chamada.
 
-A função `área` acessa os campos `comprimento` e `largura` da instância 
-`Rectangle`. Nossa função assinatura para `área` agora indica exatamente o que 
-queremos dizer: calcular a área de um `Rectangle` usando os campos `lenght` 
-(comprimento) e `width` (largura). Transmite que o comprimento e a largura são 
-relacionados uns aos outros, e dá nomes descritivos para os valores em vez de 
-usar a tupla de valores de índice `0` e `1`-uma vitória para uma maior clareza.
+A função `area` acessa os campos `length` e `width` da instância
+`Rectangle`. A assinatura de `area` agora expressa exatamente o que queremos
+dizer: calcular a área de um `Rectangle` usando seus campos `length` e `width`.
+Isso transmite que comprimento e largura estão relacionados e dá nomes descritivos
+aos valores, em vez de usar os índices `0` e `1` de uma tupla.
 
-### Adicionando Funcionalidade Util com Traits Derivadas
+### Adicionando Funcionalidade Útil com Traits Derivadas
 
 Seria útil para ser capaz de imprimir uma instância do `Rectangle` enquanto
 estamos depurando o nosso programa, a fim de consultar os valores para todos
@@ -175,7 +173,7 @@ até agora implementam `Display` por padrão, porque só há uma maneira que voc
 deseja mostrar um `1` ou qualquer outro tipo primitivo para um usuário. Mas com
 Structs, a forma como `println!` deve formatar a saída é menos clara, pois 
 existem mais possibilidades de exibição: você quer vírgulas ou não? Deseja 
-imprimir as chavetas `{}`? Todos os campos devem ser mostrados? Devido a esta 
+imprimir as chaves `{}`? Todos os campos devem ser mostrados? Devido a esta
 ambiguidade, Rust não tenta adivinhar o que queremos e as structs não têm uma 
 implementação de `Display`.
 

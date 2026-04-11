@@ -1,16 +1,16 @@
 ## Definindo e Instanciando Structs
 
-Structs são semelhantes às tuplas, que foram discutidas no Capítulo 3. Como 
+Structs são semelhantes às tuplas, que foram discutidas no Capítulo 3. Como
 tuplas, os elementos de uma struct podem ser de tipos diferentes. Ao contrário
-das tuplas, nomeie cada dado de modo que seja claro o que cada um significa. 
-Como resultado destes nomes, structs são mais flexíveis que tuplas: nós não 
-temos de saber a ordem dos dados para especificar ou aceder aos valores de 
-uma instância.
+das tuplas, em uma struct damos nome a cada pedaço de dado, para que fique
+claro o que cada valor representa. Como resultado, structs são mais flexíveis
+que tuplas: não precisamos saber a ordem dos dados para especificar ou acessar
+os valores de uma instância.
 
-Para definir uma struct, digite a palavra-chave `struct` e o nome da struct.
+Para definir uma struct, digitamos a palavra-chave `struct` e o nome da struct.
 O nome da struct deve descrever o significado dos dados agrupados. Em seguida,
-dentro das chavetas {}, vamos definir os nomes e tipos dos dados, o que chamamos de 
-*campos*. Por exemplo, a Lista 5-1 mostra uma struct para armazenar informações
+ dentro das chaves (`{}`), definimos os nomes e os tipos dos dados, que chamamos de
+*campos*. Por exemplo, a Listagem 5-1 mostra uma struct para armazenar informações
 sobre a conta de um usuário:
 
 ```rust
@@ -21,18 +21,18 @@ struct User {
     active: bool,
 }
 ```
-<span class="caption">Lista 5-1: Definição da struct `User`</span>
+<span class="caption">Listagem 5-1: Definição da struct `User`</span>
 
-Para usar uma struct depois de a definirmos, criamos uma *instância* dessa 
-struct, especificando valores para cada um dos campos. Estamos a criar uma 
-instância, indicando o nome da struct e depois entre chavetas, adicionamos 
-pares `campo:valor` onde as chaves são os nomes dos campos e os valores são os
-dados que deseja armazenar nesses campos. Nós não temos que atribuir os 
-elementos na mesma ordem em que os temos declarado na struct.
+Para usar uma struct depois de a definirmos, criamos uma *instância* dessa
+struct, especificando valores concretos para cada um dos campos. Criamos uma
+instância informando o nome da struct e, depois, entre chaves, adicionando
+pares `campo: valor`, em que as chaves são os nomes dos campos e os valores são
+os dados que queremos armazenar nesses campos. Não precisamos informar os
+campos na mesma ordem em que foram declarados na struct.
 Em outras palavras, a definição da struct é como um modelo geral para o tipo,
-e as instâncias preenchem esse modelo com os dados específicos, para criar 
-valores desse tipo. Por exemplo, podemos declarar um usuário específico como 
-mostrado na Lista 5-2:
+e as instâncias preenchem esse modelo com dados específicos para criar valores
+desse tipo. Por exemplo, podemos declarar um usuário específico como mostrado
+na Listagem 5-2:
 
 ```rust
 # struct User {
@@ -50,13 +50,13 @@ let user1 = User {
 };
 ```
 
-<span class="caption">Lista 5-2: Criar uma instância da struct `User`</span>
+<span class="caption">Listagem 5-2: Criando uma instância da struct `User`</span>
 
-Para obter um valor específico de uma struct, podemos utilizar a notação de 
-ponto. Se quiséssemos apenas esse endereço de e-mail do usuário, podemos usar
-`user1.email` sempre que queremos usar este valor. Para alterar um valor em uma
-struct, se a instância é mutável, podemos usar a notação de ponto e atribuir 
-a um campo específico. Lista 5-3 mostra como alterar o valor do campo `e-mail`
+Para obter um valor específico de uma struct, podemos usar a notação de
+ponto. Se quiséssemos acessar o endereço de email do usuário, poderíamos usar
+`user1.email` sempre que quiséssemos esse valor. Para alterar um valor em uma
+struct, se a instância for mutável, podemos usar a notação de ponto e atribuir
+um novo valor a um campo específico. A Listagem 5-3 mostra como alterar o valor do campo `email`
 de uma instância de `User` mutável:
 
 ```rust
@@ -77,21 +77,17 @@ let mut user1 = User {
 user1.email = String::from("outroemail@exemplo.com");
 ```
 
-<span class="caption">Lista 5-3: Mudando o valor no campo `email` da 
+<span class="caption">Listagem 5-3: Mudando o valor no campo `email` da
 instância de `User`</span>
 
 
-<h3>Abreviatura da Inicialização dos Campos quando as Variáveis têm o mesmo
-Nome dos Campos</h3>
+<h3>Usando a Abreviação de Inicialização de Campos</h3>
 
-Se você tiver as variáveis com os mesmos nomes dos campos da struct, você pode 
-usar o *field init shorthand* ((inicialização abreviada do campo). Isto pode 
-fazer com que as funções que criam novas instâncias de structs mais concisos.
-Em primeiro lugar, vejamos o modo mais detalhado para inicializar uma instância
-de uma struct. 
-A função chamada `build_user` mostrada aqui na Lista 5-4 tem parâmetros 
-chamados `e-mail` e `username` (nome de usuário). A função cria e retorna uma 
-instância do `User`:
+Se você tiver variáveis com os mesmos nomes dos campos da struct, pode usar o
+*field init shorthand* (abreviação de inicialização de campos). Antes, porém,
+vejamos a forma mais detalhada de inicializar uma instância de struct.
+A função chamada `build_user`, mostrada aqui na Listagem 5-4, tem parâmetros
+chamados `email` e `username`. A função cria e retorna uma instância de `User`:
 
 ```rust
 # struct User {
@@ -111,15 +107,14 @@ fn build_user(email: String, username: String) -> User {
 }
 ```
 
-<span class="caption">Lista 5-4: Uma função `build_user` que recebe um endereço
-de correio electrónico e o nome do usuário e retorna uma instância de `user`
+<span class="caption">Listagem 5-4: Uma função `build_user` que recebe um endereço
+de email e um nome de usuário e retorna uma instância de `User`
 </span>
 
-Porque os nomes dos parâmetros `e-mail` e `username` são os mesmos que os nomes
-de campo do `e-mail` e `nome de usuário` da struct `User`, podemos escrever 
-`build_user` sem a repetição de `e-mail` e `username` como mostrado na Lista5-5.
-Esta versão de `build_user` comporta-se da mesma maneira como na Lista 5-4.
-A sintaxe abreviada pode fazer casos como esse mais curtos para escrever, 
+Como os nomes dos parâmetros `email` e `username` são exatamente os mesmos dos
+campos da struct `User`, podemos reescrever `build_user` sem repetir `email` e
+`username`, como mostrado na Listagem 5-5. Esta versão de `build_user` se
+comporta da mesma maneira que a da Listagem 5-4. A sintaxe abreviada torna casos como esse mais curtos de escrever,
 especialmente quando structs têm muitos campos.
 
 ```rust
@@ -140,8 +135,8 @@ fn build_user(email: String, username: String) -> User {
 }
 ```
 
-<span class="caption">Lista 5-5: Uma função `build_user` que usa a sintaxe 
-campo init porque os parâmetros `e-mail` e `username` têm o mesmo nome dos 
+<span class="caption">Listagem 5-5: Uma função `build_user` que usa a abreviação de
+inicialização de campos porque os parâmetros `email` e `username` têm o mesmo nome dos
 campos da struct</span>
 
 <h3>A Criação de instâncias de outras instâncias com Sintaxe de Atualização da

@@ -15,7 +15,7 @@ ainda são, fundamentalmente, endereços IP, e deveriam ser tratados pelo mesmo
 tipo no código em situações que se aplicam a qualquer versão de endereço IP.
 
 Podemos expressar esse conceito em código definindo uma enum `VersaoIp` e
-listando os possíveis tipos de que um endereço IP pode ser: `V4` e `V6`. Estas
+listando os possíveis tipos que um endereço IP pode ter: `V4` e `V6`. Estas
 são as chamadas *variantes* da enum:
 
 ```rust
@@ -130,9 +130,9 @@ let loopback = EnderecoIp::V6(String::from("::1"));
 Podemos anexar dados a cada variante da enum diretamente, assim não existe mais
 a necessidade de uma struct adicional.
 
-Há uma outra vantagem de se usar uma enum em vez de uma struct: cada variante
-pode conter dados de diferentes tipos e quantidades. Os endereços IP da versão
-quatro têm sempre quatro componentes numéricas, cada uma com valor de 0 a 255.
+Há outra vantagem em usar uma enum em vez de uma struct: cada variante
+pode conter dados de tipos e quantidades diferentes. Os endereços IP da versão
+quatro têm sempre quatro componentes numéricos, cada um com valor de 0 a 255.
 Se quiséssemos representar endereços `V4` como quatro valores `u8`, e ao mesmo
 tempo manter os endereços `V6` como uma `String`, não poderíamos usar uma
 struct. Já as enums podem facilmente atender a este caso:
@@ -156,7 +156,7 @@ documentação em inglês][IpAddr]<!-- ignore -->). Vamos ver como a biblioteca
 padrão define `IpAddr`: ele tem basicamente a mesma enum e as mesmas variantes
 que nós definimos e usamos anteriormente, mas os dados do endereço são
 embutidos dentro das variantes na forma de duas structs separadas, que são
-definidas de um jeito diferente pra cada variante.
+definidas de um jeito diferente para cada variante.
 
 [IpAddr]: https://doc.rust-lang.org/std/net/enum.IpAddr.html
 
@@ -180,7 +180,7 @@ variante de enum: strings, tipos numéricos ou structs, por exemplo. Você pode
 até mesmo incluir outra enum! Além disso, os tipos definidos pela biblioteca
 padrão não são tão mais complicados do que o que talvez você pensaria em fazer.
 
-Repare que, mesmo havendo um `IpAddr`definido pela biblioteca padrão, nós ainda
+Repare que, mesmo havendo um `IpAddr` definido pela biblioteca padrão, nós ainda
 podemos criar e utilizar nossa própria definição (com o mesmo nome, inclusive)
 sem nenhum conflito, porque não trouxemos a definição da biblioteca padrão para
 dentro do nosso escopo. Falaremos mais sobre a inclusão de tipos em um escopo

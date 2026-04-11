@@ -72,7 +72,7 @@ let s = "initial contents".to_string();
 
 Isso cria uma string contendo `initial contents`.
 
-Também podemos usar a função `String :: from` para criar uma` String` de uma string
+Também podemos usar a função `String::from` para criar uma `String` de uma string
 literal. Isso equivale a usar `to_string`:
 
 ```rust
@@ -81,12 +81,12 @@ let s = String::from("initial contents");
 
 Como as strings são usadas para tantas coisas, existem várias APIs genéricas diferentes
 que podem ser usadas para strings, então há muitas opções. Algumas delas
-podem parecer redundantes, mas todas têm seu lugar! Nesse caso, `String :: from`
+podem parecer redundantes, mas todas têm seu lugar! Nesse caso, `String::from`
 e `.to_string` acabam fazendo exatamente o mesmo, então a que você escolher é uma
 questão de estilo.
 
-Lembre-se de que as string são codificadas em UTF-8, para que possamos incluir qualquer dados apropriadamente codificados
-neles:
+Lembre-se de que strings são codificadas em UTF-8, então podemos incluir nelas
+quaisquer dados apropriadamente codificados:
 
 ```rust
 let hello = "السلام عليكم";
@@ -324,8 +324,8 @@ até o índice para determinar quantos caracteres válidos havia.
 
 ### Fatiando Strings
 
-Porque não está claro qual seria o tipo de retorno da indexação de string, e
-muitas vezes é uma má idéia indexar uma string, Rust dissuade-o de fazê-lo
+Como não está claro qual seria o tipo de retorno da indexação de string, e
+muitas vezes é uma má ideia indexar uma string, Rust desencoraja isso
 pedindo que você seja mais específico se você realmente precisar disso. Do jeito que você pode ser
 mais específico que a indexação usando `[]` com um único número é usando `[]` com
 um intervalo para criar uma fatia de string contendo bytes específicos:

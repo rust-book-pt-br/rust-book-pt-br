@@ -1,9 +1,9 @@
 ## Características das linguagens orientadas a objetos
 
-Não há consenso na comunidade de programação sobre o que caracteriza um
-a linguagem deve ser considerada orientada a objetos. Rust é influenciado por muitos
+Não há consenso na comunidade de programação sobre o que caracteriza uma
+linguagem como orientada a objetos. Rust é influenciado por muitos
 paradigmas de programação, incluindo OOP; por exemplo, exploramos os recursos
-que veio da programação funcional no Capítulo 13. Indiscutivelmente, linguagens OOP
+que vieram da programação funcional no Capítulo 13. Indiscutivelmente, linguagens OOP
 compartilham certas características comuns - ou seja, objetos, encapsulamento e
 herança. Vejamos o que cada uma dessas características significa e se
 Rust suporta isso.
@@ -19,20 +19,20 @@ padrões de projeto orientados a objetos. Ele define OOP desta forma:
 > dados e os procedimentos que operam nesses dados. Os procedimentos são
 > normalmente chamados de **métodos** ou **operações**.
 
-Usando esta definição, Rust é orientado a objetos: estruturas e enumerações possuem dados,
-e os blocos `impl` fornecem métodos em estruturas e enumerações. Mesmo que estruturas e
-enums com métodos não são objetos _chamados_, eles fornecem o mesmo
+Usando esta definição, Rust é orientado a objetos: structs e enums possuem dados,
+e os blocos `impl` fornecem métodos em structs e enums. Mesmo que structs e
+enums com métodos não sejam chamados de objetos, eles fornecem a mesma
 funcionalidade, de acordo com a definição de objetos da Gangue dos Quatro.
 
 ### Encapsulamento que oculta detalhes de implementação
 
-Outro aspecto comumente associado à OOP é a ideia de _encapsulação_,
-o que significa que os detalhes de implementação de um objeto não são acessíveis para
-código usando esse objeto. Portanto, a única maneira de interagir com um objeto é
-através de sua API pública; o código que usa o objeto não deve ser capaz de acessar
-as partes internas do objeto e alteram dados ou comportamento diretamente. Isso permite que
-programador para alterar e refatorar os componentes internos de um objeto sem a necessidade
-altere o código que usa o objeto.
+Outro aspecto comumente associado à OOP é a ideia de _encapsulamento_,
+o que significa que os detalhes de implementação de um objeto não são acessíveis ao
+código que usa esse objeto. Portanto, a única maneira de interagir com um objeto é
+por meio de sua API pública; o código que usa o objeto não deve ser capaz de acessar
+as partes internas do objeto nem alterar dados ou comportamento diretamente. Isso permite que o
+programador altere e refatore os componentes internos de um objeto sem a necessidade de
+alterar o código que usa o objeto.
 
 Discutimos como controlar o encapsulamento no Capítulo 7: Podemos usar o `pub`
 palavra-chave para decidir quais módulos, tipos, funções e métodos em nosso código

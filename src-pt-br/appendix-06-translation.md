@@ -1,6 +1,6 @@
 ## Apêndice F: Traduções do Livro
 
-Para recursos em outros idiomas além do inglês. A maioria ainda está em
+Aqui estão recursos em outros idiomas além do inglês. A maioria ainda está em
 andamento; veja [a etiqueta Translations][label] para ajudar ou para nos avisar
 sobre uma nova tradução.
 

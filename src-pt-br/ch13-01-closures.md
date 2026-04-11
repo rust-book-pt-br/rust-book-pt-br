@@ -5,12 +5,12 @@
 
 ## Closures
 
-closures do Rust são funções anônimas que você pode salvar em uma variável ou passar como
-argumentos para outras funções. Você pode criar o closure em um só lugar e depois
-chame o closure em outro lugar para avaliá-lo em um contexto diferente. Ao contrário
-funções, closures pode capturar valores do escopo em que estão definidos.
-Demonstraremos como esses recursos do closure permitem a reutilização e comportamento de código
-personalização.
+As closures de Rust são funções anônimas que você pode armazenar em uma
+variável ou passar como argumentos para outras funções. Você pode criar a
+closure em um lugar e depois chamá-la em outro, avaliando-a em um contexto
+diferente. Ao contrário das funções, closures podem capturar valores do escopo
+em que são definidas. Vamos demonstrar como esses recursos permitem reutilizar
+código e personalizar comportamentos.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -19,7 +19,7 @@ personalização.
 <a id="refactoring-with-closures-to-store-code"></a>
 <a id="capturing-the-environment-with-closures"></a>
 
-### Capturando o Meio Ambiente
+### Capturando o Ambiente
 
 Examinaremos primeiro como podemos usar closures para capturar valores do
 ambiente em que estão definidos para uso posterior. Aqui está o cenário: de vez em quando
@@ -346,14 +346,14 @@ closures e é tão flexível quanto possível.
 > implementa qualquer ` Fn`traits aplicável para uma função
 > definição.
 
-Agora vamos dar uma olhada no método da biblioteca padrão `sort_by_key`, definido em slices,
-para ver como isso difere de ` unwrap_or_else`e por que ` sort_by_key`usa
-` FnMut `em vez de` FnOnce `para o limite trait. O closure recebe um argumento
-na forma de uma referência ao item atual no slice sendo considerado,
-e retorna um valor do tipo` K `que pode ser solicitado. Esta função é útil
-quando você deseja classificar um slice por um atributo específico de cada item. Em
-Listagem 13-7, temos uma lista de instâncias` Rectangle `e usamos` sort_by_key `
-para ordená-los por seu atributo` width`de menor para maior.
+Agora, vamos observar o método `sort_by_key`, da biblioteca padrão, definido em
+slices, para ver como ele difere de `unwrap_or_else` e por que usa `FnMut`, em
+vez de `FnOnce`, como limite de trait. A closure recebe um argumento na forma
+de uma referência ao item atual do slice que está sendo considerado e retorna
+um valor do tipo `K`, que pode ser ordenado. Essa função é útil quando você
+quer ordenar um slice por um atributo específico de cada item. Na Listagem
+13-7, temos uma lista de instâncias de `Rectangle` e usamos `sort_by_key` para
+ordená-las pelo atributo `width`, da menor para a maior.
 
 <Listing number="13-7" file-name="src/main.rs" caption="Usando `sort_by_key` para ordenar retângulos pela largura">
 
@@ -369,10 +369,10 @@ Este código imprime:
 {{#include ../listings/ch13-functional-features/listing-13-07/output.txt}}
 ```
 
-A razão pela qual `sort_by_key` é definido para receber um `FnMut` closure é que ele chama
-o closure várias vezes: uma vez para cada item no slice. O closure`|r|
-r.width` doesn’t capture, mutate, or move anything out from its environment, so
-ele atende aos requisitos vinculados ao trait.
+A razão pela qual `sort_by_key` é definido para receber uma closure `FnMut` é
+que ele a chama várias vezes: uma vez para cada item do slice. A closure
+`|r| r.width` não captura, não modifica nem move nada para fora do seu
+ambiente, então ela satisfaz os requisitos do limite de trait.
 
 Em contraste, a Listagem 13-8 mostra um exemplo de closure que implementa apenas
 o `FnOnce` trait, porque move um valor para fora do ambiente. O
@@ -418,9 +418,9 @@ Contador `num_sort_operations` e, portanto, pode ser chamado mais de uma vez.
 
 </Listing>
 
-Os `Fn` traits são importantes ao definir ou usar funções ou tipos que
-faça uso do closures. Na próxima seção, discutiremos iterators. Muitos
-Os métodos iterator aceitam argumentos closure, portanto, lembre-se desses detalhes do closure
-enquanto continuamos!
+As traits `Fn` são importantes ao definir ou usar funções e tipos que façam
+uso de closures. Na próxima seção, discutiremos iteradores. Muitos métodos de
+iteradores recebem closures como argumento, então vale a pena manter esses
+detalhes em mente enquanto continuamos!
 
 [unwrap-or-else]: ../std/option/enum.Option.html#method.unwrap_or_else

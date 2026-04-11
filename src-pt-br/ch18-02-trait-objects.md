@@ -5,23 +5,23 @@
 ## Usando objetos trait para abstrair comportamento compartilhado
 
 No Capítulo 8, mencionamos que uma limitação dos vetores é que eles podem
-armazenar elementos de apenas um tipo. Criamos uma solução alternativa na Listagem 8-9 onde
-definimos um enum `SpreadsheetCell` que tinha variantes para conter números inteiros, flutuantes,
+armazenar elementos de apenas um tipo. Criamos uma solução alternativa na Listagem 8-9, em que
+definimos um enum `SpreadsheetCell` que tinha variantes para conter números inteiros, de ponto flutuante
 e texto. Isso significava que poderíamos armazenar diferentes tipos de dados em cada célula e
-ainda tem um vetor que representa uma linha de células. Isto é perfeitamente bom
-solução quando nossos itens intercambiáveis são um conjunto fixo de tipos que conhecemos
+ainda ter um vetor representando uma linha de células. Essa é uma solução perfeitamente
+boa quando nossos itens intercambiáveis são um conjunto fixo de tipos que conhecemos
 quando nosso código é compilado.
 
 No entanto, às vezes queremos que o usuário da nossa biblioteca seja capaz de estender o conjunto de
 tipos que são válidos em uma situação particular. Para mostrar como podemos alcançar
 isso, criaremos um exemplo de ferramenta de interface gráfica do usuário (GUI) que itera
-através de uma lista de itens, chamando um método `draw` em cada um para atraí-los para o
-tela – uma técnica comum para ferramentas GUI. Criaremos uma biblioteca crate chamada
-`gui ` que contém a estrutura de uma biblioteca GUI. Este crate pode incluir
-alguns tipos para as pessoas usarem, como`Button ` ou`TextField `. Além disso,
-Os usuários do` gui `desejarão criar seus próprios tipos que possam ser desenhados: Para
-Por exemplo, um programador pode adicionar um` Image `e outro pode adicionar um
-` SelectBox`.
+por uma lista de itens, chamando um método `draw` em cada um para desenhá-los na
+tela, uma técnica comum em ferramentas GUI. Criaremos um crate de biblioteca chamado
+`gui`, que contém a estrutura de uma biblioteca GUI. Esse crate pode incluir
+alguns tipos para as pessoas usarem, como `Button` ou `TextField`. Além disso,
+usuários de `gui` desejarão criar seus próprios tipos que possam ser desenhados. Por
+exemplo, um programador pode adicionar um `Image` e outro pode adicionar um
+`SelectBox`.
 
 No momento em que escrevo a biblioteca, não podemos conhecer e definir todos os tipos
 outros programadores podem querer criar. Mas sabemos que `gui` precisa manter
@@ -30,13 +30,13 @@ em cada um desses valores de tipo diferente. Não é preciso saber exatamente o 
 acontecerá quando chamarmos o método ` draw`, basta que o valor tenha aquele
 método disponível para chamarmos.
 
-Para fazer isso em uma linguagem com herança, podemos definir uma classe chamada
-`Component ` que possui um método chamado`draw `. As outras aulas, como
-` Button `,` Image `e` SelectBox `herdariam de` Component `e, portanto,
-herdar o método` draw `. Cada um deles poderia substituir o método` draw `para definir
-seu comportamento personalizado, mas a estrutura poderia tratar todos os tipos como se
-elas eram instâncias` Component `e chamam` draw `nelas. Mas porque Rust
-não tem herança, precisamos de outra forma de estruturar a biblioteca` gui`para
+Para fazer isso em uma linguagem com herança, poderíamos definir uma classe chamada
+`Component` com um método chamado `draw`. As outras classes, como
+`Button`, `Image` e `SelectBox`, herdariam de `Component` e, portanto,
+herdariam o método `draw`. Cada uma poderia sobrescrever o método `draw` para definir
+seu comportamento personalizado, mas a estrutura poderia tratar todos esses tipos como se
+fossem instâncias de `Component` e chamar `draw` nelas. Mas, como Rust
+não tem herança, precisamos de outra forma de estruturar a biblioteca `gui` para
 permitir que os usuários criem novos tipos compatíveis com a biblioteca.
 
 ### Definindo uma trait para comportamento comum

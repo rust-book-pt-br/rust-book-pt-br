@@ -9,10 +9,10 @@ referir-se a dados. Além disso, elas não têm nenhum custo adicional e são o 
 de ponteiro que usamos com maior frequência.
 
 _Ponteiros inteligentes_ (_smart pointers_), por outro lado, são estruturas de
-dados que agem como um ponteiro mas também têm metadados e habilidades
+dados que agem como ponteiros, mas também têm metadados e capacidades
 adicionais. O conceito de ponteiros inteligentes não é exclusivo do Rust: ele
 teve origem no C++ e também existe em outras linguagens. No Rust, os diferentes
-ponteiros inteligentes definidos na biblioteca padrão proveem funcionalidades
+ponteiros inteligentes definidos na biblioteca padrão fornecem funcionalidades
 além daquelas providas pelas referências. Um exemplo que vamos explorar neste
 capítulo é o tipo de ponteiro inteligente de _contagem de referências_
 (_reference counting_). Esse ponteiro lhe permite ter múltiplos possuidores de
@@ -39,7 +39,7 @@ que ele implementa as traits `Deref` e `Drop`. A trait `Deref` permite que uma
 instância da struct do ponteiro inteligente se comporte como uma referência.
 Assim podemos escrever código que funcione tanto com referências quanto com
 ponteiros inteligentes. A trait `Drop` nos permite personalizar o código que é
-executado quando uma instância do smart pointer sai de escopo. Neste capítulo,
+executado quando uma instância do ponteiro inteligente sai de escopo. Neste capítulo,
 discutiremos ambas as traits e demonstraremos porque são importantes para
 ponteiros inteligentes.
 
@@ -54,7 +54,7 @@ ponteiros inteligentes mais comuns na biblioteca padrão:
 - `Ref<T>` e `RefMut<T>`, acessados através de `RefCell<T>`, um tipo que aplica
   as regras de empréstimo em tempo de execução em vez de em tempo de compilação
 
-Além disso, vamos cobrir a pattern de _mutabilidade interior_ (_interior
+Além disso, vamos cobrir o padrão de _mutabilidade interior_ (_interior
 mutability_), onde um tipo imutável expõe uma API para modificar um valor
 interno. Também vamos discutir _ciclos de referências_: como eles podem vazar
 memória e como evitá-los.

@@ -1,12 +1,12 @@
 # Funções
 
-Funções são difundidas em códigos em Rust. Você já viu uma das mais
+Funções são comuns em código Rust. Você já viu uma das mais
 importantes funções da linguagem: a função `main`, que é o
-ponto de entrada de diversos programas. Você também já viu a notação `fn`, que permite você
+ponto de entrada de muitos programas. Você também já viu a notação `fn`, que permite
 declarar uma nova função.
 
 Códigos em Rust usam, por convenção, o estilo *snake case* para nomes de função e
-variável. No snake case, todas as letras são minúsculas e sublinhado (underline) separa as palavras.
+variável. No *snake case*, todas as letras são minúsculas e sublinhados separam as palavras.
 Aqui está um programa que contém uma definição de função de exemplo:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
@@ -23,12 +23,12 @@ fn outra_funcao() {
 }
 ```
 
-As definições de funções em Rust iniciam com `fn` e tem um par de parênteses
+As definições de funções em Rust começam com `fn` e têm um par de parênteses
 depois do nome da função. As chaves dizem ao compilador onde o
 corpo da função começa e termina.
 
 Podemos chamar qualquer função que tenhamos definido, inserindo seu nome, seguido de um
-conjunto de parenteses. Pelo fato da `outra_funcao` ter sido definida no programa, ela pode
+conjunto de parênteses. Como `outra_funcao` foi definida no programa, ela pode
 ser chamada dentro da função `main`. Note que definimos `outra_funcao`
 *depois* da função `main`; poderíamos ter definido antes
 também. Rust não se importa onde você definiu suas funções, apenas que elas foram
@@ -92,8 +92,8 @@ A declaração de `outra_funcao` tem um parâmetro chamado `x`. O tipo do
 de formato.
 
 Nas assinaturas de função, você *deve* declarar o tipo de cada parâmetro. Essa é
-decisão deliberada no design do Rust: exigir anotações de tipo na definição da função,
-significa que o compilador quase nunca precisará que as use em outro lugar do código
+uma decisão deliberada no design do Rust: exigir anotações de tipo na definição da função
+significa que o compilador quase nunca precisará que elas apareçam em outro lugar do código
 para especificar o que você quer.
 
 Quando você precisa que uma função tenha vários parâmetros, separe as declarações de parâmetros
@@ -130,8 +130,8 @@ O valor de x é: 5
 O valor de y é: 6
 ```
 
-Porque nós chamamos a função com `5` sendo o valor de` x` e `6` é passado
-como o valor de `y`, as duas cadeias são impressas com esses valores.
+Como chamamos a função com `5` como valor de `x` e `6` como valor de `y`,
+as duas linhas são impressas com esses valores.
 
 ### Corpos de função
 
@@ -165,7 +165,7 @@ fn main() {
 Definições de função também são definições; todo o exemplo
 é uma declaração em si.
 
-Definições não retornam valores. Assim sendo, você não pode atribuir uma declaração `let` para
+Declarações não retornam valores. Assim sendo, você não pode atribuir uma declaração `let` a
 outra variável, como o código a seguir tenta fazer; você receberá um erro:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
@@ -228,8 +228,8 @@ A expressão:
 }
 ```
 
-é um bloco que, nesse exemplo, avalia `4`. Esse valor fica vinculado ao `y`
-como parte da declaração `let`. Note o  `x + 1` sem um ponto e vírgula no final, que é diferente da maioria das linhas vistas até agora.
+é um bloco que, nesse exemplo, avalia para `4`. Esse valor fica vinculado a `y`
+como parte da declaração `let`. Note `x + 1` sem ponto e vírgula no final, o que é diferente da maioria das linhas vistas até agora.
 Expressões não terminam com ponto e vírgula.
 Se você adicionar um ponto e vírgula ao fim de uma expressão,
 você a transforma em uma declaração, que então não retornará um valor.

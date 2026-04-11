@@ -1,21 +1,21 @@
-## Pacotes e caixas
+## Pacotes e Crates
 
-As primeiras partes do sistema de módulos que abordaremos são os pacotes e o crates.
+As primeiras partes do sistema de módulos que abordaremos são os pacotes e os crates.
 
 Uma _crate_ é a menor quantidade de código que o compilador Rust considera em um
 tempo. Mesmo se você executar `rustc` em vez de `cargo` e passar um único código-fonte
 arquivo (como fizemos em [“Noções básicas do programa Rust”][basics]<!-- ignore
---> no Capítulo 1), o compilador considera esse arquivo como um crate. As caixas podem
+--> no Capítulo 1), o compilador considera esse arquivo como um crate. Crates podem
 contêm módulos, e os módulos podem ser definidos em outros arquivos que são obtidos
 compilado com o crate, como veremos nas próximas seções.
 
 Um crate pode vir em uma de duas formas: um crate binário ou uma biblioteca crate.
-_Caixas binárias_ são programas que você pode compilar em um executável que pode ser executado,
+_Crates binários_ são programas que você pode compilar em um executável que pode ser executado,
 como um programa de linha de comando ou um servidor. Cada um deve ter uma função chamada
 `main` que define o que acontece quando o executável é executado. Todos os crates que temos
 criados até agora foram binários crates.
 
-_Caixas de biblioteca_ não têm uma função `main` e não compilam para um
+_Crates de biblioteca_ não têm uma função `main` e não compilam para um
 executável. Em vez disso, eles definem funcionalidades destinadas a serem compartilhadas com
 vários projetos. Por exemplo, o `rand` crate que usamos no [Capítulo
 2][rand]<!-- ignore --> fornece funcionalidade que gera números aleatórios.

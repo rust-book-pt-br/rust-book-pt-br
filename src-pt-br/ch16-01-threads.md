@@ -1,37 +1,38 @@
 ## Usando Threads para Executar Código Simultaneamente
 
-Na maioria dos sistemas operacionais atuais, o código de um programa executado é executado em um
-_process_, e o sistema operacional gerenciará vários processos ao mesmo tempo.
+Na maioria dos sistemas operacionais atuais, o código de um programa é executado em um
+_process_, e o sistema operacional gerencia vários processos ao mesmo tempo.
 Dentro de um programa, você também pode ter partes independentes que são executadas simultaneamente.
-Os recursos que executam essas partes independentes são chamados de _threads_. Para
-Por exemplo, um web server pode ter vários threads para que possa responder a
+Os recursos que executam essas partes independentes são chamados de _threads_. Por
+exemplo, um web server pode ter várias threads para que possa responder a
 mais de uma solicitação ao mesmo tempo.
 
-Dividir o cálculo do seu programa em vários threads para executar vários
-tarefas ao mesmo tempo podem melhorar o desempenho, mas também adicionam complexidade.
-Como o threads pode ser executado simultaneamente, não há garantia inerente sobre o
+Dividir o cálculo do seu programa em várias threads para executar várias
+tarefas ao mesmo tempo pode melhorar o desempenho, mas também adiciona complexidade.
+Como as threads podem ser executadas simultaneamente, não há garantia inerente sobre a
 ordem em que partes do seu código em diferentes threads serão executadas. Isso pode levar
-para problemas, como:
+a problemas, como:
 
-- Condições de corrida, nas quais threads estão acessando dados ou recursos em um
+- Condições de corrida, nas quais threads acessam dados ou recursos em uma
   ordem inconsistente
-- Deadlocks, nos quais dois threads ficam esperando um pelo outro, impedindo que ambos
-  threads de continuar
+- Deadlocks, nos quais duas threads ficam esperando uma pela outra, impedindo que ambas
+  as threads continuem
 - Bugs que só acontecem em determinadas situações e são difíceis de reproduzir e corrigir
   de forma confiável
 
-Rust tenta mitigar os efeitos negativos do uso do threads, mas
+Rust tenta mitigar os efeitos negativos do uso de threads, mas
 a programação em um contexto multithread ainda exige reflexão cuidadosa e requer
 uma estrutura de código diferente daquela dos programas executados em um único
 thread.
 
-As linguagens de programação implementam threads de algumas maneiras diferentes e muitas
-sistemas operacionais fornecem uma API que a linguagem de programação pode chamar para criar
-novo threads. A biblioteca padrão Rust usa um modelo _1:1_ de thread
-implementação, em que um programa usa um sistema operacional thread por um
-idioma thread. Existem crates que implementam outros modelos de threading que
-fazer diferentes compensações para o modelo 1:1. (Sistema async do Rust, que iremos
-veja no próximo capítulo, também fornece outra abordagem para a simultaneidade.)
+As linguagens de programação implementam threads de maneiras diferentes, e muitos
+sistemas operacionais fornecem uma API que a linguagem pode chamar para criar
+novas threads. A biblioteca padrão do Rust usa um modelo de implementação de
+threads _1:1_, em que um programa usa uma thread do sistema operacional para cada
+thread da linguagem. Existem crates que implementam outros modelos de threading,
+fazendo trade-offs diferentes em relação ao modelo 1:1. (O sistema async do Rust,
+que veremos no próximo capítulo, também oferece outra abordagem para a
+concorrência.)
 
 ### Criando um novo thread com `spawn`
 

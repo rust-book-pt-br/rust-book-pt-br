@@ -1,30 +1,30 @@
 ## Desligamento e limpeza elegantes
 
-O código na Listagem 21-20 está respondendo a solicitações de forma assíncrona por meio do
-uso de um pool thread, como pretendíamos. Recebemos alguns avisos sobre o `workers`,
-Campos ` id`e ` thread`que não estamos usando de forma direta que nos lembre
-não estamos limpando nada. Quando usamos o menos elegante
-Método <kbd>ctrl</kbd>-<kbd>C</kbd> para interromper o thread principal, todos os outros threads
-também são interrompidos imediatamente, mesmo que estejam no meio de um serviço
-pedido.
+O código na Listagem 21-20 está respondendo a requisições de forma assíncrona por meio do
+uso de um thread pool, como pretendíamos. Recebemos alguns avisos sobre os campos
+`workers`, `id` e `thread`, que não estamos usando de forma direta, lembrando-nos de que
+não estamos limpando nada. Quando usamos o método menos elegante
+<kbd>ctrl</kbd>-<kbd>C</kbd> para interromper a thread principal, todas as outras threads
+também são interrompidas imediatamente, mesmo que estejam no meio de atender uma
+requisição.
 
-A seguir, implementaremos o `Drop` trait para chamar `join` em cada um dos
-threads no pool para que eles possam finalizar as solicitações nas quais estão trabalhando
-antes de fechar. Em seguida, implementaremos uma maneira de informar ao threads que eles deveriam
-pare de aceitar novas solicitações e desligue. Para ver este código em ação, vamos
-modifique nosso servidor para aceitar apenas duas solicitações antes de desligar normalmente
-seu conjunto thread.
+A seguir, implementaremos a trait `Drop` para chamar `join` em cada uma das
+threads do pool, para que elas possam finalizar as requisições em que estão
+trabalhando antes de encerrar. Em seguida, implementaremos uma maneira de
+informar às threads que elas devem parar de aceitar novas requisições e se
+desligar. Para ver esse código em ação, vamos modificar nosso servidor para
+aceitar apenas duas requisições antes de desligar normalmente seu thread pool.
 
-Uma coisa a ser observada à medida que avançamos: nada disso afeta as partes do código que
-lidar com a execução do closures, então tudo aqui seria o mesmo se estivéssemos
-usando um pool thread para um tempo de execução async.
+Uma coisa a observar à medida que avançamos: nada disso afeta as partes do
+código que lidam com a execução das closures, então tudo aqui seria o mesmo se
+estivéssemos usando um thread pool para um runtime async.
 
-### Implementando a característica `Drop` em `ThreadPool`
+### Implementando a trait `Drop` em `ThreadPool`
 
-Vamos começar implementando `Drop` em nosso pool thread. Quando a piscina estiver
-descartados, todos os nossos threads devem se juntar para garantir que concluam seu trabalho.
-A Listagem 21-22 mostra uma primeira tentativa de implementação de `Drop`; este código não vai
-bastante trabalho ainda.
+Vamos começar implementando `Drop` em nosso thread pool. Quando ele for
+descartado, todas as nossas threads deverão ser reunidas com `join` para
+garantir que concluam seu trabalho. A Listagem 21-22 mostra uma primeira
+tentativa de implementar `Drop`; esse código ainda não funcionará muito bem.
 
 <Listing number="21-22" file-name="src/lib.rs" caption="Esperando cada thread com `join` quando o thread pool sai de escopo">
 
@@ -34,12 +34,12 @@ bastante trabalho ainda.
 
 </Listing>
 
-Primeiro, percorremos cada um dos pools thread `workers`. Usamos ` &mut`para isso
-porque ` self`é uma referência mutável e também precisamos ser capazes de sofrer mutação
-` worker `. Para cada` worker `, imprimimos uma mensagem dizendo que este
-A instância` Worker `está sendo encerrada e então chamamos` join `nesse` Worker `
-thread da instância. Se a chamada para` join `falhar, usamos` unwrap`para fazer Rust
-panic e entre em um desligamento desagradável.
+Primeiro, percorremos cada um dos `workers` do thread pool. Usamos `&mut` para
+isso porque `self` é uma referência mutável e também precisamos poder alterar
+cada `worker`. Para cada `worker`, imprimimos uma mensagem dizendo que essa
+instância de `Worker` está sendo encerrada e então chamamos `join` na thread
+dessa instância. Se a chamada a `join` falhar, usamos `unwrap` para fazer o
+Rust entrar em `panic` e encerrar de forma abrupta.
 
 Aqui está o erro que obtemos quando compilamos este código:
 
@@ -47,31 +47,33 @@ Aqui está o erro que obtemos quando compilamos este código:
 {{#include ../listings/ch21-web-server/listing-21-22/output.txt}}
 ```
 
-O erro nos diz que não podemos chamar `join` porque só temos um borrowing mutável
-de cada `worker` e `join` leva ownership de seu argumento. Para resolver isso
-problema, precisamos mover o thread para fora da instância `Worker` que possui
-`thread ` para que`join ` possa consumir o thread. Uma maneira de fazer isso é pegar
-a mesma abordagem que adotamos na Listagem 18-15. Se`Worker ` mantivesse um
-`Option<thread::JoinHandle<()>> `, poderíamos chamar o método` take `no
-` Option `para mover o valor para fora da variante` Some `e deixar uma variante` None `
-em seu lugar. Em outras palavras, um` Worker `em execução teria um` Some `
-variante em` thread `, e quando quiséssemos limpar um` Worker `, substituiríamos
-` Some `com` None `para que o` Worker`não tenha um thread para rodar.
+O erro nos diz que não podemos chamar `join` porque só temos um empréstimo
+mutável de cada `worker`, e `join` toma ownership de seu argumento. Para
+resolver esse problema, precisamos mover a thread para fora da instância
+`Worker` que possui o campo `thread`, para que `join` possa consumi-la. Uma
+maneira de fazer isso seria adotar a mesma abordagem que usamos na
+Listagem 18-15. Se `Worker` armazenasse um `Option<thread::JoinHandle<()>>`,
+poderíamos chamar o método `take` em `Option` para mover o valor para fora da
+variante `Some` e deixar uma variante `None` em seu lugar. Em outras palavras,
+um `Worker` em execução teria `Some` em `thread`, e, quando quiséssemos limpar
+um `Worker`, substituiríamos `Some` por `None`, para que o `Worker` deixasse de
+ter uma thread para executar.
 
 No entanto, o _único_ momento em que isso aconteceria seria ao descartar o
-`Worker `. Em troca, teríamos que lidar com um
-` Option<thread::JoinHandle<()>> `em qualquer lugar onde acessamos` worker.thread `.
-Idiomatic Rust usa bastante` Option `, mas quando você se encontra embrulhando
-algo que você sabe que sempre estará presente em um` Option`como uma solução alternativa como
-isso, é uma boa ideia procurar abordagens alternativas para tornar seu código
-mais limpo e menos sujeito a erros.
+`Worker`. Em troca, teríamos que lidar com um `Option<thread::JoinHandle<()>>`
+em todo lugar em que acessássemos `worker.thread`. Rust idiomático usa bastante
+`Option`, mas, quando você se vê embrulhando algo que sabe que sempre estará
+presente em um `Option` apenas como solução de contorno, é uma boa ideia
+procurar abordagens alternativas para manter o código mais limpo e menos sujeito
+a erros.
 
-Neste caso, existe uma alternativa melhor: o método `Vec::drain`. Aceita
-um parâmetro de intervalo para especificar quais itens remover do vetor e retornar
-um iterator desses itens. Passar a sintaxe do intervalo `..` removerá *todos*
-valor do vetor.
+Neste caso, existe uma alternativa melhor: o método `Vec::drain`. Ele aceita um
+parâmetro de intervalo para especificar quais itens remover do vetor e retorna
+um iterator desses itens. Passar a sintaxe de intervalo `..` removerá *todos*
+os valores do vetor.
 
-Portanto, precisamos atualizar a implementação `ThreadPool` ` drop`assim:
+Portanto, precisamos atualizar a implementação de `Drop` para `ThreadPool`
+assim:
 
 <Listing file-name="src/lib.rs">
 
@@ -90,21 +92,22 @@ mas não é recomendado para código de produção.
 ### Sinalização para os threads pararem de escutar trabalhos
 
 Com todas as alterações que fizemos, nosso código é compilado sem nenhum aviso.
-No entanto, a má notícia é que esse código não funciona da maneira que desejamos
-ainda. A chave é a lógica no closures executada pelo threads do `Worker`
-instâncias: No momento, chamamos ` join`, mas isso não desligará o threads,
-porque eles ` loop`estão sempre procurando emprego. Se tentarmos abandonar nossos
-` ThreadPool `com nossa implementação atual do` drop`, o thread principal será
-bloquear para sempre, aguardando a conclusão do primeiro thread.
+No entanto, a má notícia é que esse código ainda não funciona da maneira que
+desejamos. A chave está na lógica da closure executada pelas threads das
+instâncias `Worker`: no momento, chamamos `join`, mas isso não desligará essas
+threads, porque elas estão em `loop`, sempre procurando trabalho. Se tentarmos
+descartar nosso `ThreadPool` com a implementação atual de `drop`, a thread
+principal ficará bloqueada para sempre, esperando a primeira thread terminar.
 
-Para corrigir este problema, precisaremos de uma alteração no `ThreadPool` ` drop`
-implementação e, em seguida, uma mudança no loop ` Worker`.
+Para corrigir esse problema, precisaremos de uma alteração na implementação de
+`drop` para `ThreadPool` e, em seguida, de uma mudança no loop de `Worker`.
 
-Primeiro, mudaremos a implementação `ThreadPool` ` drop`para eliminar explicitamente
-o ` sender`antes de aguardar a conclusão do threads. A Listagem 21-23 mostra o
-alterações em ` ThreadPool`para eliminar explicitamente ` sender`. Ao contrário do thread,
-aqui _precisamos_ usar um ` Option`para poder mover ` sender`para fora
-` ThreadPool `com` Option::take`.
+Primeiro, mudaremos a implementação de `drop` para `ThreadPool` para descartar
+explicitamente o `sender` antes de esperar a conclusão das threads. A
+Listagem 21-23 mostra as alterações em `ThreadPool` para descartar
+explicitamente `sender`. Ao contrário do caso da thread, aqui _precisamos_ usar
+um `Option` para poder mover `sender` para fora de `ThreadPool` com
+`Option::take`.
 
 <Listing number="21-23" file-name="src/lib.rs" caption="Fazendo `drop` explícito de `sender` antes de esperar as threads `Worker` com `join`">
 
@@ -114,11 +117,12 @@ aqui _precisamos_ usar um ` Option`para poder mover ` sender`para fora
 
 </Listing>
 
-A eliminação de `sender` fecha o canal, o que indica que nenhuma outra mensagem será
-enviado. Quando isso acontece, todas as chamadas para `recv` que as instâncias `Worker` fazem
-no loop infinito retornará um erro. Na Listagem 21-24, alteramos o
-Loop `Worker` para sair normalmente do loop nesse caso, o que significa que o threads
-terminará quando a implementação `ThreadPool` ` drop`chamar ` join`neles.
+Descartar `sender` fecha o canal, o que indica que nenhuma outra mensagem será
+enviada. Quando isso acontece, todas as chamadas a `recv` feitas pelas
+instâncias `Worker` em seu loop infinito retornam erro. Na Listagem 21-24,
+alteramos o loop de `Worker` para sair normalmente nesse caso, o que significa
+que as threads terminarão quando a implementação de `drop` para `ThreadPool`
+chamar `join` nelas.
 
 <Listing number="21-24" file-name="src/lib.rs" caption="Saindo explicitamente do loop quando `recv` retorna um erro">
 
@@ -139,13 +143,13 @@ antes de desligar o servidor normalmente, conforme mostrado na Listagem 21-25.
 
 </Listing>
 
-Você não gostaria que um web server do mundo real desligasse depois de servir apenas dois
-solicitações. Este código apenas demonstra que o desligamento e a limpeza normais são
-em condições de funcionamento.
+Você não gostaria que um web server do mundo real desligasse depois de atender
+apenas duas requisições. Este código apenas demonstra que o desligamento e a
+limpeza normais estão funcionando.
 
-O método `take` é definido em `Iterator` trait e limita a iteração
-no máximo aos dois primeiros itens. O `ThreadPool` sairá do escopo no
-final de `main`, e a implementação de ` drop`será executada.
+O método `take` é definido na trait `Iterator` e limita a iteração, no máximo,
+aos dois primeiros itens. O `ThreadPool` sairá de escopo ao final de `main`, e
+a implementação de `drop` será executada.
 
 Inicie o servidor com `cargo run` e faça três solicitações. O terceiro pedido
 deve ocorrer um erro e, em seu terminal, você deverá ver uma saída semelhante a esta:
@@ -179,26 +183,28 @@ Shutting down worker 2
 Shutting down worker 3
 ```
 
-Você poderá ver uma ordem diferente de IDs e mensagens `Worker` impressas. Nós podemos
-veja como esse código funciona a partir das mensagens: As instâncias 0 e 3 do `Worker` obtiveram o
-dois primeiros pedidos. O servidor parou de aceitar conexões após o segundo
-conexão, e a implementação `Drop` em `ThreadPool` começa a ser executada
-antes mesmo de `Worker 3` iniciar seu trabalho. Soltar o `sender` desconecta todos os
-instâncias `Worker` e solicita que elas sejam encerradas. As instâncias `Worker` cada
-imprima uma mensagem quando eles se desconectarem e, em seguida, o pool thread chama `join` para
-espere que cada `Worker` thread termine.
+Você pode ver uma ordem diferente de IDs e mensagens `Worker` impressas. Pelas
+mensagens, conseguimos perceber como esse código funciona: as instâncias
+`Worker` 0 e 3 receberam as duas primeiras requisições. O servidor parou de
+aceitar conexões após a segunda, e a implementação de `Drop` para `ThreadPool`
+começa a ser executada antes mesmo de `Worker 3` iniciar seu trabalho. Soltar o
+`sender` desconecta todas as instâncias `Worker` e solicita que elas sejam
+encerradas. Cada instância `Worker` imprime uma mensagem quando se desconecta,
+e então o thread pool chama `join` para esperar que a thread de cada `Worker`
+termine.
 
-Observe um aspecto interessante desta execução específica: O `ThreadPool`
-derrubou o ` sender`, e antes que qualquer ` Worker`recebesse um erro, tentamos
-junte-se ao ` Worker 0`. ` Worker 0`ainda não recebeu um erro do ` recv`, então o principal
-thread bloqueado, aguardando a conclusão do ` Worker 0`. Enquanto isso, ` Worker 3`
-recebeu um trabalho e todos os threads receberam um erro. Quando ` Worker 0`terminar,
-o thread principal esperou que o restante das instâncias ` Worker`terminassem. Naquela
-ponto, todos eles saíram de seus loops e pararam.
+Observe um aspecto interessante desta execução específica: o `ThreadPool`
+descartou o `sender`, e, antes que qualquer `Worker` recebesse um erro,
+tentamos fazer `join` em `Worker 0`. `Worker 0` ainda não havia recebido um
+erro de `recv`, então a thread principal ficou bloqueada, esperando `Worker 0`
+terminar. Enquanto isso, `Worker 3` recebeu um trabalho e todas as threads
+receberam um erro. Quando `Worker 0` terminou, a thread principal esperou que o
+restante das instâncias `Worker` terminasse. Nesse ponto, todas já tinham saído
+de seus loops e parado.
 
-Parabéns! Agora concluímos nosso projeto; temos um web server básico que usa
-um pool thread para responder de forma assíncrona. Somos capazes de realizar um gracioso
-desligamento do servidor, que limpa todo o threads do pool.
+Parabéns! Agora concluímos nosso projeto: temos um web server básico que usa
+um thread pool para responder de forma assíncrona. Somos capazes de realizar um
+desligamento gracioso do servidor, limpando todas as threads do pool.
 
 Aqui está o código completo para referência:
 
@@ -225,9 +231,9 @@ aqui estão algumas ideias:
 - Adicione testes de funcionalidade da biblioteca.
 - Altere as chamadas para `unwrap` para um tratamento de erros mais robusto.
 - Use `ThreadPool` para realizar alguma tarefa diferente de atender solicitações da web.
-- Encontre um pool thread crate em [crates.io](https://crates.io/) e implemente um
-  web server semelhante usando o crate. Em seguida, compare sua API e
-  robustez ao pool thread que implementamos.
+- Encontre um crate de thread pool em [crates.io](https://crates.io/) e
+  implemente um web server semelhante usando esse crate. Em seguida, compare
+  sua API e robustez com o thread pool que implementamos.
 
 ## Resumo
 

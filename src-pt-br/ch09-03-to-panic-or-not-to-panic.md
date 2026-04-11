@@ -41,8 +41,8 @@ deveria acontecer.
 ### Casos em que Você Tem Mais Informação Que o Compilador
 
 Seria também apropriado chamar `unwrap` quando você tem outra lógica que
-assegura que o `Result` vai ter um valor `Ok`, mas essa lógica não é algo
-que o compilador entenda. Você ainda vai ter um valor de `Result` que precisa 
+assegura que o `Result` terá um valor `Ok`, mas essa lógica não é algo
+que o compilador entenda. Você ainda terá um valor `Result` com o qual precisa
 lidar: seja qual for a operação que você está chamando, ela ainda tem uma possibilidade
 de falhar em geral, mesmo que seja logicamente impossível que isso ocorra nessa 
 situação particular. Se você consegue assegurar ao inspecionar manualmente o código que
@@ -55,7 +55,7 @@ use std::net::IpAddr;
 let home = "127.0.0.1".parse::<IpAddr>().unwrap();
 ```
 
-Nós estamos criando uma instância `IpAddr` ao analisar uma string *hardcoded*. Nós
+Estamos criando uma instância `IpAddr` ao analisar uma string *hardcoded*. Nós
 podemos ver que `127.0.0.1` é um endereço de IP válido, então é aceitável usar 
 `unwrap` aqui. No entanto, ter uma string válida *hardcoded* não muda o tipo retornado
 pelo método `parse`: ainda teremos um valor de `Result`, e o compilador ainda 
@@ -68,11 +68,11 @@ definitivamente iríamos querer tratar o `Result` de uma forma mais robusta.
 
 ### Diretrizes para Tratamento de Erro
 
-É aconselhável fazer que seu código entre em `panic!` quando é possível que
+É aconselhável fazer com que seu código entre em `panic!` quando é possível que
 ele entre em um mau estado. Nesse contexto, mau estado é quando
 alguma hipótese, garantia, contrato ou invariante foi quebrada, tal como
-valores inválidos, valores contraditórios, ou valores faltando que são passados
-a seu código - além de um ou mais dos seguintes:
+valores inválidos, valores contraditórios ou valores faltando que são passados
+ao seu código, além de um ou mais dos seguintes:
 
 * O mau estado não é algo que é *esperado* que aconteça ocasionalmente.
 * Seu código após certo ponto precisa confiar que ele não está nesse mau estado.
@@ -130,7 +130,7 @@ para adivinhar um número entre 1 e 100. Nós nunca validamos que o chute do usu
 fosse entre esses números antes de compará-lo com o número secreto; nós somente 
 validamos que o chute era positivo. Nesse caso, as consequências não foram tão
 drásticas: nosso output de "Muito alto" ou "Muito baixo" ainda estariam corretos. Seria
-uma melhoria útil guiar o usuário para chutes válidos, e ter um comportamento distinto
+seria uma melhoria útil guiar o usuário para chutes válidos, e ter um comportamento distinto
 quando um usuário chuta um número fora do limite e quando um usuário digita letras, por exemplo.
 
 Uma maneira de fazer isso seria interpretar o chute como um `i32` em vez de
@@ -147,7 +147,7 @@ loop {
     };
 
     if palpite < 1 || palpite > 100 {
-        println!("O número secreto vai estar entre 1 e 100.");
+        println!("O número secreto estará entre 1 e 100.");
         continue;
     }
 

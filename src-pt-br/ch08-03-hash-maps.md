@@ -1,22 +1,22 @@
 ## Hash Maps
 
-A última das nossas coleções comuns é o *hash map*. O tipo `HashMap <K, V>`
-armazena um mapeamento de chaves do tipo `K` para valores do tipo` V`. Ele faz isso através de um
-*hashing function*, que determina como ele coloca essas chaves e valores em
-memória. Muitas linguagens de programação diferentes suportam este tipo de 
-estrutura de dados, mas muitas vezes com um nome diferente: hash, map, object, hash table ou
-associative array, apenas para citar alguns.
+A última de nossas coleções comuns é o *hash map*. O tipo `HashMap<K, V>`
+armazena um mapeamento de chaves do tipo `K` para valores do tipo `V`. Ele faz isso por meio de uma
+*hashing function*, que determina como coloca essas chaves e valores na
+memória. Muitas linguagens de programação dão suporte a esse tipo de
+estrutura de dados, embora muitas vezes sob nomes diferentes: hash, map,
+object, hash table ou associative array, apenas para citar alguns.
 
-Os Hash maps são úteis para quando você deseja poder procurar dados sem uso de
-índice, como você pode com vetores, mas usando uma chave que pode ser de qualquer tipo. Por 
+Hash maps são úteis quando você quer procurar dados sem usar um índice,
+como faria com vetores, mas usando uma chave que pode ser de qualquer tipo. Por
 exemplo, em um jogo, você poderia acompanhar a pontuação de cada equipe em um hash map
-onde cada chave é o nome de uma equipe e os valores são cada pontuação da equipe. Dado um
+em que cada chave é o nome de uma equipe e cada valor é a pontuação dessa equipe. Dado o
 nome da equipe, você pode recuperar sua pontuação.
 
-Examinaremos a API básica dos hash map neste capítulo, mas há muitos
-mais coisas escondidas nas funções definidas no `HashMap` pela biblioteca
+Examinaremos a API básica dos hash maps neste capítulo, mas há muito
+mais nas funções definidas em `HashMap` pela biblioteca
 padrão. Como sempre, verifique a documentação da biblioteca padrão para mais
-informação. 
+informações.
 
 ### Criando um novo Hash Map
 
@@ -34,10 +34,10 @@ scores.insert(String::from("Blue"), 10);
 scores.insert(String::from("Yellow"), 50);
 ```
 
-Observe que precisamos primeiro `use` o `HashMap` da parte de coleções da
+Observe que precisamos primeiro importar com `use` o `HashMap` da parte de coleções da
 biblioteca padrão. De nossas três coleções comuns, esta é a de menor
-frequencia de uso, por isso não está inclusa nos recursos importados automaticamente no
-prelúdio. Os Hash maps também têm menos suporte da biblioteca padrão; não há
+frequência de uso, por isso não está incluída entre os itens importados automaticamente no
+prelúdio. Hash maps também têm menos suporte da biblioteca padrão; não há
 macro embutida para construí-los, por exemplo.
 
 Assim como os vetores, os mapas hash armazenam seus dados no heap. Este `HashMap` tem
@@ -70,8 +70,8 @@ contém com base nos tipos de dados no vetor.
 
 ### Mapas de Hash e Propriedade
 
-Para os tipos que implementam a `Copy` trait, como `i32`, os valores são copiados
-no hash map. Para valores owned como `String`, os valores serão movidos e
+Para tipos que implementam a trait `Copy`, como `i32`, os valores são copiados
+para o hash map. Para valores `owned` como `String`, os valores serão movidos e
 o hash map será o owner desses valores:
 
 
@@ -87,12 +87,12 @@ map.insert(field_name, field_value);
 ```
 
 
-Não poderíamos usar as ligações `field_name` e` field_value` depois
+Não poderíamos usar as variáveis `field_name` e `field_value` depois
 que foram transferidos para o hash map com a chamada para `insert`.
 
-Se inserimos referências a valores no hash map, os próprios valores
-não serão movido para o hash map. Os valores que as referências apontam devem ser
-válidos pelo menos enquanto o hash map seja válido, no entanto. Falaremos mais
+Se inserirmos referências a valores no hash map, os próprios valores
+não serão movidos para o hash map. Os valores para os quais as referências apontam devem ser
+válidos pelo menos enquanto o hash map for válido. Falaremos mais
 sobre esses problemas na seção Lifetimes do Capítulo 10. 
 
 ### Acessando Valores em um Hash Map

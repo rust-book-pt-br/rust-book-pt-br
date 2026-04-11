@@ -1,7 +1,7 @@
-## `Box<T>` Aponta para Dados no Heap e Tem Tamanho Conhecido
+## Usando `Box<T>` para Apontar para Dados no Heap
 
 O ponteiro inteligente mais simples é um _box_ (literalmente, "caixa"), cujo
-tipo é escrito `Box<T>`. _Boxes_ (plural de _box_) lhe permitem armazenar dados
+tipo é escrito `Box<T>`. _Boxes_ (plural de _box_) permitem armazenar dados
 no heap em vez de na pilha. O que fica na pilha é o ponteiro para o dado no
 heap. Confira o Capítulo 4 para rever a diferença entre pilha e heap.
 
@@ -22,7 +22,7 @@ um pouco mais sobre as outras duas situações: no segundo caso, transferir poss
 de uma quantidade grande de dados pode levar muito tempo porque os dados são
 copiados de um lado para o outro na pilha. Para melhorar o desempenho nessa
 situação, podemos armazenar essa quantidade grande de dados no heap em um box.
-Assim, apenas uma quantidade pequena de dados referentes ao ponteiro é copiada
+Assim, apenas uma pequena quantidade de dados referentes ao ponteiro é copiada
 na pilha, e os dados em si ficam em um lugar só no heap. O terceiro caso é
 conhecido como um _objeto de trait_ (_trait object_), e o Capítulo 17 dedica uma
 seção inteira somente a esse tópico. Então o que você aprender aqui você irá
@@ -47,9 +47,9 @@ fn main() {
 <span class="caption">Listagem 15-1: Armazenando um valor `i32` no heap usando
 um box</span>
 
-Nós definimos a variável `b` como tendo o valor de um `Box` que aponta para o
+Definimos a variável `b` como tendo o valor de um `Box` que aponta para o
 valor `5`, que está alocado no heap. Esse programa irá imprimir `b = 5`; nesse
-caso, podemos acessar o dado no box de um jeito similar ao que usaríamos se esse
+caso, podemos acessar o dado no box de um jeito semelhante ao que usaríamos se esse
 dado estivesse na pilha. Da mesma forma que com qualquer valor possuído, quando
 um box sai de escopo, como o `b` no fim da `main`, ele é desalocado. A
 desalocação acontece para o box (armazenado na pilha) e para os dados aos quais
@@ -58,7 +58,7 @@ ele aponta (armazenados no heap).
 Colocar um único valor no heap não é muito útil, então você normalmente não vai
 usar boxes sozinhos desse jeito. Ter valores como um único `i32` na pilha, onde
 são armazenados por padrão, é mais apropriado para a maioria das situações.
-Vamos dar uma olhada em um caso onde o box nos possibilita definir tipos que não
+Vamos dar uma olhada em um caso em que o box nos permite definir tipos que não
 poderíamos definir sem ele.
 
 ### Boxes Possibilitam Tipos Recursivos
@@ -125,7 +125,7 @@ para representar uma estrutura de dados _cons list_ de valores `i32` </span>
 > genéricos, conforme discutimos no Capítulo 10, para definir um tipo cons list
 > que poderia armazenar valores de qualquer tipo.
 
-A listagem 15-3 mostra como fica o uso do tipo `List` para armazenar a lista
+A Listagem 15-3 mostra como fica o uso do tipo `List` para armazenar a lista
 `1, 2, 3`.
 
 <span class="filename">Arquivo: src/main.rs</span>
@@ -168,7 +168,7 @@ definir um enum recursivo</span>
 O erro diz que esse tipo "tem tamanho infinito". A razão é que nós definimos
 `List` com uma variante que é recursiva: ela contém um outro valor de si mesma
 diretamente. Como resultado, o Rust não consegue determinar quanto espaço ele
-precisa para armazenar um valor `List`. Vamos analizar por partes por que
+precisa para armazenar um valor `List`. Vamos analisar por partes por que
 recebemos esse erro: primeiro, vamos ver como o Rust decide quanto espaço
 precisa para armazenar o valor de um tipo _não_ recursivo.
 

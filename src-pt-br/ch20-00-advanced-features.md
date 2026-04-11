@@ -11,13 +11,13 @@ recursos que Rust tem a oferecer.
 
 Neste capítulo, abordaremos:
 
-- Rust inseguro: como cancelar algumas das garantias do Rust e assumir a
+- Rust inseguro: como abrir mão de algumas das garantias do Rust e assumir a
   responsabilidade de manter manualmente essas garantias
 - traits avançadas: tipos associados, parâmetros de tipo padrão, sintaxe
   totalmente qualificada, supertraits e o padrão newtype em relação a traits
-- Tipos avançados: mais sobre o padrão newtype, aliases de tipo, tipo nunca,
+- tipos avançados: mais sobre o padrão newtype, aliases de tipo, tipo nunca,
   e tipos de tamanho dinâmico
-- Funções avançadas e closures: ponteiros de função e retorno de closures
-- Macros: Maneiras de definir código que define mais código em tempo de compilação
+- funções avançadas e closures: ponteiros de função e retorno de closures
+- macros: maneiras de definir código que define mais código em tempo de compilação
 
 É uma panóplia de recursos do Rust com algo para todos! Vamos mergulhar!

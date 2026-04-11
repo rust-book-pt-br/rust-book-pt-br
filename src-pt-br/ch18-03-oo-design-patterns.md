@@ -1,7 +1,7 @@
 ## Implementando um padrão de design orientado a objetos
 
-O _state pattern_ é um padrão de design orientado a objetos. O ponto crucial do
-O padrão é que definimos um conjunto de estados que um valor pode ter internamente. O
+O _state pattern_ é um padrão de design orientado a objetos. O ponto central do
+padrão é que definimos um conjunto de estados que um valor pode ter internamente. Esses
 estados são representados por um conjunto de _objetos de estado_, e o comportamento do valor
 muda com base em seu estado. Vamos trabalhar com um exemplo de blog
 post struct que possui um campo para armazenar seu estado, que será um objeto de estado
@@ -13,8 +13,8 @@ por seu próprio comportamento e por governar quando deveria se transformar em o
 estado. O valor que contém um objeto de estado não sabe nada sobre os diferentes
 comportamento dos estados ou quando fazer a transição entre estados.
 
-A vantagem de usar o padrão estatal é que, quando o negócio
-requisitos da mudança do programa, não precisaremos alterar o código do
+A vantagem de usar o padrão de estado é que, quando os requisitos de negócio
+do programa mudarem, não precisaremos alterar o código do
 valor que contém o estado ou o código que usa o valor. Só precisaremos
 atualizar o código dentro de um dos objetos de estado para alterar suas regras ou talvez
 adicione mais objetos de estado.
@@ -40,13 +40,13 @@ deve permanecer um rascunho não publicado.
 
 <a id="a-traditional-object-oriented-attempt"></a>
 
-### Attempting Traditional Object-Oriented Style
+### Tentando o estilo orientado a objetos tradicional
 
 Existem infinitas maneiras de estruturar código para resolver o mesmo problema, cada uma com
-diferentes compensações. A implementação desta seção é mais tradicional
-estilo orientado a objetos, que é possível escrever em Rust, mas não leva
-vantagem de alguns dos pontos fortes do Rust. Mais tarde, demonstraremos um diferente
-solução que ainda usa o padrão de design orientado a objetos, mas é estruturada
+trade-offs diferentes. A implementação desta seção usa um estilo mais tradicional de
+orientação a objetos, que é possível escrever em Rust, mas não tira
+proveito de alguns dos pontos fortes do Rust. Mais tarde, demonstraremos uma
+solução diferente que ainda usa o padrão de design orientado a objetos, mas é estruturada
 de uma forma que pode parecer menos familiar para programadores com orientação a objetos
 experiência. Compararemos as duas soluções para experimentar as compensações de
 projetar o código Rust de maneira diferente do código em outras linguagens.

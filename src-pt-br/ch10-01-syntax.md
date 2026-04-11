@@ -1,22 +1,22 @@
 ## Tipos Genéricos de Dados
 
-Usando tipos genéricos onde usualmente colocamos tipos, como em assinaturas de
-funções ou estruturas, vamos criar definições que podemos usar muitos tipos 
-diferentes de tipos concretos de dados. Vamos dar uma olhada em como definir
-funções, structs, enums e métodos usando tipos genéricos, e ao final dessa
-seção discutiremos a performance do código usando tipos genéricos.
+Usamos tipos genéricos para criar definições de itens, como assinaturas de
+funções ou structs, que depois podemos usar com muitos tipos de dados
+concretos diferentes. Vamos ver como definir funções, structs, enums e métodos
+usando tipos genéricos e, ao final desta seção, discutiremos o desempenho do
+código que usa esses tipos.
 
 ### Usando Tipos Genéricos de Dados em Definições de Funções
 
-Nós podemos definir funções que usam tipos genéricos na assinatura da função
-onde os tipos de dados dos parâmetros e os retornos vão. Desse modo, o código
-que escrevemos pode ser mais flexível e pode fornecer mais funcionalidades para 
-os chamadores da nossa função, e ainda diminuir duplicação de código.
+Podemos definir funções que usam tipos genéricos na assinatura, no lugar em que
+normalmente especificaríamos os tipos de dados dos parâmetros e do valor de
+retorno. Assim, o código que escrevemos pode ficar mais flexível, oferecer mais
+funcionalidade aos chamadores da função e ainda evitar duplicação de código.
 
-Continuando com nossa função `maior`, a Listagem 10-4 mostra duas funções que 
-oferecem a mesma funcionalidade de encontrar o maior valor dado um corte. A
-primeira função é a que extraímos na Listagem 10-3 que encontra o maior `ì32` 
-em um corte. A segunda função encontra o maior `char` em um corte:
+Continuando com nossa função `maior`, a Listagem 10-4 mostra duas funções que
+encontram o maior valor em um corte. A primeira função é a que extraímos na
+Listagem 10-3 e encontra o maior `i32` em um corte. A segunda encontra o maior
+`char` em um corte:
 
 <span class="filename">Nome do Arquivo: src/main.rs</span>
 
@@ -60,45 +60,43 @@ fn main() {
 }
 ```
 
-<span class="caption">Listing 10-4: Duas funções que diferem apenas em seus
+<span class="caption">Listagem 10-4: Duas funções que diferem apenas em seus
 nomes e nos tipos de suas assinaturas</span>
 
-Aqui as funções `maior_i32` e `maior_char` tem exatamente o mesmo corpo, então 
-seria bom se pudéssemos transformar essas duas funções em uma e nos livrar da 
-duplicação. Por sorte, nós podemos fazer isso introduzindo um parâmetro de 
-tipo genérico!
+As funções `maior_i32` e `maior_char` têm exatamente o mesmo corpo, então seria
+bom se pudéssemos transformá-las em uma única função e eliminar essa
+duplicação. Felizmente, podemos fazer isso introduzindo um parâmetro de tipo
+genérico!
 
-Para parametrizar os tipos na assinatura de uma função que vamos definir,
-precisamos criar um nome para o tipo parâmetro, assim como damos nomes para os 
-valores dos parâmetros de uma função. Nós vamos escolher o nome `T`. Qualquer 
-identificador pode ser usado como um nome de tipo de parâmetro, mas estamos 
-escolhendo `T` porque a convenção de nomes de tipos de Rust é a CamelCase. 
-Nomes de parâmetros de tipos genéricos também tendem a ser curtos por 
-convenção, e frequentemente usam apenas uma letra. A abreviatura de "tipo", `T`
-é a escolha padrão feita por programadores Rust.
+Para parametrizar os tipos na assinatura de uma nova função, precisamos dar um
+nome ao parâmetro de tipo, assim como damos nomes aos parâmetros de valor de
+uma função. Vamos escolher o nome `T`. Qualquer identificador pode ser usado
+como nome de parâmetro de tipo, mas estamos escolhendo `T` porque, por
+convenção, nomes de parâmetros de tipos genéricos em Rust são curtos e
+frequentemente usam apenas uma letra. Como abreviação de "tipo", `T` é a
+escolha padrão entre programadores Rust.
 
-Quando usamos um parâmetro no corpo de uma função, nós temos que declarar o 
-parâmetro na assinatura para que o compilador saiba o que aquele nome no corpo
-significa. Similarmente, quando usamos um tipo de nome de parâmetro em uma 
-assinatura de função, temos que declarar o tipo de nome de parâmetro antes de 
-usa-lo. Declarações de tipos de nomes vão em colchetes entre o nome da função e 
-a lista de paramêtros.
+Quando usamos um parâmetro no corpo de uma função, precisamos declará-lo na
+assinatura para que o compilador saiba o que aquele nome significa. De modo
+semelhante, quando usamos o nome de um parâmetro de tipo na assinatura de uma
+função, precisamos declará-lo antes de usá-lo. As declarações de nomes de tipos
+ficam entre colchetes angulares, entre o nome da função e a lista de
+parâmetros.
 
-A assinatura da função da função genérica `maior` que vamos definir se parecerá
+A assinatura da função genérica `maior` que vamos definir se parecerá
 com isto:
 
 ```rust,ignore
 fn maior<T>(lista: &[T]) -> T {
 ```
 
-Nós leríamos isso como: a função `maior` é genérica sobre algum tipo `T`. Ela
-tem um parâmetro chamado `lista`, e o tipo de `lista` é um corte dos valores
-do tipo `T`. A função `maior` retornará um valor do mesmo tipo `T`.
+Leríamos isso assim: a função `maior` é genérica sobre algum tipo `T`. Ela tem
+um parâmetro chamado `lista`, e o tipo de `lista` é um corte de valores do tipo
+`T`. A função `maior` retornará um valor do mesmo tipo `T`.
 
-A listagem 10-5 mostra a definição da função unificada `maior` usando um tipo 
-genérico de dado na sua assinatura, e mostra quando nós poderemos chamar a 
-função `maior` com ou um corte de valores de `i32` ou de valores `char`. Note 
-que esse código não compilará ainda! 
+A Listagem 10-5 mostra a definição da função unificada `maior` usando um tipo
+genérico na assinatura e como podemos chamá-la com um corte de valores `i32`
+ou com um corte de valores `char`. Note que esse código ainda não compilará!
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 
@@ -142,23 +140,21 @@ error[E0369]: binary operation `>` cannot be applied to type `T`
 note: an implementation of `std::cmp::PartialOrd` might be missing for `T`
 ```
 
-A nota menciona `std::cmp::PartialOrd`, que é um *trait*. Nós vamos falar sobre
-trait na próxima sessão, mas de forma breve, o que esse erro está dizendo é que
-o corpo de `maior` não funcionará para todos os possíveis tipos que `T` poderia
-ser; já que queremos comparar valores do tipo `T` no corpo, nós podemos apenas
-usar tipos que sabem como ser ordenados. A biblioteca padrão definiu que o 
-trait `std::cmp::PartialOrd` que tipos podem implementar para habilitar
-comparações. Vamos voltar a traits e em como especificar que um tipo genérico
-tenha um trait em particular na próxima sessão, mas vamos deixar isso de lado 
-por um momento e explorar outros lugares que podemos usar parâmetros de tipos 
-genéricos primeiro.
+A nota menciona `std::cmp::PartialOrd`, que é um *trait*. Vamos falar sobre
+traits na próxima seção, mas, em resumo, esse erro diz que o corpo de `maior`
+não funcionará para todos os tipos possíveis que `T` poderia representar. Como
+queremos comparar valores do tipo `T` no corpo da função, só podemos usar tipos
+que saibam ser ordenados. A biblioteca padrão define o trait
+`std::cmp::PartialOrd`, que os tipos podem implementar para habilitar
+comparações. Voltaremos aos traits e a como especificar que um tipo genérico
+tenha um trait específico na próxima seção, mas, por enquanto, vamos explorar
+outros lugares em que podemos usar parâmetros de tipos genéricos.
 
 ### Usando Tipos de Dados Genéricos em Definições de Structs
 
-Nós podemos definir structs para usar um parâmetro de tipo genérico em um ou 
-mais campos de um struct com a sintaxe `<>` também. A listagem 10-6 mostra a 
-definição e faz uso do struct `Ponto` que contém as coordenadas `x` e `y` com 
-valores de qualquer tipo:
+Também podemos definir structs que usem um parâmetro de tipo genérico em um ou
+mais campos com a sintaxe `<>`. A Listagem 10-6 mostra a definição e o uso da
+struct `Ponto`, que contém coordenadas `x` e `y` com valores de qualquer tipo:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 
@@ -177,17 +173,16 @@ fn main() {
 <span class="caption">Listagem 10-6: Uma struct `Ponto` contém os valores `x` e
 `y` do tipo `T`</span>
 
-A sintaxe é similar a que se usa em definições de funções usando tipos 
-genéricos. Primeiro, nós temos que declarar o nome do tipo de parâmetro dentro
-de colchetes angulares logo após o nome da struct. Então nós podemos usar tipos
-genéricos na definição da struct onde nós especificaríamos tipos concretos de
-dados.
+A sintaxe é semelhante à usada em definições de funções com tipos genéricos.
+Primeiro, declaramos o nome do parâmetro de tipo entre colchetes angulares logo
+após o nome da struct. Depois, podemos usar esse tipo genérico na definição da
+struct onde normalmente especificaríamos tipos de dados concretos.
 
-Note que porque só usamos um tipo genérico na definição de `Ponto`, o que 
-estamos dizendo é que o struct `Ponto` é genérico sobre algum tipo `T`, e os
-campos `x` e `y` são *ambos* do mesmo tipo, qualquer que seja. Se nós tentarmos
-criar uma instância de um `Ponto` que possui valores de tipos diferentes, como
-na Listagem 10-7, nosso código não compilará:
+Note que, como usamos apenas um tipo genérico na definição de `Ponto`, estamos
+dizendo que a struct `Ponto` é genérica sobre algum tipo `T`, e os campos `x` e
+`y` são *ambos* desse mesmo tipo, seja ele qual for. Se tentarmos criar uma
+instância de `Ponto` com valores de tipos diferentes, como na Listagem 10-7,
+nosso código não compilará:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 
@@ -203,7 +198,7 @@ fn main() {
 ```
 
 <span class="caption">Listagem 10-7: Os campos `x` e `y` precisam ser do mesmo
-tipo porque ambos tem o tipo genérico de dado `T`</span>
+tipo porque ambos têm o tipo genérico `T`</span>
 
 Se nós tentarmos compilar isso, receberemos o seguinte erro:
 
@@ -219,16 +214,15 @@ error[E0308]: mismatched types
   = note:    found type `{float}`
 ```
 
-Quando atribuímos o valor de 5 para `x`, o compilador sabe que para essa 
-instância de `Ponto` o tipo genérico `T` será um número inteiro. Então quando
-especificamos 4.0 para `y`, o qual é definido para ter o mesmo tipo de `x`, nós
-temos um tipo de erro de incompatibilidade.
+Quando atribuímos o valor 5 a `x`, o compilador sabe que, para essa instância
+de `Ponto`, o tipo genérico `T` será um número inteiro. Então, quando
+especificamos 4.0 para `y`, que foi definido para ter o mesmo tipo de `x`,
+recebemos um erro de incompatibilidade de tipos.
 
-Se nós quisermos definir um struct de `Ponto` onde `x` e `y` têm tipos 
-diferentes e quisermos fazer com que esses tipos sejam genéricos, nós podemos 
-usar parâmetros múltiplos de tipos genéricos. Na listagem 10-8, nós mudamos a
-definição do `Ponto` para os tipos genéricos `T` e `U`. O campo `x` é do tipo
-`T`, e o campo `y` do tipo `U`:
+Se quisermos definir uma struct `Ponto` em que `x` e `y` tenham tipos
+diferentes e ainda assim genéricos, podemos usar múltiplos parâmetros de tipo.
+Na Listagem 10-8, mudamos a definição de `Ponto` para usar os tipos genéricos
+`T` e `U`. O campo `x` é do tipo `T`, e o campo `y` é do tipo `U`:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 

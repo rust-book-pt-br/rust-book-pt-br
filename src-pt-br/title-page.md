@@ -5,7 +5,7 @@ comunidade Rust_
 
 Esta versão do texto assume que você está usando Rust 1.90.0 (lançado em
 2025-09-18) ou posterior, com `edition = "2024"` no arquivo *Cargo.toml* de
-todos os projetos, para configurá-los de acordo com os idiomatismos da edição
+todos os projetos, para configurá-los de acordo com os padrões idiomáticos da edição
 2024 do Rust. Consulte a [seção “Instalação” do Capítulo 1][install]<!--
 ignore --> para instruções sobre como instalar ou atualizar o Rust, e veja o
 [Apêndice E][appendix-e]<!-- ignore --> para informações sobre edições.
@@ -18,7 +18,7 @@ e offline com instalações do Rust feitas com `rustup`; execute `rustup doc
 
 Várias [traduções] da comunidade também estão disponíveis.
 
-Este texto está disponível em [brochura e ebook pela No Starch
+Este texto está disponível em [formato impresso e ebook pela No Starch
 Press][nsprust].
 
 [install]: ch01-01-installation.html

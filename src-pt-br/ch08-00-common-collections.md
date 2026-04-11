@@ -24,5 +24,5 @@ veja [a documentação][collections].
 
 [collections]: ../../std/collections/index.html
 
-Nós iremos discutir como criar e atualizar vetores, strings, e hash 
-maps, bem como o que os tornam especiais.
+Vamos discutir como criar e atualizar vetores, strings e hash maps, bem como o
+que torna cada um deles especial.

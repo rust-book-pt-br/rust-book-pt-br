@@ -1,29 +1,30 @@
-## Refatoração para Melhorar a Modularidade e o Tratamento de Erros
+## Refatorando para Melhorar a Modularidade e o Tratamento de Erros
 
-Para melhorar o nosso programa, repararemos quatro problemas que têm a ver com a
-estrutura do programa e como ele está tratando possíveis erros.
+Para melhorar o nosso programa, vamos corrigir quatro problemas relacionados à
+estrutura do programa e à forma como ele está tratando possíveis erros.
 
-Primeiro, a nossa função `main` agora executa duas tarefas: analisa argumentos e
-abre arquivos. Para uma função tão pequena, este não é um grande problema. No entanto, se
-continuamos a desenvolver o nosso programa dentro de `main`, o número de tarefas separadas que
-a função `main` manipula aumentarão. Com uma função ganhando responsabilidades,
-torna-se mais difícil de raciocinar, mais difícil de testar e mais difícil de mudar
-sem quebrar uma das suas partes. É melhor separar a funcionalidade para que cada
-função seja responsável por uma tarefa.
+Primeiro, a nossa função `main` agora executa duas tarefas: analisar argumentos
+e abrir arquivos. Para uma função tão pequena, isso ainda não é um grande
+problema. No entanto, se continuarmos a desenvolver o programa dentro de
+`main`, o número de tarefas separadas sob sua responsabilidade aumentará. À
+medida que uma função acumula responsabilidades, fica mais difícil raciocinar
+sobre ela, testá-la e alterá-la sem quebrar uma de suas partes. É melhor
+separar a funcionalidade para que cada função seja responsável por uma única
+tarefa.
 
-Esta questão também se liga ao segundo problema: embora `query` e `filename`
-sejam variáveis de configuração para o nosso programa, variáveis como `f` e `contents`
-são usadas para executar a lógica do programa. Quanto maior o `main` se torna, mais
-variáveis precisamos trazer no escopo; quanto mais variáveis temos no escopo,
-mais difícil será acompanhar o objetivo de cada uma. É melhor agrupar
-as variáveis de configuração em uma estrutura para tornar claro seu objetivo.
+Essa questão também se conecta ao segundo problema: embora `query` e
+`filename` sejam variáveis de configuração do programa, variáveis como `f` e
+`contents` são usadas para executar sua lógica. Quanto maior `main` ficar, mais
+variáveis precisaremos trazer para o escopo; quanto mais variáveis tivermos em
+escopo, mais difícil será acompanhar a finalidade de cada uma. É melhor
+agrupar as variáveis de configuração em uma estrutura para deixar claro o seu
+propósito.
 
-O terceiro problema é que usamos `expect` para imprimir uma mensagem de erro, ao
-abrir um arquivo, falha, mas a mensagem de erro apenas imprime `file not found`.
-Abrir um arquivo pode falhar de várias maneiras, além do arquivo faltando: como
-exemplo, o arquivo pode existir, mas talvez não possamos ter permissão para abri-lo.
-Agora, se estivermos nessa situação, imprimiríamos a mensagem de erro `file not found`
-que daria ao usuário a informação errada!
+O terceiro problema é que usamos `expect` para imprimir uma mensagem de erro
+quando a leitura do arquivo falha, mas a mensagem apenas diz `file not found`.
+Abrir um arquivo pode falhar de várias maneiras. Por exemplo, o arquivo pode
+existir, mas talvez não tenhamos permissão para abri-lo. Nessa situação,
+mostrar `file not found` daria à pessoa usuária uma informação incorreta!
 
 O quarto problema, usamos `expect` repetidamente para lidar com diferentes erros, e se o usuário
 executa o nosso programa sem especificar argumentos suficientes, eles terão erros `index out
@@ -330,7 +331,7 @@ a técnica que usamos na Lista 9-9 não é a melhor para usar aqui: uma chamada 
 aprendeu no Capítulo 9 - retornando um `Result` que indica sucesso
 ou um erro.
 
-#### Retornando um `Result` de um `new` Em vez de Chamar `panic!`
+#### Retornando um `Result` de `new` em vez de Chamar `panic!`
 
 Em vez disso, podemos retornar um valor `Result` que conterá uma instância `Config` em
 caso bem-sucedido e descreverá o problema no caso de erro. Quando
@@ -364,14 +365,14 @@ impl Config {
 <span class="caption">Listagem 12-9: Retornando um `Result` de
 `Config::new`</span>
 
-Nossa função `new` agora retorna um` Result` com uma instância `Config` no caso de sucesso 
-e um `&'static str` no caso de erro. Lembre-se da seção “The Static Lifetime” no capítulo 10 
-que `& 'static str` é o tipo de string literal, que é o nosso tipo de mensagem de erro por enquanto.
+Nossa função `new` agora retorna um `Result`, com uma instância de `Config` no
+caso de sucesso e uma string literal no caso de erro. Nossos valores de erro
+serão, por enquanto, literais de string com lifetime `'static`.
 
-Fizemos duas mudanças no corpo da função `new`: em vez de chamar
-`panic!` quando o usuário não passa argumentos suficientes, agora devolvemos um valor `Err`
-, e nós wrapped (embalamos) o valor de retorno `Config` em um `Ok`. Estas alterações
-fazem com que a função esteja conforme a sua nova assinatura de tipo.
+Fizemos duas mudanças no corpo da função: em vez de chamar `panic!` quando a
+pessoa usuária não fornece argumentos suficientes, agora retornamos um valor
+`Err`, e envolvemos o valor de retorno `Config` em um `Ok`. Essas alterações
+fazem a função se adequar à nova assinatura de tipo.
 
 Retornar um valor `Err` de `Config::new` permite que a função `main`
 lide com o valor `Result` retornado da função `new` e saia do processo
@@ -405,26 +406,24 @@ fn main() {
 <span class="caption">Listagem 12-10: Se ao criar um `Config` falha, saimos
 com um código de erro</span>
 
-Nesta lista, usamos um método que não abordamos antes:
-`unwrap_or_else`, que está definido em `Result <T, E>` pela biblioteca padrão.
-Usar `unwrap_or_else` nos permite definir algum erro personalizado, não-`panic!` de
-manipulação. Se o `Result` for um valor `Ok`, o comportamento deste método é semelhante
-a `unwrap`: ele retorna o valor interno `Ok`. No entanto, se o valor
-é um valor `Err`, este método chama o código na *closure*, que é uma
-função anônima que definimos e passamos como um argumento para `unwrap_or_else`. Nós
-entraremos em detalhes sobre closures no Capítulo 13. Por enquanto, você precisa apenas saber
-que `unwrap_or_else` passará o valor interno do `Err`, que neste
-caso é a string estática `not enough arguments` que adicionamos na Listagem 12-9,
-para o nosso closure no argumento `err` que aparece entre os pipes verticais.
-O código no closure pode então usar o valor `err` quando ele é executado.
+Nesta listagem, usamos um método que ainda não vimos em detalhe:
+`unwrap_or_else`, definido em `Result<T, E>` pela biblioteca padrão. Usá-lo
+nos permite definir um tratamento de erro personalizado, sem `panic!`. Se o
+`Result` for `Ok`, o comportamento desse método é semelhante ao de `unwrap`:
+ele retorna o valor interno. No entanto, se o valor for `Err`, esse método
+chama o código da *closure*, que é uma função anônima que definimos e passamos
+como argumento para `unwrap_or_else`. Falaremos mais sobre closures no Capítulo
+13. Por enquanto, basta saber que `unwrap_or_else` passa à closure o valor
+interno do `Err`, que neste caso é a string estática `not enough arguments`
+que adicionamos na Listagem 12-9.
 
-Adicionamos uma nova linha de `use` para importar `process` da biblioteca padrão.
-O código na closure que será executado no caso de erro são apenas duas linhas: nós
-imprimos o valor de `err` e depois chamamos `process::exit`. A função `process::exit`
-interromperá o programa imediatamente e retornará o número que foi
-passado como o código de status de saída. Isso é semelhante ao manuseio baseado no `panic!`
-que usamos na Listagem 12-8, mas já não obtemos todos os resultados extras. Vamos tentar
-isto:
+Adicionamos uma nova linha `use` para importar `process` da biblioteca padrão.
+O código na closure que será executado no caso de erro tem apenas duas linhas:
+imprimimos o valor de `err` e depois chamamos `process::exit`. A função
+`process::exit` interromperá o programa imediatamente e retornará o número que
+foi passado como código de status de saída. Isso é semelhante ao tratamento
+baseado em `panic!` que usamos na Listagem 12-8, mas sem toda a saída extra.
+Vamos experimentar:
 
 ```text
 $ cargo run

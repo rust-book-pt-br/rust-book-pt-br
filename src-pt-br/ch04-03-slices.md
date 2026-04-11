@@ -103,12 +103,12 @@ futuro. Considere o programa na Listagem 4-6, que usa a função da Listagem 4-5
 fn main() {
     let mut s = String::from("texto longo");
 
-    let palavra = primeira_palavra(&s); // palavra vai ter o valor 5.
+    let palavra = primeira_palavra(&s); // palavra terá o valor 5.
 
     s.clear(); // Isso esvazia a String, deixando ela igual a "".
 
     // palavra ainda tem o valor 5 aqui, mas já não há mais uma string para a
-    // qual o valor 5 faça algum sentido. palavra agora é totalmente inválida!
+    // qual o valor 5 faça algum sentido. `palavra` agora é totalmente inválida!
 }
 ```
 
@@ -120,7 +120,7 @@ Este programa compila sem erros, e também o faria se usássemos a variável
 de `s` de nenhuma forma, então, `palavra` ainda contém o valor `5`. Poderíamos
 usar esse valor `5` com a variável `s` para tentar extrair a primeira palavra da
 string, mas isso seria um bug, pois o conteúdo de `s` já mudou após termos salvo
-o valor `5` na variável `word`.
+o valor `5` na variável `palavra`.
 
 Ter que se preocupar sobre o índice da `palavra` ficar fora de sincronia com os
 dados em `s` é tedioso e propenso a erros! Gerenciar esses índices é ainda mais
@@ -150,8 +150,8 @@ let texto = &s[0..5];
 let longo = &s[6..11];
 ```
 
-Isto é similar a pegar uma referência à `String` inteira, mas um extra-apontando 
-do pedaço `[0..5]`. Em vez de uma referência à `String` inteira, trata-se de 
+Isto é similar a pegar uma referência à `String` inteira, mas com o adicional
+do trecho `[0..5]`. Em vez de uma referência à `String` inteira, trata-se de
 uma referência a uma porção da `String`. A sintaxe `início..fim` representa um 
 _range_ (uma faixa) que começa em `início` e continua até, mas não incluindo, 
 `fim`.

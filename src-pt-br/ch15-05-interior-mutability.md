@@ -1,17 +1,17 @@
 ## `RefCell<T>` e o Padrão de Mutabilidade Interior
 
-_Mutabilidade interior_ (_interior mutability_) é uma design pattern em Rust que
+_Mutabilidade interior_ (_interior mutability_) é um padrão em Rust que
 lhe permite modificar um dado mesmo quando há referências imutáveis a ele:
 normalmente, esta ação é proibida pelas regras de empréstimo. Para fazer isso, a
-pattern usa código `unsafe` (_inseguro_) dentro de uma estrutura de dados para
+padrão usa código `unsafe` (_inseguro_) dentro de uma estrutura de dados para
 dobrar as regras normais do Rust que governam mutação e empréstimo. Nós ainda
 não cobrimos código unsafe; faremos isso no Capítulo 19. Podemos usar tipos que
-usam a pattern de mutabilidade interior quando podemos garantir que as regras de
+usam o padrão de mutabilidade interior quando podemos garantir que as regras de
 empréstimo serão seguidas em tempo de execução, ainda que o compilador não o
 possa garantir. O código `unsafe` envolvido é então embrulhado em uma API safe,
 e o tipo exterior permanece imutável.
 
-Para explorar este conceito, vamos ver o tipo `RefCell<T>` que segue a pattern
+Para explorar este conceito, vamos ver o tipo `RefCell<T>` que segue o padrão
 de mutabilidade interior.
 
 ### Aplicando Regras de Empréstimo em Tempo de Execução com o `RefCell<T>`
@@ -54,7 +54,7 @@ quando você tem certeza que seu código segue as regras de empréstimo, mas o
 compilador é incapaz de entender e garantir isso.
 
 Assim como o `Rc<T>`, o `RefCell<T>` é apenas para uso em cenários de thread
-única e lhe darão um erro de compilação se você tentar usá-lo em um contexto de
+única e dará a você um erro de compilação se tentar usá-lo em um contexto de
 múltiplas threads. Falaremos sobre como obter a funcionalidade de um
 `RefCell<T>` em um programa multithread no Capítulo 16.
 
@@ -71,7 +71,7 @@ Aqui está uma recapitulação das razões para escolher o `Box<T>`, o `Rc<T>` o
   execução, nós podemos modificar o valor dentro de um `RefCell<T>` mesmo quando
   o `RefCell<T>` é imutável.
 
-Modificar o valor dentro de um valor imutável é a pattern de _mutabilidade
+Modificar o valor dentro de um valor imutável é o padrão de _mutabilidade
 interior_. Vamos dar uma olhada em uma situação em que a mutabilidade interior é
 útil e examinar como ela é possível.
 

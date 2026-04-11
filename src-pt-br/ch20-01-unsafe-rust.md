@@ -1,61 +1,60 @@
 ## Unsafe Rust
 
 Todo o código que discutimos até agora teve as garantias de segurança de memória do Rust
-aplicado em tempo de compilação. No entanto, Rust possui um segundo idioma escondido dentro dele
-que não impõe essas garantias de segurança de memória: é chamado de _unsafe Rust_
+aplicadas em tempo de compilação. No entanto, o Rust possui uma segunda linguagem escondida dentro dele
+que não impõe essas garantias de segurança de memória: ela é chamada de _unsafe Rust_
 e funciona como o Rust normal, mas nos dá superpoderes extras.
 
 O Rust inseguro existe porque, por natureza, a análise estática é conservadora. Quando
 o compilador tenta determinar se o código mantém ou não as garantias,
-é melhor rejeitar alguns programas válidos do que aceitar alguns inválidos
-programas. Embora o código _possa_ estar correto, se o compilador Rust não tiver
+é melhor rejeitar alguns programas válidos do que aceitar alguns programas inválidos.
+Embora o código _possa_ estar correto, se o compilador Rust não tiver
 informações suficientes para ter confiança, ele rejeitará o código. Nestes casos,
 você pode usar código inseguro para dizer ao compilador: “Confie em mim, eu sei o que estou
-fazendo.” Esteja avisado, entretanto, que você usa Rust inseguro por sua própria conta e risco: se você
+fazendo.” Esteja avisado, entretanto, de que você usa Rust inseguro por sua própria conta e risco: se você
 usar código inseguro incorretamente, podem ocorrer problemas devido à insegurança da memória, como
 desreferenciação de ponteiro nulo.
 
-Outra razão pela qual Rust tem um alter ego inseguro é que o computador subjacente
-o hardware é inerentemente inseguro. Se Rust não permitiu que você realizasse operações inseguras, você
-não conseguia realizar certas tarefas. Rust precisa permitir que você execute sistemas de baixo nível
-programação, como interagir diretamente com o sistema operacional ou mesmo
-escrevendo seu próprio sistema operacional. Trabalhando com programação de sistemas de baixo nível
-é um dos objetivos da linguagem. Vamos explorar o que podemos fazer com situações inseguras
-Rust e como fazê-lo.
+Outra razão pela qual o Rust tem um alter ego inseguro é que o hardware subjacente
+do computador é inerentemente inseguro. Se o Rust não permitisse que você realizasse operações inseguras,
+você não conseguiria executar certas tarefas. O Rust precisa permitir que você faça
+programação de sistemas de baixo nível, como interagir diretamente com o sistema operacional ou até
+mesmo escrever seu próprio sistema operacional. Trabalhar com programação de sistemas de baixo nível
+é um dos objetivos da linguagem. Vamos explorar o que podemos fazer com
+unsafe Rust e como fazê-lo.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="unsafe-superpowers"></a>
 
-### Performing Unsafe Superpowers
+### Executando superpoderes inseguros
 
 Para mudar para Rust inseguro, use a palavra-chave `unsafe` e inicie um novo bloco
-que contém o código inseguro. Você pode realizar cinco ações no Rust inseguro que você
-não posso no Rust seguro, que chamamos de _superpoderes inseguros_. Esses superpoderes
+que contenha o código inseguro. Você pode realizar cinco ações em Rust inseguro que você
+não pode realizar em Rust seguro, que chamamos de _superpoderes inseguros_. Esses superpoderes
 incluem a capacidade de:
 
-1. Dereference a raw pointer.
-1. Call an unsafe function or method.
-1. Access or modify a mutable static variable.
-1. Implement an unsafe trait.
-1. Access fields of `union`s.
+1. Desreferenciar um raw pointer.
+1. Chamar uma função ou método `unsafe`.
+1. Acessar ou modificar uma variável estática mutável.
+1. Implementar uma trait `unsafe`.
+1. Acessar campos de `union`s.
 
 É importante entender que `unsafe` não desliga o borrow checker
-ou desabilitar qualquer uma das outras verificações de segurança do Rust: Se você usar uma referência em inseguro
-código, ele ainda será verificado. A palavra-chave `unsafe` só dá acesso a
-esses cinco recursos que não são verificados pelo compilador quanto à memória
-segurança. Você ainda terá algum grau de segurança dentro de um bloco inseguro.
+nem desabilita qualquer uma das outras verificações de segurança do Rust: se você usar uma referência em
+código inseguro, ela ainda será verificada. A palavra-chave `unsafe` só dá acesso a
+esses cinco recursos que não são verificados pelo compilador quanto à segurança de memória.
+Você ainda terá algum grau de segurança dentro de um bloco inseguro.
 
 Além disso, `unsafe` não significa que o código dentro do bloco seja necessariamente
 perigoso ou que definitivamente terá problemas de segurança de memória: A intenção é
 que, como programador, você garantirá que o código dentro de um bloco `unsafe`
 acessará a memória de maneira válida.
 
-As pessoas são falíveis e erros acontecerão, mas ao exigir estes cinco
+As pessoas são falíveis e erros acontecerão, mas, ao exigir que essas cinco
 operações inseguras estejam dentro de blocos anotados com `unsafe`, você saberá que
-quaisquer erros relacionados à segurança da memória devem estar dentro de um bloco ` unsafe`. Mantenha
-` unsafe`bloqueia pequenos; você ficará grato mais tarde, quando investigar a memória
-insetos.
+quaisquer erros relacionados à segurança de memória devem estar dentro de um bloco `unsafe`.
+Mantenha os blocos `unsafe` pequenos; você ficará grato depois, quando estiver investigando bugs de memória.
 
 Para isolar o máximo possível o código inseguro, é melhor incluí-lo
 dentro de uma abstração segura e fornecer uma API segura, que discutiremos mais tarde
@@ -69,30 +68,30 @@ a abstração é segura.
 Vejamos cada uma das cinco superpotências inseguras. Também veremos
 algumas abstrações que fornecem uma interface segura para código inseguro.
 
-### Dereferencing a Raw Pointer
+### Desreferenciando um raw pointer
 
 No Capítulo 4, na seção [“Referências pendentes”][dangling-references]<!-- ignore
 -->, mencionamos que o compilador garante que as referências sejam sempre
-válido. Unsafe Rust tem dois novos tipos chamados _raw pointers_ que são semelhantes a
-referências. Tal como acontece com as referências, os ponteiros brutos podem ser imutáveis ou mutáveis e
+válidas. Unsafe Rust tem dois novos tipos chamados _raw pointers_, que são semelhantes a
+referências. Assim como acontece com referências, raw pointers podem ser imutáveis ou mutáveis e
 são escritos como `*const T` e `*mut T`, respectivamente. O asterisco não é o
 operador de desreferência; faz parte do nome do tipo. No contexto da matéria-prima
 ponteiros, _imutável_ significa que o ponteiro não pode ser atribuído diretamente a
 depois de ser desreferenciado.
 
-Diferente das referências e smart pointers, ponteiros brutos:
+Diferentemente de referências e smart pointers, raw pointers:
 
-- É permitido ignorar as regras borrowing por ter regras imutáveis e
-  ponteiros mutáveis ou vários ponteiros mutáveis para o mesmo local
+- Podem ignorar as regras de borrowing, tendo ponteiros imutáveis e mutáveis,
+  ou vários ponteiros mutáveis, para o mesmo local
 - Não há garantia de apontar para memória válida
 - Podem ser nulos
-- Não implemente nenhuma limpeza automática
+- Não implementam nenhuma limpeza automática
 
 Ao optar por não fazer com que Rust aplique essas garantias, você pode desistir
 segurança garantida em troca de maior desempenho ou capacidade de
 interface com outro idioma ou hardware onde as garantias do Rust não se aplicam.
 
-Listing 20-1 shows how to create an immutable and a mutable raw pointer.
+A Listagem 20-1 mostra como criar um raw pointer imutável e um mutável.
 
 <Listing number="20-1" caption="Criando ponteiros brutos com os operadores de empréstimo bruto">
 
@@ -102,8 +101,8 @@ Listing 20-1 shows how to create an immutable and a mutable raw pointer.
 
 </Listing>
 
-Observe que não incluímos a palavra-chave `unsafe` neste código. Nós podemos criar
-ponteiros brutos em código seguro; simplesmente não podemos desreferenciar ponteiros brutos fora de um
+Observe que não incluímos a palavra-chave `unsafe` neste código. Podemos criar
+raw pointers em código seguro; simplesmente não podemos desreferenciar raw pointers fora de um
 bloco inseguro, como você verá daqui a pouco.
 
 Criamos ponteiros brutos usando os operadores de borrowing bruto: `&raw const num`
@@ -160,7 +159,7 @@ Outro caso é ao construir abstrações seguras que o borrow checker
 não entende. Apresentaremos funções inseguras e depois veremos um
 exemplo de uma abstração segura que usa código inseguro.
 
-### Calling an Unsafe Function or Method
+### Chamando uma função ou método `unsafe`
 
 O segundo tipo de operação que você pode realizar em um bloco inseguro é chamar
 funções inseguras. Funções e métodos inseguros parecem exatamente iguais aos normais
@@ -171,8 +170,8 @@ garantimos que cumprimos esses requisitos. Ao chamar uma função insegura dentr
 Bloco `unsafe`, estamos dizendo que lemos a documentação desta função e
 assumimos a responsabilidade de manter os contratos da função.
 
-Here is an unsafe function named `dangerous` that doesn’t do anything in its
-body:
+Aqui está uma função `unsafe` chamada `dangerous` que não faz nada em seu
+corpo:
 
 ```rust
 {{#rustdoc_include ../listings/ch20-advanced-features/no-listing-01-unsafe-fn/src/main.rs:here}}

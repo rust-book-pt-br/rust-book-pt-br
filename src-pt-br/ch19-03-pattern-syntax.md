@@ -3,31 +3,32 @@
 Nesta seção, reunimos toda a sintaxe válida em padrões e discutimos
 por que e quando você pode querer usar cada um.
 
-### Matching Literals
+### Correspondendo a literais
 
-Como você viu no Capítulo 6, você pode comparar padrões match diretamente com literais. O
-o código a seguir fornece alguns exemplos:
+Como você viu no Capítulo 6, pode fazer a correspondência de padrões
+diretamente com literais. O código a seguir mostra alguns exemplos:
 
 ```rust
 {{#rustdoc_include ../listings/ch19-patterns-and-matching/no-listing-01-literals/src/main.rs:here}}
 ```
 
-Este código imprime `one` porque o valor em `x` é `1`. Esta sintaxe é útil
-quando você deseja que seu código execute uma ação se obtiver uma determinada ação concreta
-valor.
+Este código imprime `one` porque o valor em `x` é `1`. Essa sintaxe é útil
+quando você quer que o código execute uma ação ao receber um determinado
+valor concreto.
 
-### Matching Named Variables
+### Correspondendo a variáveis nomeadas
 
-Variáveis nomeadas são padrões irrefutáveis que match qualquer valor, e usamos
-muitas vezes neste livro. No entanto, há uma complicação quando você usa
-variáveis nomeadas em expressões `match`, ` if let`ou ` while let`. Porque cada
-desses tipos de expressões inicia um novo escopo, variáveis declaradas como parte de
-um padrão dentro dessas expressões irá sombrear aqueles com o mesmo nome fora
-os construtos, como é o caso de todas as variáveis. Na Listagem 19-11, declaramos
-uma variável chamada ` x`com o valor ` Some(5)`e uma variável ` y`com o valor
-` 10 `. Em seguida, criamos uma expressão` match `no valor` x `. Olhe para o
-padrões nos braços match e` println!`no final, e tente descobrir
-o que o código irá imprimir antes de executá-lo ou ler mais.
+Variáveis nomeadas são padrões irrefutáveis que correspondem a qualquer valor,
+e já as usamos muitas vezes neste livro. No entanto, há uma complicação quando
+você usa variáveis nomeadas em expressões `match`, `if let` ou `while let`.
+Como cada um desses tipos de expressão inicia um novo escopo, variáveis
+declaradas como parte de um padrão dentro dessas expressões irão sombrear
+aquelas com o mesmo nome fora delas, como acontece com todas as variáveis. Na
+Listagem 19-11, declaramos uma variável chamada `x` com o valor `Some(5)` e uma
+variável `y` com o valor `10`. Em seguida, criamos uma expressão `match` sobre
+o valor `x`. Observe os padrões nos braços do `match` e o `println!` ao final,
+e tente descobrir o que o código imprimirá antes de executá-lo ou continuar a
+leitura.
 
 <Listing number="19-11" file-name="src/main.rs" caption="Uma expressão `match` com um braço que introduz uma nova variável que sombreia uma variável `y` existente">
 
@@ -38,43 +39,44 @@ o que o código irá imprimir antes de executá-lo ou ler mais.
 </Listing>
 
 Vejamos o que acontece quando a expressão `match` é executada. O padrão
-no primeiro braço match não match o valor definido de `x`, então o código
-continua.
+do primeiro braço não corresponde ao valor armazenado em `x`, então a
+execução continua.
 
-O padrão no segundo braço match introduz uma nova variável chamada `y` que
-match qualquer valor dentro de um valor `Some`. Porque estamos em um novo escopo dentro
-expressão ` match`, esta é uma nova variável ` y`, não o ` y`que declaramos em
-começando com o valor ` 10`. Esta nova ligação ` y`irá match qualquer valor
-dentro de um ` Some`, que é o que temos no ` x`. Portanto, este novo ` y`se liga a
-o valor interno de ` Some`em ` x`. Esse valor é ` 5`, então a expressão para
-esse braço executa e imprime ` Matched, y = 5`.
+O padrão no segundo braço de `match` introduz uma nova variável chamada `y`,
+que corresponderá a qualquer valor dentro de um `Some`. Como estamos em um novo
+escopo dentro da expressão `match`, essa é uma nova variável `y`, e não o `y`
+que declaramos no começo com o valor `10`. Esse novo binding `y` corresponderá
+a qualquer valor dentro de um `Some`, que é exatamente o que temos em `x`.
+Portanto, esse novo `y` se vincula ao valor interno de `Some` em `x`. Esse
+valor é `5`, então a expressão desse braço é executada e imprime
+`Matched, y = 5`.
 
-Se `x` fosse um valor `None` em vez de `Some(5)`, os padrões no primeiro
-dois braços não teriam correspondido, então o valor teria correspondido ao
-sublinhado. Não introduzimos a variável ` x`no padrão do
-braço de sublinhado, então o ` x`na expressão ainda é o ` x`externo que não foi
-sido sombreado. Neste caso hipotético, ` match`imprimiria ` Default case,
+Se `x` fosse `None` em vez de `Some(5)`, os padrões dos dois primeiros
+braços não corresponderiam, então o valor cairia no padrão com
+sublinhado. Como não introduzimos a variável `x` no padrão desse braço,
+o `x` usado na expressão ainda seria o `x` externo, que não foi
+sombreado. Nesse caso hipotético, o `match` imprimiria `Default case,
 x = None`.
 
-Quando a expressão `match` é concluída, seu escopo termina, assim como o escopo de
-o `y` interno. O último `println!` produz `at the end: x = Some(5), y = 10`.
+Quando a expressão `match` termina, seu escopo também termina, assim como o
+escopo do `y` interno. O último `println!` produz `at the end: x = Some(5), y = 10`.
 
-Para criar uma expressão `match` que compare os valores do `x` externo e
-`y `, em vez de introduzir uma nova variável que obscureça o` y`existente
-variável, precisaríamos usar uma condicional de proteção match. Nós vamos conversar
-sobre os guardas match posteriormente em [“Adicionando condicionais com correspondência
-Guardas”](#adding-conditionals-with-match-guards)Seção <!-- ignore -->.
+Para criar uma expressão `match` que compare os valores do `x` externo e de
+`y`, em vez de introduzir uma nova variável que sombreie a variável `y`
+existente, precisaríamos usar uma guarda de `match`. Falaremos sobre guardas de
+`match` mais adiante, na seção
+[“Adicionando condicionais com match guards”](#adding-conditionals-with-match-guards)<!-- ignore -->.
 
 <!-- Old headings. Do not remove or links may break. -->
 <a id="multiple-patterns"></a>
 
-### Combinando vários padrões
+### Correspondendo a vários padrões
 
-Nas expressões `match`, você pode match vários padrões usando a sintaxe ` |`,
-que é o operador padrão _ou_. Por exemplo, no código a seguir, match
-o valor de `x` em relação aos braços match, o primeiro dos quais tem uma opção _ou_,
-ou seja, se o valor de `x` corresponder a qualquer um dos valores nesse braço, isso
-arm’s code will run:
+Em expressões `match`, você pode corresponder a vários padrões usando a sintaxe
+`|`, que é o operador de padrão _ou_. Por exemplo, no código a seguir,
+correspondemos o valor de `x` com os braços de `match`, sendo que o primeiro
+deles tem uma opção _ou_; isto é, se o valor de `x` corresponder a qualquer um
+dos valores naquele braço, o código desse braço será executado:
 
 
 ```rust
@@ -85,25 +87,25 @@ Este código imprime `one or two`.
 
 ### Correspondência de intervalos de valores com `..=`
 
-A sintaxe `..=` nos permite match para um intervalo inclusivo de valores. No
-código a seguir, quando um padrão corresponde a qualquer um dos valores dentro do determinado
-alcance, esse braço executará:
+A sintaxe `..=` nos permite corresponder a um intervalo inclusivo de valores.
+No código a seguir, quando um padrão corresponde a qualquer um dos valores
+dentro do intervalo dado, aquele braço será executado:
 
 ```rust
 {{#rustdoc_include ../listings/ch19-patterns-and-matching/no-listing-03-ranges/src/main.rs:here}}
 ```
 
-Se `x` for `1`, ` 2`, ` 3`, ` 4`ou ` 5`, o primeiro braço será match. Esta sintaxe é
-mais conveniente para vários valores match do que usar o operador `|` para
-express the same idea; if we were to use `|`, we would have to specify `1 | 2 |
-3 | 4 | 5`. Specifying a range is much shorter, especially if we want to match,
-digamos, qualquer número entre 1 e 1.000!
+Se `x` for `1`, `2`, `3`, `4` ou `5`, o primeiro braço corresponderá. Essa
+sintaxe é mais conveniente para vários valores do que usar o operador `|` para
+expressar a mesma ideia; se fôssemos usar `|`, teríamos de especificar
+`1 | 2 | 3 | 4 | 5`. Especificar um intervalo é bem mais curto, especialmente
+se quisermos corresponder, digamos, a qualquer número entre 1 e 1.000!
 
-O compilador verifica se o intervalo não está vazio em tempo de compilação e porque o
-apenas os tipos para os quais Rust pode dizer se um intervalo está vazio ou não são `char` e
-valores numéricos, os intervalos só são permitidos com valores numéricos ou `char`.
+O compilador verifica, em tempo de compilação, se o intervalo não está vazio.
+Como os únicos tipos para os quais Rust consegue determinar isso são `char` e
+valores numéricos, intervalos só são permitidos com números ou `char`.
 
-Here is an example using ranges of `char` values:
+Eis um exemplo usando intervalos de valores `char`:
 
 ```rust
 {{#rustdoc_include ../listings/ch19-patterns-and-matching/no-listing-04-ranges-of-char/src/main.rs:here}}
@@ -112,10 +114,10 @@ Here is an example using ranges of `char` values:
 Rust pode dizer que `'c'` está dentro do intervalo do primeiro padrão e imprime `early
 ASCII letter`.
 
-### Destructuring to Break Apart Values
+### Desestruturando para separar valores
 
-Também podemos usar padrões para desestruturar estruturas, enumerações e tuplas para usar
-diferentes partes desses valores. Vamos examinar cada valor.
+Também podemos usar padrões para desestruturar structs, enums e tuplas, de modo
+a usar partes diferentes desses valores. Vamos examinar cada caso.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -123,8 +125,8 @@ diferentes partes desses valores. Vamos examinar cada valor.
 
 #### Structs
 
-A Listagem 19-12 mostra uma estrutura `Point` com dois campos, `x` e `y`, que podemos
-separe usando um padrão com uma instrução ` let`.
+A Listagem 19-12 mostra uma struct `Point` com dois campos, `x` e `y`, que
+podemos separar usando um padrão em uma instrução `let`.
 
 <Listing number="19-12" file-name="src/main.rs" caption="Desestruturando os campos de uma struct em variáveis separadas">
 
@@ -134,17 +136,17 @@ separe usando um padrão com uma instrução ` let`.
 
 </Listing>
 
-Este código cria as variáveis `a` e `b` que match os valores do `x`
-e ` y`da estrutura ` p`. Este exemplo mostra que os nomes dos
-variáveis ​​no padrão não precisam match os nomes dos campos da estrutura.
-No entanto, é comum match os nomes das variáveis aos nomes dos campos para torná-lo
-mais fácil lembrar quais variáveis vieram de quais campos. Por causa disso
-uso comum e porque escrever ` let Point { x: x, y: y } = p;`contém um
-muita duplicação, Rust tem uma abreviação para padrões que os campos de estrutura match:
-Você só precisa listar o nome do campo struct e as variáveis criadas
-do padrão terão os mesmos nomes. A Listagem 19-13 se comporta da mesma
-maneira como o código na Listagem 19-12, mas as variáveis criadas no ` let`
-padrão são ` x`e ` y`em vez de ` a`e ` b`.
+Esse código cria as variáveis `a` e `b`, que correspondem aos valores dos
+campos `x` e `y` da struct `p`. Este exemplo mostra que os nomes das variáveis
+no padrão não precisam corresponder aos nomes dos campos da struct. No entanto,
+é comum usar os mesmos nomes dos campos para as variáveis, a fim de facilitar a
+lembrança de quais variáveis vieram de quais campos. Por causa desse uso comum,
+e porque escrever `let Point { x: x, y: y } = p;` contém bastante duplicação,
+Rust tem uma forma abreviada para padrões que correspondem aos campos de uma
+struct: você só precisa listar o nome do campo da struct, e as variáveis
+criadas a partir do padrão terão os mesmos nomes. A Listagem 19-13 se comporta
+da mesma forma que o código da Listagem 19-12, mas as variáveis criadas no
+padrão `let` são `x` e `y` em vez de `a` e `b`.
 
 <Listing number="19-13" file-name="src/main.rs" caption="Desestruturando campos de struct usando a forma abreviada de campos">
 
@@ -154,18 +156,17 @@ padrão são ` x`e ` y`em vez de ` a`e ` b`.
 
 </Listing>
 
-Este código cria as variáveis `x` e `y` que match os campos `x` e `y`
-da variável ` p`. O resultado é que as variáveis ` x`e ` y`contêm o
-valores da estrutura ` p`.
+Esse código cria as variáveis `x` e `y`, que correspondem aos campos `x` e `y`
+da variável `p`. O resultado é que `x` e `y` contêm os valores da struct `p`.
 
-Também podemos desestruturar com valores literais como parte do padrão struct
+Também podemos desestruturar usando valores literais como parte do padrão da struct
 em vez de criar variáveis para todos os campos. Fazer isso nos permite testar
 alguns dos campos para valores específicos ao criar variáveis para
 desestruturar os outros campos.
 
-Na Listagem 19-14, temos uma expressão `match` que separa os valores `Point`
-em três casos: pontos que ficam diretamente no eixo ` x`(o que é verdade quando
-` y = 0 `), no eixo` y `(` x = 0`) ou em nenhum dos eixos.
+Na Listagem 19-14, temos uma expressão `match` que separa valores `Point`
+em três casos: pontos que ficam diretamente no eixo `x` (o que é verdade quando
+`y = 0`), no eixo `y` (`x = 0`) ou em nenhum dos eixos.
 
 <Listing number="19-14" file-name="src/main.rs" caption="Desestruturando e comparando valores literais em um único padrão">
 
@@ -175,21 +176,21 @@ em três casos: pontos que ficam diretamente no eixo ` x`(o que é verdade quand
 
 </Listing>
 
-O primeiro braço match qualquer ponto que esteja no eixo `x` especificando que
-o campo `y` corresponde se seu valor corresponder ao literal `0`. O padrão ainda
-cria uma variável ` x`que podemos usar no código deste braço.
+O primeiro braço corresponde a qualquer ponto que esteja no eixo `x`,
+especificando que o campo `y` corresponde ao literal `0`. O padrão ainda
+cria uma variável `x`, que podemos usar no código desse braço.
 
-Da mesma forma, o segundo braço corresponde a qualquer ponto no eixo `y` especificando que
-o campo `x` corresponde se seu valor for `0` e cria uma variável `y` para o
+Da mesma forma, o segundo braço corresponde a qualquer ponto no eixo `y`,
+especificando que o campo `x` tem valor `0`, e cria uma variável `y` para o
 valor do campo `y`. O terceiro braço não especifica nenhum literal, então
-corresponde a qualquer outro ` Point`e cria variáveis para os campos ` x`e ` y`.
+corresponde a qualquer outro `Point` e cria variáveis para os campos `x` e `y`.
 
-Neste exemplo, o valor `p` corresponde ao segundo braço em virtude de `x`
-contendo um ` 0`, então este código imprimirá ` On the y axis at 7`.
+Neste exemplo, o valor `p` corresponde ao segundo braço porque `x`
+contém `0`, então esse código imprimirá `On the y axis at 7`.
 
 Lembre-se de que uma expressão `match` para de verificar os braços depois de encontrar o
-primeiro padrão correspondente, mesmo que `Point { x: 0, y: 0 }` esteja no eixo `x`
-e o eixo ` y`, este código imprimiria apenas ` On the x axis at 0`.
+primeiro padrão correspondente; assim, embora `Point { x: 0, y: 0 }` esteja no eixo `x`
+e também no eixo `y`, esse código imprimiria apenas `On the x axis at 0`.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -197,11 +198,11 @@ e o eixo ` y`, este código imprimiria apenas ` On the x axis at 0`.
 
 #### Enums
 
-Desestruturamos enums neste livro (por exemplo, Listagem 6-5 no Capítulo 6),
+Desestruturamos enums neste livro (por exemplo, na Listagem 6-5 do Capítulo 6),
 mas ainda não discutimos explicitamente que o padrão para desestruturar um enum
-corresponde à forma como os dados armazenados na enumeração são definidos. Como um
-Por exemplo, na Listagem 19-15, usamos o enum `Message` da Listagem 6-2 e escrevemos
-um `match` com padrões que irão desestruturar cada valor interno.
+corresponde à maneira como os dados armazenados nele são definidos. Como
+exemplo, na Listagem 19-15 usamos o enum `Message` da Listagem 6-2 e escrevemos
+um `match` com padrões que desestruturam cada valor interno.
 
 <Listing number="19-15" file-name="src/main.rs" caption="Desestruturando variantes de enum que guardam diferentes tipos de valores">
 
@@ -211,24 +212,23 @@ um `match` com padrões que irão desestruturar cada valor interno.
 
 </Listing>
 
-Este código imprimirá `Change color to red 0, green 160, and blue 255`. Experimente
-alterando o valor de ` msg`para ver o código dos outros braços executados.
+Esse código imprimirá `Change color to red 0, green 160, and blue 255`. Experimente
+alterar o valor de `msg` para ver o código dos outros braços ser executado.
 
-Para variantes enum sem quaisquer dados, como `Message::Quit`, não podemos desestruturar
-o valor ainda mais. Só podemos match no valor literal ` Message::Quit`,
-e nenhuma variável está nesse padrão.
+Para variantes de enum sem dados, como `Message::Quit`, não podemos
+desestruturar ainda mais o valor. Só podemos corresponder ao valor literal
+`Message::Quit`, e não há variáveis nesse padrão.
 
 Para variantes de enum do tipo struct, como `Message::Move`, podemos usar um padrão
-semelhante ao padrão que especificamos para estruturas match. Após o nome da variante, nós
-coloque colchetes e depois liste os campos com variáveis para que possamos quebrar
-separe as peças para usar no código deste braço. Aqui usamos a abreviatura
-formulário como fizemos na Listagem 19-13.
+semelhante ao que usamos para structs. Após o nome da variante, colocamos
+chaves e listamos os campos com variáveis para separar as partes e usá-las
+no código desse braço. Aqui usamos a forma abreviada, como fizemos na Listagem 19-13.
 
-Para variantes de enum semelhantes a tupla, como `Message::Write` que contém uma tupla com um
-elemento e `Message::ChangeColor` que contém uma tupla com três elementos, o
-padrão é semelhante ao padrão que especificamos para tuplas match. O número de
-variáveis no padrão devem match o número de elementos na variante que estamos
-correspondência.
+Para variantes de enum semelhantes a tuplas, como `Message::Write`, que contém uma tupla com um
+elemento, e `Message::ChangeColor`, que contém uma tupla com três elementos, o
+padrão é semelhante ao que usamos para tuplas. O número de
+variáveis no padrão deve corresponder ao número de elementos da variante com a qual estamos
+fazendo a correspondência.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -236,10 +236,10 @@ correspondência.
 
 #### Estruturas e Enums aninhados
 
-Até agora, todos os nossos exemplos combinaram estruturas ou enums com um nível de profundidade,
-mas a correspondência também pode funcionar em itens aninhados! Por exemplo, podemos refatorar o
-código na Listagem 19-15 para suportar cores RGB e HSV no `ChangeColor`
-mensagem, conforme mostrado na Listagem 19-16.
+Até agora, todos os nossos exemplos fizeram correspondência com structs ou enums de um único nível,
+mas a correspondência também funciona com itens aninhados. Por exemplo, podemos refatorar o
+código da Listagem 19-15 para dar suporte a cores RGB e HSV na mensagem `ChangeColor`,
+como mostrado na Listagem 19-16.
 
 <Listing number="19-16" caption="Fazendo correspondência em enums aninhadas">
 
@@ -249,12 +249,12 @@ mensagem, conforme mostrado na Listagem 19-16.
 
 </Listing>
 
-O padrão do primeiro braço na expressão `match` corresponde a um
-Variante enum `Message::ChangeColor` que contém uma variante `Color::Rgb`; então,
-o padrão se liga aos três valores ` i32`internos. O padrão do segundo
-arm também corresponde a uma variante de enum ` Message::ChangeColor`, mas o enum interno
-corresponde a ` Color::Hsv`. Podemos especificar essas condições complexas em um
-Expressão ` match`, mesmo que duas enumerações estejam envolvidas.
+O padrão do primeiro braço na expressão `match` corresponde a uma
+variante `Message::ChangeColor` que contém uma variante `Color::Rgb`; então,
+o padrão associa os três valores internos do tipo `i32`. O padrão do segundo
+braço também corresponde a uma variante `Message::ChangeColor`, mas o enum interno
+corresponde a `Color::Hsv`. Podemos especificar essas condições complexas em uma
+única expressão `match`, mesmo quando duas enums estão envolvidas.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -262,29 +262,29 @@ Expressão ` match`, mesmo que duas enumerações estejam envolvidas.
 
 #### Estruturas e Tuplas
 
-Podemos misturar match e aninhar padrões de desestruturação de maneiras ainda mais complexas.
-O exemplo a seguir mostra uma desestruturação complicada onde aninhamos estruturas e
-tuplas dentro de uma tupla e desestrutura todos os valores primitivos:
+Podemos misturar e aninhar padrões de desestruturação de maneiras ainda mais complexas.
+O exemplo a seguir mostra uma desestruturação complicada em que aninhamos structs e
+tuplas dentro de uma tupla e extraímos todos os valores primitivos:
 
 ```rust
 {{#rustdoc_include ../listings/ch19-patterns-and-matching/no-listing-05-destructuring-structs-and-tuples/src/main.rs:here}}
 ```
 
-Este código nos permite dividir tipos complexos em suas partes componentes para que possamos
-use os valores nos quais estamos interessados separadamente.
+Esse código nos permite dividir tipos complexos em suas partes componentes para que possamos
+usar separadamente os valores que nos interessam.
 
-A desestruturação com padrões é uma maneira conveniente de usar pedaços de valores, como
-como o valor de cada campo em uma estrutura, separadamente um do outro.
+A desestruturação com padrões é uma maneira conveniente de usar partes de valores,
+como o valor de cada campo de uma struct, separadamente umas das outras.
 
 ### Ignorando valores em um padrão
 
-Você viu que às vezes é útil ignorar valores em um padrão, como
-no último braço de um `match`, para obter um resumo que na verdade não funciona
-qualquer coisa, menos leva em conta todos os valores possíveis restantes. Existem alguns
-maneiras de ignorar valores inteiros ou partes de valores em um padrão: usando o ` _`
-padrão (que você viu), usando o padrão ` _`dentro de outro padrão,
-usando um nome que começa com um sublinhado ou usando `..` para ignorar o restante
-partes de um valor. Vamos explorar como e por que usar cada um desses padrões.
+Você viu que, às vezes, é útil ignorar valores em um padrão, como
+no último braço de um `match`, para obter um caso genérico que não faz
+nada de fato, mas cobre todos os valores possíveis restantes. Existem algumas
+formas de ignorar valores inteiros ou partes de valores em um padrão: usando o padrão `_`
+(que você já viu), usando `_` dentro de outro padrão,
+usando um nome que começa com sublinhado ou usando `..` para ignorar as
+partes restantes de um valor. Vamos explorar como e por que usar cada um desses padrões.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -292,10 +292,10 @@ partes de um valor. Vamos explorar como e por que usar cada um desses padrões.
 
 #### Um valor inteiro com `_`
 
-Usamos o sublinhado como um padrão curinga que match qualquer valor, exceto
-não se vincula ao valor. Isto é especialmente útil como o último braço em um `match`
-expressão, mas também podemos usá-la em qualquer padrão, incluindo função
-parâmetros, conforme mostrado na Listagem 19-17.
+Usamos o sublinhado como um padrão curinga que corresponde a qualquer valor,
+mas não o vincula a uma variável. Isso é especialmente útil como último braço de uma
+expressão `match`, mas também podemos usá-lo em qualquer padrão, inclusive em
+parâmetros de função, como mostra a Listagem 19-17.
 
 <Listing number="19-17" file-name="src/main.rs" caption="Usando `_` em uma assinatura de função">
 
@@ -308,13 +308,12 @@ parâmetros, conforme mostrado na Listagem 19-17.
 Este código irá ignorar completamente o valor `3` passado como primeiro argumento,
 e imprimirá `This code only uses the y parameter: 4`.
 
-Na maioria dos casos, quando você não precisa mais de um parâmetro de função específico, você
-mudaria a assinatura para que não incluísse o parâmetro não utilizado.
-Ignorar um parâmetro de função pode ser especialmente útil nos casos em que, por
-Por exemplo, você está implementando um trait quando precisa de um determinado tipo de assinatura, mas
-o corpo da função na sua implementação não precisa de um dos parâmetros.
-Você evita então receber um aviso do compilador sobre parâmetros de função não utilizados, como
-você faria se usasse um nome.
+Na maioria dos casos, quando você não precisa mais de um parâmetro específico de uma função,
+você mudaria a assinatura para não incluí-lo. Ignorar um parâmetro pode ser
+especialmente útil quando, por exemplo, você está implementando uma trait e precisa
+seguir uma determinada assinatura, mas o corpo da sua implementação não usa um dos
+parâmetros. Assim, você evita o aviso do compilador sobre parâmetro não utilizado,
+que apareceria se usasse um nome normal.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -323,11 +322,11 @@ você faria se usasse um nome.
 #### Partes de um valor com um `_` aninhado
 
 Também podemos usar `_` dentro de outro padrão para ignorar apenas parte de um valor, por
-Por exemplo, quando queremos testar apenas parte de um valor, mas não temos utilidade para o
-outras partes do código correspondente que queremos executar. A Listagem 19-18 mostra o código
-responsável por gerenciar o valor de uma configuração. Os requisitos de negócios são que
-o usuário não deve ter permissão para substituir uma personalização existente de um
-configuração, mas pode desarmar a configuração e atribuir-lhe um valor se ela estiver atualmente desativada.
+exemplo, quando queremos testar só uma parte dele, mas não precisamos das
+outras partes no código correspondente que será executado. A Listagem 19-18 mostra um código
+responsável por gerenciar o valor de uma configuração. A regra de negócio é que
+o usuário não deve poder sobrescrever uma personalização já existente de uma
+configuração, mas pode definir um valor se ela estiver atualmente sem valor.
 
 <Listing number="19-18" caption="Usando sublinhado dentro de padrões que correspondem a variantes `Some` quando não precisamos usar o valor dentro de `Some`">
 
@@ -337,20 +336,20 @@ configuração, mas pode desarmar a configuração e atribuir-lhe um valor se el
 
 </Listing>
 
-Este código irá imprimir `Can't overwrite an existing customized value` e então
-`setting is Some(5) `. No primeiro braço match, não precisamos ligar ou usar match
-os valores dentro de qualquer variante` Some `, mas precisamos testar o caso
-quando` setting_value `e` new_setting_value `são a variante` Some `. Nisso
-caso, imprimimos o motivo para não alterar` setting_value`, e isso não acontece
-mudou.
+Esse código imprimirá `Can't overwrite an existing customized value` e depois
+`setting is Some(5)`. No primeiro braço do `match`, não precisamos vincular nem usar
+os valores dentro das variantes `Some`, mas precisamos testar o caso
+em que `setting_value` e `new_setting_value` sejam ambos `Some`. Nesse
+caso, imprimimos o motivo para não alterar `setting_value`, e ele permanece
+inalterado.
 
-Em todos os outros casos (se `setting_value` ou `new_setting_value` for `None`)
-expresso pelo padrão ` _`no segundo braço, queremos permitir
-` new_setting_value `para se tornar` setting_value`.
+Em todos os outros casos, expressos pelo padrão `_` no segundo braço
+(ou seja, se `setting_value` ou `new_setting_value` for `None`),
+queremos permitir que `new_setting_value` se torne `setting_value`.
 
-Também podemos usar sublinhados em vários lugares dentro de um padrão para ignorar
-valores particulares. A Listagem 19-19 mostra um exemplo de como ignorar o segundo e
-quartos valores em uma tupla de cinco itens.
+Também podemos usar sublinhados em vários pontos de um padrão para ignorar
+valores específicos. A Listagem 19-19 mostra como ignorar o segundo e o
+quarto valores de uma tupla com cinco itens.
 
 <Listing number="19-19" caption="Ignorando várias partes de uma tupla">
 
@@ -360,22 +359,22 @@ quartos valores em uma tupla de cinco itens.
 
 </Listing>
 
-Este código imprimirá `Some numbers: 2, 8, 32`, e os valores ` 4`e ` 16`serão
-ser ignorado.
+Esse código imprimirá `Some numbers: 2, 8, 32`, e os valores `4` e `16` serão
+ignorados.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="ignoring-an-unused-variable-by-starting-its-name-with-_"></a>
 
-#### Uma variável não utilizada iniciando seu nome com `_`
+#### Uma variável não utilizada iniciando com `_`
 
 Se você criar uma variável, mas não a usar em lugar nenhum, Rust normalmente emitirá um
-aviso porque uma variável não utilizada pode ser um bug. No entanto, às vezes é
-útil para poder criar uma variável que você ainda não usará, como quando você está
-prototipagem ou apenas iniciando um projeto. Nesta situação, você pode dizer ao Rust
-não avisar sobre a variável não utilizada iniciando o nome da variável
-com um sublinhado. Na Listagem 19-20, criamos duas variáveis não utilizadas, mas quando
-compilarmos este código, só devemos receber um aviso sobre um deles.
+aviso, porque uma variável não utilizada pode indicar um bug. No entanto, às vezes é
+útil criar uma variável que você ainda não vai usar, como quando está
+prototipando ou apenas começando um projeto. Nessa situação, você pode dizer ao Rust
+para não avisar sobre a variável não utilizada iniciando seu nome
+com um sublinhado. Na Listagem 19-20, criamos duas variáveis não utilizadas, mas, quando
+compilarmos esse código, devemos receber aviso apenas sobre uma delas.
 
 <Listing number="19-20" file-name="src/main.rs" caption="Começando o nome de uma variável com sublinhado para evitar avisos de variável não utilizada">
 
@@ -386,12 +385,12 @@ compilarmos este código, só devemos receber um aviso sobre um deles.
 </Listing>
 
 Aqui, recebemos um aviso sobre não usar a variável `y`, mas não recebemos um
-aviso sobre não usar ` _x`.
+aviso sobre não usar `_x`.
 
 Observe que há uma diferença sutil entre usar apenas `_` e usar um nome
-que começa com um sublinhado. A sintaxe `_x` ainda vincula o valor ao
-variável, enquanto `_` não se vincula de forma alguma. Para mostrar um caso em que isso
-distinção é importante, a Listagem 19-21 nos fornecerá um erro.
+que começa com sublinhado. A sintaxe `_x` ainda vincula o valor à
+variável, enquanto `_` não vincula nada. Para mostrar um caso em que essa
+distinção é importante, a Listagem 19-21 produzirá um erro.
 
 <Listing number="19-21" caption="Uma variável não usada que começa com sublinhado ainda associa o valor, o que pode tomar ownership dele">
 
@@ -402,9 +401,9 @@ distinção é importante, a Listagem 19-21 nos fornecerá um erro.
 </Listing>
 
 Receberemos um erro porque o valor `s` ainda será movido para `_s`,
-o que nos impede de usar ` s`novamente. No entanto, usando o sublinhado sozinho
-nunca se vincula ao valor. A Listagem 19-22 será compilada sem erros
-porque ` s`não é movido para ` _`.
+o que nos impede de usar `s` novamente. Já o sublinhado sozinho
+nunca se vincula ao valor. A Listagem 19-22 compilará sem erros
+porque `s` não é movido para `_`.
 
 <Listing number="19-22" caption="Usar um sublinhado não associa o valor">
 
@@ -420,13 +419,13 @@ Esse código funciona perfeitamente porque nunca vinculamos `s` a nada; ele não
 
 #### Partes restantes de um valor com `..`
 
-Com valores que possuem muitas partes, podemos usar a sintaxe `..` para usar valores específicos.
-partes e ignore o resto, evitando a necessidade de listar sublinhados para cada
+Em valores com muitas partes, podemos usar a sintaxe `..` para selecionar
+partes específicas e ignorar o restante, sem precisar listar sublinhados para cada
 valor ignorado. O padrão `..` ignora qualquer parte de um valor que não tenhamos
-explicitamente correspondido no resto do padrão. Na Listagem 19-23, temos um
-Estrutura `Point` que contém uma coordenada no espaço tridimensional. No
-Expressão `match`, queremos operar apenas na coordenada ` x`e ignorar
-os valores nos campos ` y`e ` z`.
+correspondido explicitamente no restante do padrão. Na Listagem 19-23, temos uma
+struct `Point` que contém uma coordenada no espaço tridimensional. Na
+expressão `match`, queremos operar apenas sobre a coordenada `x` e ignorar
+os valores dos campos `y` e `z`.
 
 <Listing number="19-23" caption="Ignorando todos os campos de um `Point`, exceto `x`, usando `..`">
 
@@ -436,10 +435,10 @@ os valores nos campos ` y`e ` z`.
 
 </Listing>
 
-Listamos o valor `x` e depois incluímos apenas o padrão `..`. Isso é mais rápido
-do que ter que listar ` y: _`e ` z: _`, especialmente quando estamos trabalhando com
-estruturas que possuem muitos campos em situações onde apenas um ou dois campos são
-relevante.
+Listamos o valor `x` e depois incluímos apenas o padrão `..`. Isso é mais simples
+do que listar `y: _` e `z: _`, especialmente quando estamos trabalhando com
+structs que têm muitos campos em situações em que apenas um ou dois deles são
+relevantes.
 
 A sintaxe `..` será expandida para quantos valores forem necessários. Listagem 19-24
 mostra como usar `..` com uma tupla.
@@ -452,13 +451,13 @@ mostra como usar `..` com uma tupla.
 
 </Listing>
 
-Neste código, o primeiro e o último valores são correspondidos com `first` e `last`.
-O `..` irá match e ignorará tudo no meio.
+Nesse código, o primeiro e o último valores são correspondidos com `first` e `last`.
+O `..` corresponderá e ignorará tudo o que estiver no meio.
 
-No entanto, o uso de `..` deve ser inequívoco. Se não estiver claro quais valores são
-destinado à correspondência e que deve ser ignorado, Rust nos dará um erro.
-A Listagem 19-25 mostra um exemplo de uso de `..` de forma ambígua, portanto não
-compilar.
+No entanto, o uso de `..` precisa ser inequívoco. Se não ficar claro quais valores
+devem ser correspondidos e quais devem ser ignorados, Rust emitirá um erro.
+A Listagem 19-25 mostra um exemplo de uso ambíguo de `..` e, por isso, não
+compila.
 
 <Listing number="19-25" file-name="src/main.rs" caption="Uma tentativa de usar `..` de forma ambígua">
 
@@ -475,28 +474,28 @@ Quando compilamos este exemplo, obtemos este erro:
 ```
 
 É impossível para Rust determinar quantos valores na tupla devem ser ignorados
-antes de combinar um valor com `second` e quantos valores adicionais devem ser
-ignorar depois disso. Este código pode significar que queremos ignorar `2`, vincular
-` second `para` 4 `e, em seguida, ignore` 8 `,` 16 `e` 32 `; ou que queremos ignorar
-` 2 `e` 4 `, ligue` second `a` 8 `e, em seguida, ignore` 16 `e` 32 `; e assim por diante.
-O nome da variável` second `não significa nada de especial para Rust, então obtemos um
-erro do compilador porque usar`..` em dois lugares como este é ambíguo.
+antes de associar um valor a `second` e quantos valores adicionais devem ser
+ignorados depois disso. Esse código pode significar que queremos ignorar `2`, vincular
+`second` a `4` e depois ignorar `8`, `16` e `32`; ou que queremos ignorar
+`2` e `4`, vincular `second` a `8` e depois ignorar `16` e `32`; e assim por diante.
+O nome da variável `second` não tem nenhum significado especial para Rust, então recebemos um
+erro do compilador porque usar `..` em dois lugares dessa forma é ambíguo.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="extra-conditionals-with-match-guards"></a>
 
-### Adicionando Condicionais com Match Guards
+### Adicionando condicionais com match guards
 
 Um _match guard_ é uma condição `if` adicional, especificada após o padrão em
-um braço `match`, que também deve match para que esse braço seja escolhido. Os guardas da partida são
-útil para expressar ideias mais complexas do que um padrão sozinho permite. Nota,
-no entanto, eles estão disponíveis apenas em expressões ` match`, não em ` if let`ou
-Expressões ` while let`.
+um braço `match`, que também precisa ser satisfeita para que esse braço seja escolhido.
+Match guards são úteis para expressar ideias mais complexas do que um padrão sozinho permite.
+Observe, porém, que eles estão disponíveis apenas em expressões `match`, não em
+expressões `if let` ou `while let`.
 
-A condição pode usar variáveis ​​criadas no padrão. A listagem 19-26 mostra um
-`match ` onde o primeiro braço possui o padrão`Some(x) ` e também possui um match
-guarda de`if x % 2 == 0 ` (que será`true` se o número for par).
+A condição pode usar variáveis criadas no padrão. A Listagem 19-26 mostra um
+`match` em que o primeiro braço tem o padrão `Some(x)` e também uma
+guarda `if x % 2 == 0` (que será `true` se o número for par).
 
 <Listing number="19-26" caption="Adicionando uma guarda de match a um padrão">
 
@@ -506,26 +505,26 @@ guarda de`if x % 2 == 0 ` (que será`true` se o número for par).
 
 </Listing>
 
-Este exemplo imprimirá `The number 4 is even`. Quando ` num`é comparado com o
-padrão no primeiro braço, ele corresponde porque ` Some(4)`corresponde a ` Some(x)`. Então,
-o guarda match verifica se o restante da divisão de ` x`por 2 é igual a
-0 e, por ser assim, o primeiro braço é selecionado.
+Esse exemplo imprimirá `The number 4 is even`. Quando `num` é comparado com o
+padrão do primeiro braço, ele corresponde porque `Some(4)` corresponde a `Some(x)`. Então,
+a guarda verifica se o resto da divisão de `x` por 2 é igual a
+0 e, como é esse o caso, o primeiro braço é selecionado.
 
-Se `num` fosse `Some(5)`, a guarda match no primeiro braço seria
-foram ` false`porque o resto de 5 dividido por 2 é 1, o que não é
-igual a 0. Rust iria então para o segundo braço, que seria match porque o
-o segundo braço não possui uma proteção match e, portanto, corresponde a qualquer variante ` Some`.
+Se `num` fosse `Some(5)`, a guarda do primeiro braço seria
+`false`, porque o resto de 5 dividido por 2 é 1, e não
+0. Rust passaria então para o segundo braço, que corresponderia, porque
+ele não tem guarda e portanto corresponde a qualquer variante `Some`.
 
 Não há como expressar a condição `if x % 2 == 0` dentro de um padrão, então
-a guarda match nos dá a capacidade de expressar essa lógica. A desvantagem de
-essa expressividade adicional é que o compilador não tenta verificar
-exaustividade quando expressões de guarda match estão envolvidas.
+a guarda de `match` nos permite representar essa lógica. A desvantagem dessa
+expressividade adicional é que o compilador não tenta verificar
+a exaustividade quando há match guards envolvidos.
 
-Ao discutir a Listagem 19-11, mencionamos que poderíamos usar proteções match para
-resolver nosso problema de sombreamento de padrões. Lembre-se que criamos uma nova variável
-dentro do padrão na expressão `match` em vez de usar a variável
-fora do `match`. Essa nova variável significava que não poderíamos testar o valor
-da variável externa. A Listagem 19-27 mostra como podemos usar uma proteção match para corrigir
+Ao discutir a Listagem 19-11, mencionamos que poderíamos usar match guards para
+resolver nosso problema de sombreamento de padrões. Lembre-se de que criamos uma nova variável
+dentro do padrão na expressão `match`, em vez de usar a variável
+externa. Essa nova variável significava que não poderíamos testar o valor
+da variável de fora. A Listagem 19-27 mostra como usar uma guarda de `match` para corrigir
 esse problema.
 
 <Listing number="19-27" file-name="src/main.rs" caption="Usando uma guarda de `match` para testar igualdade com uma variável externa">
@@ -536,25 +535,24 @@ esse problema.
 
 </Listing>
 
-Este código agora imprimirá `Default case, x = Some(5)`. O padrão no segundo
-O braço match não introduz uma nova variável ` y`que obscureceria o ` y`externo,
-o que significa que podemos usar o ` y`externo na proteção match. Em vez de especificar o
-padrão como ` Some(y)`, que teria sombreado o ` y`externo, especificamos
-` Some(n) `. Isso cria uma nova variável` n `que não oculta nada porque
-não há variável` n `fora de` match`.
+Esse código agora imprimirá `Default case, x = Some(5)`. O padrão no segundo
+braço do `match` não introduz uma nova variável `y` que sombrearia o `y` externo,
+o que significa que podemos usar o `y` externo na guarda. Em vez de especificar o
+padrão como `Some(y)`, o que teria sombreado o `y` externo, especificamos
+`Some(n)`. Isso cria uma nova variável `n` que não sombreia nada, porque
+não existe nenhuma variável `n` fora do `match`.
 
-A proteção match `if n == y` não é um padrão e portanto não introduz novos
-variáveis. Este `y` _é_ o `y` externo em vez de um novo `y` o sombreando, e
-podemos procurar um valor que tenha o mesmo valor do `y` externo comparando
-`n ` para`y`.
+A guarda `if n == y` não é um padrão e, portanto, não introduz novas
+variáveis. Esse `y` _é_ o `y` externo, em vez de um novo `y` o sombreando, e
+podemos procurar um valor igual ao `y` externo comparando
+`n` com `y`.
 
-Você também pode usar o operador _or_ `|` em uma guarda de `match` para
-especificar múltiplos padrões; a condição da guarda será aplicada a todos os
-padrões. A Listagem 19-28 mostra a precedência ao combinar um padrão que usa
-`|` com uma guarda de `match`. A parte importante deste exemplo é que a guarda
-de `match` `if y` se aplica a `4`, `5` _e_ `6`, mesmo que possa parecer que
-`if y` se aplica apenas
-applies to `6`.
+Você também pode usar o operador _or_ `|` em um braço com guarda de `match` para
+especificar múltiplos padrões; a condição da guarda será aplicada a todos eles.
+A Listagem 19-28 mostra a precedência ao combinar um padrão com `|`
+e uma guarda de `match`. A parte importante deste exemplo é que a guarda
+`if y` se aplica a `4`, `5` _e_ `6`, embora possa parecer, à primeira vista, que
+ela se aplica apenas a `6`.
 
 <Listing number="19-28" caption="Combinando vários padrões com uma guarda de match">
 
@@ -564,13 +562,13 @@ applies to `6`.
 
 </Listing>
 
-A condição match afirma que o braço só corresponde se o valor de `x` for
-igual a `4`, ` 5`ou ` 6`_e_ se ` y`for ` true`. Quando esse código é executado, o
-o padrão do primeiro braço corresponde porque `x` é `4`, mas o match guarda ` if y`
+A condição diz que o braço só corresponde se o valor de `x` for
+igual a `4`, `5` ou `6` _e_ se `y` for `true`. Quando esse código é executado, o
+padrão do primeiro braço corresponde porque `x` é `4`, mas a guarda `if y`
 é `false`, então o primeiro braço não é escolhido. O código passa para o segundo
-arm, que faz match, e este programa imprime `no`. A razão é que
-A condição `if` se aplica a todo o padrão `4 | 5 | 6`, não apenas ao último
-value `6`. In other words, the precedence of a match guard in relation to a
+braço, que corresponde, e o programa imprime `no`. A razão é que
+a condição `if` se aplica a todo o padrão `4 | 5 | 6`, e não apenas ao último
+valor `6`. Em outras palavras, a precedência de uma guarda de `match` em relação a um
 padrão se comporta assim:
 
 ```text
@@ -583,21 +581,21 @@ em vez disso:
 4 | 5 | (6 if y) => ...
 ```
 
-Depois de executar o código, o comportamento de precedência fica evidente: Se o guarda match
-foram aplicados apenas ao valor final na lista de valores especificados usando o
-Operador `|`, o braço teria correspondido e o programa teria impresso
+Depois de executar o código, o comportamento da precedência fica evidente: se a guarda de `match`
+fosse aplicada apenas ao valor final da lista de valores especificados com o
+operador `|`, o braço teria correspondido e o programa teria impresso
 `yes`.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="-bindings"></a>
 
-### Usando ligações `@`
+### Usando bindings `@`
 
 O operador _at_ `@` nos permite criar uma variável que contém um valor ao mesmo
-vez que estamos testando esse valor para um padrão match. Na Listagem 19-29, queremos
-teste se um campo `Message::Hello` ` id`está dentro do intervalo ` 3..=7`. Nós também
-queremos vincular o valor à variável ` id`para que possamos usá-lo no código
+tempo em que testamos esse valor em um padrão. Na Listagem 19-29, queremos
+verificar se o campo `id` de `Message::Hello` está dentro do intervalo `3..=7`. Também
+queremos vincular esse valor à variável `id` para que possamos usá-lo no código
 associado ao braço.
 
 <Listing number="19-29" caption="Usando `@` para associar um valor em um padrão ao mesmo tempo em que o testa">
@@ -608,32 +606,32 @@ associado ao braço.
 
 </Listing>
 
-Este exemplo imprimirá `Found an id in range: 5`. Especificando ` id @`antes
-intervalo ` 3..=7`, estamos capturando qualquer valor que corresponda ao intervalo em um
-variável chamada ` id`enquanto testa se o valor corresponde ao padrão de intervalo.
+Esse exemplo imprimirá `Found an id in range: 5`. Ao especificar `id @` antes do
+intervalo `3..=7`, capturamos qualquer valor que corresponda ao intervalo em uma
+variável chamada `id`, ao mesmo tempo em que testamos se o valor corresponde ao padrão de intervalo.
 
-No segundo braço, onde temos apenas um intervalo especificado no padrão, o código
-associado ao braço não possui uma variável que contenha o valor real
-do campo `id`. O valor do campo ` id`poderia ter sido 10, 11 ou 12, mas
-o código que acompanha esse padrão não sabe qual é. O código padrão
-não é possível usar o valor do campo ` id`porque não salvamos o
-Valor ` id`em uma variável.
+No segundo braço, em que temos apenas um intervalo especificado no padrão, o código
+associado ao braço não possui uma variável contendo o valor real
+do campo `id`. O valor desse campo poderia ser 10, 11 ou 12, mas
+o código associado a esse padrão não sabe qual deles é. Esse código
+não pode usar o valor do campo `id`, porque não o salvamos em
+uma variável.
 
-No último braço, onde especificamos uma variável sem intervalo, temos
-o valor disponível para uso no código do braço em uma variável chamada `id`. O
-o motivo é que usamos a sintaxe abreviada do campo struct. Mas não temos
-aplicou qualquer teste ao valor no campo ` id`neste braço, como fizemos com o
-primeiros dois braços: Qualquer valor seria match esse padrão.
+No último braço, em que especificamos uma variável sem intervalo, temos
+o valor disponível para uso no código do braço em uma variável chamada `id`. Isso
+acontece porque usamos a sintaxe abreviada do campo da struct. Mas não
+aplicamos nenhum teste ao valor do campo `id` nesse braço, como fizemos nos
+dois primeiros: qualquer valor corresponderia a esse padrão.
 
 Usar `@` nos permite testar um valor e salvá-lo em uma variável dentro de um padrão.
 
 ## Resumo
 
-Os padrões do Rust são muito úteis para distinguir entre diferentes tipos de
-dados. Quando usado em expressões `match`, Rust garante que seus padrões cubram
-todos os valores possíveis, ou seu programa não será compilado. Padrões em ` let`
-instruções e parâmetros de função tornam essas construções mais úteis, permitindo
-a desestruturação de valores em partes menores e a atribuição dessas partes a
+Os padrões de Rust são muito úteis para distinguir entre diferentes tipos de
+dados. Quando usados em expressões `match`, Rust garante que os padrões cubram
+todos os valores possíveis, ou o programa não compila. Padrões em instruções `let`
+e em parâmetros de função tornam essas construções mais úteis, permitindo
+desestruturar valores em partes menores e atribuir essas partes a
 variáveis. Podemos criar padrões simples ou complexos para atender às nossas necessidades.
 
 A seguir, no penúltimo capítulo do livro, veremos alguns

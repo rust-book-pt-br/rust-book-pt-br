@@ -1,6 +1,6 @@
 ## Controle de fluxo
 
-Decidir se deve ou não executar algum código, dependendo se uma condição é verdadeira
+Decidir se deve ou não executar algum código, dependendo de uma condição ser verdadeira,
 e decidir executar algum código repetidamente enquanto uma condição é verdadeira,
 são blocos de construção básicos na maioria das linguagens de programação. As construções
 mais comuns que permitem controlar o fluxo de execução do código Rust são as expressões `if` e
@@ -9,8 +9,8 @@ laços de repetição.
 ### Expressão `if`
 
 Uma expressão `if` permite ramificar seu código dependendo das condições. Você
-fornece uma condição e, em seguida, estado, "Se esta condição for cumprida, execute este bloco
-de código. Se a condição não for atendida, não execute este bloco de código. ”
+fornece uma condição e, em seguida, diz: "Se esta condição for satisfeita,
+execute este bloco de código. Se não for, não execute este bloco."
 
 Crie um novo projeto chamado *branches* no seu diretório *projects* para explorar
 a expressão `if`. No arquivo *src/main.rs*, digite o seguinte:
@@ -33,18 +33,18 @@ fn main() {
 
 Todas as expressões `if` começam com a palavra-chave `if`, que é seguida por uma
 condição. Neste caso, a condição verifica se a variável
-`number` tem um valor menor que 5. O bloco de código que queremos executar se o
-condição é verdadeira é colocada imediatamente após a condição dentro de chaves.
+`numero` tem um valor menor que 5. O bloco de código que queremos executar se a
+condição for verdadeira é colocado imediatamente após a condição, entre chaves.
 Blocos de código associados às condições em expressões `if` são
-às vezes chamado de *divisões*, assim como as expressões `de combinação` que nós
+às vezes chamados de *braços*, assim como as expressões `match` que nós
 discutimos na seção “Comparando o Palpite ao Número Secreto” de
 Capítulo 2.
 
 Opcionalmente, também podemos incluir uma expressão `else`, que escolhemos
-fazer aqui, para dar ao programa um bloco de código alternativo a ser executado, caso a
+usar aqui, para dar ao programa um bloco de código alternativo a ser executado, caso a
 condição seja avaliada como falsa. Se você não fornecer uma expressão `else` e a
 condição for falsa, o programa simplesmente ignorará o bloco `if` e passará para o
-próximo bit de código.
+próximo trecho de código.
 
 Tente executar este código; você deve ver a seguinte saída:
 
@@ -74,7 +74,7 @@ condição era falsa
 ```
 
 Também é importante notar que a condição neste código *deve* ser um `bool`. E se
-a condição não é um `bool`, nós vamos receber um erro. Por exemplo:
+a condição não for um `bool`, receberemos um erro. Por exemplo:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 
@@ -104,8 +104,8 @@ error[E0308]: mismatched types
 
 O erro indica que Rust esperava um `bool`, mas obteve um inteiro. Ao contrário de
 linguagens como Ruby e JavaScript, o Rust não tentará automaticamente
-converter tipos não-booleanos em um booleano. Você deve explicitar e sempre fornecer
-`if` com um booleano como sua condição. Se quisermos que o bloco de código `if` seja executado
+converter tipos não booleanos em um booleano. Você deve ser explícito e sempre fornecer
+ao `if` um booleano como condição. Se quisermos que o bloco de código `if` seja executado
 somente quando um número não é igual a `0`, por exemplo, podemos mudar o `if`
 para o seguinte:
 
@@ -125,7 +125,7 @@ A execução deste código irá imprimir `número era algo diferente de zero`.
 
 #### Gerenciando Múltiplas Condições com `else if`
 
-Você pode ter várias condições combinando `if` e` else` em um `else if`.
+Você pode ter várias condições combinando `if` e `else` em uma expressão `else if`.
 Por exemplo:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
@@ -205,7 +205,7 @@ O valor do número é: 5
 Lembre-se de que os blocos de código são avaliados até a última expressão, e os
 números por si mesmos também são expressões. Neste caso, o valor de
 toda a expressão `if` depende de qual bloco de código é executado. Isso significa que
-os valores que têm o potencial de serem resultados de cada braço do `if` e que devem ser
+os valores que podem ser resultados de cada braço do `if` devem ser
 do mesmo tipo; na Listagem 3-2, os resultados do braço `if` e do `else`
 eram inteiros `i32`. Se os tipos forem incompatíveis, como no exemplo a
 seguir, receberemos um erro:

@@ -1,35 +1,35 @@
 ## Traits: Definindo Comportamento Compartilhado
 
-Traits nos permitem usar outro tipo de abstração: eles nos permitem abstrair 
-sobre o comportamento que tipos têm em comum. Um *trait* diz ao compilador de
-Rust sobre uma funcionalidade que um tipo particular possui e pode compartilhar
-com outros tipos. Em situações onde nós usamos parâmetros de tipos genéricos,
-nós podemos usar *limites de trait* para especificar, em tempo de compilação,
-que o tipo genérico pode ser qualquer tipo que implementa um trait e por
-conseguinte tem o comportamento que queremos usar nessa situação.
+Traits nos permitem usar outro tipo de abstração: eles nos permitem abstrair
+sobre o comportamento que diferentes tipos têm em comum. Um *trait* informa ao
+compilador do Rust qual funcionalidade um tipo particular possui e pode
+compartilhar com outros tipos. Em situações nas quais usamos parâmetros de
+tipos genéricos, podemos usar *trait bounds* para especificar, em tempo de
+compilação, que o tipo genérico pode ser qualquer tipo que implemente um trait
+e, portanto, tenha o comportamento que queremos usar naquela situação.
 
 > Nota: *Traits* são similares a um recurso frequentemente chamado de 
 > 'interface' em outras linguagens, com algumas diferenças.
 
 ### Definindo um Trait
 
-O comportamento de um tipo consiste nos métodos que podemos chamar para aquele
-tipo. Tipos diferentes dividem o mesmo comportamento se podemos chamar os 
-mesmos métodos em todos esses tipos. Definições de traits são um modo de 
-agrupar métodos de assinaturas juntos a fim de definir um conjunto de 
-comportamentos para atingir algum propósito.
+O comportamento de um tipo consiste nos métodos que podemos chamar nesse tipo.
+Tipos diferentes compartilham o mesmo comportamento quando podemos chamar os
+mesmos métodos em todos eles. Definições de traits são uma forma de agrupar
+assinaturas de métodos para definir um conjunto de comportamentos necessários
+para atingir algum propósito.
 
-Por exemplo, digamos que temos múltiplos structs que contém vários tipos e
-quantidades de texto: um struct `ArtigoDeNoticias`que contém uma notícia 
-preenchida em um lugar do mundo, e um `Tweet` que pode ter no máximo 140
-caracteres em seu conteúdo além dos metadados como se ele foi um retweet ou uma
-resposta a outro tweet.
+Por exemplo, digamos que temos múltiplas structs que contêm vários tipos e
+quantidades de texto: uma struct `ArtigoDeNoticia`, que contém uma notícia
+registrada em algum lugar do mundo, e um `Tweet`, que pode ter no máximo 140
+caracteres em seu conteúdo, além de metadados informando se ele é um retweet ou
+uma resposta a outro tweet.
 
-Nós queremos fazer uma biblioteca agregadora de mídia que pode mostrar resumos
-de dados que podem estar guardados em uma instância de `ArtigoDeNoticia` ou 
-`Tweet`. O comportamento que precisamos cada struct possua é que seja capaz de
-ser resumido, e que nós possamos pedir pelo resumo chamando um método `resumo`
-em uma instância. A Listagem 10-12 mostra a definição de um trait `Resumir` que
+Queremos criar uma biblioteca agregadora de mídia que possa mostrar resumos de
+dados armazenados em uma instância de `ArtigoDeNoticia` ou `Tweet`. O
+comportamento de que precisamos em cada struct é a capacidade de ser resumida,
+para que possamos pedir esse resumo chamando um método `resumo` em uma
+instância. A Listagem 10-12 mostra a definição de um trait `Resumir` que
 expressa esse conceito:
 
 <span class="filename">Nome do arquivo: lib.rs</span>
@@ -43,28 +43,28 @@ pub trait Resumir {
 <span class="caption">Listagem 10-12: Definição de um trait `Resumir` que 
 consiste no comportamento fornecido pelo método `resumo`</span>
 
-Nós declaramos um trait com a palavra-chave `trait`, e então o nome do trait,
-nesse caso `Resumir`. Dentro de chaves declaramos a assinatura do método que
-descreve o comportamento que tipos que implementam esse trait precisarão ter,
-nesse caso `fn resumo(&self) -> String;`. Depois da assinatura do método ao
-invés de fornecer uma implementação dentro de chaves, nós colocamos um ponto e
-vírgula. Cada tipo que implementa esse trait precisa então fornecer seu próprio
-comportamento customizado para o corpo do método, mas o compilador vai reforçar
-que qualquer tipo que tenha o trait `Resumir` terá o método `resumo`
-definido para ele com esse exata assinatura.
+Declaramos um trait com a palavra-chave `trait` e, em seguida, damos o nome a
+ele, neste caso `Resumir`. Dentro das chaves, declaramos a assinatura do método
+que descreve o comportamento que os tipos que implementarem esse trait
+precisarão ter, neste caso `fn resumo(&self) -> String;`. Depois da assinatura
+do método, em vez de fornecer uma implementação entre chaves, colocamos um
+ponto e vírgula. Cada tipo que implementar esse trait precisará então fornecer
+seu próprio comportamento personalizado para o corpo do método, mas o
+compilador garantirá que qualquer tipo que tenha o trait `Resumir` terá o
+método `resumo` definido com essa assinatura exata.
 
-Um trait pode ter vários métodos no seu corpo, com os métodos das assinaturas
-listados um por linha e cada linha terminando com um ponto e vírgula.
+Um trait pode ter vários métodos no seu corpo, com as assinaturas listadas uma
+por linha e cada linha terminando com um ponto e vírgula.
 
 ### Implementando um Trait em um Tipo
 
 Agora que definimos o trait `Resumir`, podemos implementá-lo nos tipos do nosso
-agregador de mídias que queremos que tenham esse comportamento. A Listagem 
-10-13 mostra uma implementação do trait `Resumir` no struct `ArtigoNotícia` que
-possui o título, o autor e a localização para criar e retornar o valor de 
-`resumo`. Para o struct `Tweet`, nós escolhemos definir `resumo` como o nome de
-usuário seguido por todo o texto do tweet, assumindo que o conteúdo do tweet já
-está limitado a 140 caracteres.
+agregador de mídia que devem ter esse comportamento. A Listagem
+10-13 mostra uma implementação do trait `Resumir` para a struct
+`ArtigoDeNoticia`, que usa o título, o autor e a localização para criar e
+retornar o valor de `resumo`. Para a struct `Tweet`, escolhemos definir
+`resumo` como o nome de usuário seguido por todo o texto do tweet, assumindo
+que seu conteúdo já esteja limitado a 140 caracteres.
 
 <span class="filename">Nome do arquivo: lib.rs</span>
 
@@ -103,18 +103,17 @@ impl Resumir for Tweet {
 <span class="caption">Listagem 10-13: Implementando o trait `Resumir` nos tipos 
 `ArtigoDeNoticia` e `Tweet`</span>
 
-Implementar um trait em um tipo é similar a implementar métodos que não estão
-relacionados com um trait. A diferença está depois de `impl`, nós colocamos o
-nome do trait que queremos implementar, então dizemos `for` e o nome do tipo 
-que queremos implementar. Dentro do bloco `impl`, nós colocamos as assinaturas
-dos métodos que a definição do trait definiu, mas ao invés de colocar um ponto
-e vírgula depois de cada assinatura, nós colocamos chaves e preenchemos o corpo
-do método com o comportamento específico que queremos que os métodos dos traits
-tenham para um tipo particular.
+Implementar um trait em um tipo é parecido com implementar métodos comuns. A
+diferença é que, depois de `impl`, colocamos o nome do trait que queremos
+implementar, depois usamos `for` e então o nome do tipo para o qual queremos
+implementar o trait. Dentro do bloco `impl`, colocamos as assinaturas dos
+métodos definidos pelo trait, mas, em vez de colocar um ponto e vírgula depois
+de cada assinatura, usamos chaves e preenchemos o corpo do método com o
+comportamento específico que queremos para aquele tipo.
 
-Uma vez que implementamos o trait, nós podemos chamar os métodos nas instâncias
-de `ArtigoDeNoticia` e `Tweet` da mesma maneira que nós chamamos métodos que não
-são parte de um trait:
+Depois de implementar o trait, podemos chamar esses métodos em instâncias de
+`ArtigoDeNoticia` e `Tweet` da mesma maneira que chamamos métodos que não fazem
+parte de um trait:
 
 ```rust,ignore
 let tweet = Tweet {
@@ -128,16 +127,16 @@ let tweet = Tweet {
 println!("1 novo tweet: {}", tweet.resumo());
 ```
 
-Isso irá imprimir `1 novo tweet: horse_ebooks: claro, como vocês provavelmente já sabem,
+Isso imprimirá `1 novo tweet: horse_ebooks: claro, como vocês provavelmente já sabem,
 pessoas`
 
-Note que porque nós definimos o trait `Resumir` e os tipos `ArtigoDeNoticia` e
-`Tweet` todos na mesma `lib.rs` na listagem 10-13, eles estão todos no mesmo 
-escopo. Se essa `lib.rs` é para um crate nós chamamos `agregador`, e se outra
-pessoa quiser usar a funcionalidade do nosso crate e implementar o trait 
-`Resumir` na sua struct `PrevisaoTempo`, o código deles precisaria importar o
-trait `Resumir` no escopo deles primeiro antes deles poderem implementá-lo, 
-como na Listagem 10-14:
+Note que, como definimos o trait `Resumir` e os tipos `ArtigoDeNoticia` e
+`Tweet` todos no mesmo `lib.rs`, mostrado na Listagem 10-13, eles também estão
+todos no mesmo escopo. Se esse `lib.rs` pertencer a um crate que chamamos de
+`agregador`, e outra pessoa quiser usar a funcionalidade do nosso crate e
+implementar o trait `Resumir` em sua struct `PrevisaoTempo`, o código dela
+precisaria primeiro importar o trait `Resumir` para o próprio escopo antes de
+poder implementá-lo, como na Listagem 10-14:
 
 <span class="filename">Nome do arquivo: lib.rs</span>
 
@@ -166,33 +165,30 @@ impl Resumir for PrevisaoTempo {
 Esse código também assume que `Resumir` é um trait público, o que é verdade 
 porque colocamos a palavra-chave `pub` antes de `trait` na Listagem 10-12.
 
-Uma restrição para se prestar atenção na implementação de traits: nós podemos
-implementar um trait em um tipo desde que o trait ou o tipo forem locais para o
-nosso crate. Em outras palavras, nós não estamos autorizados a implementar 
-traits externos em tipos externos. Nós não podemos implementar o trait 
-`Display` em `Vec`, por exemplo, já que ambos `Display` e `Vec` são definidos na
-biblioteca padrão. Nós temos a permissão de implementar traits da biblioteca
-padrão como `Display` em um tipo personalizado como `Tweet` como parte da
-funcionalidade do nosso crate `aggregator`, já que nós já havíamos definido
-`Resumir` lá. Essa restrição é parte do que é chamado de a *regra do ṍrfão*,
-qual você pode procurar se estiver interessado nesse tipo de teoria. De forma
-curta, é chamada de a regra do órfão porque o tipo pai não está presente. Sem
-essa regra, dois crates poderiam implementar o mesmo trait para o mesmo tipo,
-e as duas implementações entrariam em conflito: o Rust não saberia qual
-implementação usar. Porque o Rust impõe a regra do órfão, os códigos de outras 
-pessoas não podem quebrar seu código e vice e versa.
+Há uma restrição importante ao implementar traits: só podemos implementar um
+trait em um tipo quando o trait ou o tipo for local ao nosso crate. Em outras
+palavras, não temos permissão para implementar traits externos em tipos
+externos. Não podemos implementar o trait `Display` para `Vec`, por exemplo, já
+que tanto `Display` quanto `Vec` são definidos na biblioteca padrão. Temos
+permissão para implementar traits da biblioteca padrão, como `Display`, em um
+tipo personalizado como `Tweet`, como parte da funcionalidade do nosso crate
+`aggregator`. Essa restrição faz parte do que se chama *regra do órfão*. Em
+resumo, ela recebe esse nome porque o tipo "pai" não está presente. Sem essa
+regra, dois crates poderiam implementar o mesmo trait para o mesmo tipo, e as
+duas implementações entrariam em conflito: o Rust não saberia qual
+implementação usar. Como o Rust impõe a regra do órfão, o código de outras
+pessoas não pode quebrar o seu, e vice-versa.
 
 ### Implementações Padrão
 
-As vezes é útil ter um comportamento padrão pra alguns ou todos os métodos em
-um trait, ao invés de fazer toda implementação em todo tipo e definir um 
-comportamento personalizado. Quando implementamos o trait em um tipo 
-particular, nós podemos escolher manter ou sobrescrever o comportamento padrão
-de cada método.
+Às vezes, é útil ter um comportamento padrão para alguns ou todos os métodos de
+um trait, em vez de exigir uma implementação completa em todo tipo. Quando
+implementamos o trait em um tipo particular, podemos escolher manter ou
+sobrescrever o comportamento padrão de cada método.
 
-A Listagem 10-15 mostra como poderíamos ter escolhido especificar uma string 
-padrão para o método `resumo` do trait `Resumir` ao invés de escolher de apenas
-definir a assinatura do método como fizemos na Listagem 10-12:
+A Listagem 10-15 mostra como poderíamos especificar uma string padrão para o
+método `resumo` do trait `Resumir`, em vez de apenas definir a assinatura do
+método como fizemos na Listagem 10-12:
 
 <span class="filename">Nome do arquivo: lib.rs</span>
 
@@ -207,18 +203,18 @@ pub trait Resumir {
 <span class="caption">Listagem 10-15: Definição de um trait `Resumir` com a 
 implementação padrão do método `resumo`</span>
 
-Se nós quiséssemos usar a implementação padrão para resumir as instâncias de
-`ArtigoDeNoticia` ao invés de definir uma implementação personalizada como 
-fizemos na Listagem 10-13, nós especificaríamos um bloco `impl` vazio:
+Se quiséssemos usar a implementação padrão para resumir as instâncias de
+`ArtigoDeNoticia`, em vez de definir uma implementação personalizada como
+fizemos na Listagem 10-13, especificaríamos um bloco `impl` vazio:
 
 ```rust,ignore
 impl Resumir for ArtigoDeNoticia {}
 ```
 
-Mesmo que não estejamos mais escolhendo definir o método `resumo` diretamente 
-em `ArtigoDeNoticia`, já que o método `resumo` tem uma implementação padrão e 
-nós especificamos que `ArtigoDeNoticia` implementa o trait `Resumir`, nós ainda
-podemos chamar o método `resumo` em uma instância de `ArtigoDeNoticia`:
+Mesmo que não estejamos mais definindo o método `resumo` diretamente em
+`ArtigoDeNoticia`, como `resumo` tem uma implementação padrão e especificamos
+que `ArtigoDeNoticia` implementa o trait `Resumir`, ainda podemos chamar o
+método `resumo` em uma instância de `ArtigoDeNoticia`:
 
 ```rust,ignore
 let artigo = ArtigoDeNoticia {
@@ -234,19 +230,19 @@ println!("Novo artigo disponível! {}", artigo.resumo());
 
 Esse código imprime `Novo artigo disponível! (Leia mais...)`
 
-Mudando o trait `Resumir` para ter uma implementação padrão para `resumo` não
-requer que nós mudemos nada na implementação de `Resumir` em `Tweet` na 
-Listagem 10-13 ou em `PrevisaoTempo` na Listagem 10-14: a sintaxe para sobrepor
-uma implementação padrão é exatamente a mesma de uma sintaxe para implementar
-um método de trait que não tem uma implementação padrão.
+Mudar o trait `Resumir` para ter uma implementação padrão de `resumo` não exige
+que mudemos nada na implementação de `Resumir` para `Tweet` na Listagem 10-13
+ou para `PrevisaoTempo` na Listagem 10-14: a sintaxe para sobrescrever uma
+implementação padrão é exatamente a mesma usada para implementar um método de
+trait que não tem implementação padrão.
 
-Implementações padrões são autorizadas a chamar outros métodos no mesmo trait,
-mesmo se os outros métodos não tiverem uma implementação padrão. Desse modo, um
-trait pode prover muitas funcionalidades úteis e apenas requerir implementações
-para especificar uma pequena parte dele. Nós poderíamos escolher que o trait
-`Resumir` também tivesse o método `resumo_autor` qual a implementação é 
-necessária, então um método `resumo` que tem a implementação padrão que chama
-pelo método `resumo_autor`:
+Implementações padrão podem chamar outros métodos do mesmo trait, mesmo que
+esses outros métodos não tenham implementação padrão. Desse modo, um trait pode
+fornecer muita funcionalidade útil e exigir que os implementadores especifiquem
+apenas uma pequena parte dela. Poderíamos escolher que o trait `Resumir`
+também tivesse o método `resumo_autor`, cuja implementação seria obrigatória, e
+então ter um método `resumo` com implementação padrão que chamasse
+`resumo_autor`:
 
 ```rust
 pub trait Resumir {
@@ -258,8 +254,8 @@ pub trait Resumir {
 }
 ```
 
-Para usar essa versão de `Resumir`, nós só precisamos definir `resumo_autor`
-quando nós implementamos o trait em um tipo:
+Para usar essa versão de `Resumir`, só precisamos definir `resumo_autor`
+quando implementamos o trait em um tipo:
 
 ```rust,ignore
 impl Resumir for Tweet {

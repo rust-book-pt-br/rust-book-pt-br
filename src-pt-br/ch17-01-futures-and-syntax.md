@@ -1,19 +1,19 @@
 ## Futures e a sintaxe assíncrona
 
-Os elementos-chave da programação assíncrona em Rust são _futuros_ e Rust
-Palavras-chave `async` e `await`.
+Os elementos-chave da programação assíncrona em Rust são _futures_ e as
+palavras-chave `async` e `await`.
 
-Um _futuro_ é um valor que pode não estar pronto agora, mas estará pronto em algum momento.
-ponto no future. (Este mesmo conceito aparece em muitas línguas, às vezes
-sob outros nomes, como _task_ ou _promise_.) Rust fornece um `Future` trait
+Um _future_ é um valor que pode não estar pronto agora, mas estará pronto em algum
+momento no futuro. (Esse mesmo conceito aparece em muitas linguagens, às vezes
+sob outros nomes, como _task_ ou _promise_.) O Rust fornece a trait `Future`
 como um bloco de construção para que diferentes operações async possam ser implementadas com
 estruturas de dados diferentes, mas com uma interface comum. Em Rust, futures são
-tipos que implementam o `Future` trait. Cada future contém suas próprias informações
+são tipos que implementam a trait `Future`. Cada future contém suas próprias informações
 sobre o progresso que foi feito e o que significa “pronto”.
 
 Você pode aplicar a palavra-chave `async` a blocos e funções para especificar que eles
 pode ser interrompido e retomado. Dentro de um bloco async ou função async, você
-pode usar a palavra-chave `await` para _aguardar um futuro_ (ou seja, esperar que ele se torne
+pode usar a palavra-chave `await` para _aguardar um future_ (ou seja, esperar que ele se torne
 pronto). Qualquer ponto onde você await um future dentro de um bloco ou função async é
 um local potencial para esse bloco ou função pausar e retomar. O processo de
 verificar com um future para ver se seu valor ainda está disponível é chamado de _polling_.
@@ -23,34 +23,34 @@ palavras-chave para programação async. Se você estiver familiarizado com esse
 pode notar algumas diferenças significativas em como Rust lida com a sintaxe. Isso é
 por um bom motivo, como veremos!
 
-Ao escrever async Rust, usamos as palavras-chave `async` e `await` na maioria dos
-tempo. Rust os compila em código equivalente usando o `Future` trait, tanto quanto
-ele compila loops `for` em código equivalente usando `Iterator` trait.
-Como o Rust fornece o `Future` trait, você também pode implementá-lo para
+Ao escrever async Rust, usamos as palavras-chave `async` e `await` na maior parte do
+tempo. O Rust as compila em código equivalente usando a trait `Future`, da mesma forma que
+compila loops `for` em código equivalente usando a trait `Iterator`.
+Como o Rust fornece a trait `Future`, você também pode implementá-la para
 seus próprios tipos de dados quando necessário. Muitas das funções que veremos
 ao longo deste capítulo retornam tipos com suas próprias implementações de
 `Future`. Voltaremos à definição do trait no final do capítulo
-e nos aprofundarmos mais em como funciona, mas isso é detalhe suficiente para nos manter em movimento
-para frente.
+e nos aprofundaremos mais em como ela funciona, mas isso já é detalhe suficiente para seguirmos
+em frente.
 
 Tudo isso pode parecer um pouco abstrato, então vamos escrever nosso primeiro programa async: um
-pequeno raspador de teia. Passaremos dois URLs da linha de comando, buscaremos ambos
-simultaneamente e retornar o resultado de qualquer um que termine primeiro. Isto
+pequeno raspador da web. Passaremos duas URLs pela linha de comando, buscaremos ambas
+simultaneamente e retornaremos o resultado da que terminar primeiro. Este
 exemplo terá uma boa sintaxe nova, mas não se preocupe - explicaremos
 tudo o que você precisa saber enquanto avançamos.
 
 ## Nosso primeiro programa assíncrono
 
 Para manter o foco deste capítulo no aprendizado do async, em vez de fazer malabarismos com as peças
-do ecossistema, criamos o `trpl` crate (`trpl ` é a abreviação de “The Rust
-Linguagem de Programação”). Ele reexporta todos os tipos, traits e funções
-você precisará, principalmente do [`futures `][futures-crate]<!-- ignore --> e
-[` tokio `][tokio]<!-- ignore --> crates. O` futures `crate é uma casa oficial
-para experimentação Rust para código async, e é realmente onde o` Future `
-trait foi originalmente projetado. Tokio é o runtime async mais usado em
+do ecossistema, criamos o crate `trpl` (`trpl` é a abreviação de “The Rust
+Programming Language”). Ele reexporta todos os tipos, traits e funções
+de que você precisará, principalmente dos crates [`futures`][futures-crate]<!-- ignore --> e
+[`tokio`][tokio]<!-- ignore -->. O crate `futures` é um lar oficial
+para a experimentação do Rust com código async, e foi realmente onde a trait `Future`
+foi originalmente projetada. Tokio é o runtime async mais usado em
 Rust hoje, especialmente para aplicações web. Existem outros ótimos tempos de execução
-lá, e eles podem ser mais adequados para seus propósitos. Usamos o` tokio `
-crate está oculto para` trpl`porque é bem testado e amplamente utilizado.
+por aí, e eles podem ser mais adequados aos seus propósitos. Usamos o crate `tokio`
+por baixo de `trpl` porque ele é bem testado e amplamente utilizado.
 
 Em alguns casos, `trpl` também renomeia ou agrupa as APIs originais para mantê-lo
 focado nos detalhes relevantes para este capítulo. Se você quiser entender o que
@@ -67,16 +67,16 @@ $ cd hello-async
 $ cargo add trpl
 ```
 
-Agora podemos usar as diversas peças fornecidas pelo `trpl` para escrever nosso primeiro async
-programa. Construiremos uma pequena ferramenta de linha de comando que busca duas páginas da web,
-extrai o elemento `<title>` de cada um e imprime o título de qualquer
-page termina todo o processo primeiro.
+Agora podemos usar as diversas peças fornecidas pelo `trpl` para escrever nosso
+primeiro programa async. Construiremos uma pequena ferramenta de linha de
+comando que busca duas páginas da web, extrai o elemento `<title>` de cada uma
+e imprime o título da página que terminar o processo primeiro.
 
 ### Definindo a função page_title
 
-Vamos começar escrevendo uma função que usa o URL de uma página como parâmetro, faz
-uma solicitação para ele e retorna o texto do elemento `<title>` (consulte a Listagem
-17-1).
+Vamos começar escrevendo uma função que usa a URL de uma página como parâmetro,
+faz uma solicitação para ela e retorna o texto do elemento `<title>` (consulte
+a Listagem 17-1).
 
 <Listing number="17-1" file-name="src/main.rs" caption="Definindo uma função async para obter o elemento de título de uma página HTML">
 
@@ -189,7 +189,7 @@ Vamos percorrer cada parte da versão transformada:
   Parâmetro` url `. (Falaremos muito mais sobre` async `versus` async move`
   mais adiante no capítulo.)
 
-Now we can call `page_title` in `main`.
+Agora podemos chamar `page_title` em `main`.
 
 <!-- Old headings. Do not remove or links may break. -->
 

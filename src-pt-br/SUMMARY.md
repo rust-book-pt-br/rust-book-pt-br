@@ -18,9 +18,9 @@
   - [Comentários](ch03-04-comments.md)
   - [Controle de Fluxo](ch03-05-control-flow.md)
 
-- [Entendendo ownership](ch04-00-understanding-ownership.md)
+- [Entendendo Ownership](ch04-00-understanding-ownership.md)
   - [O que é ownership?](ch04-01-what-is-ownership.md)
-  - [Referências e borrowing](ch04-02-references-and-borrowing.md)
+  - [Referências e _borrowing_](ch04-02-references-and-borrowing.md)
   - [O Tipo Slice](ch04-03-slices.md)
 
 - [Usando Structs para Estruturar Dados Relacionados](ch05-00-structs.md)

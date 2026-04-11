@@ -1,4 +1,4 @@
-## Ciclos de Referências Podem Vazar Memória
+## Ciclos de Referência Podem Vazar Memória
 
 As garantias de segurança de memória do Rust tornam _difícil_ mas não impossível
 acidentalmente criar memória que nunca é liberada (conhecida como um _vazamento
@@ -46,7 +46,7 @@ impl List {
 ```
 
 <span class="caption">Listagem 15-25: Uma definição de cons list que contém um
-`RefCell<T>` para que possamos modificar ao que se refere uma variante
+`RefCell<T>` para que possamos modificar aquilo a que uma variante
 `Cons`</span>
 
 Estamos usando outra variação da definição de `List` da Listagem 15-5. O segundo
@@ -180,7 +180,7 @@ dar uma olhada em um exemplo usando grafos feitos de vértices pais e vértices
 filhos para ver quando relações de não posse são um jeito apropriado de evitar
 ciclos de referências.
 
-### Prevenindo Ciclos de Referência: Transforme um `Rc<T>` em um `Weak<T>`
+### Prevenindo Ciclos de Referência: Transformando um `Rc<T>` em um `Weak<T>`
 
 Até agora, demonstramos que chamar `Rc::clone` aumenta a `strong_count`
 (_contagem de referências fortes_) de uma instância `Rc<T>`, e que a instância

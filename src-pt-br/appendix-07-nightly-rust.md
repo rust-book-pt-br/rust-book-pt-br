@@ -1,16 +1,16 @@
 <!-- # Appendix G - How Rust is Made and “Nightly Rust” -->
 # Apêndice G - Como é feito o Rust e o "Rust Nightly"
 
-Este apêndice é sobre como o Rust é feito e como isso afeta você como um
+Este apêndice trata de como Rust é feito e de como isso afeta você como
 desenvolvedor Rust. Mencionamos que a saída deste livro foi gerada pelo Rust
-estável (*Stable*) na versão 1.21.0, mas todos os exemplos que compilam devem
+estável (*stable*) na versão 1.21.0, mas todos os exemplos que compilam devem
 continuar sendo compilados em qualquer versão estável do Rust mais recente.
 Esta seção explica como garantimos que isso seja verdade!
 
 <!-- ### Stability Without Stagnation -->
 ### Estabilidade sem estagnação
 
-Como linguagem, o Rust se preopcupa muito com a estabilidade do seu código.
+Como linguagem, Rust se preocupa muito com a estabilidade do seu código.
 Queremos que o Rust seja uma base sólida sobre a qual você possa construir,
 e se as coisas estivessem mudando constantemente, isso seria impossível. Ao
 mesmo tempo, se não pudermos experimentar novos recursos, poderemos descobrir
@@ -24,12 +24,12 @@ mas também deve trazer novos recursos, menos bugs e tempos de compilação mais
 rápidos.
 
 <!-- ### Choo, Choo! Release Channels and Riding the Trains -->
-### Tchu, Tchu! Canais de _Release_ e Passeios de Trem
+### Tchu, Tchu! Canais de _Release_ e viagens de trem
 
-O desenvolvimento do Rust opera em um "*train scheduler*" (Horário de trem).
+O desenvolvimento do Rust opera em um "*train scheduler*" (um cronograma de trem).
 Isto é, todo o desenvolvimento é feito na _branch_ `master` do repositório do
-Rust. As versões seguem um modelo de trem de liberação de 
-software (_train model_) que têm sido usado pela Cisco IOS e outros projetos de software. Existem três canais de _release_ para o Rust.
+Rust. As versões seguem um modelo de trem de liberação de
+software (_train model_) que tem sido usado pela Cisco IOS e outros projetos de software. Há três canais de _release_ para o Rust.
 
 <!-- 
 * Nightly
@@ -82,8 +82,8 @@ beta:                *
 
 Agora digamos que uma regressão seja encontrada. Ainda bem que tivemos algum
 tempo para testar a versão beta antes da regressão se tornar uma versão estável!
-A correção é aplicada à _branch_ `master`, de modo que todas as noites é
-corrigida e, em seguida, a correção é portada para a _branch_ `beta`, e uma nova
+A correção é aplicada à _branch_ `master`, de modo que a versão nightly é
+corrigida, e, em seguida, a correção é portada para a _branch_ `beta`, e uma nova
 versão beta é produzida:
 
 ```text
@@ -121,8 +121,8 @@ Isso é chamado de "_train model_" (modelo de trem) porque a cada seis semanas,
 uma _release_ "sai da estação", mas ainda precisa percorrer o canal beta antes
 de chegar como uma _release_ estável.
 
-O Rust é lançando a cada seis semanas, como um relógio.
-Se você souber a data de um lançamento do Rust, poderá saber a data do próximo:
+Rust é lançado a cada seis semanas, como um relógio.
+Se você souber a data de um lançamento do Rust, poderá prever a data do próximo:
 seis semanas depois. Um aspecto interessante de ter lançamentos agendados a cada
 seis semanas é que o próximo trem estará chegando em breve. Se um recurso falhar
 em uma versão específica, não há necessidade de se preocupar: outra está
@@ -131,7 +131,7 @@ possivelmente "não polidos" perto do prazo de lançamento.
 
 Graças a esse processo, você sempre pode verificar a próxima versão do Rust e
 verificar por si mesmo que é fácil fazer uma atualização para a mesma: se uma
-versão beta não funcionar conforme o esperado, você pode reportar à equipe e ter
+versão beta não funcionar conforme o esperado, você pode reportar o problema à equipe e ter
 isso corrigido antes do próximo lançamento estável!
 A quebra de uma versão beta é relativamente rara, mas o `rustc` ainda é um
 software, e bugs existem.
@@ -144,11 +144,11 @@ O Rust usa uma técnica chamada "sinalizadores de recursos" para determinar quai
 recursos estão ativados em uma determinada _release_. Se um novo recurso estiver
 em desenvolvimento ativo, ele pousará na _branch_ `master` e, logo, no
 _Nightly_, mas atrás de um sinalizador de recurso.
-Se você, como usuário, deseja experimentar o recurso de trabalho em andamento,
-pode, mas deve estar usando uma versão _Nightly_ do Rust e anotar seu
-código-fonte com o sinalizador apropriado para ativar.
+Se você, como usuário, deseja experimentar um recurso em desenvolvimento,
+pode fazê-lo, mas deve estar usando uma versão _Nightly_ do Rust e anotar seu
+código-fonte com o sinalizador apropriado para ativá-lo.
 
-Se você estiver usando uma versçao beta ou estável do Rust, você não pode usar
+Se você estiver usando uma versão beta ou estável do Rust, você não pode usar
 qualquer sinalizador de recurso. Essa é a chave que nos permite usar de forma
 prática os novos recursos antes de declará-los estáveis para sempre. Aqueles que
 desejam optar pelo que há de mais moderno podem fazê-lo, e aqueles que desejam
@@ -158,7 +158,7 @@ quebrado. Estabilidade sem estagnação.
 Este livro contém informações apenas sobre recursos estáveis, pois os recursos
 em desenvolvimento ainda estão sendo alterados e certamente serão diferentes
 entre quando este livro foi escrito e quando eles forem ativados em compilações
-estáveis. Você pode encontrar documentação on-line para recursos do exclusivos
+estáveis. Você pode encontrar documentação on-line para recursos exclusivos
 do _Nightly_ (_nightly-only_).
 
 <!-- ### Rustup and the Role of Rust Nightly -->
@@ -184,7 +184,7 @@ nightly-x86_64-pc-windows-msvc
 
 Como pode ver, o _toolchain_ estável (_Stable_) é o padrão. A maioria dos
 usuários do Rust usa o estável na maioria das vezes. Você pode querer usar o
-estável na mioria das vezes, mas usará o _Nightly_ em um projeto específico
+estável na maioria das vezes, mas usar o _Nightly_ em um projeto específico
 por se preocupar com um recurso de ponta.
 Para fazer isso, você pode usar `rustup override` no diretório desse projeto
 para definir que o _toolchain_ do _Nightly_ deve ser usado quando o `rustup` for
@@ -195,15 +195,15 @@ $ cd ~/projects/needs-nightly
 $ rustup override add nightly
 ```
 
-Agora, toda que chamar `rustc` ou `cargo` dentro de `~/projects/needs-nightly`,
-o `rustup` irá garantir que você esteja usando o _Rust Nightly_ ao invés do
+Agora, toda vez que chamar `rustc` ou `cargo` dentro de `~/projects/needs-nightly`,
+o `rustup` irá garantir que você esteja usando o _Rust Nightly_ em vez do
 padrão _Rust Stable_. Isso é útil quando você tem muitos projetos em Rust.
 
 <!-- ### The RFC Process and Teams -->
 ### O Processo de RFC e Equipes
 
 Então, como você aprende sobre esses novos recursos? O modelo de desenvolvimento
-da Rust segue um processo de solicitação de comentários (RFC). Se você deseja
+do Rust segue um processo de solicitação de comentários (RFC). Se você deseja
 uma melhoria no Rust, pode escrever uma proposta, chamada RFC (Request For
 Comments).
 
@@ -216,7 +216,7 @@ do compilador, infraestrutura, documentação e muito mais. A equipe apropriada
 lê a proposta e os comentários, escreve alguns comentários próprios e,
 eventualmente, há um consenso para aceitar ou rejeitar o recurso.
 
-Se o recurso for aceito, uma _Issue_ será aberta no repositório do Rust e alguém
+Se o recurso for aceito, uma _issue_ será aberta no repositório do Rust e alguém
 poderá implementá-lo. A pessoa que a implementa pode muito bem não ser a pessoa
 que propôs o recurso em primeiro lugar! Quando a implementação está pronta, ela
 chega à _branch_ `master` atrás de um sinalizador de recurso, conforme
@@ -224,7 +224,7 @@ discutimos na seção "Recursos instáveis".
 
 Depois de algum tempo, assim que os desenvolvedores do Rust que usam versões
 _Nightly_ puderem experimentar o novo recurso, os membros da equipe discutirão o
-recurso, como ele funciona no _Nightly_ e decidirão se ele deve se tornar parte
-do Rust estável ou não. Se a decisão for sim, o portão do recurso será removido
+recurso, como ele funciona no _Nightly_, e decidirão se ele deve se tornar parte
+do Rust estável ou não. Se a decisão for positiva, o sinalizador do recurso será removido
 e o recurso agora será considerado estável! Ele entra no próximo trem para uma
 nova versão estável do Rust.

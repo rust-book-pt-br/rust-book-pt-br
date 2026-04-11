@@ -4,26 +4,27 @@
 
 ## Instalando binários com `cargo install`
 
-O comando `cargo install` permite instalar e usar o binário crates
-localmente. Isto não se destina a substituir pacotes do sistema; é para ser um
-maneira conveniente para os desenvolvedores do Rust instalarem ferramentas que outras pessoas compartilharam
-[crates.io](https://crates.io/)<!-- ignore -->. Observe que você só pode instalar
-pacotes que possuem alvos binários. Um _alvo binário_ é o programa executável
-que é criado se o crate tiver um arquivo _src/main.rs_ ou outro arquivo especificado
-como um binário, em oposição a um alvo de biblioteca que não pode ser executado por si só, mas
-é adequado para inclusão em outros programas. Normalmente, crates tem
-informações no arquivo README sobre se um crate é uma biblioteca, tem um
-alvo binário ou ambos.
+O comando `cargo install` permite instalar e usar crates binários localmente.
+Isso não se destina a substituir pacotes do sistema; a ideia é oferecer uma
+forma conveniente para desenvolvedores Rust instalarem ferramentas que outras
+pessoas compartilharam em [crates.io](https://crates.io/)<!-- ignore -->.
+Observe que você só pode instalar pacotes que tenham alvos binários. Um _alvo
+binário_ é o programa executável criado quando o crate tem um arquivo
+_src/main.rs_ ou outro arquivo especificado como binário, em contraste com um
+alvo de biblioteca, que não pode ser executado por conta própria, mas é
+apropriado para ser incluído em outros programas. Normalmente, crates têm
+informações no README sobre se são bibliotecas, se têm um alvo binário ou se
+têm ambos.
 
-Todos os binários instalados com `cargo install` são armazenados no arquivo de instalação
-pasta _bin_ do root. Se você instalou o Rust usando _rustup.rs_ e não tem nenhum
-configurações personalizadas, este diretório será *$HOME/.cargo/bin*. Certifique-se de que
-este diretório está no seu `$PATH` para poder executar programas que você instalou
-com `cargo install`.
+Todos os binários instalados com `cargo install` são armazenados na pasta _bin_
+da raiz de instalação. Se você instalou o Rust usando _rustup.rs_ e não tem
+configurações personalizadas, esse diretório será *$HOME/.cargo/bin*. Garanta
+que ele esteja no seu `$PATH` para poder executar os programas instalados com
+`cargo install`.
 
-Por exemplo, no Capítulo 12 mencionamos que existe uma implementação Rust de
-a ferramenta `grep` chamada `ripgrep` para pesquisar arquivos. Para instalar o `ripgrep`, nós
-pode executar o seguinte:
+Por exemplo, no Capítulo 12 mencionamos que existe uma implementação em Rust da
+ferramenta `grep`, chamada `ripgrep`, para pesquisar em arquivos. Para instalar
+o `ripgrep`, podemos executar o seguinte:
 
 <!-- manual-regeneration
 cargo install something you don't have, copy relevant output below
@@ -42,7 +43,8 @@ $ cargo install ripgrep
    Installed package `ripgrep v14.1.1` (executable `rg`)
 ```
 
-A penúltima linha da saída mostra a localização e o nome do
-binário instalado, que no caso de `ripgrep` é `rg`. Enquanto o
-diretório de instalação está em seu ` $PATH`, conforme mencionado anteriormente, você pode
-em seguida, execute ` rg --help`e comece a usar uma ferramenta Rustier mais rápida para pesquisar arquivos!
+A penúltima linha da saída mostra a localização e o nome do binário instalado,
+que no caso de `ripgrep` é `rg`. Desde que o diretório de instalação esteja no
+seu `$PATH`, como mencionado anteriormente, você poderá executar `rg --help` e
+começar a usar uma ferramenta mais rápida, escrita em Rust, para pesquisar
+arquivos!

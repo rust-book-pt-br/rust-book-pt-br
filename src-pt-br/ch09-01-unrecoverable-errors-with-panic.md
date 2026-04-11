@@ -1,20 +1,20 @@
 ## Erros Irrecuperáveis com `panic!`
 
-Às vezes coisas ruins acontecem no seu código, e não há nada que você possa fazer
+Às vezes, coisas ruins acontecem no seu código, e não há nada que você possa fazer
 sobre isso. Nesses casos, Rust tem a macro `panic!`. Quando ela é executada, seu
-programa vai imprimir uma mensagem de falha, resolver e limpar a pilha e então
+programa vai imprimir uma mensagem de falha, desenrolar e limpar a pilha, e então
 terminar. A situação mais comum em que isso acontece é quando algum tipo de bug
 foi detectado, e não é claro para o programador como tratar esse erro.
 
-> ### Resolver a Pilha ou Abortar em Resposta a `panic!`
+> ### Desenrolar a Pilha ou Abortar em Resposta a `panic!`
 >
-> Por padrão, quando acontece um `panic!`, o programa começa a *resolver* a pilha,
+> Por padrão, quando acontece um `panic!`, o programa começa a *desenrolar* a pilha,
 > o que significa que Rust percorre a pilha e limpa os dados de cada função que encontra.
 > Mas essa limpeza dá bastante trabalho. A alternativa é imediatamente *abortar*,
 > que termina o programa sem fazer a limpeza. A memória que o programa estava usando vai então
 > precisar ser limpada pelo sistema operacional. Se no seu projeto você precisa tornar
-> o binário final o menor possível, você pode deixar de resolver e sim abortar no *panic*
-> adicionando `panic = 'abort'` à seção apropriadada de `[profile]` no seu arquivo
+> o binário final o menor possível, você pode deixar de desenrolar e passar a abortar em caso de *panic*
+> adicionando `panic = 'abort'` à seção apropriada de `[profile]` no seu arquivo
 > *Cargo.toml*. Por exemplo, se você quiser abortar no *panic* no modo de *release*, adicione
 > isso:
 > ```toml
@@ -32,7 +32,7 @@ fn main() {
 }
 ```
 
-Quando você roda o programa, verá algo como isso:
+Quando você executar o programa, verá algo como isto:
 
 ```text
 $ cargo run
@@ -52,7 +52,7 @@ arquivo *src/main.rs*.
 Nesse caso, a linha indicada é parte do nosso código, e se formos àquela linha
 veremos a chamada à macro `panic!`. Em outros casos, a chamada a `panic!` pode
 estar em código que nosso código chama. O nome do arquivo e número de linha
-reportado pela mensagem de erro será no código de outra pessoa quando a macro 
+reportado pela mensagem de erro estará no código de outra pessoa quando a macro
 `panic!` for chamada, não a linha do nosso código que eventualmente levou a chamada
 de `panic!`. Podemos usar o *backtrace* das funções de onde veio a chamada a `panic!`
 para entender qual parte de nosso código está causando o problema. Vamos discutir

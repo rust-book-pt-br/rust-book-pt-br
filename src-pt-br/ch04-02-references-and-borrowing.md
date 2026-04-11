@@ -1,4 +1,4 @@
-## Referências e _Borrowing_
+## Referências e _borrowing_
 
 O problema de usar tuplas, que vimos no fim da seção anterior, é que precisamos
 retornar a `String`, de forma que ainda possamos usá-la após a chamada à função
@@ -36,9 +36,9 @@ sem tomar posse dele. A Figura 4-5 mostra um diagrama.
 
 <span class="caption">Figura 4-5: `&String s` apontando para `String s1`</span>
 
-> Nota: O oposto de referenciar usando `&` é *derreferenciar*, feito por meio do
-> operador derreferenciador, `*`. Veremos alguns usos do operador
-> derreferenciador no Capítulo 8 e vamos discutir detalhes da derreferenciação
+> Nota: O oposto de referenciar usando `&` é *desreferenciar*, feito por meio do
+> operador de desreferenciação, `*`. Veremos alguns usos desse operador
+> no Capítulo 8 e vamos discutir detalhes da desreferenciação
 > no Capítulo 15.
 
 Vamos olhar mais de perto esta chamada de função:
@@ -162,10 +162,10 @@ error[E0499]: cannot borrow `s` as mutable more than once at a time
   | - first borrow ends here
 ```
 
-Esta restrição permite a mutação, mas de uma forma bem controlada. Isto é algo
+Essa restrição permite a mutação, mas de uma forma bem controlada. Isso é algo
 com que novos Rustáceos passam trabalho, porque a maioria das linguagens de
-programação permitem modificar um valor quando você quiser. O benefício de ter
-esta restrição é que o Rust previne _data races_ em tempo de compilação. 
+programação permite modificar um valor quando você quiser. O benefício de ter
+essa restrição é que o Rust previne _data races_ em tempo de compilação.
 
 Um *data race* é parecido com uma condição de corrida, e acontece quando esses
 três fatores ocorrem:
@@ -174,9 +174,9 @@ três fatores ocorrem:
 1. Ao menos um dos ponteiros é usado para escrever sobre o dado.
 1. Não há nenhum mecanismo sendo usado para sincronizar o acesso ao dado.
 
-Data races causam comportamento indefinido e pode ser difíceis de diagnosticar
+Data races causam comportamento indefinido e podem ser difíceis de diagnosticar
 e corrigir quando você está tentando rastreá-los em tempo de execução. Rust
-previne este problema de acontecer porque não vai nem deixar compilar um código
+previne que esse problema aconteça porque não vai nem deixar compilar um código
 com data races!
 
 Como sempre, podemos usar chaves (`{}`) para criar um novo escopo, permitindo
@@ -229,10 +229,10 @@ de repente! Porém, múltiplas referências imutáveis são permitidas, pois nin
 que esteja apenas lendo os dados será capaz de afetar a leitura que está sendo
 feita em outra parte do código.
 
-Observe que o escopo de uma referência começa de onde é inserida e continua até
+Observe que o escopo de uma referência começa no ponto em que ela é introduzida e continua até
 a última vez que a referência foi usada. Por exemplo, este código será compilado
-porque o último uso das referências imutáveis, ocorrem antes da referência mutável
-ser inserida:
+porque o último uso das referências imutáveis ocorre antes de a referência mutável
+ser introduzida:
 
 ```rust,ignore
 let mut s = String::from("texto");
@@ -245,11 +245,11 @@ println!("{} and {}", r1, r2);
 let r3 = &mut s; // sem problema
 println!("{}", r3);
 ```
-O escopo das referências imutáveis `r1` e `r2` terminam após o `println!` onde eles
-são utilizados pela última vez, que é antes da referência mutável `r3` ser criada.
+O escopo das referências imutáveis `r1` e `r2` termina após o `println!` em que elas
+são utilizadas pela última vez, que é antes de a referência mutável `r3` ser criada.
 Esses escopos não se sobrepõem, portanto, este código é permitido.
 
-Mesmo que esses erros sejam frustrantes às vezes, lembre-se que é o compilador
+Mesmo que esses erros sejam frustrantes às vezes, lembre-se de que é o compilador
 do Rust apontando um bug potencial antecipadamente (em tempo de compilação,
 em vez de execução), e mostrando exatamente onde está o problema, em vez de você
 ter que investigar por que algumas vezes os seus dados não são aquilo que você

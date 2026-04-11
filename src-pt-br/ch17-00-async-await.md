@@ -1,33 +1,35 @@
 # Fundamentos da programação assíncrona: Async, Await, Futures e Streams
 
-Muitas operações que pedimos ao computador podem demorar um pouco para serem concluídas. Seria
-seria legal se pudéssemos fazer outra coisa enquanto esperamos por aqueles
-processos de longa duração para serem concluídos. Os computadores modernos oferecem duas técnicas para
-trabalhando em mais de uma operação ao mesmo tempo: paralelismo e simultaneidade. Nosso
-a lógica dos programas, entretanto, é escrita de maneira predominantemente linear. Nós gostaríamos de
-ser capaz de especificar as operações que um programa deve realizar e os pontos em que
-uma função poderia pausar e alguma outra parte do programa poderia ser executada,
-sem a necessidade de especificar antecipadamente exatamente a ordem e a maneira como cada
-pedaço de código deve ser executado. _Programação assíncrona_ é uma abstração que permite
-expressamos nosso código em termos de possíveis pontos de pausa e eventuais resultados
-que cuida dos detalhes da coordenação para nós.
+Muitas operações que pedimos ao computador podem demorar um pouco para serem
+concluídas. Seria ótimo se pudéssemos fazer outra coisa enquanto esperamos
+esses processos de longa duração terminarem. Os computadores modernos oferecem
+duas técnicas para trabalhar em mais de uma operação ao mesmo tempo:
+paralelismo e concorrência. Nossa lógica de programa, entretanto, é escrita de
+maneira predominantemente linear. Gostaríamos de ser capazes de especificar as
+operações que um programa deve realizar e os pontos em que uma função poderia
+pausar e alguma outra parte do programa pudesse ser executada, sem a
+necessidade de especificar antecipadamente exatamente a ordem e a maneira como
+cada pedaço de código deve ser executado. _Programação assíncrona_ é uma
+abstração que nos permite expressar nosso código em termos de possíveis pontos
+de pausa e resultados futuros, enquanto ela cuida dos detalhes de coordenação
+para nós.
 
-Este capítulo se baseia no uso do threads no Capítulo 16 para paralelismo e
-simultaneidade, introduzindo uma abordagem alternativa para escrever código: Rust's
-futures, streams e a sintaxe `async` e `await` que nos permite expressar como
-as operações podem ser assíncronas e o crates de terceiros que implementa
-tempos de execução assíncronos: código que gerencia e coordena a execução de
+Este capítulo se baseia no uso de threads no Capítulo 16 para paralelismo e
+concorrência, introduzindo uma abordagem alternativa para escrever código: os
+futures, streams e a sintaxe `async` e `await` do Rust, que nos permitem expressar como
+as operações podem ser assíncronas, além dos crates de terceiros que implementam
+runtimes assíncronos: código que gerencia e coordena a execução de
 operações assíncronas.
 
-Vamos considerar um exemplo. Digamos que você esteja exportando um vídeo que criou de um
+Vamos considerar um exemplo. Digamos que você esteja exportando um vídeo que criou de uma
 celebração familiar, uma operação que pode levar de minutos a
 horas. A exportação de vídeo usará o máximo de potência de CPU e GPU possível. Se você
 tinha apenas um núcleo de CPU e seu sistema operacional não pausou a exportação até
 foi concluído - isto é, se ele executou a exportação _sincronamente_ - você não poderia fazer
 qualquer outra coisa no seu computador enquanto a tarefa estava em execução. Isso seria um
 experiência bastante frustrante. Felizmente, o sistema operacional do seu computador
-pode, e interrompe invisivelmente, a exportação com freqüência suficiente para permitir que você obtenha outros
-trabalho realizado simultaneamente.
+pode, e interrompe invisivelmente, a exportação com frequência suficiente para permitir que você faça
+outros trabalhos simultaneamente.
 
 Agora digamos que você esteja baixando um vídeo compartilhado por outra pessoa, o que também pode levar
 um tempo, mas não ocupa tanto tempo de CPU. Neste caso, a CPU deve
@@ -40,19 +42,20 @@ operações a cada segundo. Novamente, seu sistema operacional interromperá inv
 seu programa para permitir que a CPU execute outro trabalho enquanto espera pelo
 chamada de rede para terminar.
 
-A exportação de vídeo é um exemplo de operação _CPU-bound_ ou _compute-bound_.
-É limitado pela velocidade potencial de processamento de dados do computador dentro da CPU
-ou GPU, e quanto dessa velocidade ele pode dedicar à operação. O vídeo
-download é um exemplo de operação _I/O-bound_, porque é limitado pelo
-velocidade de _entrada e saída_ do computador; só pode ir tão rápido quanto os dados
-podem ser enviados pela rede.
+A exportação de vídeo é um exemplo de operação _CPU-bound_ ou
+_compute-bound_. Ela é limitada pela velocidade potencial de processamento de
+dados do computador na CPU ou na GPU e por quanto dessa velocidade pode ser
+dedicada à operação. O download do vídeo é um exemplo de operação _I/O-bound_,
+porque é limitado pela velocidade de _entrada e saída_ do computador; ele só
+pode avançar tão rápido quanto os dados conseguem ser enviados pela rede.
 
-Em ambos os exemplos, as interrupções invisíveis do sistema operacional fornecem
-uma forma de simultaneidade. Essa simultaneidade acontece apenas no nível de todo o
-programa, porém: o sistema operacional interrompe um programa para permitir que outro
-os programas realizam o trabalho. Em muitos casos, porque compreendemos os nossos programas a um nível
-nível muito mais granular do que o sistema operacional, podemos detectar
-oportunidades de simultaneidade que o sistema operacional não consegue ver.
+Em ambos os exemplos, as interrupções invisíveis do sistema operacional
+fornecem uma forma de concorrência. Essa concorrência acontece apenas no nível
+do programa inteiro, porém: o sistema operacional interrompe um programa para
+permitir que outros programas realizem trabalho. Em muitos casos, como
+compreendemos nossos programas em um nível muito mais granular do que o sistema
+operacional, podemos detectar oportunidades de concorrência que ele não
+consegue ver.
 
 Por exemplo, se estivermos construindo uma ferramenta para gerenciar downloads de arquivos, deveríamos estar
 capaz de escrever nosso programa de forma que iniciar um download não bloqueie a interface do usuário,
@@ -67,19 +70,19 @@ completamente pronto.
 > casos em que um programa individual beneficiaria com a operação a ser
 > _não_ bloqueador.
 
-Poderíamos evitar o bloqueio de nosso thread principal gerando um thread dedicado para
-baixe cada arquivo. No entanto, a sobrecarga dos recursos do sistema usados por aqueles
-threads acabaria por se tornar um problema. Seria preferível que a chamada
-não bloqueamos em primeiro lugar e, em vez disso, poderíamos definir uma série de tarefas
-que gostaríamos que nosso programa fosse concluído e permitir que o tempo de execução escolha o melhor
-ordem e maneira de executá-los.
+Poderíamos evitar o bloqueio da thread principal criando uma thread dedicada
+para baixar cada arquivo. No entanto, a sobrecarga dos recursos do sistema
+usados por essas threads acabaria se tornando um problema. Seria preferível que
+a chamada já não fosse bloqueante e que, em vez disso, pudéssemos definir uma
+série de tarefas que gostaríamos que nosso programa concluísse e deixar o
+runtime escolher a melhor ordem e maneira de executá-las.
 
-Isso é exatamente o que a abstração _async_ (abreviação de _asynchronous_) do Rust
-nos dá. Neste capítulo, você aprenderá tudo sobre async à medida que abordamos o
-seguintes tópicos:
+Isso é exatamente o que a abstração _async_ (abreviação de _asynchronous_) do
+Rust nos oferece. Neste capítulo, você aprenderá tudo sobre async à medida que
+abordarmos os seguintes tópicos:
 
-- Como usar a sintaxe `async` e `await` do Rust e executar assíncrono
-  funções com um tempo de execução
+- Como usar a sintaxe `async` e `await` do Rust e executar funções
+  assíncronas com um runtime
 - Como usar o modelo async para resolver alguns dos mesmos desafios que analisamos
   no Capítulo 16
 - Como o multithreading e o async fornecem soluções complementares que você pode
@@ -90,9 +93,9 @@ desvio para discutir as diferenças entre paralelismo e simultaneidade.
 
 ## Paralelismo e simultaneidade
 
-Até agora, tratamos o paralelismo e a simultaneidade como praticamente intercambiáveis. Agora
-precisamos distingui-los com mais precisão, porque as diferenças
-aparecerá quando começarmos a trabalhar.
+Até agora, tratamos o paralelismo e a simultaneidade como praticamente
+intercambiáveis. Agora precisamos distingui-los com mais precisão, porque as
+diferenças aparecerão quando começarmos a trabalhar.
 
 Considere as diferentes maneiras pelas quais uma equipe poderia dividir o trabalho em um projeto de software.
 Você pode atribuir múltiplas tarefas a um único membro, atribuir uma tarefa a cada membro,
@@ -141,8 +144,8 @@ série, uma tarefa após a outra, como na Figura 17-3.
 
 </figure>
 
-Likewise, you might realize that one of your own tasks depends on another of
-your tasks. Now your concurrent work has also become serial.
+Da mesma forma, você pode perceber que uma de suas próprias tarefas depende de
+outra tarefa sua. Nesse caso, seu trabalho concorrente também se tornou serial.
 
 Paralelismo e simultaneidade também podem se cruzar. Se você aprender
 que um colega está preso até você terminar uma de suas tarefas, você provavelmente

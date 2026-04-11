@@ -72,7 +72,7 @@ Abra novamente o arquivo *src/main.rs*. Escreveremos todo nosso código nele.
 ## Processando um Palpite
 
 A primeira parte do programa vai pedir uma entrada ao usuário, processar essa
-entrada, e conferir se ela está no formato esperado. Pra começar, vamos permitir
+entrada e conferir se ela está no formato esperado. Para começar, vamos permitir
 que o jogador entre com um palpite. Coloque este código no arquivo
 *src/main.rs*:
 
@@ -99,8 +99,8 @@ fn main() {
 <span class="caption">Listagem 2-1: Código para ler um palpite do usuário e
 imprimí-lo na tela.</span>
 
-Esse código tem muita informação, vamos ver uma parte de cada vez. Para obter a
-entrada do usuário, e então imprimir o resultado como saída, precisaremos trazer
+Esse código tem muita informação, então vamos ver uma parte de cada vez. Para obter a
+entrada do usuário e então imprimir o resultado como saída, precisaremos trazer
 ao escopo a biblioteca `io` (de entrada/saída). A biblioteca `io` provém da
 biblioteca padrão (chamada de `std`):
 
@@ -138,7 +138,7 @@ println!("Adivinhe o número!");
 println!("Digite o seu palpite.");
 ```
 
-Este código está exibindo uma mensagem que diz de que se trata o jogo e solicitando
+Esse código exibe uma mensagem dizendo do que se trata o jogo e solicita
 uma entrada do usuário.
 
 ### Armazenando Valores em Variáveis
@@ -157,8 +157,8 @@ Segue outro exemplo:
 let maçãs = 5;
 ```
 
-Essa linha cria uma nova variável chamada `maçãs`, e a vincula ao valor `5`. Em Rust, variáveis são imutáveis por padrão, ou seja, uma vez vinculado o valor a variável, 
-o mesmo não pode ser alterado. Nós vamos discutir este conceito em detalhes 
+Essa linha cria uma nova variável chamada `maçãs` e a vincula ao valor `5`. Em Rust, variáveis são imutáveis por padrão, ou seja, uma vez vinculado o valor à variável, 
+ele não pode ser alterado. Nós vamos discutir este conceito em detalhes 
 na seção ["Variáveis e Mutabilidade"][variables] do Capítulo 3. Para criar uma
 variável mutável, nós adicionamos `mut` antes do nome da variável: 
 [variables]: ./ch03-01-variables-and-mutability.html#variables-and-mutability
@@ -175,7 +175,7 @@ let mut bananas = 5; // mutável
 [chapter3]: ./ch03-04-comments.html
 
 Agora você sabe que `let mut palpite` vai introduzir uma variável mutável de
-nome `palpite`. No outro lado do símbolo `=` está o valor ao qual `palpite` está
+nome `palpite`. Do outro lado do símbolo `=` está o valor ao qual `palpite` está
 vinculado, que é o resultado da chamada `String::new`, uma função que retorna
 uma nova instância de `String`. [`String`][string]<!-- ignore --> é um tipo
 fornecido pela biblioteca padrão que representa uma cadeia expansível de
@@ -265,7 +265,7 @@ Os tipos [`Result`][result] são [*enumerações*][enums]<!-- ignore -->, comume
 de *enums*. Uma enumeração é um tipo que pode ter um conjunto fixo de valores,
 os quais são chamados de *variantes* da enum.
 
-O [Capítulo 6][enums] vai abordar enums em mais detalhes.O propósito destes tipos `Result` é codificar informações de manipulação de erros. 
+O [Capítulo 6][enums] vai abordar enums em mais detalhes. O propósito desses tipos `Result` é codificar informações de manipulação de erros.
 
 [result]: https://doc.rust-lang.org/std/result/enum.Result.html
 [enums]: ch06-00-enums.html
@@ -279,7 +279,7 @@ Valores do tipo `Result`, assim como qualquer tipo, possuem métodos
 definidos. Uma instância de `Result` tem um [método `expect`][expect]<!-- ignore -->
 que você pode chamar. Se esta instância de `Result` é um `Err`, `expect` vai
 terminar o programa com erro e mostrar a mensagem que você passou como argumento
-ao `expect`. Se o método `read_line` retornar um `Err`, provavelmente seria o
+ao `expect`. Se o método `read_line` retornar um `Err`, provavelmente será o
 resultado de um erro vindo do sistema operacional que está por trás. Se esta
 instância de `Result` é um `Ok`, `expect` vai obter o valor contido no `Ok`
 e retorná-lo para que você possa usá-lo. Neste caso, o valor é o número de bytes
@@ -313,7 +313,7 @@ aprenderá sobre recuperação de erros no [Capítulo 9][chap9].
 
 [chap9]: ./ch09-00-error-handling.md
 
-### Exibindo Valores com Curingas com `println!` (_placeholders_)
+### Exibindo Valores com `println!` e placeholders
 
 Tirando a chave que delimita a função `main`, há apenas uma linha mais a ser
 discutida no código que fizemos até agora, que é a seguinte:
@@ -321,7 +321,7 @@ discutida no código que fizemos até agora, que é a seguinte:
 ```rust,ignore
 println!("Você disse: {palpite}");
 ```
-Esta linha imprime a string na qual salvamos os dados inseridos pelo usuário. O `{}` é um curinga que reserva o lugar de um valor. Para imprimir o valor de uma variável, podemos colocá-la dentro das chaves diretamente na string. Também podemos imprimir o resultado de uma ou mais expressões, colocando chaves vazias nas posições desejadas, string de formatação, e adicionando a lista de expressões separadas por vírgulas e em ordem após a string de formatação. Por exemplo, podemos imprimir uma variável e o resultado de uma expressão em uma única chamada de `println!` desta forma:
+Essa linha imprime a string na qual salvamos os dados inseridos pelo usuário. O `{}` é um placeholder que reserva o lugar de um valor. Para imprimir o valor de uma variável, podemos colocá-la diretamente dentro das chaves na string. Também podemos imprimir o resultado de uma ou mais expressões colocando chaves vazias na string de formatação e adicionando, depois dela, uma lista de expressões separadas por vírgulas, na mesma ordem. Por exemplo, podemos imprimir uma variável e o resultado de uma expressão em uma única chamada de `println!` desta forma:
 
 ```rust
 let x = 5;
@@ -364,7 +364,7 @@ fornece um [crate `rand`][randcrate].
 
 ### Usando um Crate para Ter Mais Funcionalidades
 
-Lembre-se que um *crate* é um pacote de código Rust. O projeto que estamos
+Lembre-se de que um *crate* é um pacote de código Rust. O projeto que estamos
 construindo é um *crate binário*, que é um executável. Já o `rand` é um
 *crate de biblioteca*, que contém código cujo objetivo é ser usado por outros
 programas.
@@ -421,18 +421,18 @@ $ cargo build
 <span class="caption">Listagem 2-2: Resultado da execução de `cargo build`
 depois de adicionar o crate `rand` como dependência.</span>
 
-Talvez pra você apareçam versões diferentes (mas elas são todas compatíveis com
-o código, graças ao Versionamento Semântico!), e as linhas talvez apareçam em
+Talvez para você apareçam versões diferentes, mas todas elas serão compatíveis com
+o código, graças ao Versionamento Semântico, e as linhas talvez apareçam em
 ordem diferente.
 
-Agora que temos uma dependência externa, Cargo busca as versões mais recentes de
+Agora que temos uma dependência externa, o Cargo busca as versões mais recentes de
 tudo no *registro*, que é uma cópia dos dados do [Crates.io][cratesio].
 Crates.io é onde as pessoas do ecossistema Rust postam seus projetos
 _open source_ para que os outros possam usar.
 
 [cratesio]: https://crates.io
 
-Após atualizar o registro, Cargo verifica a seção `[dependencies]` e baixa todas
+Após atualizar o registro, o Cargo verifica a seção `[dependencies]` e baixa todas
 as que você não tem ainda. Neste caso, embora tenhamos listado apenas `rand`
 como dependência, o Cargo também baixa outras crates que `rand` depende para funcionar. Depois de baixá-las, o Cargo as compila e
 então compila nosso projeto.
@@ -471,7 +471,7 @@ vez que você executou `cargo build`, e agora está no seu diretório
 Cargo descobre as versões de todas as dependências que preenchem os critérios
 e então as escreve no arquivo *Cargo.lock*. Quando você compilar o seu projeto
 futuramente, o Cargo verá que o arquivo *Cargo.lock* existe e usará as versões
-especificadas no mesmo, em vez de refazer todo o trabalho descobrir as versões
+especificadas no mesmo, em vez de refazer todo o trabalho de descobrir as versões
 novamente. Isto lhe permite ter um _build_ reproduzível automaticamente. Em
 outras palavras, seu projeto vai continuar com a versão `0.8.5` até que você
 faça uma atualização explícita, graças ao arquivo *Cargo.lock*.
@@ -559,19 +559,19 @@ que define métodos a serem implementados pelos geradores de números aleatório
 e esse trait deve estar dentro do escopo para que possamos usar esses métodos. O
 Capítulo 10 vai abordar traits em mais detalhes.
 
-Tem outras duas linhas que adicionamos no meio. A função `rand::thread_rng` nos
+Há outras duas linhas que adicionamos no meio. A função `rand::thread_rng` nos
 dá o gerador de números aleatórios que vamos usar, um que é local à _thread_
 corrente e que é inicializado pelo sistema operacional. Depois, vamos chamar o
 método `gen_range` no gerador de números aleatórios. Esse método está definido
-pelo trait `Rng` que trouxemos ao escopo por meio do `use rand::Rng`. Este
-método recebe dois argumentos e gera um número aleatório entre eles. O tipo de argumento que estamos usando aqui tem a forma `start..=end` que inclui os limites inferiores e superiores. Logo,
+pelo trait `Rng` que trouxemos ao escopo por meio do `use rand::Rng`. Esse
+método recebe uma expressão de intervalo como argumento e gera um número aleatório nesse intervalo. O tipo de argumento que estamos usando aqui tem a forma `start..=end`, que inclui os limites inferior e superior. Logo,
 precisamos especificar `1..=100` para obter um número de 1 a 100.
 
 > Nota: Saber quais traits devem ser usadas e quais funções e métodos de um crate
 >devem ser chamados não é nada trivial. As instruções de como usar um crate
 >estão na documentação de cada um. Outra coisa boa do Cargo é que você pode rodar
->o comando `cargo doc --open` que vai construir localmente a documentação
->fornecida por todas as suas dependências e abrí-las no seu navegador. Se você
+>o comando `cargo doc --open`, que vai construir localmente a documentação
+>fornecida por todas as suas dependências e abri-la no seu navegador. Se você
 >estiver interessado em outras funcionalidades do crate `rand`, por exemplo,
 >execute `cargo doc --open` e clique em `rand`, no menu ao lado esquerdo.
 
@@ -606,7 +606,7 @@ e 100. Bom trabalho!
 
 ## Comparando o Palpite com o Número Secreto
 
-Agora que nós temos a entrada do usuário e o número secreto, vamos compará-los.
+Agora que temos a entrada do usuário e o número secreto, vamos compará-los.
 Esta etapa é mostrada na Listagem 2-4. Observe que este código ainda não compila, como vamos explicar a seguir!
 
 <span class="filename">Arquivo: src/main.rs</span>

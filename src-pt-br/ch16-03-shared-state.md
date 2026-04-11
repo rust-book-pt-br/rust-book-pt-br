@@ -1,21 +1,21 @@
 ## Simultaneidade de estado compartilhado
 
-A passagem de mensagens é uma ótima maneira de lidar com a simultaneidade, mas não é a única.
-Outro método seria vários threads acessarem os mesmos dados compartilhados.
-Considere novamente esta parte do slogan da documentação da linguagem Go: “Faça
+A passagem de mensagens é uma ótima maneira de lidar com a concorrência, mas não é a única.
+Outro método seria permitir que várias threads acessassem os mesmos dados compartilhados.
+Considere novamente esta parte do slogan da documentação da linguagem Go: “Não
 não se comunique compartilhando memória.”
 
 Como seria a comunicação através do compartilhamento de memória? Além disso, por que
-entusiastas da troca de mensagens alertam para não usar o compartilhamento de memória?
+entusiastas da passagem de mensagens alertam contra o uso de compartilhamento de memória?
 
-De certa forma, os canais em qualquer linguagem de programação são semelhantes ao ownership único
-porque depois de transferir um valor para um canal, você não deverá mais usá-lo
-valor. A simultaneidade de memória compartilhada é como vários ownership: Vários threads
-pode acessar o mesmo local de memória ao mesmo tempo. Como você viu no Capítulo 15,
-onde smart pointers tornou possível vários ownership, vários ownership podem
-adicione complexidade porque esses diferentes proprietários precisam de gerenciamento. Sistema de tipos do Rust
-e as regras ownership auxiliam muito na correção desse gerenciamento. Por um
-Por exemplo, vejamos mutexes, uma das primitivas de simultaneidade mais comuns
+De certa forma, os canais em qualquer linguagem de programação são semelhantes ao ownership único,
+porque, depois de transferir um valor para um canal, você não deve mais usá-lo.
+A concorrência com memória compartilhada é como ownership múltiplo: várias threads
+podem acessar o mesmo local de memória ao mesmo tempo. Como você viu no Capítulo 15,
+onde smart pointers tornaram possível o ownership múltiplo, ter vários owners pode
+adicionar complexidade porque esses diferentes proprietários precisam ser gerenciados. O sistema de tipos do Rust
+e as regras de ownership ajudam muito a acertar esse gerenciamento. Como exemplo,
+vejamos mutexes, uma das primitivas de concorrência mais comuns
 para memória compartilhada.
 
 <!-- Old headings. Do not remove or links may break. -->

@@ -1,6 +1,6 @@
 ## A Trait `Drop` Roda Código durante a Limpeza
 
-A segunda trait de importância para a pattern de ponteiros inteligentes é a
+A segunda trait importante no padrão de ponteiros inteligentes é a
 `Drop`, que nos permite personalizar o que acontece quando um valor está prestes
 a sair de escopo. Nós podemos prover uma implementação da trait `Drop` para
 qualquer tipo, e o código que especificarmos pode ser usado para liberar
@@ -54,7 +54,7 @@ fn main() {
 implementa a trait `Drop` onde colocaríamos nosso código de limpeza</span>
 
 A trait `Drop` é incluída no prelúdio, então não precisamos importá-la. Nós
-implementamos a trait `Drop` no `CustomSmartPointer` e providenciamos uma
+implementamos a trait `Drop` no `CustomSmartPointer` e fornecemos uma
 implementação para o método `drop` que chama `println!`. O corpo da função
 `drop` é onde você colocaria qualquer que fosse a lógica que você gostaria que
 rodasse quando uma instância do seu tipo for sair de escopo. Aqui estamos
@@ -187,6 +187,6 @@ porque isso causaria um erro de compilação: o sistema de posse que garante que
 as referências são sempre válidas também garante que o `drop` é chamado apenas
 uma vez quando o valor não está mais sendo usado.
 
-Agora que examinamos o `Box<T>` e alguma características de ponteiros
+Agora que examinamos o `Box<T>` e algumas características de ponteiros
 inteligentes, vamos dar uma olhada em alguns outros ponteiros inteligentes
 definidos na biblioteca padrão.

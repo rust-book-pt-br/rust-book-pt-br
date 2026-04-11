@@ -1,23 +1,23 @@
-## O Que É Ownership? 
+## O que é ownership?
 
 A característica central do Rust é *ownership*. Embora seja bem direta de
 explicar, ela tem implicações profundas em todo o resto da linguagem.
 
-Todos os programas têm que decidir de que forma vão usar a memória do computador
+Todos os programas têm de decidir de que forma vão usar a memória do computador
 durante a execução. Algumas linguagens possuem _garbage collection_ (coleta de
 lixo), que constantemente busca segmentos de memória que já não são mais
 utilizados enquanto o programa executa; em outras linguagens, o programador deve
 alocar e liberar memória de forma explícita. Rust usa uma terceira abordagem: a
-memória é gerenciada através de um sistema de posse, que tem um conjunto de
-regras verificadas em tempo de compilação. Nenhuma característica relacionada ao
-ownership implica qualquer custo em tempo de execução.
+memória é gerenciada por meio de um sistema de ownership, com um conjunto de
+regras verificadas em tempo de compilação. Nenhuma das características
+relacionadas ao ownership implica qualquer custo em tempo de execução.
 
-Como ownership é um conceito novo para muitos programadores, leva um pouco de
+Como ownership é um conceito novo para muitos programadores, leva algum tempo
 tempo para se acostumar. A boa notícia é que quanto mais experiente você se
 torna em Rust e nas regras do sistema de posse, mais você será capaz de
-escrever, naturalmente, código seguro e eficiente. Fique aí!
+escrever, naturalmente, código seguro e eficiente. Continue firme!
 
-Quando você entender ownership, você terá uma fundação sólida para entender as
+Quando você entender ownership, terá uma base sólida para entender as
 características que fazem o Rust ser único. Neste capítulo, você vai aprender
 ownership trabalhando em alguns exemplos com foco em uma estrutura de dados
 muito comum: _strings_.   
@@ -40,7 +40,7 @@ muito comum: _strings_.
 > primeiro a sair). Imagine uma pilha de pratos: quando você coloca mais pratos,
 > você os põe em cima da pilha, e quando você precisa de um prato, você pega o
 > que está no topo. Adicionar ou remover pratos do meio ou do fundo não funciona
-> tão bem! Dizemos fazer um *push* na pilha quando nos refererimos a inserir
+> tão bem! Dizemos fazer um *push* na pilha quando nos referimos a inserir
 > dados, e fazer um *pop* da pilha quando nos referimos a remover dados.
 >
 > A pilha é rápida por conta da forma como ela acessa os dados: ela nunca tem
@@ -95,9 +95,9 @@ muito comum: _strings_.
 Primeiro, vamos dar uma olhada nas regras de ownership. Mantenha em mente essas
 regras quando trabalharmos com os exemplos em seguida:
 
-> 1. Cada valor em Rust possui uma variável que é dita seu *owner* (sua dona).
-> 2. Pode apenas haver um owner por vez.
-> 3. Quando o owner sai fora de escopo, o valor será destruído.
+> 1. Cada valor em Rust tem um *owner*.
+> 2. Só pode haver um owner por vez.
+> 3. Quando o owner sai de escopo, o valor é descartado.
 
 ### Escopo de Variáveis
 
@@ -157,7 +157,7 @@ nosso programa. Strings literais são convenientes, mas nem sempre são adequada
 para situações em que queremos usar texto. Um motivo é que elas são imutáveis.
 Outro é que nem todos os valores de string são conhecidos enquanto escrevemos
 nosso código: por exemplo, o que fazer se queremos obter uma entrada do usuário
-e armazená-la? Para essas situações, Rust tem um segundo tipo de strings,
+e armazená-la? Para essas situações, Rust tem um segundo tipo de string,
 `String`. Este tipo é alocado na heap, e como tal, é capaz de armazenar uma
 quantidade de texto que é desconhecida em tempo de compilação. Você pode criar
 uma `String` de uma string literal usando a função `from`, da seguinte forma:
@@ -169,10 +169,10 @@ let s = String::from("texto");
 O `::` é um operador que nos permite indicar que o _namespace_ desta função
 `from`, em particular, é o tipo `String`, de forma que não precisamos usar um
 nome específico como `string_from`. Vamos discutir esta sintaxe na seção
-"Sintaxe do Método" do Capítulo 5, e quando falarmos sobre _namespaces_ com
+"Sintaxe do Método" do Capítulo 5, e quando falarmos sobre _namespaces_ em
 módulos no Capítulo 7.
 
-Este tipo de string *pode* ser alterada:
+Esse tipo de string *pode* ser alterado:
 
 ```rust
 let mut s = String::from("olá");
@@ -231,7 +231,7 @@ escopo da Listagem 4-1 usando uma `String` em vez de uma string literal:
 ```
 
 Existe um ponto natural em que podemos retornar ao sistema operacional a memória
-da qual precisa nossa `String`: quando `s` sai de escopo. Quando uma variável
+de que nossa `String` precisa: quando `s` sai de escopo. Quando uma variável
 sai de escopo, o Rust chama para nós uma função especial. Essa função é chamada
 `drop`, e é aí que o autor de `String` pode colocar o código que retorna
 a memória. Rust chama `drop` automaticamente ao fechar chaves (`}`).
@@ -239,7 +239,7 @@ a memória. Rust chama `drop` automaticamente ao fechar chaves (`}`).
 > Nota: Em C++, esta forma de desalocar recursos no fim do tempo de vida útil de
 > um item às vezes é chamado de *Resource Acquisition Is Initialization* (RAII,
 > do inglês, Aquisição de Recurso É Inicialização). A função `drop` em Rust vai
-> lhe ser bastante familar se você já tiver usado padrões RAII.
+> lhe ser bastante familiar se você já tiver usado padrões RAII.
 
 Este padrão tem um profundo impacto na forma de escrever código em Rust. Pode
 parecer simples agora, mas o comportamento do código pode ser inesperado em
@@ -259,7 +259,7 @@ let y = x;
 <span class="caption">Listagem 4-2: Atribuindo o valor inteiro da variável `x`
 para `y`.</span>
 
-Provavelmente podemos advinhar o que isto faz com base nas nossas experiências
+Provavelmente podemos adivinhar o que isso faz com base nas nossas experiências
 com outras linguagens: "Associe o valor `5` a `x`; depois faça uma cópia do
 valor em `x` e a associe a `y`." Agora temos duas variáveis, `x` e `y`, e ambas
 são iguais a `5`. É isto mesmo que acontece, porque números inteiros são valores

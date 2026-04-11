@@ -1,4 +1,4 @@
-## Tratando Ponteiros Inteligentes como Referências Normais com a Trait `Deref`
+## Tratando Ponteiros Inteligentes como Referências Normais
 
 Implementar a trait `Deref` nos permite personalizar o comportamento do
 _operador de desreferência_ (_dereference operator_), `*` (que é diferente do
@@ -37,8 +37,8 @@ fn main() {
 <span class="caption">Listagem 15-6: Usando o operador de desreferência para
 seguir uma referência a um valor `i32`</span>
 
-A variável `x` contém um valor `i32`, `5`. Nós setamos `y` igual a uma
-referência a `x`. Podemos conferir (coloquialmente, "assertar") que `x` é igual
+A variável `x` contém um valor `i32`, `5`. Nós definimos `y` como uma
+referência a `x`. Podemos verificar que `x` é igual
 a `5`. Contudo, se queremos fazer uma asserção sobre o valor em `y`, temos que
 usar `*y` para seguir a referência até o valor ao qual `y` aponta (por isso
 "desreferência"). Uma vez que desreferenciamos `y`, temos acesso ao valor
@@ -84,17 +84,17 @@ fn main() {
 <span class="caption">Listagem 15-7: Usando o operador de desreferência em um
 `Box<i32>`</span>
 
-A única diferença entre a Listagem 15-7 e a Listagem 15-6 é que aqui nós setamos
-`y` para ser uma instância de um box apontando para o valor em `x` em vez de uma
+A única diferença entre a Listagem 15-7 e a Listagem 15-6 é que aqui nós
+definimos `y` como uma instância de um box apontando para o valor em `x`, em vez de uma
 referência apontando para o valor de `x`. Na última asserção, podemos usar o
 operador de desreferência para seguir o ponteiro do box do mesmo jeito que
 fizemos quando `y` era uma referência. A seguir, vamos explorar o que tem de
 especial no `Box<T>` que nos permite usar o operador de desreferência, criando
-nosso próprio tipo box.
+nosso próprio tipo de box.
 
 ### Definindo Nosso Próprio Ponteiro Inteligente
 
-Vamos construir um smart pointer parecido com o tipo `Box<T>` fornecido pela
+Vamos construir um ponteiro inteligente parecido com o tipo `Box<T>` fornecido pela
 biblioteca padrão para vermos como ponteiros inteligentes, por padrão, se
 comportam diferente de referências. Em seguida, veremos como adicionar a
 habilidade de usar o operador de desreferência.

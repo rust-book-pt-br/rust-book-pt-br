@@ -5,19 +5,19 @@
 
 ### Entregando controle ao tempo de execução
 
-Lembre-se da seção [“Nosso primeiro programa async”][async-program]<!-- ignore -->
-de que, em cada ponto `await`, Rust dá ao runtime a chance de pausar a
-tarefa e mude para outra se o future aguardado não estiver pronto. O
-o inverso também é verdadeiro: Rust _apenas_ pausa os blocos async e devolve o controle para
-um tempo de execução em um ponto await. Tudo entre os pontos await é síncrono.
+Lembre-se, da seção [“Nosso primeiro programa async”][async-program]<!-- ignore -->,
+de que, em cada ponto `await`, o Rust dá ao runtime a chance de pausar a
+tarefa e mudar para outra se o future aguardado não estiver pronto. O
+inverso também é verdadeiro: o Rust _apenas_ pausa os blocos async e devolve o controle ao
+runtime em um ponto `await`. Tudo entre pontos `await` é síncrono.
 
-Isso significa que se você fizer muito trabalho em um bloco async sem um ponto await,
-que future bloqueará qualquer outro futures de progredir. Você pode às vezes
-ouça isso sendo chamado de um future _faminto_ outro futures. Em alguns casos,
-isso pode não ser grande coisa. No entanto, se você estiver fazendo algum tipo de trabalho caro
-configuração ou trabalho de longa duração, ou se você tiver um future que continuará fazendo alguns
-tarefa específica indefinidamente, você precisará pensar sobre quando e onde entregar
-controle de volta ao tempo de execução.
+Isso significa que, se você fizer muito trabalho em um bloco async sem um ponto `await`,
+esse future bloqueará o progresso de quaisquer outros futures. Às vezes você pode
+ouvir isso ser descrito como um future “faminto”, que deixa outros futures sem progredir. Em alguns casos,
+isso pode não ser um problema. No entanto, se você estiver fazendo algum tipo de trabalho caro
+de configuração ou de longa duração, ou se tiver um future que continuará realizando alguma
+tarefa específica indefinidamente, precisará pensar sobre quando e onde devolver
+o controle ao runtime.
 
 Vamos simular uma operação demorada para ilustrar o problema de starvation e,
 depois, explorar como resolvê-lo. A Listagem 17-14 apresenta uma função `slow`.
@@ -30,10 +30,10 @@ depois, explorar como resolvê-lo. A Listagem 17-14 apresenta uma função `slow
 
 </Listing>
 
-Este código usa `std::thread::sleep` em vez de `trpl::sleep` para que a chamada
-`slow ` bloqueará o thread atual por alguns milissegundos. Nós podemos
-use`slow` para substituir operações do mundo real que são de longa duração e
-bloqueio.
+Este código usa `std::thread::sleep` em vez de `trpl::sleep`, de modo que a
+chamada a `slow` bloqueará a thread atual por alguns milissegundos. Podemos
+usar `slow` para representar operações do mundo real que são longas e
+bloqueantes.
 
 Na Listagem 17-15, usamos `slow` para emular esse tipo de trabalho vinculado à CPU em
 um par de futures.
@@ -203,8 +203,8 @@ necessidade: queremos competir com o future transmitido em relação à duraçã
 `trpl::sleep ` para criar um cronômetro future a partir da duração e usar`trpl::select`
 para executar esse cronômetro com o future que o chamador passa.
 
-In Listing 17-20, we implement `timeout` by matching on the result of awaiting
-`trpl::select`.
+Na Listagem 17-20, implementamos `timeout` fazendo `match` sobre o resultado de
+aguardar `trpl::select`.
 
 <Listing number="17-20" caption="Definindo `timeout` com `select` e `sleep`" file-name="src/main.rs">
 
@@ -214,17 +214,17 @@ In Listing 17-20, we implement `timeout` by matching on the result of awaiting
 
 </Listing>
 
-A implementação do `trpl::select` não é justa: ele sempre pesquisa argumentos em
-a ordem em que são passados ​​(outras implementações `select` serão
-escolher aleatoriamente qual argumento pesquisar primeiro). Assim, passamos `future_to_try` para
-`select ` primeiro para que tenha a chance de ser concluído mesmo que`max_time ` seja muito
-curta duração. Se`future_to_try ` terminar primeiro,`select ` retornará`Left `
-com a saída de` future_to_try `. Se` timer `terminar primeiro,` select `irá
-retorne` Right `com a saída do temporizador de` ()`.
+A implementação de `trpl::select` não é justa: ela sempre faz `poll` nos argumentos na
+ordem em que são passados (outras implementações de `select` podem escolher
+aleatoriamente qual argumento verificar primeiro). Assim, passamos `future_to_try` para
+`select` primeiro para que ele tenha a chance de ser concluído mesmo que `max_time` seja muito
+curto. Se `future_to_try` terminar primeiro, `select` retornará `Left`
+com a saída de `future_to_try`. Se `timer` terminar primeiro, `select` retornará
+`Right` com a saída do temporizador, `()`.
 
-Se o `future_to_try` for bem-sucedido e obtivermos um `Left(output)`, retornamos
-` Ok(output) `. Se o temporizador terminar e obtivermos um` Right(()) `,
-ignore` () `com` _ `e retorne` Err(max_time)`.
+Se `future_to_try` for bem-sucedido e obtivermos `Left(output)`, retornamos
+`Ok(output)`. Se o temporizador terminar e obtivermos `Right(())`,
+ignoramos `()` com `_` e retornamos `Err(max_time)`.
 
 Com isso, temos um `timeout` funcional construído a partir de dois outros auxiliares async. Se
 executamos nosso código, ele imprimirá o modo de falha após o tempo limite:
