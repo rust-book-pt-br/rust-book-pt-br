@@ -1,0 +1,76 @@
+name: CI PT-BR
+
+on: [push, pull_request]
+
+env:
+  MDBOOK_VERSION: 0.5.1
+
+jobs:
+  test:
+    name: Run tests (PT-BR)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update rustup
+        run: rustup self update
+      - name: Install Rust
+        run: |
+          rustup set profile minimal
+          rustup toolchain install 1.90 -c rust-docs
+          rustup default 1.90
+      - name: Install mdbook
+        run: |
+          mkdir bin
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=bin
+          echo "$(pwd)/bin" >> "${GITHUB_PATH}"
+      - name: Report versions
+        run: |
+          rustup --version
+          rustc -Vv
+          mdbook --version
+      - name: Build `trpl` crate
+        run: |
+          cd packages/trpl
+          cargo build
+      - name: Run tests (PT-BR)
+        run: |
+          RUSTUP_TOOLCHAIN='1.90' \
+          MDBOOK_BOOK__TITLE='A Linguagem de Programação Rust (PT-BR)' \
+          MDBOOK_BOOK__LANGUAGE='pt-BR' \
+          MDBOOK_BOOK__SRC='src-pt-br' \
+          MDBOOK_BUILD__BUILD_DIR='book-pt-br' \
+          mdbook test --library-path packages/trpl/target/debug/deps
+
+  lint:
+    name: Run lints (PT-BR)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update rustup
+        run: rustup self update
+      - name: Install Rust
+        run: |
+          rustup set profile minimal
+          rustup toolchain install nightly -c rust-docs
+          rustup override set nightly
+      - name: Install mdbook
+        run: |
+          mkdir bin
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=bin
+          echo "$(pwd)/bin" >> "${GITHUB_PATH}"
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - name: Report versions
+        run: |
+          rustup --version
+          rustc -Vv
+          mdbook --version
+          shellcheck --version
+      - name: Shellcheck
+        run: find . -name '*.sh' -print0 | xargs -0 shellcheck
+      - name: Build PT-BR
+        run: bash scripts/build-pt-br.sh
+      - name: Lint for local file paths (PT-BR)
+        run: cargo run --bin lfp src-pt-br
+      - name: Validate references (PT-BR)
+        run: bash scripts/validate-pt-br.sh

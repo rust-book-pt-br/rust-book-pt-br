@@ -1,86 +1,92 @@
-# 🤝 Contribuindo
+# Contribuindo
 
-Obrigado por ajudar a manter a tradução do Rust Book atualizada!
+Obrigado por ajudar a traduzir e revisar o Rust Book para PT-BR.
 
----
+Este repositório existe para manter uma tradução comunitária, pública e não
+oficial de `rust-lang/book`, com o mínimo possível de divergência estrutural em
+relação ao projeto-fonte.
 
-## 📌 Processo
+## Onde editar
 
-1. Fork do repositório
-2. Crie uma branch:
+Edite normalmente apenas:
 
-   ```bash
-   git checkout -b minha-contribuicao
-   ```
-3. Faça suas alterações
-4. Abra um Pull Request
+- `src-pt-br`
+- documentação do projeto, como `README.md`, `CONTRIBUTING.md` e `GOVERNANCE.md`
+- scripts e workflows locais relacionados ao fork PT-BR
 
----
+Não envie traduções manuais para `src`. Esse diretório deve continuar espelhando
+o upstream em inglês.
 
-## 🧠 Regras de tradução (IMPORTANTE)
+## Fluxo recomendado
 
-### ❌ NÃO traduzir:
+1. Verifique se já existe uma issue relacionada.
+2. Abra uma issue se a mudança envolver terminologia, revisão ampla ou dúvida de
+   interpretação.
+3. Envie um PR pequeno e objetivo sempre que possível.
+4. Explique no PR se o texto foi revisado do zero ou se partiu da tradução
+   inicial assistida por IA.
 
-* ownership
-* borrow
-* lifetime
-* crate
-* trait
+## Regras para a trilha traduzida
 
-### ✔ Traduzir:
+- Preserve links, âncoras HTML e comentários necessários para compatibilidade
+  com mdBook.
+- Preserve `{{#include ...}}`, `{{#rustdoc_include ...}}`, blocos de código e
+  referências a listings.
+- Não mude exemplos Rust ou saídas de compilação só para "soar melhor" em
+  português; qualquer ajuste técnico precisa continuar coerente com o livro.
+- Prefira consistência terminológica entre capítulos.
+- Ao revisar texto gerado por IA, trate-o como rascunho inicial. Revisão humana
+  é obrigatória.
 
-* compiler → compilador
-* function → função
-* variable → variável
+## Issues x Pull Requests
 
----
+Abra issue quando:
 
-## 📚 Consistência
+- encontrar erro de tradução, referência quebrada ou inconsistências
+- quiser propor padrão de glossário ou terminologia
+- quiser coordenar a revisão de um capítulo inteiro
 
-Antes de traduzir:
+Abra pull request quando:
 
-* Verifique termos já usados
-* Evite múltiplas traduções para o mesmo conceito
+- já tiver uma correção concreta pronta
+- estiver atualizando a infraestrutura do fork PT-BR
+- estiver ajustando o conteúdo em `src-pt-br` sem mudar o escopo editorial do
+  projeto
 
----
+## Build e validação
 
-## 💻 Código
+Build da versão em inglês:
 
-* ❌ NÃO alterar código original
-* ❌ NÃO traduzir código
-* ✔ Traduzir apenas comentários explicativos
+```bash
+mdbook build
+```
 
----
+Build da versão PT-BR:
 
-## 🧪 Validação
+```bash
+bash scripts/build-pt-br.sh
+```
 
-Antes de abrir PR:
+Validação de referências PT-BR:
 
-* Build do livro deve funcionar
-* Markdown válido
-* Sem erros de formatação
+```bash
+bash scripts/validate-pt-br.sh
+```
 
----
+Lint de caminhos locais:
 
-## 🧾 Commits
+```bash
+cargo run --bin lfp src-pt-br
+```
 
-Use mensagens claras:
+## Licenciamento das contribuições
 
-* `feat: tradução capítulo 1`
-* `fix: correção de termos técnicos`
-* `sync: atualização com upstream`
+Para manter compatibilidade com o projeto-fonte, salvo indicação explícita em
+contrário, contribuições submetidas para este repositório são aceitas sob os
+termos `MIT OR Apache-2.0`.
 
----
+## Mudanças em inglês
 
-## 🤖 Tradução com IA
-
-Permitido, mas:
-
-* ✔ Revisão humana obrigatória
-* ❌ Não aceitar tradução automática sem validação
-
----
-
-## 📣 Dúvidas
-
-Abra uma issue 🙂
+Se você encontrar um problema em `src`, prefira abrir issue ou PR no
+`rust-lang/book`. O fork PT-BR não deve manter correções editoriais locais em
+inglês que possam se perder no próximo sync com o upstream.

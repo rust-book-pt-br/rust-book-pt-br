@@ -21,18 +21,6 @@ $ cargo new hello_cargo --bin
 $ cd hello_cargo
 ```
 
-<!-- Below -- so we always have to start a cargo project with the --bin option
-se quisermos que seja algo que possamos executar e não apenas uma biblioteca, é isso
-right? It might be worth laying that out -->
-<!-- As of Rust 1.21.0 (the version we're using for the book), yes, you must
-sempre especifique `--bin`. Em uma versão do Rust próxima ao future (1.25 ou 1.26),
-binário crates se tornará o tipo padrão de crate que ` cargo new`faz, então
-você não precisará especificar ` --bin`(mas poderá, se quiser, e o comportamento
-será o mesmo). Preferimos não entrar em mais detalhes do que temos aqui
-por causa dessa mudança; Eu acho que "O argumento ` --bin`deve ser passado para ` cargo new`
-cria um aplicativo executável (geralmente chamado apenas de *binário*), em oposição a um
-library." lays this out enough. /Carol -->
-
 Isso cria um novo executável binário chamado `hello_cargo`. O argumento `--bin` transmitido para `cargo new` cria um aplicativo executável (geralmente chamado apenas de *binário*), em oposição a uma biblioteca. Atribuímos `hello_cargo` como o nome do nosso projeto e o Cargo cria seus arquivos em um diretório com o mesmo nome.
 
 Vá para o diretório *hello_cargo* e liste os arquivos, e você verá que Cargo gerou dois arquivos e um diretório para nós: um diretório *Cargo.toml* e *src* com um arquivo *main.rs* dentro. Também inicializou um novo repositório git, junto com um arquivo *.gitignore*.

@@ -170,7 +170,7 @@ ou enviar um *pull request* (solicitação de recebimento) [pt_br on GitHub]. Po
 Para contribuições na língua inglesa veja [on GitHub] e [CONTRIBUTING-en-us.md], respectivamente.
 
 [on GitHub]: https://github.com/rust-lang/book
-[CONTRIBUTING-en-us.md]: https://github.com/rust-lang/book/blob/master/CONTRIBUTING.md
+[CONTRIBUTING-en-us.md]: https://github.com/rust-lang/book/blob/main/CONTRIBUTING.md
 
-[pt_br on GitHub]: https://github.com/rust-br/rust-book-pt-br
-[CONTRIBUTING.md]: https://github.com/rust-br/rust-book-pt-br/blob/master/CONTRIBUTING.md
+[pt_br on GitHub]: https://github.com/rust-book-pt-br/rust-book-pt-br
+[CONTRIBUTING.md]: https://github.com/rust-book-pt-br/rust-book-pt-br/blob/main/CONTRIBUTING.md

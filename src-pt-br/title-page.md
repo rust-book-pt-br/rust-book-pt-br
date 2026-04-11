@@ -10,10 +10,11 @@ todos os projetos, para configurá-los de acordo com os idiomatismos da edição
 ignore --> para instruções sobre como instalar ou atualizar o Rust, e veja o
 [Apêndice E][appendix-e]<!-- ignore --> para informações sobre edições.
 
-O formato HTML está disponível online em
+O formato HTML em inglês está disponível online em
 [https://doc.rust-lang.org/stable/book/](https://doc.rust-lang.org/stable/book/)
 e offline com instalações do Rust feitas com `rustup`; execute `rustup doc
---book` para abrir.
+--book` para abrir. A edição PT-BR deste fork é publicada em
+<https://rust-book-pt-br.github.io/rust-book-pt-br/>.
 
 Várias [traduções] da comunidade também estão disponíveis.
 

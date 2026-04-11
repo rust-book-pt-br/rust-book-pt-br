@@ -321,11 +321,6 @@ discutida no código que fizemos até agora, que é a seguinte:
 ```rust,ignore
 println!("Você disse: {palpite}");
 ```
-<!-- Achei meio confuso então dei uma ajeitada, segue o texto original:
-
-Esta linha imprime a string que agora contém a entrada do usuário. O conjunto de chaves {} é um espaço reservado: pense em {} como pequenas pinças de caranguejo que mantêm um valor no lugar. Ao imprimir o valor de uma variável, o nome da variável pode ficar entre chaves. Ao imprimir o resultado da avaliação de uma expressão, coloque colchetes vazios no format string e, em seguida, siga o format string com uma lista de expressões separadas por vírgula para imprimir em cada espaço reservado de colchetes vazio na mesma ordem. Imprimindo uma variável e o resultado de uma expressão em uma chamada para println! ficaria assim:
--->
-
 Esta linha imprime a string na qual salvamos os dados inseridos pelo usuário. O `{}` é um curinga que reserva o lugar de um valor. Para imprimir o valor de uma variável, podemos colocá-la dentro das chaves diretamente na string. Também podemos imprimir o resultado de uma ou mais expressões, colocando chaves vazias nas posições desejadas, string de formatação, e adicionando a lista de expressões separadas por vírgulas e em ordem após a string de formatação. Por exemplo, podemos imprimir uma variável e o resultado de uma expressão em uma única chamada de `println!` desta forma:
 
 ```rust
@@ -616,9 +611,6 @@ Esta etapa é mostrada na Listagem 2-4. Observe que este código ainda não comp
 
 <span class="filename">Arquivo: src/main.rs</span>
 
-<!-- Adicionar a figura do ferris indicando que o código não compila -->
-<!-- <img src="./img/ferris/does_not_compile.svg" alt= “” width="10%" height="10%" align="right">
--->
 <pre>
 <img src="./img/ferris/does_not_compile.svg" alt= “” width="10%" height="10%" align="right">
 </pre>

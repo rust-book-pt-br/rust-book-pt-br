@@ -95,8 +95,14 @@ jobs:
       run: |
         mdbook build
         cargo run --bin lfp src
+    - name: Build PT-BR and lint local file paths
+      run: |
+        bash scripts/build-pt-br.sh
+        cargo run --bin lfp src-pt-br
     - name: Validate references
       run: bash ci/validate.sh
+    - name: Validate references (PT-BR)
+      run: bash scripts/validate-pt-br.sh
     - name: Check for broken links
       run: |
         curl -sSLo linkcheck.sh \

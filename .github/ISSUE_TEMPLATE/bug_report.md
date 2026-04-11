@@ -1,17 +1,18 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Relate um problema no conteúdo PT-BR, na infraestrutura ou na publicação
 ---
 
-- I have searched open and closed issues and pull requests for duplicates, using these search terms:
-  -
-  -
-  -
-- I have checked the latest `main` branch to see if this has already been fixed, in this file:
-  -
+Tipo do problema:
+- erro de tradução
+- referência ou link quebrado
+- problema no build/publicação
+- outro
 
-URL to the section(s) of the book with this problem:
+Arquivo ou URL afetada:
 
-Description of the problem:
+Trecho, seção ou capítulo:
 
-Suggested fix:
+Descrição do problema:
+
+Sugestão de correção:

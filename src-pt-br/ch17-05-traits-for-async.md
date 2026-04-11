@@ -504,11 +504,6 @@ método para que possamos fazer exatamente isso:
 {{#rustdoc_include ../listings/ch17-async-await/no-listing-stream-ext/src/lib.rs:here}}
 ```
 
-<!--
-TODO: atualize isto se/quando tokio/etc. atualizar seu MSRV e passar a usar funções async
-no traits, pois a falta dele é a razão pela qual ainda não o possuem.
--->
-
 > Nota: A definição real que usamos anteriormente neste capítulo parece um pouco
 > diferente disso, pois suporta versões do Rust que ainda não
 > suporte ao uso de funções async em traits. Como resultado, fica assim:

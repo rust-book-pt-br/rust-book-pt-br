@@ -398,8 +398,6 @@ aprofunde-se no que podemos fazer com async.
 [thread-spawn]: ch16-01-threads.html#creating-a-new-thread-with-spawn
 [cli-args]: ch12-01-accepting-command-line-arguments.html
 
-<!-- TODO: map source link version to version of Rust? -->
-
 [crate-source]: https://github.com/rust-lang/book/tree/main/packages/trpl
 [futures-crate]: https://crates.io/crates/futures
 [tokio]: https://tokio.rs

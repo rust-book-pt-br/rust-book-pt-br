@@ -2,8 +2,8 @@
 
 As listas a seguir contêm palavras-chave reservadas para uso current ou future
 usado pela linguagem Rust. Como tal, eles não podem ser usados como identificadores (exceto
-como identificadores brutos, conforme discutimos no [“Raw
-Identificadores”][seção raw-identifiers]<!-- ignore -->). _Identificadores_ são nomes
+como identificadores brutos, conforme discutimos em [“Raw
+Identificadores”][raw-identifiers]<!-- ignore -->). _Identificadores_ são nomes
 de funções, variáveis, parâmetros, campos struct, módulos, crates, constantes,
 macros, valores estáticos, atributos, tipos, traits ou lifetimes.
 

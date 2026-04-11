@@ -6,7 +6,7 @@ sobre uma nova tradução.
 
 [label]: https://github.com/rust-lang/book/issues?q=is%3Aopen+is%3Aissue+label%3ATranslations
 
-- [Português (Brasil)](https://github.com/rust-br/rust-book-pt-br)
+- [Português (Brasil)](https://github.com/rust-book-pt-br/rust-book-pt-br)
 - [Português (Portugal)](https://github.com/nunojesus/rust-book-pt-pt)
 - 简体中文: [KaiserY/trpl-zh-cn](https://github.com/KaiserY/trpl-zh-cn), [gnu4cn/rust-lang-Zh_CN](https://github.com/gnu4cn/rust-lang-Zh_CN)
 - [正體中文](https://github.com/rust-tw/book-tw)
