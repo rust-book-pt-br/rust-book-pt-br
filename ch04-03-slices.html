@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
+            window.path_to_searchindex_js = "searchindex-4c181ae4.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-77646bdf.js"></script>
+        <script src="toc-869888b5.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,25 +181,32 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="slices"><a class="header" href="#slices"><em>Slices</em></a></h2>
-<p>Outro tipo de dados em que não há ownership é a <em>slice</em> (do inglês, fatia).
-Slices lhe permitem referenciar uma sequência contígua de elementos em uma
-coleção em vez de referenciar a coleção inteira.</p>
-<p>Aqui está um pequeno problema de programação: escrever uma função que pega uma
-string e retorna a primeira palavra que encontrar dentro dela. Se a função não
-encontrar um espaço na string, significa que a string inteira é uma palavra só,
-então a string toda deve ser retornada.</p>
-<p>Vamos pensar sobre a assinatura desta função:</p>
-<pre><code class="language-rust ignore">fn primeira_palavra(s: &amp;String) -&gt; ?</code></pre>
-<p>Esta função, <code>primeira_palavra</code>, tem uma <code>&amp;String</code> como parâmetro. Nós não
-queremos tomar posse dela, então tudo bem. Mas o que nós deveríamos retornar?
-Não temos uma forma de falar sobre <em>parte</em> de uma string. No entanto, poderíamos
-retornar o índice do final de uma palavra. Vamos tentar fazer isso, conforme
-mostrado na Listagem 4-5:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn primeira_palavra(s: &amp;String) -&gt; usize {
+                        <h2 id="o-tipo-de-fatia"><a class="header" href="#o-tipo-de-fatia">O tipo de fatia</a></h2>
+<p><em>Slices</em> permitem fazer referência a uma sequência contígua de elementos em um
+<a href="ch08-00-common-collections.html">coleção</a><!-- ignore -->. Uma fatia é uma espécie
+de referência, portanto não tem propriedade.</p>
+<p>Aqui está um pequeno problema de programação: Escreva uma função que receba uma string de
+palavras separadas por espaços e retorna a primeira palavra encontrada naquela string.
+Se a função não encontrar um espaço na string, toda a string deverá ser
+uma palavra, então a string inteira deve ser retornada.</p>
+<blockquote>
+<p>Nota: Para fins de introdução de fatias, estamos assumindo ASCII apenas em
+esta seção; uma discussão mais completa sobre o tratamento de UTF-8 está no
+<a href="ch08-02-strings.html#storing-utf-8-encoded-text-with-strings">“Armazenando texto codificado em UTF-8 com strings”</a><!-- ignore --> seção
+do Capítulo 8.</p>
+</blockquote>
+<p>Vamos ver como escreveríamos a assinatura desta função sem usar
+fatias, para entender o problema que as fatias resolverão:</p>
+<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; ?</code></pre>
+<p>A função <code>first_word</code> possui um parâmetro do tipo <code>&amp;String</code>. Nós não precisamos
+propriedade, então está tudo bem. (Em Rust idiomático, as funções não assumem propriedade
+dos seus argumentos, a menos que seja necessário, e as razões para isso se tornarão
+claro à medida que continuamos.) Mas o que devemos retornar? Nós realmente não temos um jeito
+para falar sobre <em>parte</em> de uma string. No entanto, poderíamos retornar o índice do final
+da palavra, indicada por um espaço. Vamos tentar isso, conforme mostrado na Listagem 4-7.</p>
+<figure class="listing" id="listing-4-7">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn first_word(s: &amp;String) -&gt; usize {
     let bytes = s.as_bytes();
 
     for (i, &amp;item) in bytes.iter().enumerate() {
@@ -210,41 +217,77 @@ mostrado na Listagem 4-5:</p>
 
     s.len()
 }
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 4-5: A função <code>primeira_palavra</code>, que retorna um
-índice para um byte da <code>String</code> passada como parâmetro.</span></p>
-<p>Vamos dividir este código em algumas partes. Como precisamos varrer a <code>String</code>
-elemento por elemento, e verificar se algum valor é um espaço, vamos converter
-nossa <code>String</code> em um array de bytes usando o método <code>as_bytes</code>:</p>
-<pre><code class="language-rust ignore">let bytes = s.as_bytes();</code></pre>
-<p>Depois, criamos um iterador sobre o array de bytes usando o método <code>iter</code>:</p>
-<pre><code class="language-rust ignore">for (i, &amp;item) in bytes.iter().enumerate() {</code></pre>
-<p>Vamos discutir sobre iteradores em mais detalhes no Capítulo 13. Por enquanto,
-saiba que <code>iter</code> é um método que retorna cada elemento em uma coleção, e
-<code>enumerate</code> encapsula o resultado do <code>iter</code> e retorna cada elemento como parte
-de uma tupla. O primeiro elemento da tupla é o índice, e o segundo elemento é
-uma referência ao valor. Isto é um pouco mais conveniente do que calcular o
-índice nós mesmos.</p>
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<figcaption><a href="#listing-4-7">Listing 4-7</a>: The <code>first_word</code> function that returns a byte index value into the <code>String</code> parameter</figcaption>
+</figure>
+<p>Porque precisamos passar pelo <code>String</code> elemento por elemento e verificar se
+um valor é um espaço, converteremos nosso <code>String</code> em uma matriz de bytes usando o
+<code>as_bytes</code> método.</p>
+<pre><code class="language-rust ignore"><span class="boring">fn first_word(s: &amp;String) -&gt; usize {
+</span>    let bytes = s.as_bytes();
+<span class="boring">
+</span><span class="boring">    for (i, &amp;item) in bytes.iter().enumerate() {
+</span><span class="boring">        if item == b' ' {
+</span><span class="boring">            return i;
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    s.len()
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<p>A seguir, criamos um iterador sobre o array de bytes usando o método <code>iter</code>:</p>
+<pre><code class="language-rust ignore"><span class="boring">fn first_word(s: &amp;String) -&gt; usize {
+</span><span class="boring">    let bytes = s.as_bytes();
+</span><span class="boring">
+</span>    for (i, &amp;item) in bytes.iter().enumerate() {
+<span class="boring">        if item == b' ' {
+</span><span class="boring">            return i;
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    s.len()
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<p>Discutiremos iteradores com mais detalhes no <a href="ch13-02-iterators.html">Capítulo 13</a><!-- ignore -->.
+Por enquanto, saiba que <code>iter</code> é um método que retorna cada elemento de uma coleção
+e que <code>enumerate</code> agrupa o resultado de <code>iter</code> e retorna cada elemento como
+parte de uma tupla. O primeiro elemento da tupla retornado de
+<code>enumerate</code> é o índice e o segundo elemento é uma referência ao elemento.
+Isso é um pouco mais conveniente do que calcular o índice nós mesmos.</p>
 <p>Como o método <code>enumerate</code> retorna uma tupla, podemos usar padrões para
-desestruturar esta tupla, assim como qualquer outra coisa em Rust. Então, no
-<code>for</code>, especificamos um padrão que tem <code>i</code> para o índice na tupla e <code>&amp;item</code> para
-o byte. Como pegamos uma referência ao elemento através do
-<code>.iter().enumerate()</code>, usamos um <code>&amp;</code> neste padrão.</p>
-<p>Nós procuramos o byte que representa um espaço usando a sintaxe de byte literal.
-Se encontrarmos um espaço, retornamos a posição dele. Caso contrário, retornamos
-o tamanho da string usando <code>s.len()</code>:</p>
-<pre><code class="language-rust ignore">    if item == b' ' {
-        return i;
+desestruturar essa tupla. Discutiremos mais padrões no <a href="ch06-02-match.html#patterns-that-bind-to-values">Capítulo
+6</a><!-- ignore -->. No loop <code>for</code>, especificamos um padrão que tem <code>i</code>
+para o índice na tupla e <code>&amp;item</code> para o byte único na tupla.
+Como obtemos uma referência ao elemento de <code>.iter().enumerate()</code>, usamos
+<code>&amp;</code> no padrão.</p>
+<p>Dentro do loop <code>for</code>, procuramos o byte que representa o espaço por
+usando a sintaxe literal de byte. Se encontrarmos um espaço, retornamos a posição.
+Caso contrário, retornamos o comprimento da string usando <code>s.len()</code>.</p>
+<pre><code class="language-rust ignore"><span class="boring">fn first_word(s: &amp;String) -&gt; usize {
+</span><span class="boring">    let bytes = s.as_bytes();
+</span><span class="boring">
+</span><span class="boring">    for (i, &amp;item) in bytes.iter().enumerate() {
+</span>        if item == b' ' {
+            return i;
+        }
     }
-}
-s.len()</code></pre>
-<p>Agora temos uma forma de descobrir o índice do fim da primeira palavra na
-string, mas tem um problema. Estamos retornando um <code>usize</code> por si só, mas ele só
-possui um significado no contexto da <code>&amp;String</code>. Em outras palavras, como é um
-valor separado da <code>String</code>, não há garantia de que ele ainda será válido no
-futuro. Considere o programa na Listagem 4-6, que usa a função da Listagem 4-5:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn primeira_palavra(s: &amp;String) -&gt; usize {
+
+    s.len()
+<span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<p>Agora temos uma maneira de descobrir o índice do final da primeira palavra no
+string, mas há um problema. Estamos retornando um <code>usize</code> sozinho, mas é
+apenas um número significativo no contexto de <code>&amp;String</code>. Em outras palavras,
+porque é um valor separado de <code>String</code>, não há garantia de que
+ainda será válido no futuro. Considere o programa na Listagem 4-8 que
+usa a função <code>first_word</code> da Listagem 4-7.</p>
+<figure class="listing" id="listing-4-8">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn first_word(s: &amp;String) -&gt; usize {
 </span><span class="boring">    let bytes = s.as_bytes();
 </span><span class="boring">
 </span><span class="boring">    for (i, &amp;item) in bytes.iter().enumerate() {
@@ -257,107 +300,99 @@ futuro. Considere o programa na Listagem 4-6, que usa a função da Listagem 4-5
 </span><span class="boring">}
 </span><span class="boring">
 </span>fn main() {
-    let mut s = String::from("texto longo");
+    let mut s = String::from("hello world");
 
-    let palavra = primeira_palavra(&amp;s); // palavra terá o valor 5.
+    let word = first_word(&amp;s); // word will get the value 5
 
-    s.clear(); // Isso esvazia a String, deixando ela igual a "".
+    s.clear(); // this empties the String, making it equal to ""
 
-    // palavra ainda tem o valor 5 aqui, mas já não há mais uma string para a
-    // qual o valor 5 faça algum sentido. `palavra` agora é totalmente inválida!
+    // word still has the value 5 here, but s no longer has any content that we
+    // could meaningfully use with the value 5, so word is now totally invalid!
 }</code></pre>
-<p><span class="caption">Listagem 4-6: Armazenando o resultado de uma chamada à
-função <code>primeira_palavra</code>, e depois, mudando o conteúdo da <code>String</code>.</span></p>
-<p>Este programa compila sem erros, e também o faria se usássemos a variável
-<code>palavra</code> depois de chamar <code>s.clear()</code>. <code>palavra</code> não está conectada ao estado
-de <code>s</code> de nenhuma forma, então, <code>palavra</code> ainda contém o valor <code>5</code>. Poderíamos
-usar esse valor <code>5</code> com a variável <code>s</code> para tentar extrair a primeira palavra da
-string, mas isso seria um bug, pois o conteúdo de <code>s</code> já mudou após termos salvo
-o valor <code>5</code> na variável <code>palavra</code>.</p>
-<p>Ter que se preocupar sobre o índice da <code>palavra</code> ficar fora de sincronia com os
-dados em <code>s</code> é tedioso e propenso a erros! Gerenciar esses índices é ainda mais
-delicado se escrevermos uma função <code>segunda_palavra</code>. Sua assinatura teria que
-ser algo do tipo:</p>
-<pre><code class="language-rust ignore">fn segunda_palavra(s: &amp;String) -&gt; (usize, usize) {</code></pre>
-<p>Agora estamos rastreando os índices do início <em>e</em> do final, e temos ainda mais
-valores que são calculados a partir dos dados em um estado particular, mas que
-não estão vinculados a este estado de nenhuma forma. Agora temos três variáveis
-não relacionadas flutuando que precisam ser mantidas em sincronia.</p>
-<p>Felizmente, Rust possui uma solução para este problema: slices de string.</p>
-<h3 id="slices-de-string"><a class="header" href="#slices-de-string">Slices de String</a></h3>
-<p>Uma <em>slice de string</em> é uma referência para uma parte de uma <code>String</code>, e tem a
-seguinte forma:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>let s = String::from("texto longo");
+<figcaption><a href="#listing-4-8">Listing 4-8</a>: Storing the result from calling the <code>first_word</code> function and then changing the <code>String</code> contents</figcaption>
+</figure>
+<p>Este programa compila sem erros e também o faria se usássemos <code>word</code>
+depois de ligar para <code>s.clear()</code>. Porque <code>word</code> não está conectado ao estado de <code>s</code>
+de forma alguma, <code>word</code> ainda contém o valor <code>5</code>. Poderíamos usar esse valor <code>5</code> com
+a variável <code>s</code> para tentar extrair a primeira palavra, mas isso seria um bug
+porque o conteúdo de <code>s</code> mudou desde que salvamos <code>5</code> em <code>word</code>.</p>
+<p>Ter que se preocupar com o índice em <code>word</code> ficando fora de sincronia com os dados em
+<code>s</code> é tedioso e sujeito a erros! Gerenciar esses índices é ainda mais frágil se
+escrevemos uma função <code>second_word</code>. Sua assinatura teria que ser assim:</p>
+<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; (usize, usize) {</code></pre>
+<p>Agora estamos rastreando um índice inicial <em>e</em> final, e temos ainda mais
+valores que foram calculados a partir de dados em um determinado estado, mas não estão vinculados a
+esse estado. Temos três variáveis ​​não relacionadas flutuando que precisam
+para ser mantido em sincronia.</p>
+<p>Felizmente, Rust tem uma solução para este problema: fatias de string.</p>
+<h3 id="fatias-de-corda"><a class="header" href="#fatias-de-corda">Fatias de corda</a></h3>
+<p>Uma <em>string slice</em> é uma referência a uma sequência contígua dos elementos de um
+<code>String</code>, e fica assim:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    let s = String::from("hello world");
 
-let texto = &amp;s[0..5];
-let longo = &amp;s[6..11];
+    let hello = &amp;s[0..5];
+    let world = &amp;s[6..11];
 <span class="boring">}</span></code></pre>
-<p>Isto é similar a pegar uma referência à <code>String</code> inteira, mas com o adicional
-do trecho <code>[0..5]</code>. Em vez de uma referência à <code>String</code> inteira, trata-se de
-uma referência a uma porção da <code>String</code>. A sintaxe <code>início..fim</code> representa um
-<em>range</em> (uma faixa) que começa em <code>início</code> e continua até, mas não incluindo,
-<code>fim</code>.</p>
-<p>Podemos criar slices usando um range entre colchetes especificando
-<code>[índice_inicial..índice_final]</code>, em que <code>índice_inicial</code> é a primeira posição
-inclusa na slice, e <code>índice_final</code> é um a mais que a última posição inclusa na
-slice. Internamente, a estrutura de dados de uma slice armazena a posição
-inicial e o tamanho da slice, que corresponde a <code>índice_final</code> menos
-<code>índice_inicial</code>. Então, no caso do <code>let longo = &amp;s[6..11];</code>, <code>longo</code> seria uma
-slice que contém um ponteiro para o sétimo byte de <code>s</code> (índice 6) e um tamanho
-igual a 5.</p>
-<p>A Figura 4-6 mostra isto em um diagrama.</p>
-<img alt="mundo contendo um ponteiro para o 7o byte da String s e um tamanho 5" src="img/trpl04-06.svg" class="center" style="width: 50%;" />
-<p><span class="caption">Figura 4-6: Slice referente a uma parte de uma
+<p>Em vez de uma referência a <code>String</code> inteiro, <code>hello</code> é uma referência a um
+parte do <code>String</code>, especificada no bit extra <code>[0..5]</code>. Nós criamos fatias
+usando um intervalo entre colchetes, especificando
+<code>[starting_index..ending_index]</code>, onde <em><code>starting_index</code></em> é o primeiro
+posição na fatia e <em><code>ending_index</code></em> é um a mais que a última posição
+na fatia. Internamente, a estrutura de dados da fatia armazena a posição inicial
+e o comprimento da fatia, que corresponde a <em><code>ending_index</code></em> menos
+<em><code>starting_index</code></em>. Então, no caso de <code>let world = &amp;s[6..11];</code>, <code>world</code> seria
+ser uma fatia que contém um ponteiro para o byte no índice 6 de <code>s</code> com comprimento
+valor de <code>5</code>.</p>
+<p>A Figura 4-7 mostra isso em um diagrama.</p>
+<p>&lt;img alt=“Três tabelas: uma tabela que representa os dados da pilha de s, que aponta
+para o byte no índice 0 em uma tabela de dados de string “hello world” em
+a pilha. A terceira tabela representa os dados da pilha do mundo da fatia, que
+tem um valor de comprimento de 5 e aponta para o byte 6 da tabela de dados heap.“
+src=“img/trpl04-07.svg” class=“center” style=“largura: 50%;” /&gt;</p>
+<p><span class="caption">Figura 4-7: Uma fatia de string referente a parte de um
 <code>String</code></span></p>
-<p>Com a sintaxe de range do Rust (<code>..</code>), se você quiser começar com o primeiro
-elemento (índice zero), você pode omitir o valor antes dos dois pontos. Em
-outras palavras, estas formas são equivalentes:</p>
+<p>Com a sintaxe de intervalo <code>..</code> do Rust, se quiser começar no índice 0, você pode descartar
+o valor antes dos dois períodos. Em outras palavras, estes são iguais:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let s = String::from("texto");
+</span>let s = String::from("hello");
 
 let slice = &amp;s[0..2];
 let slice = &amp;s[..2];
 <span class="boring">}</span></code></pre>
-<p>Da mesma forma, se a sua slice inclui o último byte da <code>String</code>, você pode
-omitir o último número. Isso significa que as seguintes formas são equivalentes:</p>
+<p>Da mesma forma, se sua fatia incluir o último byte de <code>String</code>, você
+pode eliminar o número final. Isso significa que são iguais:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let s = String::from("texto");
+</span>let s = String::from("hello");
 
-let tamanho = s.len();
+let len = s.len();
 
-let slice = &amp;s[3..tamanho];
+let slice = &amp;s[3..len];
 let slice = &amp;s[3..];
 <span class="boring">}</span></code></pre>
-<p>Você também pode omitir ambos os valores para pegar uma slice da string inteira.
-Logo, essas duas formas são equivalentes:</p>
+<p>Você também pode eliminar ambos os valores para obter uma fatia de toda a string. Então, esses
+são iguais:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>let s = String::from("texto");
+</span>let s = String::from("hello");
 
-let tamanho = s.len();
+let len = s.len();
 
-let slice = &amp;s[0..tamanho];
+let slice = &amp;s[0..len];
 let slice = &amp;s[..];
 <span class="boring">}</span></code></pre>
 <blockquote>
-<p>Nota: Os índices do range de uma slice de string devem coincidir com os
-limites entre caracteres UTF-8 válidos. Se você tentar criar uma slice de
-string no meio de um caractere que tenha mais de um byte, seu programa vai
-terminar com erro. Para introduzir slices de string, estamos utilizando
-apenas caracteres ASCII nesta seção; uma discussão mais detalhada sobre
-manipulação de caracteres UTF-8 será feita na seção “Strings” do Capítulo 8.</p>
+<p>Observação: os índices de intervalo de fatias de string devem ocorrer em caracteres UTF-8 válidos
+limites. Se você tentar criar uma fatia de string no meio de uma
+caractere multibyte, seu programa será encerrado com um erro.</p>
 </blockquote>
-<p>Com toda essa informação em mente, vamos reescrever a função <code>primeira_palavra</code>
-para retornar uma slice. O tipo que representa “slice de string” é escrito como
-<code>&amp;str</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn primeira_palavra(s: &amp;String) -&gt; &amp;str {
+<p>Com todas essas informações em mente, vamos reescrever <code>first_word</code> para retornar um
+fatiar. O tipo que significa “string slice” é escrito como <code>&amp;str</code>:</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn first_word(s: &amp;String) -&gt; &amp;str {
     let bytes = s.as_bytes();
 
     for (i, &amp;item) in bytes.iter().enumerate() {
@@ -368,75 +403,30 @@ para retornar uma slice. O tipo que representa “slice de string” é escrito 
 
     &amp;s[..]
 }
-<span class="boring">}</span></code></pre>
-<p>Pegamos o índice para o fim da palavra da mesma forma como fizemos na Listagem
-4-5, buscando a primeira ocorrência de um espaço. Quando o encontramos,
-retornamos uma slice de string usando o início da string e o índice do espaço
-como índices inicial e final, respectivamente.</p>
-<p>Agora, quando chamamos <code>primeira_palavra</code>, pegamos de volta um único valor que
-está vinculado à string. O valor é composto de uma referência para o ponto
-inicial da slice e o número de elementos que ela contém.</p>
-<p>Retornar uma slice também funcionaria para uma função <code>segunda_palavra</code>:</p>
-<pre><code class="language-rust ignore">fn segunda_palavra(s: &amp;String) -&gt; &amp;str {</code></pre>
-<p>Agora, temos uma API bem direta que é bem mais difícil de bagunçar, uma vez que
-o compilador vai se certificar que as referências dentro da <code>String</code>
-permanecerão válidas. Lembra do bug do programa na Listagem 4-6, quando
-obtivemos o índice para o fim da primeira palavra mas depois limpamos a string,
-invalidando o índice obtido? Aquele código era logicamente incorreto, mas não
-mostrava nenhum erro imediato. Os problemas apareceriam mais tarde quando
-tentássemos usar o índice da primeira palavra com uma string que foi esvaziada.
-Slices tornam esse bug impossível de acontecer e nos permitem saber que temos um
-problema no código muito mais cedo. Na versão usando slice, a função
-<code>primeira_palavra</code> vai lançar um erro em tempo de compilação:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre><code class="language-rust ignore">fn main() {
-    let mut s = String::from("texto longo");
-
-    let palavra = primeira_palavra(&amp;s);
-
-    s.clear(); // Erro!
-}</code></pre>
-<p>Aqui está o erro:</p>
-<pre><code class="language-text">error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
- --&gt; src/main.rs:6:5
-  |
-4 |     let palavra = primeira_palavra(&amp;s);
-  |                                     - immutable borrow occurs here
-5 |
-6 |     s.clear(); // Erro!
-  |     ^ mutable borrow occurs here
-7 | }
-  | - immutable borrow ends here
-</code></pre>
-<p>Voltando às regras de borrowing, lembre-se que, se temos uma referência imutável
-para algum valor, não podemos também obter uma referência mutável do mesmo. Como
-<code>clear</code> precisa truncar a <code>String</code>, esse método tenta obter uma referência
-mutável, e acaba falhando. O Rust não só tornou nossa API mais fácil de usar,
-como também eliminou uma classe inteira de erros em tempo de compilação!</p>
-<h4 id="strings-literais-são-slices"><a class="header" href="#strings-literais-são-slices">Strings Literais São Slices</a></h4>
-<p>Lembre-se de que falamos sobre strings literais serem armazenadas dentro do
-binário. Agora que conhecemos slices, podemos entender strings literais
-adequadamente:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>let s = "Olá, mundo!";
-<span class="boring">}</span></code></pre>
-<p>O tipo de <code>s</code> aqui é <code>&amp;str</code>: é uma slice apontando para aquele ponto específico
-do binário. Também é por isso que strings literais são imutáveis; <code>&amp;str</code> é uma
-referência imutável.</p>
-<h4 id="slices-de-strings-como-parâmetros"><a class="header" href="#slices-de-strings-como-parâmetros">Slices de Strings como Parâmetros</a></h4>
-<p>Saber que você pode obter slices de literais e <code>String</code>s nos levam a mais um
-aprimoramento da função <code>primeira_palavra</code>, e aqui está sua assinatura:</p>
-<pre><code class="language-rust ignore">fn primeira_palavra(s: &amp;String) -&gt; &amp;str {</code></pre>
-<p>Um Rustáceo mais experiente escreveria esta função conforme a seguir, permitindo
-utilizar a mesma função com <code>String</code>s e <code>&amp;str</code>s:</p>
-<pre><code class="language-rust ignore">fn primeira_palavra(s: &amp;str) -&gt; &amp;str {</code></pre>
-<p>Se temos uma slice de string, podemos passá-la diretamente. Se temos uma
-<code>String</code>, podemos passar uma slice da <code>String</code> inteira. Definir uma função que
-recebe uma slice em vez de uma referência para uma String deixa nossa API mais
-genérica e útil sem perder nenhuma funcionalidade:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn primeira_palavra(s: &amp;str) -&gt; &amp;str {
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+</figure>
+<p>Obtemos o índice para o final da palavra da mesma forma que fizemos na Listagem 4-7, por
+procurando a primeira ocorrência de um espaço. Quando encontramos um espaço, retornamos um
+fatia de string usando o início da string e o índice do espaço como o
+índices iniciais e finais.</p>
+<p>Agora, quando chamamos <code>first_word</code>, obtemos de volta um único valor que está vinculado ao
+dados subjacentes. O valor é composto por uma referência ao ponto inicial do
+a fatia e o número de elementos na fatia.</p>
+<p>Retornar uma fatia também funcionaria para uma função <code>second_word</code>:</p>
+<pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {</code></pre>
+<p>Agora temos uma API simples que é muito mais difícil de bagunçar porque o
+o compilador garantirá que as referências em <code>String</code> permaneçam válidas.
+Lembre-se do bug no programa da Listagem 4.8, quando obtivemos o índice para o
+final da primeira palavra, mas depois limpou a string, então nosso índice ficou inválido?
+Esse código estava logicamente incorreto, mas não apresentava erros imediatos. O
+problemas apareceriam mais tarde se continuássemos tentando usar o índice da primeira palavra com
+uma string vazia. Slices tornam esse bug impossível e nos avisam muito mais cedo
+que temos um problema com nosso código. Usando a versão slice de <code>first_word</code>
+gerará um erro em tempo de compilação:</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">fn first_word(s: &amp;String) -&gt; &amp;str {
 </span><span class="boring">    let bytes = s.as_bytes();
 </span><span class="boring">
 </span><span class="boring">    for (i, &amp;item) in bytes.iter().enumerate() {
@@ -447,51 +437,171 @@ genérica e útil sem perder nenhuma funcionalidade:</p>
 </span><span class="boring">
 </span><span class="boring">    &amp;s[..]
 </span><span class="boring">}
+</span><span class="boring">
 </span>fn main() {
-    let minha_string = String::from("texto longo");
+    let mut s = String::from("hello world");
 
-    // primeira_palavra funciona com slices de `String`s
-    let palavra = primeira_palavra(&amp;minha_string[..]);
+    let word = first_word(&amp;s);
 
-    let minha_string_literal = "texto longo";
+    s.clear(); // error!
 
-    // primeira_palavra funciona com strings literais
-    let palavra = primeira_palavra(&amp;minha_string_literal[..]);
-
-	// uma vez que strings literais *são* slices de strings,
-	// isso também funciona, sem nem usar sintaxe de slice!
-    let palavra = primeira_palavra(minha_string_literal);
+    println!("the first word is: {word}");
 }</code></pre>
-<h3 id="outras-slices"><a class="header" href="#outras-slices">Outras Slices</a></h3>
-<p>Slices de string, como você pode imaginar, são específicas de strings. Mas há
-também um tipo de slice mais genérico. Considere esta array:</p>
+</figure>
+<p>Aqui está o erro do compilador:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+  --&gt; src/main.rs:18:5
+   |
+16 |     let word = first_word(&amp;s);
+   |                           -- immutable borrow occurs here
+17 |
+18 |     s.clear(); // error!
+   |     ^^^^^^^^^ mutable borrow occurs here
+19 |
+20 |     println!("the first word is: {word}");
+   |                                   ---- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `ownership` (bin "ownership") due to 1 previous error
+</code></pre>
+<p>Lembre-se das regras de empréstimo que se tivermos uma referência imutável a
+alguma coisa, não podemos também tomar uma referência mutável. Porque <code>clear</code> precisa
+truncar o <code>String</code>, ele precisa obter uma referência mutável. O <code>println!</code>
+após a chamada para <code>clear</code> usa a referência em <code>word</code>, então o imutável
+a referência ainda deve estar ativa nesse ponto. Rust não permite o mutável
+referência em <code>clear</code> e a referência imutável em <code>word</code> existente no
+ao mesmo tempo e a compilação falha. Rust não apenas tornou nossa API mais fácil de usar,
+mas também eliminou uma classe inteira de erros em tempo de compilação!</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="string-literals-are-slices"></a></p>
+<h4 id="literais-de-string-como-fatias"><a class="header" href="#literais-de-string-como-fatias">Literais de string como fatias</a></h4>
+<p>Lembre-se de que falamos sobre literais de string armazenados dentro do binário. Agora
+que sabemos sobre fatias, podemos entender corretamente os literais de string:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = "Hello, world!";
+<span class="boring">}</span></code></pre>
+<p>O tipo de <code>s</code> aqui é <code>&amp;str</code>: é uma fatia apontando para aquele ponto específico de
+o binário. É também por isso que os literais de string são imutáveis; <code>&amp;str</code> é um
+referência imutável.</p>
+<h4 id="fatias-de-string-como-parâmetros"><a class="header" href="#fatias-de-string-como-parâmetros">Fatias de string como parâmetros</a></h4>
+<p>Saber que você pode pegar fatias de literais e valores <code>String</code> nos leva a
+mais uma melhoria em <code>first_word</code>, e essa é sua assinatura:</p>
+<pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; &amp;str {</code></pre>
+<p>Um Rustáceo mais experiente escreveria a assinatura mostrada na Listagem 4-9
+em vez disso, porque nos permite usar a mesma função em ambos os valores <code>&amp;String</code>
+e <code>&amp;str</code> valores.</p>
+<figure class="listing" id="listing-4-9">
+<pre><code class="language-rust ignore">fn first_word(s: &amp;str) -&gt; &amp;str {
+<span class="boring">    let bytes = s.as_bytes();
+</span><span class="boring">
+</span><span class="boring">    for (i, &amp;item) in bytes.iter().enumerate() {
+</span><span class="boring">        if item == b' ' {
+</span><span class="boring">            return &amp;s[0..i];
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    &amp;s[..]
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    let my_string = String::from("hello world");
+</span><span class="boring">
+</span><span class="boring">    // `first_word` works on slices of `String`s, whether partial or whole.
+</span><span class="boring">    let word = first_word(&amp;my_string[0..6]);
+</span><span class="boring">    let word = first_word(&amp;my_string[..]);
+</span><span class="boring">    // `first_word` also works on references to `String`s, which are equivalent
+</span><span class="boring">    // to whole slices of `String`s.
+</span><span class="boring">    let word = first_word(&amp;my_string);
+</span><span class="boring">
+</span><span class="boring">    let my_string_literal = "hello world";
+</span><span class="boring">
+</span><span class="boring">    // `first_word` works on slices of string literals, whether partial or
+</span><span class="boring">    // whole.
+</span><span class="boring">    let word = first_word(&amp;my_string_literal[0..6]);
+</span><span class="boring">    let word = first_word(&amp;my_string_literal[..]);
+</span><span class="boring">
+</span><span class="boring">    // Because string literals *are* string slices already,
+</span><span class="boring">    // this works too, without the slice syntax!
+</span><span class="boring">    let word = first_word(my_string_literal);
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-4-9">Listing 4-9</a>: Improving the <code>first_word</code> function by using a string slice for the type of the <code>s</code> parameter</figcaption>
+</figure>
+<p>Se tivermos uma fatia de string, podemos passá-la diretamente. Se tivermos um <code>String</code>, nós
+pode passar uma fatia do <code>String</code> ou uma referência ao <code>String</code>. Esse
+a flexibilidade aproveita as coerções deref, um recurso que abordaremos em
+o <a href="ch15-02-deref.html#using-deref-coercions-in-functions-and-methods">“Usando Coerções Deref em Funções e Métodos”</a><!--
+ignore --> do Capítulo 15.</p>
+<p>Definindo uma função para obter uma fatia de string em vez de uma referência a <code>String</code>
+torna nossa API mais geral e útil sem perder nenhuma funcionalidade:</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn first_word(s: &amp;str) -&gt; &amp;str {
+</span><span class="boring">    let bytes = s.as_bytes();
+</span><span class="boring">
+</span><span class="boring">    for (i, &amp;item) in bytes.iter().enumerate() {
+</span><span class="boring">        if item == b' ' {
+</span><span class="boring">            return &amp;s[0..i];
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    &amp;s[..]
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let my_string = String::from("hello world");
+
+    // `first_word` works on slices of `String`s, whether partial or whole.
+    let word = first_word(&amp;my_string[0..6]);
+    let word = first_word(&amp;my_string[..]);
+    // `first_word` also works on references to `String`s, which are equivalent
+    // to whole slices of `String`s.
+    let word = first_word(&amp;my_string);
+
+    let my_string_literal = "hello world";
+
+    // `first_word` works on slices of string literals, whether partial or
+    // whole.
+    let word = first_word(&amp;my_string_literal[0..6]);
+    let word = first_word(&amp;my_string_literal[..]);
+
+    // Because string literals *are* string slices already,
+    // this works too, without the slice syntax!
+    let word = first_word(my_string_literal);
+}</code></pre>
+</figure>
+<h3 id="outras-fatias"><a class="header" href="#outras-fatias">Outras fatias</a></h3>
+<p>Fatias de string, como você pode imaginar, são específicas para strings. Mas há um
+tipo de fatia mais geral também. Considere esta matriz:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let a = [1, 2, 3, 4, 5];
 <span class="boring">}</span></code></pre>
-<p>Assim como às vezes queremos nos referir a uma parte de uma string, podemos
-também querer nos referir a uma parte de uma array, e faríamos isso da seguinte
-forma:</p>
+<p>Assim como podemos querer nos referir a parte de uma string, podemos querer nos referir a
+parte de uma matriz. Faríamos assim:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let a = [1, 2, 3, 4, 5];
 
 let slice = &amp;a[1..3];
+
+assert_eq!(slice, &amp;[2, 3]);
 <span class="boring">}</span></code></pre>
-<p>Essa slice tem o tipo <code>&amp;[i32]</code>. Ela funciona da mesma forma que as slices de
-string, armazenando uma referência para o primeiro elemento e um tamanho. Você
-vai usar esse tipo de slice para todos os tipos de coleções. Vamos discutir
-essas coleções em mais detalhe quando falarmos sobre vetores no Capítulo 8.</p>
+<p>Esta fatia tem o tipo <code>&amp;[i32]</code>. Funciona da mesma maneira que as fatias de string, por
+armazenando uma referência ao primeiro elemento e um comprimento. Você usará esse tipo de
+fatia para todos os tipos de outras coleções. Discutiremos essas coleções em
+detalhes quando falamos sobre vetores no Capítulo 8.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Os conceitos de ownership, borrowing, e slices são o que garante a segurança de
-memória dos programas em Rust em tempo de compilação. A linguagem Rust lhe dá
-controle sobre o uso da memória, assim como outras linguagens de programação de
-sistemas, mas como o dono dos dados limpa automaticamente a memória quando ele
-sai de escopo, você não tem que escrever e debugar código extra para ter esse
-controle.</p>
-<p>O ownership afeta o funcionamento de várias outras partes do Rust, por isso
-vamos falar um pouco mais sobre esses conceitos neste livro daqui para a frente.
-Vamos seguir para o próximo capítulo e ver como agrupar dados em uma <code>struct</code>.</p>
+<p>Os conceitos de propriedade, empréstimo e fatias garantem a segurança da memória em Rust
+programas em tempo de compilação. A linguagem Rust oferece controle sobre sua memória
+uso da mesma maneira que outras linguagens de programação de sistemas. Mas tendo o
+o proprietário dos dados limpa automaticamente esses dados quando o proprietário sai do escopo
+significa que você não precisa escrever e depurar código extra para obter esse controle.</p>
+<p>A propriedade afeta o funcionamento de muitas outras partes do Rust, então falaremos sobre
+aprofundar esses conceitos ao longo do restante do livro. Vamos passar para
+Capítulo 5 e observe o agrupamento de dados em um <code>struct</code>.</p>
 
                     </main>
 

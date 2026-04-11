@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Usar panic! ou Não Usar panic! - A Linguagem de Programação Rust (PT-BR)</title>
+        <title>Usar ou Não Usar panic! - A Linguagem de Programação Rust (PT-BR)</title>
 
 
         <!-- Custom HTML head -->
@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
+            window.path_to_searchindex_js = "searchindex-4c181ae4.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-77646bdf.js"></script>
+        <script src="toc-869888b5.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,218 +181,264 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="entrar-em-panic-ou-não-entrar-em-panic"><a class="header" href="#entrar-em-panic-ou-não-entrar-em-panic">Entrar em <code>panic!</code> ou Não Entrar em <code>panic!</code></a></h2>
-<p>Então como você decide quando entrar em <code>panic!</code> e quando você deveria retornar
-um <code>Result</code>? Quando o código entra em pânico, não há maneira de se recuperar. Você
-poderia chamar <code>panic!</code> para qualquer situação de erro, tendo uma maneira de se recuperar
-ou não, mas então você estaria decidindo no lugar do código que chama seu código
-que a situação é irrecuperável. Quando você decide retornar um valor de <code>Result</code>,
-você lhe dá opções em vez de tomar a decisão por ele. O código
-que chama seu código pode tentar se recuperar de uma maneira que é apropriada para
-a situação, ou ele pode decidir que um valor de <code>Err</code> nesse caso é irrecuperável,
-chamando <code>panic!</code> e transformando seu erro recuperável em um irrecuperável.
-Portanto, retornar <code>Result</code> é uma boa escolha padrão quando você está definindo
-uma função que pode falhar.</p>
-<p>Em algumas situações é mais apropriado escrever código que entra em pânico em vez
-de retornar um <code>Result</code>, mas eles são menos comuns. Vamos explorar porque é apropriado
-entrar em pânico em alguns exemplos, protótipos de código e testes; depois situações
-em que você como humano pode saber que um método não vai falhar, mas que o compilador não
-tem como saber; e concluir com algumas diretrizes sobre como decidir entrar ou
-não em pânico em código de biblioteca.</p>
-<h3 id="exemplos-protótipos-e-testes-são-todos-lugares-em-que-é-perfeitamente-ok-entrar-em-pânico"><a class="header" href="#exemplos-protótipos-e-testes-são-todos-lugares-em-que-é-perfeitamente-ok-entrar-em-pânico">Exemplos, Protótipos, e Testes São Todos Lugares em que É Perfeitamente Ok Entrar em Pânico</a></h3>
-<p>Quando você está escrevendo um exemplo para ilustrar algum conceito, ter código
-de tratamento de erro robusto junto do exemplo pode torná-lo menos claro. Em exemplos,
-é compreensível que uma chamada a um método como <code>unwrap</code> que poderia chamar <code>panic!</code>
-apenas substitua a maneira como você trataria erros na sua aplicação,
-que pode ser diferente baseado no que o resto do seu código está fazendo.</p>
-<p>De forma semelhante, os métodos <code>unwrap</code> e <code>expect</code> são bem úteis ao fazer
-protótipos, antes de você estar pronto para decidir como tratar erros. Eles deixam
-marcadores claros no seu código para quando você estiver pronto para tornar
-seu programa mais robusto.</p>
-<p>Se uma chamada de método falha em um teste, queremos que o teste inteiro falhe,
-mesmo se esse método não é a funcionalidade sendo testada. Como <code>panic!</code> é o modo
-que um teste é marcado como falha, chamar <code>unwrap</code> ou <code>expect</code> é exatamente o que
-deveria acontecer.</p>
-<h3 id="casos-em-que-você-tem-mais-informação-que-o-compilador"><a class="header" href="#casos-em-que-você-tem-mais-informação-que-o-compilador">Casos em que Você Tem Mais Informação Que o Compilador</a></h3>
-<p>Seria também apropriado chamar <code>unwrap</code> quando você tem outra lógica que
-assegura que o <code>Result</code> terá um valor <code>Ok</code>, mas essa lógica não é algo
-que o compilador entenda. Você ainda terá um valor <code>Result</code> com o qual precisa
-lidar: seja qual for a operação que você está chamando, ela ainda tem uma possibilidade
-de falhar em geral, mesmo que seja logicamente impossível que isso ocorra nessa
-situação particular. Se você consegue assegurar ao inspecionar manualmente o código que
-você nunca terá uma variante <code>Err</code>, é perfeitamente aceitável chamar <code>unwrap</code>.
-Aqui temos um exemplo:</p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use std::net::IpAddr;
+                        <h2 id="para-panic-ou-não-para-panic"><a class="header" href="#para-panic-ou-não-para-panic">Para <code>panic!</code> ou não para <code>panic!</code></a></h2>
+<p>Então, como você decide quando deve ligar para <code>panic!</code> e quando deve retornar
+<code>Result</code>? Quando o código entra em pânico, não há como se recuperar. Você poderia ligar para <code>panic!</code>
+para qualquer situação de erro, haja ou não uma forma possível de recuperação, mas
+então você está tomando a decisão de que uma situação é irrecuperável em nome de
+o código de chamada. Quando você escolhe retornar um valor <code>Result</code>, você fornece o
+opções de código de chamada. O código de chamada pode optar por tentar a recuperação em um
+maneira apropriada para sua situação, ou pode decidir que um <code>Err</code>
+valor neste caso é irrecuperável, então ele pode chamar <code>panic!</code> e transformar seu
+erro recuperável em um erro irrecuperável. Portanto, retornar <code>Result</code> é um
+boa escolha padrão quando você está definindo uma função que pode falhar.</p>
+<p>Em situações como exemplos, código de protótipo e testes, é mais
+apropriado escrever código que entre em pânico em vez de retornar <code>Result</code>. Vamos
+explore o porquê e depois discuta situações em que o compilador não consegue dizer isso
+o fracasso é impossível, mas você, como humano, pode. O capítulo terminará com
+algumas diretrizes gerais sobre como decidir se deve entrar em pânico no código da biblioteca.</p>
+<h3 id="exemplos-código-de-protótipo-e-testes"><a class="header" href="#exemplos-código-de-protótipo-e-testes">Exemplos, código de protótipo e testes</a></h3>
+<p>Quando você está escrevendo um exemplo para ilustrar algum conceito, incluindo também
+um código robusto de tratamento de erros pode tornar o exemplo menos claro. Nos exemplos, é
+entendi que uma chamada para um método como <code>unwrap</code> que poderia entrar em pânico é entendida como um
+espaço reservado para a maneira como você deseja que seu aplicativo lide com erros, o que pode
+diferem com base no que o resto do seu código está fazendo.</p>
+<p>Da mesma forma, os métodos <code>unwrap</code> e <code>expect</code> são muito úteis quando você está
+prototipagem e você ainda não está pronto para decidir como lidar com erros. Eles vão embora
+limpe marcadores em seu código para quando você estiver pronto para tornar seu programa mais
+robusto.</p>
+<p>Se uma chamada de método falhar em um teste, você desejará que todo o teste falhe, mesmo que
+esse método não é a funcionalidade em teste. Porque <code>panic!</code> é como um teste
+está marcado como uma falha, chamar <code>unwrap</code> ou <code>expect</code> é exatamente o que deveria
+acontecer.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="cases-in-which-you-have-more-information-than-the-compiler"></a></p>
+<h3 id="quando-você-tem-mais-informações-que-o-compilador"><a class="header" href="#quando-você-tem-mais-informações-que-o-compilador">Quando você tem mais informações que o compilador</a></h3>
+<p>Também seria apropriado chamar <code>expect</code> quando você tiver alguma outra lógica
+isso garante que <code>Result</code> terá um valor <code>Ok</code>, mas a lógica não é
+algo que o compilador entende. Você ainda terá um valor <code>Result</code> que você
+precisa lidar: Qualquer operação que você esteja chamando ainda tem a possibilidade de
+falhando em geral, mesmo que seja logicamente impossível em seu particular
+situação. Se você puder garantir, inspecionando manualmente o código, que nunca
+tiver uma variante <code>Err</code>, é perfeitamente aceitável chamar <code>expect</code> e documentar
+a razão pela qual você acha que nunca terá uma variante <code>Err</code> no texto do argumento.
+Aqui está um exemplo:</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
+</span>    use std::net::IpAddr;
 
-let home = "127.0.0.1".parse::&lt;IpAddr&gt;().unwrap();
+    let home: IpAddr = "127.0.0.1"
+        .parse()
+        .expect("Hardcoded IP address should be valid");
 <span class="boring">}</span></code></pre>
-<p>Estamos criando uma instância <code>IpAddr</code> ao analisar uma string <em>hardcoded</em>. Nós
-podemos ver que <code>127.0.0.1</code> é um endereço de IP válido, então é aceitável usar
-<code>unwrap</code> aqui. No entanto, ter uma string válida <em>hardcoded</em> não muda o tipo retornado
-pelo método <code>parse</code>: ainda teremos um valor de <code>Result</code>, e o compilador ainda
-vai nos fazer tratar o <code>Result</code> como se a variante <code>Err</code> fosse uma
-possibilidade, porque o compilador não é inteligente o bastante para ver que essa string
-é sempre um endereço IP válido. Se a string de endereço IP viesse de um usuário ao invés
-de ser <em>hardcoded</em> no programa, e portanto, de fato tivesse uma possibilidade de falha, nós
-definitivamente iríamos querer tratar o <code>Result</code> de uma forma mais robusta.</p>
-<h3 id="diretrizes-para-tratamento-de-erro"><a class="header" href="#diretrizes-para-tratamento-de-erro">Diretrizes para Tratamento de Erro</a></h3>
-<p>É aconselhável fazer com que seu código entre em <code>panic!</code> quando é possível que
-ele entre em um mau estado. Nesse contexto, mau estado é quando
-alguma hipótese, garantia, contrato ou invariante foi quebrada, tal como
-valores inválidos, valores contraditórios ou valores faltando que são passados
-ao seu código, além de um ou mais dos seguintes:</p>
+<p>Estamos criando uma instância <code>IpAddr</code> analisando uma string codificada. Podemos ver
+que <code>127.0.0.1</code> é um endereço IP válido, então é aceitável usar <code>expect</code>
+aqui. No entanto, ter uma string válida e codificada não altera o tipo de retorno
+do método <code>parse</code>: ainda obtemos um valor <code>Result</code> e o compilador irá
+ainda nos faça lidar com <code>Result</code> como se a variante <code>Err</code> fosse uma possibilidade
+porque o compilador não é inteligente o suficiente para ver que esta string é sempre um
+endereço IP válido. Se a string do endereço IP veio de um usuário em vez de ser
+codificado no programa e, portanto, <em>tinha</em> uma possibilidade de falha,
+definitivamente gostaríamos de lidar com <code>Result</code> de uma forma mais robusta.
+Mencionar a suposição de que este endereço IP está codificado nos levará a
+altere <code>expect</code> para um melhor código de tratamento de erros se, no futuro, precisarmos obter
+o endereço IP de alguma outra fonte.</p>
+<h3 id="diretrizes-para-tratamento-de-erros"><a class="header" href="#diretrizes-para-tratamento-de-erros">Diretrizes para tratamento de erros</a></h3>
+<p>É aconselhável deixar seu código em pânico quando for possível que ele possa
+acabar em um estado ruim. Neste contexto, um <em>estado ruim</em> é quando alguma suposição,
+garantia, contrato ou invariante foi quebrado, como quando valores inválidos,
+valores contraditórios ou valores ausentes são passados ​​para o seu código - mais um ou
+mais do seguinte:</p>
 <ul>
-<li>O mau estado não é algo que é <em>esperado</em> que aconteça ocasionalmente.</li>
-<li>Seu código após certo ponto precisa confiar que ele não está nesse mau estado.</li>
-<li>Não há uma forma boa de codificar essa informação nos tipos que você usa.</li>
+<li>O mau estado é algo inesperado, em oposição a algo que
+provavelmente acontecerá ocasionalmente, como um usuário inserindo dados de forma errada
+formatar.</li>
+<li>Seu código após este ponto precisa confiar em não estar neste estado ruim,
+em vez de verificar o problema em cada etapa.</li>
+<li>Não há uma boa maneira de codificar essas informações nos tipos que você usa. Bem
+trabalharemos com um exemplo do que queremos dizer em <a href="ch18-03-oo-design-patterns.html#encoding-states-and-behavior-as-types">“Encoding States and Behavior as
+Tipos”</a><!-- ignore --> no Capítulo 18.</li>
 </ul>
-<p>Se alguém chama seu código e passa valores que não fazem sentido, a melhor escolha
-talvez seja entrar em <code>panic!</code> e alertar a pessoa usando sua biblioteca do bug no
-código dela para que ela possa consertá-la durante o desenvolvimento. Similarmente,
-<code>panic!</code> é em geral apropriado se você está chamando código externo que está fora
-do seu controle e ele retorna um estado inválido que você não tem como consertar.</p>
-<p>Quando se chega a um mau estado, mas isso é esperado que aconteça não importa
-quão bem você escreva seu código, ainda é mais apropriado retornar um <code>Result</code>
-a fazer uma chamada a <code>panic!</code>. Um exemplo disso é um <em>parser</em> recebendo dados
-malformados ou uma requisição HTTP retornando um status que indique que você atingiu
-um limite de taxa. Nesses casos, você deveria indicar que falha é uma possibilidade
-esperada ao retornar um <code>Result</code> para propagar esses estados ruins para cima,
-de forma que o código que chamou seu código pode decidir como tratar o problema.
-Entrar em <code>panic!</code> não seria a melhor maneira de lidar com esses casos.</p>
-<p>Quando seu código realiza operações em valores, ele deveria verificar que os valores
-são válidos primeiro, e entrar em <code>panic!</code> caso não sejam. Isso é
-em boa parte por razões de segurança: tentar operar em dados inválidos pode expor seu
-código a vulnerabilidades. Essa é a principal razão para a biblioteca padrão entrar em
-<code>panic!</code> se você tentar um acesso de memória fora dos limites: tentar acessar memória
-que não pertence à estrutura de dados atual é um problema de segurança comum. Funções
-frequentemente tem <em>contratos</em>: seu comportamento somente é garantido se os inputs cumprem
-requerimentos específicos. Entrar em pânico quando o contrato é violado faz sentido
-porque uma violação de contrato sempre indica um bug da parte do chamador, e não é o tipo
-de erro que você quer que seja tratado explicitamente. De fato,
-não há nenhuma maneira razoável para o código chamador se recuperar: os <em>programadores</em>
-que precisam consertar o código. Contratos para uma função, especialmente quando uma
-violação leva a pânico, devem ser explicados na documentação da API da função.</p>
-<p>No entanto, ter várias checagens de erro em todas suas funções pode ser verboso
-e irritante. Felizmente, você pode usar o sistema de tipos do Rust (e portanto a
-checagem que o compilador faz) para fazer várias dessas checagens para você. Se
-sua função tem um tipo particular como parâmetro, você pode continuar com a lógica
-do seu código sabendo que o compilador já assegurou que você tem um valor válido.
-Por exemplo, se você tem um tipo em vez de uma <code>Option</code>, seu programa espera
-ter <em>algo</em> ao invés de <em>nada</em>. Seu código não precisa tratar dois casos para
-as variantes <code>Some</code> e <code>None</code>: ele vai somente ter um caso para definitivamente ter
-um valor. Um código que tente passar nada para sua função não vai nem compilar,
-então sua função não precisa checar esse caso em tempo de execução. Outro exemplo é usar
-um tipo de inteiro sem sinal como <code>u32</code>, que assegura que o parâmetro nunca é
-negativo.</p>
-<h3 id="criando-tipos-customizados-para-validação"><a class="header" href="#criando-tipos-customizados-para-validação">Criando Tipos Customizados para Validação</a></h3>
-<p>Vamos dar um passo além na ideia de usar o sistema de tipos de Rust para assegurar que temos
-um valor válido e ver como criar um tipo customizado para validação.
-Lembre do jogo de adivinhação no Capítulo 2 onde nosso código pedia ao usuário
-para adivinhar um número entre 1 e 100. Nós nunca validamos que o chute do usuário
-fosse entre esses números antes de compará-lo com o número secreto; nós somente
-validamos que o chute era positivo. Nesse caso, as consequências não foram tão
-drásticas: nosso output de “Muito alto” ou “Muito baixo” ainda estariam corretos. Seria
-seria uma melhoria útil guiar o usuário para chutes válidos, e ter um comportamento distinto
-quando um usuário chuta um número fora do limite e quando um usuário digita letras, por exemplo.</p>
-<p>Uma maneira de fazer isso seria interpretar o chute como um <code>i32</code> em vez de
-somente um <code>u32</code> para permitir números potencialmente negativos, e então adicionar
-uma checagem se o número está dentro dos limites, conforme a seguir:</p>
-<pre><code class="language-rust ignore">loop {
-    // snip
+<p>Se alguém chamar seu código e passar valores que não fazem sentido, é
+é melhor retornar um erro, se possível, para que o usuário da biblioteca possa decidir
+o que eles querem fazer nesse caso. Contudo, nos casos em que a continuação possa ser
+inseguro ou prejudicial, a melhor escolha pode ser ligar para <code>panic!</code> e alertar o
+pessoa que usa sua biblioteca para o bug em seu código para que possa corrigi-lo
+durante o desenvolvimento. Da mesma forma, <code>panic!</code> geralmente é apropriado se você estiver ligando
+código externo que está fora de seu controle e retorna um estado inválido que você
+não tem como consertar.</p>
+<p>No entanto, quando a falha é esperada, é mais apropriado retornar um <code>Result</code>
+do que fazer uma chamada <code>panic!</code>. Os exemplos incluem um analisador sendo malformado
+dados ou uma solicitação HTTP retornando um status que indica que você atingiu uma taxa
+limite. Nestes casos, retornar <code>Result</code> indica que a falha é um
+possibilidade esperada de que o código de chamada deva decidir como lidar.</p>
+<p>Quando seu código executa uma operação que pode colocar um usuário em risco se for
+chamado usando valores inválidos, seu código deve primeiro verificar se os valores são válidos
+e entre em pânico se os valores não forem válidos. Isso ocorre principalmente por razões de segurança:
+A tentativa de operar com dados inválidos pode expor seu código a vulnerabilidades.
+Esta é a principal razão pela qual a biblioteca padrão chamará <code>panic!</code> se você tentar
+um acesso à memória fora dos limites: Tentando acessar a memória que não pertence a
+a estrutura de dados atual é um problema de segurança comum. As funções geralmente têm
+<em>contratos</em>: Seu comportamento só é garantido se os insumos atenderem
+requisitos. Entrar em pânico quando o contrato é violado faz sentido porque um
+violação de contrato sempre indica um bug do lado do chamador e não é um tipo de
+erro que você deseja que o código de chamada manipule explicitamente. Na verdade, há
+nenhuma maneira razoável de chamar o código para recuperação; a chamada que os <em>programadores</em> precisam
+para corrigir o código. Contratos para uma função, especialmente quando uma violação ocorrerá
+causar pânico, deve ser explicado na documentação da API da função.</p>
+<p>No entanto, ter muitas verificações de erros em todas as suas funções seria detalhado
+e irritante. Felizmente, você pode usar o sistema de tipos do Rust (e, portanto, o tipo
+verificação feita pelo compilador) para fazer muitas das verificações para você. Se o seu
+função tem um tipo específico como parâmetro, você pode prosseguir com o seu código
+lógica sabendo que o compilador já garantiu que você tem um código válido
+valor. Por exemplo, se você tiver um tipo em vez de <code>Option</code>, seu programa
+espera ter <em>algo</em> em vez de <em>nada</em>. Seu código então não tem
+para lidar com dois casos para as variantes <code>Some</code> e <code>None</code>: terá apenas um
+caso para definitivamente ter um valor. Código tentando passar nada para o seu
+a função nem mesmo compila, então sua função não precisa verificar isso
+caso em tempo de execução. Outro exemplo é usar um tipo inteiro sem sinal, como
+<code>u32</code>, o que garante que o parâmetro nunca seja negativo.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="creating-custom-types-for-validation"></a></p>
+<h3 id="tipos-personalizados-para-validação"><a class="header" href="#tipos-personalizados-para-validação">Tipos personalizados para validação</a></h3>
+<p>Vamos aproveitar a ideia de usar o sistema de tipos do Rust para garantir que tenhamos um valor válido
+valorize um passo adiante e veja como criar um tipo personalizado para validação.
+Lembre-se do jogo de adivinhação do Capítulo 2, no qual nosso código pedia ao usuário que adivinhasse
+um número entre 1 e 100. Nunca validamos se a estimativa do usuário era
+entre esses números antes de compará-los com nosso número secreto; nós apenas
+validou que o palpite era positivo. Neste caso, as consequências não foram
+muito terrível: nossa saída de “Muito alto” ou “Muito baixo” ainda estaria correta. Mas isso
+seria um aprimoramento útil para orientar o usuário em direção a suposições válidas e ter
+comportamento diferente quando o usuário adivinha um número que está fora do intervalo versus
+quando o usuário digita, por exemplo, letras.</p>
+<p>Uma maneira de fazer isso seria analisar a estimativa como <code>i32</code> em vez de apenas como
+<code>u32</code> para permitir números potencialmente negativos e, em seguida, adicione uma verificação para o
+número estando dentro do intervalo, assim:</p>
+<figure class="listing">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
+</span><span class="boring">use std::cmp::Ordering;
+</span><span class="boring">use std::io;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    println!("Guess the number!");
+</span><span class="boring">
+</span><span class="boring">    let secret_number = rand::thread_rng().gen_range(1..=100);
+</span><span class="boring">
+</span>    loop {
+        // --snip--
 
-    let palpite: i32 = match palpite.trim().parse() {
-        Ok(num) =&gt; num,
-        Err(_) =&gt; continue,
-    };
+<span class="boring">        println!("Please input your guess.");
+</span><span class="boring">
+</span><span class="boring">        let mut guess = String::new();
+</span><span class="boring">
+</span><span class="boring">        io::stdin()
+</span><span class="boring">            .read_line(&amp;mut guess)
+</span><span class="boring">            .expect("Failed to read line");
+</span><span class="boring">
+</span>        let guess: i32 = match guess.trim().parse() {
+            Ok(num) =&gt; num,
+            Err(_) =&gt; continue,
+        };
 
-    if palpite &lt; 1 || palpite &gt; 100 {
-        println!("O número secreto estará entre 1 e 100.");
-        continue;
-    }
+        if guess &lt; 1 || guess &gt; 100 {
+            println!("The secret number will be between 1 and 100.");
+            continue;
+        }
 
-    match palpite.cmp(&amp;numero_secreto) {
-    // snip
-}</code></pre>
-<p>A expressão <code>if</code> checa se nosso valor está fora dos limites, informa o usuário
-sobre o problema, e chama <code>continue</code> para começar a próxima iteração do loop
-e pedir por outro chute. Depois da expressão <code>if</code> podemos proceder com as
-comparações entre <code>palpite</code> e o número secreto sabendo que <code>palpite</code> está
+        match guess.cmp(&amp;secret_number) {
+            // --snip--
+<span class="boring">            Ordering::Less =&gt; println!("Too small!"),
+</span><span class="boring">            Ordering::Greater =&gt; println!("Too big!"),
+</span><span class="boring">            Ordering::Equal =&gt; {
+</span><span class="boring">                println!("You win!");
+</span><span class="boring">                break;
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span>    }
+<span class="boring">}</span></code></pre>
+</figure>
+<p>A expressão <code>if</code> verifica se nosso valor está fora do intervalo e informa ao usuário
+sobre o problema e chama <code>continue</code> para iniciar a próxima iteração do loop
+e peça outro palpite. Após a expressão <code>if</code>, podemos prosseguir com o
+comparações entre <code>guess</code> e o número secreto sabendo que <code>guess</code> é
 entre 1 e 100.</p>
-<p>No entanto, essa não é a solução ideal: se fosse absolutamente crítico que o
-programa somente operasse em valores entre 1 e 100, e ele tivesse várias funções
-com esse requisito, seria tedioso (e potencialmente impactante na performance)
-ter uma checagem dessa em cada função.</p>
-<p>Em vez disso, podemos fazer um novo tipo e colocar as validações em uma função
-para criar uma instância do tipo em vez de repetir as validações em todo lugar.
-Dessa maneira, é seguro para funções usarem o novo tipo nas suas assinaturas e
-confidentemente usar os valores que recebem. A Listagem 9-9  mostra uma maneira de
-definir um tipo <code>Palpite</code> que vai somente criar uma instância de <code>Palpite</code> se a função
-<code>new</code> receber um valor entre 1 e 100:</p>
+<p>Contudo, esta não é uma solução ideal: se fosse absolutamente crítico que o
+o programa operava apenas com valores entre 1 e 100 e tinha muitas funções
+com este requisito, ter uma verificação como esta em todas as funções seria
+tedioso (e pode afetar o desempenho).</p>
+<p>Em vez disso, podemos criar um novo tipo em um módulo dedicado e colocar as validações
+em uma função para criar uma instância do tipo em vez de repetir o
+validações em todos os lugares. Dessa forma, é seguro para as funções usarem o novo tipo
+em suas assinaturas e usam com confiança os valores que recebem. Listagem 9-13
+mostra uma maneira de definir um tipo <code>Guess</code> que criará apenas uma instância de
+<code>Guess</code> se a função <code>new</code> receber um valor entre 1 e 100.</p>
+<figure class="listing" id="listing-9-13">
+<span class="file-name">Filename: src/guessing_game.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>pub struct Palpite {
-    valor: u32,
+</span>pub struct Guess {
+    value: i32,
 }
 
-impl Palpite {
-    pub fn new(valor: u32) -&gt; Palpite {
-        if valor &lt; 1 || valor &gt; 100 {
-            panic!("Valor de chute deve ser entre 1 e 100, recebi {}.", valor);
+impl Guess {
+    pub fn new(value: i32) -&gt; Guess {
+        if value &lt; 1 || value &gt; 100 {
+            panic!("Guess value must be between 1 and 100, got {value}.");
         }
 
-        Palpite {
-            valor
-        }
+        Guess { value }
     }
 
-    pub fn valor(&amp;self) -&gt; u32 {
-        self.valor
+    pub fn value(&amp;self) -&gt; i32 {
+        self.value
     }
 }
 <span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 9-9: Um tipo <code>Palpite</code> que somente funciona com valores
-entre 1 e 100.</span></p>
-<p>Primeiro, definimos uma struct chamada <code>Palpite</code> que tem um campo chamado <code>valor</code>
-que guarda um <code>u32</code>. Isso é onde o número vai ser guardado.</p>
-<p>Então nós implementamos uma função associada chamada <code>new</code> em <code>Palpite</code> que cria
-instâncias de valores <code>Palpite</code>. A função <code>new</code> é definida a ter um parâmetro
-chamado <code>valor</code> de tipo <code>u32</code> e retornar um <code>Palpite</code>. O código no corpo da função
-<code>new</code> testa para ter certeza que <code>valor</code> está entre 1 e 100. Se <code>valor</code> não passa
-nesse teste, fazemos uma chamada a <code>panic!</code>, que vai alertar ao programador que
-está escrevendo o código chamando a função que ele tem um bug que precisa ser
-corrigido, porque criar um <code>Palpite</code> com um <code>valor</code> fora desses limites violaria
-o contrato em que <code>Palpite::new</code> se baseia. As condições em que <code>Palpite::new</code> pode
-entrar em pânico devem ser discutidas na sua documentação da API voltada ao público;
-no Capítulo 14 nós cobriremos convenções de documentação indicando a possibilidade de um <code>panic!</code>
-na documentação de API. Se <code>valor</code> de fato passa no
-teste, criamos um novo <code>Palpite</code> com o campo <code>valor</code> preenchido com o parâmetro
-<code>valor</code> e retornamos o <code>Palpite</code>.</p>
-<p>Em seguida, implementamos um método chamado <code>valor</code> que pega <code>self</code> emprestado, não
-tem nenhum outro parâmetro, e retorna um <code>u32</code>. Esse é o tipo de método às vezes
-chamado de <em>getter</em>, pois seu propósito é pegar um dado de um dos campos e o retornar.
-Esse método público é necessário porque o campo <code>valor</code> da struct <code>Palpite</code> é privado.
-É importante que o campo <code>valor</code> seja privado para que código usando a struct <code>Palpite</code>
-não tenha permissão de definir o valor de <code>valor</code> diretamente: código de fora do módulo
-<em>deve</em> usar a função <code>Palpite::new</code> para criar uma instância de <code>Palpite</code>, o que certifica
-que não há maneira de um <code>Palpite</code> ter um <code>valor</code> que não foi checado pelas condições
-definidas na função <code>Palpite::new</code>.</p>
-<p>Uma função que tem um parâmetro ou retorna somente números entre 1 e 100 pode
-então declarar na sua assinatura que ela recebe ou retorna um <code>Palpite</code> em vez
-de um <code>u32</code> e não precisaria fazer nenhuma checagem adicional no seu corpo.</p>
+<figcaption><a href="#listing-9-13">Listing 9-13</a>: A <code>Guess</code> type that will only continue with values between 1 and 100</figcaption>
+</figure>
+<p>Observe que este código em <em>src/guessing_game.rs</em> depende da adição de um módulo
+declaração <code>mod guessing_game;</code> em <em>src/lib.rs</em> que não mostramos aqui.
+Dentro do arquivo deste novo módulo, definimos uma estrutura chamada <code>Guess</code> que possui um
+campo chamado <code>value</code> que contém <code>i32</code>. É aqui que o número estará
+armazenado.</p>
+<p>Então, implementamos uma função associada chamada <code>new</code> em <code>Guess</code> que cria
+instâncias de valores <code>Guess</code>. A função <code>new</code> é definida para ter um
+parâmetro chamado <code>value</code> do tipo <code>i32</code> e para retornar um <code>Guess</code>. O código no
+o corpo da função <code>new</code> testa <code>value</code> para garantir que está entre 1 e 100.
+Se <code>value</code> não passar neste teste, fazemos uma chamada <code>panic!</code>, que alertará
+o programador que está escrevendo o código de chamada que tem um bug que precisa
+corrigir, porque criar um <code>Guess</code> com um <code>value</code> fora deste intervalo seria
+violar o contrato no qual <code>Guess::new</code> está confiando. As condições em que
+<code>Guess::new</code> pode entrar em pânico deve ser discutido em sua API voltada ao público
+documentação; abordaremos convenções de documentação indicando a possibilidade
+de um <code>panic!</code> na documentação da API que você cria no Capítulo 14. Se
+<code>value</code> passa no teste, criamos um novo <code>Guess</code> com seu campo <code>value</code> definido
+para o parâmetro <code>value</code> e retorne <code>Guess</code>.</p>
+<p>A seguir, implementamos um método chamado <code>value</code> que pega emprestado <code>self</code>, não possui nenhum
+outros parâmetros e retorna um <code>i32</code>. Este tipo de método às vezes é chamado
+um <em>getter</em> porque seu objetivo é obter alguns dados de seus campos e retornar
+isto. Este método público é necessário porque o campo <code>value</code> do <code>Guess</code>
+struct é privado. É importante que o campo <code>value</code> seja privado para que
+código usando a estrutura <code>Guess</code> não tem permissão para definir <code>value</code> diretamente: Código
+fora do módulo <code>guessing_game</code> <em>deve</em> usar a função <code>Guess::new</code> para
+crie uma instância de <code>Guess</code>, garantindo assim que não há como
+<code>Guess</code> para ter um <code>value</code> que não foi verificado pelas condições do
+<code>Guess::new</code> função.</p>
+<p>Uma função que possui um parâmetro ou retorna apenas números entre 1 e 100 poderia
+em seguida, declare em sua assinatura que recebe ou retorna um <code>Guess</code> em vez de um
+<code>i32</code> e não precisaria fazer nenhuma verificação adicional em seu corpo.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>As ferramentas de tratamento de erros de Rust são feitas para te ajudar a escrever
-código mais robusto. A macro <code>panic!</code> sinaliza que seu programa está num estado que
-não consegue lidar e deixa você parar o processo ao invés de tentar prosseguir com
-valores inválidos ou incorretos. O enum <code>Result</code> usa o sistema de tipos de Rust para
-indicar que operações podem falhar de uma maneira que seu código pode se recuperar.
-Você pode usar <code>Result</code> para dizer ao código que chama seu código que ele precisa
-tratar potenciais sucessos ou falhas também. Usar <code>panic!</code> e <code>Result</code> nas situações
-apropriadas fará seu código mais confiável em face aos problemas inevitáveis.</p>
-<p>Agora que você viu as maneiras úteis em que a biblioteca padrão usa genéricos com
-os enums <code>Option</code> e <code>Result</code>, nós falaremos como genéricos funcionam e como você
-pode usá-los em seu código no próximo capítulo.</p>
+<p>Os recursos de tratamento de erros do Rust foram projetados para ajudá-lo a escrever um código mais robusto.
+A macro <code>panic!</code> sinaliza que seu programa está em um estado que não pode ser controlado e
+permite que você diga ao processo para parar em vez de tentar prosseguir com dados inválidos ou
+valores incorretos. O <code>Result</code> enum usa o sistema de tipos do Rust para indicar que
+as operações podem falhar de uma forma que seu código possa se recuperar. Você pode usar
+<code>Result</code> para informar ao código que chama seu código que ele precisa para lidar com potenciais
+sucesso ou fracasso também. Usando <code>panic!</code> e <code>Result</code> no apropriado
+situações tornarão seu código mais confiável diante de problemas inevitáveis.</p>
+<p>Agora que você viu maneiras úteis de a biblioteca padrão usar genéricos com
+os enums <code>Option</code> e <code>Result</code>, falaremos sobre como os genéricos funcionam e como você
+pode usá-los em seu código.</p>
 
                     </main>
 

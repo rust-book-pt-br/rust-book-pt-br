@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
+            window.path_to_searchindex_js = "searchindex-4c181ae4.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-77646bdf.js"></script>
+        <script src="toc-869888b5.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,13 +181,13 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="lendo-um-arquivo"><a class="header" href="#lendo-um-arquivo">Lendo um Arquivo</a></h2>
-<p>Agora vamos adicionar a funcionalidade para ler o arquivo especificado no
-argumento <code>file_path</code>. Primeiro, precisamos de um arquivo de amostra para
-testar: usaremos um arquivo com uma pequena quantidade de texto em várias
-linhas, com algumas palavras repetidas. A Listagem 12-3 traz um poema de Emily
-Dickinson que funciona muito bem! Crie um arquivo chamado <em>poem.txt</em> na raiz
-do seu projeto e coloque nele o poema “I’m Nobody! Who are you?”.</p>
+                        <h2 id="lendo-um-arquivo"><a class="header" href="#lendo-um-arquivo">Lendo um arquivo</a></h2>
+<p>Agora adicionaremos funcionalidade para ler o arquivo especificado no <code>file_path</code>
+argumento. Primeiro, precisamos de um arquivo de amostra para testá-lo: usaremos um arquivo com um
+pequena quantidade de texto em várias linhas com algumas palavras repetidas. Listagem 12-3
+tem um poema de Emily Dickinson que funcionará bem! Crie um arquivo chamado
+<em>poem.txt</em> no nível raiz do seu projeto e insira o poema “Eu não sou ninguém!
+Quem é você?“</p>
 <figure class="listing" id="listing-12-3">
 <span class="file-name">Filename: poem.txt</span>
 <pre><code class="language-text">I'm nobody! Who are you?
@@ -200,10 +200,10 @@ How public, like a frog
 To tell your name the livelong day
 To an admiring bog!
 </code></pre>
-<figcaption><a href="#listing-12-3">Listing 12-3</a>: Um poema de Emily Dickinson é um bom caso de teste</figcaption>
+<figcaption><a href="#listing-12-3">Listing 12-3</a>: A poem by Emily Dickinson makes a good test case.</figcaption>
 </figure>
-<p>Com o texto no lugar, edite <em>src/main.rs</em> e adicione código para ler o
-arquivo, como mostrado na Listagem 12-4.</p>
+<p>Com o texto no lugar, edite <em>src/main.rs</em> e adicione código para ler o arquivo, como
+mostrado na Listagem 12-4.</p>
 <figure class="listing" id="listing-12-4">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust should_panic noplayground">use std::env;
@@ -224,19 +224,19 @@ fn main() {
 
     println!("With text:\n{contents}");
 }</code></pre>
-<figcaption><a href="#listing-12-4">Listing 12-4</a>: Lendo o conteúdo do arquivo especificado pelo segundo argumento</figcaption>
+<figcaption><a href="#listing-12-4">Listing 12-4</a>: Reading the contents of the file specified by the second argument</figcaption>
 </figure>
-<p>Primeiro, trazemos para o escopo uma parte relevante da biblioteca padrão com
-uma instrução <code>use</code>: precisamos de <code>std::fs</code> para lidar com arquivos.</p>
-<p>Em <code>main</code>, a nova instrução <code>fs::read_to_string</code> recebe <code>file_path</code>, abre esse
-arquivo e retorna um valor do tipo <code>std::io::Result&lt;String&gt;</code> contendo o
-conteúdo do arquivo.</p>
-<p>Depois disso, adicionamos novamente um <code>println!</code> temporário que imprime o
-valor de <code>contents</code> depois que o arquivo é lido, para que possamos verificar se
-o programa está funcionando até aqui.</p>
-<p>Vamos executar esse código com qualquer string como primeiro argumento de linha
-de comando, porque ainda não implementamos a parte da busca, e o arquivo
-<em>poem.txt</em> como segundo argumento:</p>
+<p>Primeiro, trazemos uma parte relevante da biblioteca padrão com um <code>use</code>
+declaração: Precisamos de <code>std::fs</code> para lidar com arquivos.</p>
+<p>Em <code>main</code>, a nova instrução <code>fs::read_to_string</code> recebe <code>file_path</code>, abre
+esse arquivo e retorna um valor do tipo <code>std::io::Result&lt;String&gt;</code> que contém
+o conteúdo do arquivo.</p>
+<p>Depois disso, adicionamos novamente uma instrução temporária <code>println!</code> que imprime o valor
+de <code>contents</code> após a leitura do arquivo para que possamos verificar se o programa está
+trabalhando até agora.</p>
+<p>Vamos executar este código com qualquer string como primeiro argumento da linha de comando (porque
+ainda não implementamos a parte de pesquisa) e o arquivo <em>poem.txt</em> como o
+segundo argumento:</p>
 <pre><code class="language-console">$ cargo run -- the poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.0s
@@ -255,15 +255,15 @@ To tell your name the livelong day
 To an admiring bog!
 
 </code></pre>
-<p>Ótimo! O código leu e depois imprimiu o conteúdo do arquivo. Mas esse código
-tem alguns problemas. No momento, a função <code>main</code> tem múltiplas
-responsabilidades: em geral, funções são mais claras e mais fáceis de manter
-se cada uma for responsável por apenas uma ideia. O outro problema é que não
-estamos lidando com erros tão bem quanto poderíamos. O programa ainda é
-pequeno, então esses problemas não são tão graves, mas, à medida que ele
-crescer, será mais difícil corrigir isso de forma elegante. É uma boa prática
-começar a refatoração cedo no desenvolvimento de um programa, porque é muito
-mais fácil refatorar pequenas quantidades de código. Faremos isso em seguida.</p>
+<p>Ótimo! O código leu e depois imprimiu o conteúdo do arquivo. Mas o código
+tem algumas falhas. No momento, a função <code>main</code> possui vários
+responsabilidades: Geralmente, as funções são mais claras e fáceis de manter se
+cada função é responsável por apenas uma ideia. O outro problema é que estamos
+não lidamos com erros tão bem quanto poderíamos. O programa ainda é pequeno, então esses
+falhas não são um grande problema, mas à medida que o programa cresce, será mais difícil corrigi-las
+eles de forma limpa. É uma boa prática começar a refatorar logo no início, quando
+desenvolver um programa porque é muito mais fácil refatorar quantidades menores de
+código. Faremos isso a seguir.</p>
 
                     </main>
 

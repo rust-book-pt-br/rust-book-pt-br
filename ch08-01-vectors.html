@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f87ec64c.js";
+            window.path_to_searchindex_js = "searchindex-4c181ae4.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-77646bdf.js"></script>
+        <script src="toc-869888b5.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,50 +181,48 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="armazenando-listas-de-valores-com-vetores"><a class="header" href="#armazenando-listas-de-valores-com-vetores">Armazenando Listas de Valores com Vetores</a></h2>
-<p>O primeiro tipo de coleção que veremos é <code>Vec&lt;T&gt;</code>, também conhecido como
-<em>vetor</em>. Vetores permitem armazenar mais de um valor em uma única estrutura de
-dados que coloca todos os valores lado a lado na memória. Vetores só podem
-armazenar valores do mesmo tipo. Eles são úteis quando você tem uma lista de
-itens, como as linhas de texto em um arquivo ou os preços dos itens em um
-carrinho de compras.</p>
-<h3 id="criando-um-novo-vetor"><a class="header" href="#criando-um-novo-vetor">Criando um Novo Vetor</a></h3>
-<p>Para criar um vetor novo e vazio, chamamos a função <code>Vec::new</code>, como mostrado
-na Listagem 8-1.</p>
+                        <h2 id="armazenando-listas-de-valores-com-vetores"><a class="header" href="#armazenando-listas-de-valores-com-vetores">Armazenando listas de valores com vetores</a></h2>
+<p>O primeiro tipo de coleção que veremos é <code>Vec&lt;T&gt;</code>, também conhecido como vetor.
+Os vetores permitem armazenar mais de um valor em uma única estrutura de dados que
+coloca todos os valores um ao lado do outro na memória. Vetores só podem armazenar valores
+do mesmo tipo. Eles são úteis quando você tem uma lista de itens, como o
+linhas de texto em um arquivo ou os preços dos itens em um carrinho de compras.</p>
+<h3 id="criando-um-novo-vetor"><a class="header" href="#criando-um-novo-vetor">Criando um novo vetor</a></h3>
+<p>Para criar um novo vetor vazio, chamamos a função <code>Vec::new</code>, conforme mostrado em
+Listagem 8-1.</p>
 <figure class="listing" id="listing-8-1">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v: Vec&lt;i32&gt; = Vec::new();
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-1">Listing 8-1</a>: Criando um vetor novo e vazio para armazenar valores do tipo <code>i32</code></figcaption>
+<figcaption><a href="#listing-8-1">Listing 8-1</a>: Creating a new, empty vector to hold values of type <code>i32</code></figcaption>
 </figure>
-<p>Observe que adicionamos aqui uma anotação de tipo. Como não estamos inserindo
-nenhum valor nesse vetor, Rust não sabe que tipo de elemento pretendemos
-armazenar. Esse é um ponto importante. Vetores são implementados usando
-genéricos; veremos como usar genéricos em seus próprios tipos no Capítulo 10.
-Por enquanto, basta saber que o tipo <code>Vec&lt;T&gt;</code>, fornecido pela biblioteca
-padrão, pode armazenar qualquer tipo. Quando criamos um vetor para armazenar um
-tipo específico, podemos indicar esse tipo entre sinais de menor e maior. Na
-Listagem 8-1, dissemos a Rust que o <code>Vec&lt;T&gt;</code> em <code>v</code> armazenará elementos do
-tipo <code>i32</code>.</p>
-<p>Mais frequentemente, você criará um <code>Vec&lt;T&gt;</code> com valores iniciais, e Rust
-inferirá o tipo de valor que deseja armazenar; por isso, raramente será
-necessário escrever essa anotação de tipo. Rust oferece convenientemente a
-macro <code>vec!</code>, que cria um novo vetor contendo os valores que você fornecer. A
-Listagem 8-2 cria um novo <code>Vec&lt;i32&gt;</code> contendo os valores <code>1</code>, <code>2</code> e <code>3</code>. O
-tipo inteiro é <code>i32</code> porque esse é o tipo inteiro padrão, como discutimos na
-seção <a href="ch03-02-data-types.html#data-types">“Tipos de Dados”</a><!-- ignore -->, no Capítulo 3.</p>
+<p>Observe que adicionamos uma anotação de tipo aqui. Porque não estamos inserindo nenhum
+valores neste vetor, Rust não sabe que tipo de elementos pretendemos
+loja. Este é um ponto importante. Os vetores são implementados usando genéricos;
+abordaremos como usar genéricos com seus próprios tipos no Capítulo 10. Por enquanto,
+saiba que o tipo <code>Vec&lt;T&gt;</code> fornecido pela biblioteca padrão pode conter qualquer tipo.
+Quando criamos um vetor para conter um tipo específico, podemos especificar o tipo dentro
+colchetes angulares. Na Listagem 8-1, dissemos a Rust que <code>Vec&lt;T&gt;</code> em <code>v</code> irá
+contém elementos do tipo <code>i32</code>.</p>
+<p>Mais frequentemente, você criará um <code>Vec&lt;T&gt;</code> com valores iniciais e Rust irá inferir
+o tipo de valor que você deseja armazenar, então raramente você precisa fazer esse tipo
+anotação. Rust fornece convenientemente a macro <code>vec!</code>, que criará um
+novo vetor que contém os valores que você atribui. A Listagem 8-2 cria um novo
+<code>Vec&lt;i32&gt;</code> que contém os valores <code>1</code>, <code>2</code> e <code>3</code>. O tipo inteiro é <code>i32</code>
+porque esse é o tipo inteiro padrão, conforme discutimos na seção <a href="ch03-02-data-types.html#data-types">“Data
+Tipos”</a><!-- ignore --> seção do Capítulo 3.</p>
 <figure class="listing" id="listing-8-2">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v = vec![1, 2, 3];
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-2">Listing 8-2</a>: Criando um novo vetor contendo valores</figcaption>
+<figcaption><a href="#listing-8-2">Listing 8-2</a>: Creating a new vector containing values</figcaption>
 </figure>
-<p>Como fornecemos valores iniciais do tipo <code>i32</code>, Rust pode inferir que o tipo de
-<code>v</code> é <code>Vec&lt;i32&gt;</code>, e a anotação de tipo não é necessária. A seguir, veremos
-como modificar um vetor.</p>
-<h3 id="atualizando-um-vetor"><a class="header" href="#atualizando-um-vetor">Atualizando um Vetor</a></h3>
-<p>Para criar um vetor e, em seguida, adicionar elementos a ele, podemos usar o
-método <code>push</code>, como mostrado na Listagem 8-3.</p>
+<p>Como fornecemos valores iniciais <code>i32</code>, Rust pode inferir que o tipo de <code>v</code>
+é <code>Vec&lt;i32&gt;</code> e a anotação de tipo não é necessária. A seguir, veremos como
+para modificar um vetor.</p>
+<h3 id="atualizando-um-vetor"><a class="header" href="#atualizando-um-vetor">Atualizando um vetor</a></h3>
+<p>Para criar um vetor e depois adicionar elementos a ele, podemos usar o método <code>push</code>,
+conforme mostrado na Listagem 8-3.</p>
 <figure class="listing" id="listing-8-3">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut v = Vec::new();
@@ -234,18 +232,18 @@ método <code>push</code>, como mostrado na Listagem 8-3.</p>
     v.push(7);
     v.push(8);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-3">Listing 8-3</a>: Usando o método <code>push</code> para adicionar valores a um vetor</figcaption>
+<figcaption><a href="#listing-8-3">Listing 8-3</a>: Using the <code>push</code> method to add values to a vector</figcaption>
 </figure>
-<p>Como acontece com qualquer variável, se quisermos poder alterar seu valor,
-precisamos torná-la mutável usando a palavra-chave <code>mut</code>, como discutido no
-Capítulo 3. Os números colocados no vetor são todos do tipo <code>i32</code>, e Rust
-infere isso a partir dos dados, então não precisamos da anotação <code>Vec&lt;i32&gt;</code>.</p>
+<p>Como acontece com qualquer variável, se quisermos alterar seu valor, precisamos
+torne-o mutável usando a palavra-chave <code>mut</code>, conforme discutido no Capítulo 3. Os números
+colocamos dentro são todos do tipo <code>i32</code>, e Rust infere isso a partir dos dados, então
+não precisamos da anotação <code>Vec&lt;i32&gt;</code>.</p>
 <h3 id="lendo-elementos-de-vetores"><a class="header" href="#lendo-elementos-de-vetores">Lendo Elementos de Vetores</a></h3>
-<p>Há duas formas de fazer referência a um valor armazenado em um vetor: por meio
-de indexação ou usando o método <code>get</code>. Nos exemplos a seguir, anotamos os tipos
-dos valores retornados por essas operações para deixar tudo mais claro.</p>
-<p>A Listagem 8-4 mostra os dois modos de acessar um valor em um vetor, usando a
-sintaxe de indexação e o método <code>get</code>.</p>
+<p>Existem duas maneiras de referenciar um valor armazenado em um vetor: via indexação ou por
+usando o método <code>get</code>. Nos exemplos a seguir, anotamos os tipos de
+os valores retornados dessas funções para maior clareza.</p>
+<p>A Listagem 8-4 mostra os dois métodos de acesso a um valor em um vetor, com indexação
+sintaxe e o método <code>get</code>.</p>
 <figure class="listing" id="listing-8-4">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v = vec![1, 2, 3, 4, 5];
@@ -259,18 +257,18 @@ sintaxe de indexação e o método <code>get</code>.</p>
         None =&gt; println!("There is no third element."),
     }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-4">Listing 8-4</a>: Usando a sintaxe de indexação e o método <code>get</code> para acessar um item em um vetor</figcaption>
+<figcaption><a href="#listing-8-4">Listing 8-4</a>: Using indexing syntax and using the <code>get</code> method to access an item in a vector</figcaption>
 </figure>
-<p>Observe alguns detalhes aqui. Usamos o valor de índice <code>2</code> para obter o
-terceiro elemento porque vetores são indexados a partir de zero. Usar <code>&amp;</code> e
-<code>[]</code> nos dá uma referência ao elemento nesse índice. Quando usamos o método
-<code>get</code> com o índice passado como argumento, recebemos um <code>Option&lt;&amp;T&gt;</code>, que pode
-ser usado com <code>match</code>.</p>
-<p>Rust oferece essas duas formas de referenciar um elemento para que você possa
-escolher como o programa deve se comportar quando tentar usar um índice fora da
-faixa de elementos existentes. Como exemplo, vamos ver o que acontece quando
-temos um vetor com cinco elementos e tentamos acessar o elemento de índice 100
-com cada uma das técnicas, como mostra a Listagem 8-5.</p>
+<p>Observe alguns detalhes aqui. Usamos o valor do índice <code>2</code> para obter o terceiro elemento
+porque os vetores são indexados por número, começando em zero. Usando <code>&amp;</code> e <code>[]</code>
+nos dá uma referência ao elemento no valor do índice. Quando usamos o <code>get</code>
+método com o índice passado como argumento, obtemos um <code>Option&lt;&amp;T&gt;</code> que podemos
+use com <code>match</code>.</p>
+<p>Rust fornece essas duas maneiras de referenciar um elemento para que você possa escolher como
+o programa se comporta quando você tenta usar um valor de índice fora do intervalo de
+elementos existentes. Como exemplo, vamos ver o que acontece quando temos um vetor
+de cinco elementos e então tentamos acessar um elemento no índice 100 com cada
+técnica, conforme mostrado na Listagem 8-5.</p>
 <figure class="listing" id="listing-8-5">
 <pre class="playground"><code class="language-rust should_panic panics edition2024"><span class="boring">fn main() {
 </span>    let v = vec![1, 2, 3, 4, 5];
@@ -278,29 +276,30 @@ com cada uma das técnicas, como mostra a Listagem 8-5.</p>
     let does_not_exist = &amp;v[100];
     let does_not_exist = v.get(100);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-5">Listing 8-5</a>: Tentando acessar o elemento de índice 100 em um vetor com cinco elementos</figcaption>
+<figcaption><a href="#listing-8-5">Listing 8-5</a>: Attempting to access the element at index 100 in a vector containing five elements</figcaption>
 </figure>
-<p>Quando executarmos esse código, o primeiro método, usando <code>[]</code>, fará o programa
-entrar em pânico porque ele referencia um elemento inexistente. Esse método é
-mais apropriado quando você quer que o programa falhe se houver uma tentativa
-de acessar um elemento além do fim do vetor.</p>
+<p>Quando executamos este código, o primeiro método <code>[]</code> fará com que o programa entre em pânico
+porque faz referência a um elemento inexistente. Este método é melhor usado quando você
+deseja que seu programa trave se houver uma tentativa de acessar um elemento além do
+final do vetor.</p>
 <p>Quando o método <code>get</code> recebe um índice que está fora do vetor, ele retorna
-<code>None</code> sem entrar em pânico. Você usaria esse método se acessar um elemento
-fora da faixa do vetor puder acontecer ocasionalmente em circunstâncias
-normais. Seu código então terá lógica para tratar <code>Some(&amp;element)</code> ou <code>None</code>,
-como discutimos no Capítulo 6. Por exemplo, o índice pode vir de uma pessoa
-digitando um número. Se ela acidentalmente inserir um número muito grande e o
-programa receber <code>None</code>, você poderia informar quantos itens existem no vetor
-atual e dar outra chance para que a pessoa digite um valor válido. Isso seria
-mais amigável do que derrubar o programa por causa de um erro de digitação!</p>
-<p>Quando o programa possui uma referência válida, o borrow checker impõe as
-regras de propriedade e empréstimo, vistas no Capítulo 4, para garantir que
-essa referência e quaisquer outras referências ao conteúdo do vetor permaneçam
-válidas. Lembre-se da regra que diz que você não pode ter referências mutáveis
-e imutáveis no mesmo escopo. Essa regra se aplica na Listagem 8-6, em que
-mantemos uma referência imutável ao primeiro elemento de um vetor e tentamos
-adicionar um elemento ao fim. Esse programa não funcionará se também tentarmos
-usar esse elemento mais tarde na função.</p>
+<code>None</code> sem entrar em pânico. Você usaria este método se acessasse um elemento
+além do alcance do vetor pode acontecer ocasionalmente sob condições normais
+circunstâncias. Seu código terá então lógica para lidar com qualquer um
+<code>Some(&amp;element)</code> ou <code>None</code>, conforme discutido no Capítulo 6. Por exemplo, o índice
+pode vir de uma pessoa digitando um número. Se eles acidentalmente entrarem em um
+número que é muito grande e o programa obtém um valor <code>None</code>, você pode dizer ao
+usuário quantos itens estão no vetor atual e dê a eles outra chance de
+insira um valor válido. Isso seria mais fácil de usar do que travar o programa
+devido a um erro de digitação!</p>
+<p>Quando o programa tem uma referência válida, o verificador de empréstimo impõe a
+regras de propriedade e empréstimo (abordadas no Capítulo 4) para garantir que este
+referência e quaisquer outras referências ao conteúdo do vetor permanecem válidas.
+Lembre-se da regra que afirma que você não pode ter referências mutáveis ​​e imutáveis ​​em
+o mesmo escopo. Essa regra se aplica na Listagem 8-6, onde mantemos uma imutável
+referência ao primeiro elemento em um vetor e tente adicionar um elemento ao
+fim. Este programa não funcionará se também tentarmos nos referir a esse elemento posteriormente
+a função.</p>
 <figure class="listing" id="listing-8-6">
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let mut v = vec![1, 2, 3, 4, 5];
@@ -311,9 +310,9 @@ usar esse elemento mais tarde na função.</p>
 
     println!("The first element is: {first}");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-6">Listing 8-6</a>: Tentando adicionar um elemento a um vetor enquanto mantemos uma referência a um item</figcaption>
+<figcaption><a href="#listing-8-6">Listing 8-6</a>: Attempting to add an element to a vector while holding a reference to an item</figcaption>
 </figure>
-<p>Compilar esse código resultará neste erro:</p>
+<p>Compilar este código resultará neste erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
 error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
@@ -331,24 +330,24 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 For more information about this error, try `rustc --explain E0502`.
 error: could not compile `collections` (bin "collections") due to 1 previous error
 </code></pre>
-<p>O código da Listagem 8-6 pode parecer que deveria funcionar: por que uma
-referência ao primeiro elemento deveria se importar com mudanças no fim do
-vetor? Esse erro existe por causa de como vetores funcionam: como eles colocam
-os valores lado a lado na memória, adicionar um novo elemento ao fim do vetor
-pode exigir a alocação de uma nova região de memória e a cópia dos elementos
-antigos para esse novo espaço, caso não haja espaço suficiente para manter
-todos os elementos juntos onde o vetor está armazenado no momento. Nesse caso,
-a referência ao primeiro elemento apontaria para memória já desalocada. As
-regras de empréstimo impedem que programas acabem nessa situação.</p>
+<p>O código na Listagem 8-6 pode parecer que deveria funcionar: Por que uma referência deveria
+ao primeiro elemento se preocupa com as mudanças no final do vetor? Este erro é
+devido à forma como os vetores funcionam: porque os vetores colocam os valores próximos uns dos outros
+na memória, adicionar um novo elemento no final do vetor pode exigir
+alocando nova memória e copiando os elementos antigos para o novo espaço, se houver
+não há espaço suficiente para colocar todos os elementos próximos uns dos outros onde o vetor
+está atualmente armazenado. Nesse caso, a referência ao primeiro elemento seria
+apontando para memória desalocada. As regras de empréstimo impedem que os programas
+acabando nessa situação.</p>
 <blockquote>
-<p>Nota: para mais detalhes sobre a implementação de <code>Vec&lt;T&gt;</code>, consulte <a href="../nomicon/vec/vec.html">“The
+<p>Nota: Para obter mais detalhes sobre a implementação do tipo <code>Vec&lt;T&gt;</code>, consulte <a href="../nomicon/vec/vec.html">“O
 Rustonomicon”</a>.</p>
 </blockquote>
-<h3 id="iterando-sobre-os-valores-de-um-vetor"><a class="header" href="#iterando-sobre-os-valores-de-um-vetor">Iterando sobre os Valores de um Vetor</a></h3>
-<p>Para acessar cada elemento de um vetor, iteramos por todos eles, em vez de usar
-índices para acessar um elemento de cada vez. A Listagem 8-7 mostra como usar
-um laço <code>for</code> para obter referências imutáveis a cada elemento de um vetor de
-valores <code>i32</code> e imprimi-los.</p>
+<h3 id="iterando-sobre-os-valores-em-um-vetor"><a class="header" href="#iterando-sobre-os-valores-em-um-vetor">Iterando sobre os valores em um vetor</a></h3>
+<p>Para acessar cada elemento em um vetor, iteraríamos por todos os
+elementos em vez de usar índices para acessar um de cada vez. A Listagem 8-7 mostra como
+usar um loop <code>for</code> para obter referências imutáveis ​​para cada elemento em um vetor de
+<code>i32</code> valores e imprima-os.</p>
 <figure class="listing" id="listing-8-7">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v = vec![100, 32, 57];
@@ -356,11 +355,11 @@ valores <code>i32</code> e imprimi-los.</p>
         println!("{i}");
     }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-7">Listing 8-7</a>: Imprimindo cada elemento de um vetor ao iterar sobre os elementos com um laço <code>for</code></figcaption>
+<figcaption><a href="#listing-8-7">Listing 8-7</a>: Printing each element in a vector by iterating over the elements using a <code>for</code> loop</figcaption>
 </figure>
-<p>Também podemos iterar sobre referências mutáveis a cada elemento de um vetor
-mutável para alterar todos os elementos. O laço <code>for</code> da Listagem 8-8 adiciona
-<code>50</code> a cada elemento.</p>
+<p>Também podemos iterar sobre referências mutáveis ​​para cada elemento em um vetor mutável
+para fazer alterações em todos os elementos. O loop <code>for</code> na Listagem 8-8
+adicionará <code>50</code> a cada elemento.</p>
 <figure class="listing" id="listing-8-8">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut v = vec![100, 32, 57];
@@ -368,32 +367,30 @@ mutável para alterar todos os elementos. O laço <code>for</code> da Listagem 8
         *i += 50;
     }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-8">Listing 8-8</a>: Iterando sobre referências mutáveis aos elementos de um vetor</figcaption>
+<figcaption><a href="#listing-8-8">Listing 8-8</a>: Iterating over mutable references to elements in a vector</figcaption>
 </figure>
-<p>Para alterar o valor ao qual a referência mutável se refere, precisamos usar o
-operador de desreferência <code>*</code> para acessar o valor apontado por <code>i</code> antes de
-podermos usar o operador <code>+=</code>. Falaremos mais sobre o operador de
-desreferência na seção <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">“Seguindo o Ponteiro até o Valor com o Operador de
-Desreferência”</a><!-- ignore -->, no Capítulo 15.</p>
-<p>Iterar sobre um vetor, seja de forma imutável ou mutável, é seguro graças às
-regras do borrow checker. Se tentássemos inserir ou remover itens dentro dos
-corpos dos laços <code>for</code> nas Listagens 8-7 e 8-8, receberíamos um erro do
-compilador semelhante ao que vimos com o código da Listagem 8-6. A referência
-ao vetor mantida pelo laço <code>for</code> impede modificações simultâneas ao vetor como
-um todo.</p>
-<h3 id="usando-uma-enum-para-armazenar-múltiplos-tipos"><a class="header" href="#usando-uma-enum-para-armazenar-múltiplos-tipos">Usando uma Enum para Armazenar Múltiplos Tipos</a></h3>
-<p>Vetores só podem armazenar valores de um mesmo tipo. Isso pode ser
-inconveniente; certamente há casos em que precisamos armazenar em uma lista
-itens de tipos diferentes. Felizmente, as variantes de uma enum são definidas
-sob o mesmo tipo da enum, então, quando precisamos de um tipo que represente
-elementos de tipos diferentes, podemos definir e usar uma enum!</p>
-<p>Por exemplo, digamos que queremos obter valores de uma linha em uma planilha na
-qual algumas colunas contêm inteiros, algumas números de ponto flutuante e
-algumas strings. Podemos definir uma enum cujas variantes armazenem esses
-diferentes tipos de valor, e todas as variantes da enum serão consideradas do
-mesmo tipo: o tipo da própria enum. Depois, podemos criar um vetor para
-armazenar essa enum e, assim, armazenar efetivamente diferentes tipos. Isso é
-demonstrado na Listagem 8-9.</p>
+<p>Para alterar o valor ao qual a referência mutável se refere, temos que usar o comando
+Operador de desreferência <code>*</code> para chegar ao valor em <code>i</code> antes de podermos usar <code>+=</code>
+operador. Falaremos mais sobre o operador de desreferência na seção <a href="ch15-02-deref.html#following-the-pointer-to-the-value-with-the-dereference-operator">“Seguindo o
+Referência à seção Valor”</a><!-- ignore --> do Capítulo 15.</p>
+<p>Iterar sobre um vetor, seja imutável ou mutável, é seguro devido ao
+emprestar as regras do verificador. Se tentarmos inserir ou remover itens no <code>for</code>
+corpos de loop na Listagem 8-7 e na Listagem 8-8, obteríamos um erro do compilador
+semelhante ao que obtivemos com o código da Listagem 8-6. A referência ao
+vetor que o loop <code>for</code> contém impede a modificação simultânea do
+vetor inteiro.</p>
+<h3 id="usando-um-enum-para-armazenar-vários-tipos"><a class="header" href="#usando-um-enum-para-armazenar-vários-tipos">Usando um Enum para armazenar vários tipos</a></h3>
+<p>Os vetores só podem armazenar valores do mesmo tipo. Isso pode ser
+inconveniente; definitivamente existem casos de uso para a necessidade de armazenar uma lista de
+itens de diferentes tipos. Felizmente, as variantes de um enum são definidas
+sob o mesmo tipo enum, então quando precisamos de um tipo para representar elementos de
+tipos diferentes, podemos definir e usar um enum!</p>
+<p>Por exemplo, digamos que queremos obter valores de uma linha em uma planilha na qual
+algumas das colunas da linha contêm números inteiros, alguns números de ponto flutuante,
+e algumas cordas. Podemos definir um enum cujas variantes conterão os diferentes
+tipos de valor, e todas as variantes enum serão consideradas do mesmo tipo: que
+do enum. Então, podemos criar um vetor para armazenar esse enum e, em última análise,
+mantenha diferentes tipos. Demonstramos isso na Listagem 8-9.</p>
 <figure class="listing" id="listing-8-9">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    enum SpreadsheetCell {
@@ -408,26 +405,24 @@ demonstrado na Listagem 8-9.</p>
         SpreadsheetCell::Float(10.12),
     ];
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-9">Listing 8-9</a>: Definindo uma enum para armazenar valores de tipos diferentes em um único vetor</figcaption>
+<figcaption><a href="#listing-8-9">Listing 8-9</a>: Defining an enum to store values of different types in one vector</figcaption>
 </figure>
-<p>Rust precisa saber, em tempo de compilação, quais tipos estarão no vetor para
-conseguir determinar exatamente quanta memória no heap será necessária para
-armazenar cada elemento. Também precisamos ser explícitos sobre quais tipos são
-permitidos nesse vetor. Se Rust permitisse que um vetor armazenasse qualquer
-tipo, haveria a chance de um ou mais tipos causarem erros nas operações
-realizadas sobre os elementos do vetor. Usar uma enum junto com uma expressão
-<code>match</code> significa que Rust garantirá, em tempo de compilação, que todos os
-casos possíveis sejam tratados, como discutimos no Capítulo 6.</p>
-<p>Se você não souber, em tempo de compilação, o conjunto exaustivo de tipos que o
-programa receberá em tempo de execução para armazenar em um vetor, a técnica da
-enum não funcionará. Em vez disso, você poderá usar um trait object, que
-abordaremos no Capítulo 18.</p>
-<p>Agora que discutimos algumas das formas mais comuns de usar vetores, não deixe
-de consultar <a href="../std/vec/struct.Vec.html">a documentação da API</a><!-- ignore --> para conhecer os
-muitos métodos úteis definidos em <code>Vec&lt;T&gt;</code> pela biblioteca padrão. Por exemplo,
-além de <code>push</code>, o método <code>pop</code> remove e retorna o último elemento.</p>
-<h3 id="descartar-um-vetor-também-descarta-seus-elementos"><a class="header" href="#descartar-um-vetor-também-descarta-seus-elementos">Descartar um Vetor Também Descarta seus Elementos</a></h3>
-<p>Como qualquer outra <code>struct</code>, um vetor é liberado quando sai de escopo, como
+<p>Rust precisa saber quais tipos estarão no vetor em tempo de compilação para que
+sabe exatamente quanta memória no heap será necessária para armazenar cada elemento.
+Também devemos ser explícitos sobre quais tipos são permitidos neste vetor. Se ferrugem
+permitisse que um vetor mantivesse qualquer tipo, haveria uma chance de que um ou mais dos
+os tipos causariam erros nas operações executadas nos elementos de
+o vetor. Usar um enum mais uma expressão <code>match</code> significa que Rust garantirá
+em tempo de compilação, todos os casos possíveis são tratados, conforme discutido no Capítulo 6.</p>
+<p>Se você não conhece o conjunto exaustivo de tipos que um programa obterá em tempo de execução para
+armazenar em um vetor, a técnica enum não funcionará. Em vez disso, você pode usar uma característica
+objeto, que abordaremos no Capítulo 18.</p>
+<p>Agora que discutimos algumas das formas mais comuns de usar vetores, certifique-se
+para revisar <a href="../std/vec/struct.Vec.html">a documentação da API</a><!-- ignore --> para todos os muitos
+métodos úteis definidos em <code>Vec&lt;T&gt;</code> pela biblioteca padrão. Por exemplo, em
+além de <code>push</code>, um método <code>pop</code> remove e retorna o último elemento.</p>
+<h3 id="eliminar-um-vetor-elimina-seus-elementos"><a class="header" href="#eliminar-um-vetor-elimina-seus-elementos">Eliminar um vetor elimina seus elementos</a></h3>
+<p>Como qualquer outro <code>struct</code>, um vetor é liberado quando sai do escopo, como
 anotado na Listagem 8-10.</p>
 <figure class="listing" id="listing-8-10">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -437,12 +432,12 @@ anotado na Listagem 8-10.</p>
         // do stuff with v
     } // &lt;- v goes out of scope and is freed here
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-10">Listing 8-10</a>: Mostrando onde o vetor e seus elementos são descartados</figcaption>
+<figcaption><a href="#listing-8-10">Listing 8-10</a>: Showing where the vector and its elements are dropped</figcaption>
 </figure>
-<p>Quando o vetor é descartado, todo o seu conteúdo também é descartado, o que
-significa que os inteiros que ele contém serão liberados. O borrow checker
-garante que quaisquer referências ao conteúdo de um vetor só sejam usadas
-enquanto o próprio vetor for válido.</p>
+<p>Quando o vetor é eliminado, todo o seu conteúdo também é eliminado, o que significa que o
+inteiros que ele contém serão limpos. O verificador de empréstimo garante que qualquer
+referências ao conteúdo de um vetor são usadas apenas enquanto o próprio vetor é
+válido.</p>
 <p>Vamos passar para o próximo tipo de coleção: <code>String</code>!</p>
 
                     </main>
