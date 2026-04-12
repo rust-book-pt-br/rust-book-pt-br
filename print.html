@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
+            window.path_to_searchindex_js = "searchindex-e2a870e7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -9927,40 +9927,43 @@ situações tornarão seu código mais confiável diante de problemas inevitáve
 os enums <code>Option</code> e <code>Result</code>, falaremos sobre como os genéricos funcionam e como você
 pode usá-los em seu código.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tipos-genéricos-características-e-tempos-de-vida"><a class="header" href="#tipos-genéricos-características-e-tempos-de-vida">Tipos genéricos, características e tempos de vida</a></h1>
-<p>Cada linguagem de programação possui ferramentas para lidar eficazmente com a duplicação
-de conceitos. No Rust, uma dessas ferramentas é <em>generics</em>: substitutos abstratos para
-tipos de concreto ou outras propriedades. Podemos expressar o comportamento de genéricos ou
-como eles se relacionam com outros genéricos sem saber o que estará em seu lugar
-ao compilar e executar o código.</p>
-<p>As funções podem receber parâmetros de algum tipo genérico, em vez de um tipo concreto
-como <code>i32</code> ou <code>String</code>, da mesma forma que aceitam parâmetros com desconhecidos
-valores para executar o mesmo código em vários valores concretos. Na verdade, já
-usei genéricos no Capítulo 6 com <code>Option&lt;T&gt;</code>, no Capítulo 8 com <code>Vec&lt;T&gt;</code> e
-<code>HashMap&lt;K, V&gt;</code>, e no Capítulo 9 com <code>Result&lt;T, E&gt;</code>. Neste capítulo, você
-explore como definir seus próprios tipos, funções e métodos com genéricos!</p>
-<p>Primeiro, revisaremos como extrair uma função para reduzir a duplicação de código. Bem
-então use a mesma técnica para criar uma função genérica a partir de duas funções que
-diferem apenas nos tipos de seus parâmetros. Também explicaremos como usar
-tipos genéricos em definições de struct e enum.</p>
-<p>Em seguida, você aprenderá como usar características para definir o comportamento de maneira genérica. Você
-pode combinar características com tipos genéricos para restringir um tipo genérico a aceitar
-apenas aqueles tipos que têm um comportamento específico, em oposição a qualquer tipo.</p>
-<p>Finalmente, discutiremos <em>lifetimes</em>: uma variedade de genéricos que dão a
-informações do compilador sobre como as referências se relacionam entre si. As vidas permitem
-fornecer ao compilador informações suficientes sobre os valores emprestados para que ele possa
-garantir que as referências serão válidas em mais situações do que seriam sem
-nossa ajuda.</p>
-<h2 id="removendo-duplicação-extraindo-uma-função"><a class="header" href="#removendo-duplicação-extraindo-uma-função">Removendo duplicação extraindo uma função</a></h2>
-<p>Os genéricos nos permitem substituir tipos específicos por um espaço reservado que representa
-vários tipos para remover a duplicação de código. Antes de mergulhar na sintaxe genérica,
-vamos primeiro ver como remover a duplicação de uma forma que não envolva
-tipos genéricos extraindo uma função que substitui valores específicos por um
-espaço reservado que representa vários valores. Então, aplicaremos o mesmo
-técnica para extrair uma função genérica! Ao observar como reconhecer
-código duplicado que você pode extrair para uma função, você começará a reconhecer
-código duplicado que pode usar genéricos.</p>
-<p>Começaremos com o programa curto da Listagem 10-1 que encontra o maior
+<h1 id="tipos-genéricos-traits-e-lifetimes"><a class="header" href="#tipos-genéricos-traits-e-lifetimes">Tipos Genéricos, Traits e Lifetimes</a></h1>
+<p>Toda linguagem de programação tem ferramentas para lidar de forma eficaz com a
+duplicação de conceitos. Em Rust, uma dessas ferramentas são os <em>genéricos</em>:
+substitutos abstratos para tipos concretos ou outras propriedades. Podemos
+expressar o comportamento de genéricos ou como eles se relacionam com outros
+genéricos sem saber o que estará em seu lugar quando o código for compilado e
+executado.</p>
+<p>Funções podem receber parâmetros de algum tipo genérico, em vez de um tipo
+concreto como <code>i32</code> ou <code>String</code>, da mesma forma que recebem parâmetros com
+valores desconhecidos para executar o mesmo código sobre vários valores
+concretos. Na verdade, já usamos genéricos no Capítulo 6 com <code>Option&lt;T&gt;</code>, no
+Capítulo 8 com <code>Vec&lt;T&gt;</code> e <code>HashMap&lt;K, V&gt;</code>, e no Capítulo 9 com <code>Result&lt;T, E&gt;</code>.
+Neste capítulo, você vai explorar como definir seus próprios tipos, funções e
+métodos com genéricos!</p>
+<p>Primeiro, vamos revisar como extrair uma função para reduzir duplicação de
+código. Em seguida, usaremos a mesma técnica para criar uma função genérica a
+partir de duas funções que diferem apenas nos tipos de seus parâmetros.
+Também explicaremos como usar tipos genéricos em definições de structs e enums.</p>
+<p>Depois, você vai aprender a usar traits para definir comportamento de maneira
+genérica. Você pode combinar traits com tipos genéricos para restringir um tipo
+genérico a aceitar apenas tipos que tenham um comportamento específico, em vez
+de aceitar qualquer tipo.</p>
+<p>Por fim, discutiremos <em>lifetimes</em>: uma variedade de genéricos que fornece ao
+compilador informações sobre como referências se relacionam entre si.
+Lifetimes nos permitem dar ao compilador informações suficientes sobre valores
+emprestados para que ele possa garantir que referências serão válidas em mais
+situacões do que conseguiria sem a nossa ajuda.</p>
+<h2 id="removendo-duplicação-extraindo-uma-função"><a class="header" href="#removendo-duplicação-extraindo-uma-função">Removendo Duplicação Extraindo uma Função</a></h2>
+<p>Genéricos nos permitem substituir tipos específicos por um placeholder que
+representa múltiplos tipos, removendo duplicação de código. Antes de mergulhar
+na sintaxe dos genéricos, vamos primeiro ver como remover duplicação de uma
+forma que não envolva tipos genéricos, extraindo uma função que substitui
+valores específicos por um placeholder que representa vários valores. Depois,
+vamos aplicar a mesma técnica para extrair uma função genérica! Ao observar
+como reconhecer código duplicado que pode ser extraído para uma função, você
+começará a reconhecer código duplicado que pode usar genéricos.</p>
+<p>Vamos começar com o pequeno programa da Listagem 10-1, que encontra o maior
 número em uma lista.</p>
 <figure class="listing" id="listing-10-1">
 <span class="file-name">Filename: src/main.rs</span>
@@ -9978,19 +9981,20 @@ número em uma lista.</p>
     println!("The largest number is {largest}");
 <span class="boring">    assert_eq!(*largest, 100);
 </span>}</code></pre>
-<figcaption><a href="#listing-10-1">Listing 10-1</a>: Finding the largest number in a list of numbers</figcaption>
+<figcaption><a href="#listing-10-1">Listing 10-1</a>: Encontrando o maior número em uma lista de números</figcaption>
 </figure>
-<p>Armazenamos uma lista de inteiros na variável <code>number_list</code> e colocamos uma referência
-ao primeiro número da lista em uma variável chamada <code>largest</code>. Nós então iteramos
-através de todos os números da lista, e se o número atual for maior que
-o número armazenado em <code>largest</code>, substituímos a referência nessa variável.
-No entanto, se o número atual for menor ou igual ao maior número visto
-até agora, a variável não muda e o código passa para o próximo número
-na lista. Depois de considerar todos os números da lista, <code>largest</code> deve
-referem-se ao maior número, que neste caso é 100.</p>
-<p>Agora temos a tarefa de encontrar o maior número em duas listas diferentes de
-números. Para fazer isso, podemos optar por duplicar o código da Listagem 10-1 e usar
-a mesma lógica em dois locais diferentes do programa, conforme mostrado na Listagem 10-2.</p>
+<p>Armazenamos uma lista de inteiros na variável <code>number_list</code> e colocamos uma
+referência ao primeiro número da lista em uma variável chamada <code>largest</code>.
+Depois, iteramos por todos os números da lista e, se o número atual for maior
+do que o número armazenado em <code>largest</code>, substituímos a referência nessa
+variável. No entanto, se o número atual for menor ou igual ao maior número
+visto até aquele momento, a variável não muda, e o código segue para o próximo
+número da lista. Depois de considerar todos os números da lista, <code>largest</code>
+deverá se referir ao maior número, que neste caso é 100.</p>
+<p>Agora recebemos a tarefa de encontrar o maior número em duas listas diferentes
+de números. Para isso, podemos escolher duplicar o código da Listagem 10-1 e
+usar a mesma lógica em dois lugares diferentes do programa, como mostrado na
+Listagem 10-2.</p>
 <figure class="listing" id="listing-10-2">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -10018,19 +10022,19 @@ a mesma lógica em dois locais diferentes do programa, conforme mostrado na List
 
     println!("The largest number is {largest}");
 }</code></pre>
-<figcaption><a href="#listing-10-2">Listing 10-2</a>: Code to find the largest number in <em>two</em> lists of numbers</figcaption>
+<figcaption><a href="#listing-10-2">Listing 10-2</a>: Código para encontrar o maior número em <em>duas</em> listas de números</figcaption>
 </figure>
-<p>Embora esse código funcione, duplicar código é tedioso e sujeito a erros. Nós também
-temos que lembrar de atualizar o código em vários lugares quando quisermos alterar
-isto.</p>
-<p>Para eliminar esta duplicação, criaremos uma abstração definindo um
-função que opera em qualquer lista de inteiros passados ​​como parâmetro. Esse
-solução torna nosso código mais claro e nos permite expressar o conceito de encontrar o
-maior número em uma lista abstratamente.</p>
-<p>Na Listagem 10-3, extraímos o código que encontra o maior número em um
-função chamada <code>largest</code>. Então, chamamos a função para encontrar o maior número
-nas duas listas da Listagem 10-2. Também poderíamos usar a função em qualquer outro
-lista de valores <code>i32</code> que poderemos ter no futuro.</p>
+<p>Embora esse código funcione, duplicar código é tedioso e propenso a erros.
+Também precisamos lembrar de atualizar o código em vários lugares quando
+quisermos mudá-lo.</p>
+<p>Para eliminar essa duplicação, vamos criar uma abstração definindo uma função
+que opere sobre qualquer lista de inteiros passada como parâmetro. Essa solução
+deixa nosso código mais claro e nos permite expressar de forma abstrata o
+conceito de encontrar o maior número de uma lista.</p>
+<p>Na Listagem 10-3, extraímos o código que encontra o maior número para uma
+função chamada <code>largest</code>. Depois, chamamos essa função para encontrar o maior
+número nas duas listas da Listagem 10-2. Também poderíamos usar a função em
+qualquer outra lista de valores <code>i32</code> que venhamos a ter no futuro.</p>
 <figure class="listing" id="listing-10-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn largest(list: &amp;[i32]) -&gt; &amp;i32 {
@@ -10058,41 +10062,42 @@ fn main() {
     println!("The largest number is {result}");
 <span class="boring">    assert_eq!(*result, 6000);
 </span>}</code></pre>
-<figcaption><a href="#listing-10-3">Listing 10-3</a>: Abstracted code to find the largest number in two lists</figcaption>
+<figcaption><a href="#listing-10-3">Listing 10-3</a>: Código abstraído para encontrar o maior número em duas listas</figcaption>
 </figure>
-<p>A função <code>largest</code> possui um parâmetro chamado <code>list</code>, que representa qualquer
-fatia concreta de valores <code>i32</code> que podemos passar para a função. Como resultado,
-quando chamamos a função, o código é executado nos valores específicos que passamos
-em.</p>
-<p>Em resumo, aqui estão as etapas que executamos para alterar o código da Listagem 10.2 para
-Listagem 10-3:</p>
+<p>A função <code>largest</code> tem um parâmetro chamado <code>list</code>, que representa qualquer
+fatia concreta de valores <code>i32</code> que possamos passar para a função. Como
+resultado, quando chamamos a função, o código é executado sobre os valores
+específicos que fornecemos.</p>
+<p>Em resumo, estas foram as etapas que usamos para transformar o código da
+Listagem 10-2 em código como o da Listagem 10-3:</p>
 <ol>
-<li>Identifique código duplicado.</li>
-<li>Extraia o código duplicado no corpo da função e especifique o
-entradas e valores de retorno desse código na assinatura da função.</li>
-<li>Atualize as duas instâncias de código duplicado para chamar a função.</li>
+<li>Identificar código duplicado.</li>
+<li>Extrair o código duplicado para o corpo de uma função e especificar as
+entradas e os valores de retorno desse código na assinatura da função.</li>
+<li>Atualizar as duas instâncias do código duplicado para chamar a função.</li>
 </ol>
-<p>A seguir, usaremos essas mesmas etapas com genéricos para reduzir a duplicação de código. Em
-da mesma forma que o corpo da função pode operar em um <code>list</code> abstrato
-de valores específicos, os genéricos permitem que o código opere em tipos abstratos.</p>
-<p>Por exemplo, digamos que temos duas funções: uma que encontra o maior item em um
-fatia de valores <code>i32</code> e aquela que encontra o maior item em uma fatia de <code>char</code>
-valores. Como eliminaríamos essa duplicação? Vamos descobrir!</p>
+<p>A seguir, vamos usar essas mesmas etapas com genéricos para reduzir duplicação
+de código. Da mesma forma que o corpo da função pode operar sobre uma <code>list</code>
+abstrata em vez de valores específicos, genéricos permitem que o código opere
+sobre tipos abstratos.</p>
+<p>Por exemplo, digamos que tivéssemos duas funções: uma encontra o maior item em
+uma fatia de valores <code>i32</code>, e a outra encontra o maior item em uma fatia de
+valores <code>char</code>. Como eliminaríamos essa duplicação? Vamos descobrir!</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tipos-de-dados-genéricos-1"><a href="#tipos-de-dados-genéricos-1" class="header">Tipos de Dados Genéricos</a></h1>
-<h2 id="tipos-de-dados-genéricos"><a class="header" href="#tipos-de-dados-genéricos">Tipos de dados genéricos</a></h2>
-<p>Usamos genéricos para criar definições para itens como assinaturas de funções ou
-structs, que podemos então usar com muitos tipos de dados concretos diferentes. Vamos
-primeiro veja como definir funções, estruturas, enums e métodos usando
-genéricos. Em seguida, discutiremos como os genéricos afetam o desempenho do código.</p>
+<h2 id="tipos-de-dados-genéricos"><a class="header" href="#tipos-de-dados-genéricos">Tipos de Dados Genéricos</a></h2>
+<p>Usamos genéricos para criar definições de itens como assinaturas de função ou
+structs, que depois podemos usar com muitos tipos concretos de dados. Vamos
+primeiro ver como definir funções, structs, enums e métodos usando genéricos.
+Depois, discutiremos como os genéricos afetam o desempenho do código.</p>
 <h3 id="em-definições-de-função"><a class="header" href="#em-definições-de-função">Em Definições de Função</a></h3>
-<p>Ao definir uma função que usa genéricos, colocamos os genéricos no
-assinatura da função onde normalmente especificaríamos os tipos de dados do
-parâmetros e valor de retorno. Isso torna nosso código mais flexível e fornece
-mais funcionalidade para quem chama nossa função, evitando a duplicação de código.</p>
+<p>Ao definir uma função que usa genéricos, colocamos os genéricos na assinatura
+da função, onde normalmente especificaríamos os tipos de dados dos parâmetros e
+do valor de retorno. Fazer isso torna nosso código mais flexível e oferece
+mais funcionalidade para quem chama a função, evitando duplicação de código.</p>
 <p>Continuando com nossa função <code>largest</code>, a Listagem 10-4 mostra duas funções que
-ambos encontram o maior valor em uma fatia. Vamos então combiná-los em um único
-função que usa genéricos.</p>
+ambas encontram o maior valor em uma fatia. Em seguida, vamos combiná-las em
+uma única função usando genéricos.</p>
 <figure class="listing" id="listing-10-4">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn largest_i32(list: &amp;[i32]) -&gt; &amp;i32 {
@@ -10132,33 +10137,34 @@ fn main() {
     println!("The largest char is {result}");
 <span class="boring">    assert_eq!(*result, 'y');
 </span>}</code></pre>
-<figcaption><a href="#listing-10-4">Listing 10-4</a>: Two functions that differ only in their names and in the types in their signatures</figcaption>
+<figcaption><a href="#listing-10-4">Listing 10-4</a>: Duas funções que diferem apenas nos nomes e nos tipos presentes em suas assinaturas</figcaption>
 </figure>
-<p>A função <code>largest_i32</code> é aquela que extraímos na Listagem 10-3 que encontra
-o maior <code>i32</code> em uma fatia. A função <code>largest_char</code> encontra o maior
-<code>char</code> em uma fatia. Os corpos funcionais têm o mesmo código, então vamos eliminar
+<p>A função <code>largest_i32</code> é aquela que extraímos na Listagem 10-3, que encontra o
+maior <code>i32</code> em uma fatia. A função <code>largest_char</code> encontra o maior <code>char</code> em
+uma fatia. Os corpos das duas funções têm o mesmo código, então vamos eliminar
 a duplicação introduzindo um parâmetro de tipo genérico em uma única função.</p>
-<p>Para parametrizar os tipos em uma nova função única, precisamos nomear o tipo
-parâmetro, assim como fazemos com os parâmetros de valor de uma função. Você pode usar
-qualquer identificador como um nome de parâmetro de tipo. Mas usaremos <code>T</code> porque, por
-convenção, os nomes dos parâmetros de tipo em Rust são curtos, geralmente apenas uma letra, e
-A convenção de nomenclatura de tipo do Rust é UpperCamelCase. Abreviação de <em>type</em>, <code>T</code> é o
-escolha padrão da maioria dos programadores Rust.</p>
-<p>Quando usamos um parâmetro no corpo da função, temos que declarar o
-nome do parâmetro na assinatura para que o compilador saiba qual é esse nome
-significa. Da mesma forma, quando usamos um nome de parâmetro de tipo em uma assinatura de função,
-temos que declarar o nome do parâmetro de tipo antes de usá-lo. Para definir o genérico
-<code>largest</code>, colocamos as declarações de nome de tipo entre colchetes angulares,
-<code>&lt;&gt;</code>, entre o nome da função e a lista de parâmetros, assim:</p>
+<p>Para parametrizar os tipos nessa nova função única, precisamos dar um nome ao
+parâmetro de tipo, assim como fazemos com parâmetros de valor de uma função.
+Você pode usar qualquer identificador como nome do parâmetro de tipo. Mas
+vamos usar <code>T</code> porque, por convenção, nomes de parâmetros de tipo em Rust são
+curtos, geralmente com apenas uma letra, e a convenção de nomenclatura de tipos
+em Rust é UpperCamelCase. Como abreviação de <em>type</em>, <code>T</code> é a escolha padrão da
+maioria dos programadores Rust.</p>
+<p>Quando usamos um parâmetro no corpo da função, precisamos declarar seu nome na
+assinatura para que o compilador saiba o que ele significa. Da mesma forma,
+quando usamos um nome de parâmetro de tipo em uma assinatura de função,
+precisamos declarar esse nome antes de usá-lo. Para definir a função genérica
+<code>largest</code>, colocamos as declarações de nome de tipo dentro de colchetes
+angulares, <code>&lt;&gt;</code>, entre o nome da função e a lista de parâmetros, assim:</p>
 <pre><code class="language-rust ignore">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {</code></pre>
-<p>Lemos esta definição como “A função <code>largest</code> é genérica sobre algum tipo
-<code>T</code>.” Esta função possui um parâmetro chamado <code>list</code>, que é uma fatia de valores
-do tipo <code>T</code>. A função <code>largest</code> retornará uma referência a um valor do
-mesmo tipo <code>T</code>.</p>
-<p>A Listagem 10-5 mostra a definição da função <code>largest</code> combinada usando o genérico
-tipo de dados em sua assinatura. A listagem também mostra como podemos chamar a função
-com uma fatia de valores <code>i32</code> ou valores <code>char</code>. Observe que este código não
-compilar ainda.</p>
+<p>Lemos essa definição como: “A função <code>largest</code> é genérica sobre algum tipo
+<code>T</code>.” Essa função tem um parâmetro chamado <code>list</code>, que é uma fatia de valores
+do tipo <code>T</code>. A função <code>largest</code> retornará uma referência a um valor do mesmo
+tipo <code>T</code>.</p>
+<p>A Listagem 10-5 mostra a definição combinada da função <code>largest</code> usando o tipo
+de dado genérico em sua assinatura. A listagem também mostra como podemos
+chamar a função tanto com uma fatia de valores <code>i32</code> quanto com valores
+<code>char</code>. Observe que esse código ainda não compila.</p>
 <figure class="listing" id="listing-10-5">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">fn largest&lt;T&gt;(list: &amp;[T]) -&gt; &amp;T {
@@ -10184,9 +10190,9 @@ fn main() {
     let result = largest(&amp;char_list);
     println!("The largest char is {result}");
 }</code></pre>
-<figcaption><a href="#listing-10-5">Listing 10-5</a>: The <code>largest</code> function using generic type parameters; this doesn’t compile yet</figcaption>
+<figcaption><a href="#listing-10-5">Listing 10-5</a>: A função <code>largest</code> usando parâmetros de tipo genérico; isso ainda não compila</figcaption>
 </figure>
-<p>Se compilarmos este código agora, obteremos este erro:</p>
+<p>Se compilarmos esse código agora, obteremos este erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling chapter10 v0.1.0 (file:///projects/chapter10)
 error[E0369]: binary operation `&gt;` cannot be applied to type `&amp;T`
@@ -10205,20 +10211,22 @@ help: consider restricting type parameter `T` with trait `PartialOrd`
 For more information about this error, try `rustc --explain E0369`.
 error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
 </code></pre>
-<p>O texto de ajuda menciona <code>std::cmp::PartialOrd</code>, o que é uma característica, e estamos
-falaremos sobre características na próxima seção. Por enquanto, saiba que esse erro
-afirma que o corpo de <code>largest</code> não funcionará para todos os tipos possíveis que <code>T</code>
-poderia ser. Como queremos comparar valores do tipo <code>T</code> no corpo, podemos
-use apenas tipos cujos valores podem ser ordenados. Para permitir comparações, o padrão
-biblioteca tem o traço <code>std::cmp::PartialOrd</code> que você pode implementar em tipos
-(veja o Apêndice C para mais informações sobre esta característica). Para corrigir a Listagem 10-5, podemos seguir o
-sugestão do texto de ajuda e restringir os tipos válidos para <code>T</code> apenas aqueles que
-implementar <code>PartialOrd</code>. A listagem será então compilada, porque o padrão
-biblioteca implementa <code>PartialOrd</code> em <code>i32</code> e <code>char</code>.</p>
-<h3 id="em-definições-de-estrutura"><a class="header" href="#em-definições-de-estrutura">Em definições de estrutura</a></h3>
-<p>Também podemos definir estruturas para usar um parâmetro de tipo genérico em um ou mais
-campos usando a sintaxe <code>&lt;&gt;</code>. A Listagem 10-6 define uma estrutura <code>Point&lt;T&gt;</code> para armazenar
-<code>x</code> e <code>y</code> valores de coordenadas de qualquer tipo.</p>
+<p>O texto de ajuda menciona <code>std::cmp::PartialOrd</code>, que é uma trait, e vamos
+falar sobre traits na próxima seção. Por enquanto, basta saber que esse erro
+afirma que o corpo de <code>largest</code> não funciona para todos os tipos possíveis que
+<code>T</code> poderia representar. Como queremos comparar valores do tipo <code>T</code> dentro do
+corpo, só podemos usar tipos cujos valores possam ser ordenados. Para
+habilitar comparações, a biblioteca padrão fornece a trait
+<code>std::cmp::PartialOrd</code>, que você pode implementar em tipos. Veja o Apêndice C
+para mais informações sobre essa trait. Para corrigir a Listagem 10-5, podemos
+seguir a sugestão do texto de ajuda e restringir os tipos válidos para <code>T</code>
+apenas àqueles que implementam <code>PartialOrd</code>. A listagem então compilará,
+porque a biblioteca padrão implementa <code>PartialOrd</code> tanto em <code>i32</code> quanto em
+<code>char</code>.</p>
+<h3 id="em-definições-de-struct"><a class="header" href="#em-definições-de-struct">Em Definições de Struct</a></h3>
+<p>Também podemos definir structs para usar um parâmetro de tipo genérico em um ou
+mais campos usando a sintaxe <code>&lt;&gt;</code>. A Listagem 10-6 define uma struct
+<code>Point&lt;T&gt;</code> para armazenar valores de coordenadas <code>x</code> e <code>y</code> de qualquer tipo.</p>
 <figure class="listing" id="listing-10-6">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Point&lt;T&gt; {
@@ -10230,17 +10238,17 @@ fn main() {
     let integer = Point { x: 5, y: 10 };
     let float = Point { x: 1.0, y: 4.0 };
 }</code></pre>
-<figcaption><a href="#listing-10-6">Listing 10-6</a>: A <code>Point&lt;T&gt;</code> struct that holds <code>x</code> and <code>y</code> values of type <code>T</code></figcaption>
+<figcaption><a href="#listing-10-6">Listing 10-6</a>: Uma struct <code>Point&lt;T&gt;</code> que armazena valores <code>x</code> e <code>y</code> do tipo <code>T</code></figcaption>
 </figure>
-<p>A sintaxe para usar genéricos em definições de struct é semelhante àquela usada em
-definições de função. Primeiro, declaramos o nome do parâmetro de tipo dentro
-colchetes angulares logo após o nome da estrutura. Então, usamos o tipo genérico
-na definição da estrutura onde, de outra forma, especificaríamos tipos de dados concretos.</p>
-<p>Observe que, como usamos apenas um tipo genérico para definir <code>Point&lt;T&gt;</code>, isso
-definição diz que a estrutura <code>Point&lt;T&gt;</code> é genérica sobre algum tipo <code>T</code>, e
-os campos <code>x</code> e <code>y</code> são <em>ambos</em> do mesmo tipo, seja qual for o tipo. Se
-criamos uma instância de <code>Point&lt;T&gt;</code> que possui valores de diferentes tipos, como em
-Listagem 10.7, nosso código não será compilado.</p>
+<p>A sintaxe para usar genéricos em definições de struct é parecida com a usada em
+definições de função. Primeiro, declaramos o nome do parâmetro de tipo entre
+colchetes angulares logo após o nome da struct. Depois, usamos o tipo genérico
+na definição da struct onde, de outra forma, especificaríamos tipos concretos.</p>
+<p>Observe que, como usamos apenas um tipo genérico para definir <code>Point&lt;T&gt;</code>, essa
+definição diz que a struct <code>Point&lt;T&gt;</code> é genérica sobre algum tipo <code>T</code>, e que
+os campos <code>x</code> e <code>y</code> são <em>ambos</em> desse mesmo tipo, seja ele qual for. Se
+criarmos uma instância de <code>Point&lt;T&gt;</code> com valores de tipos diferentes, como na
+Listagem 10-7, nosso código não compilará.</p>
 <figure class="listing" id="listing-10-7">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">struct Point&lt;T&gt; {
@@ -10251,12 +10259,13 @@ Listagem 10.7, nosso código não será compilado.</p>
 fn main() {
     let wont_work = Point { x: 5, y: 4.0 };
 }</code></pre>
-<figcaption><a href="#listing-10-7">Listing 10-7</a>: The fields <code>x</code> and <code>y</code> must be the same type because both have the same generic data type <code>T</code>.</figcaption>
+<figcaption><a href="#listing-10-7">Listing 10-7</a>: Os campos <code>x</code> e <code>y</code> precisam ter o mesmo tipo porque ambos usam o mesmo tipo de dado genérico <code>T</code></figcaption>
 </figure>
 <p>Neste exemplo, quando atribuímos o valor inteiro <code>5</code> a <code>x</code>, deixamos o
-compilador sabe que o tipo genérico <code>T</code> será um número inteiro para esta instância de
-<code>Point&lt;T&gt;</code>. Então, quando especificamos <code>4.0</code> para <code>y</code>, que definimos como tendo
-do mesmo tipo que <code>x</code>, obteremos um erro de incompatibilidade de tipo como este:</p>
+compilador saber que o tipo genérico <code>T</code> será um inteiro para essa instância
+de <code>Point&lt;T&gt;</code>. Depois, quando especificamos <code>4.0</code> para <code>y</code>, que definimos como
+tendo o mesmo tipo de <code>x</code>, receberemos um erro de incompatibilidade de tipos
+assim:</p>
 <pre><code class="language-console">$ cargo run
    Compiling chapter10 v0.1.0 (file:///projects/chapter10)
 error[E0308]: mismatched types
@@ -10268,10 +10277,10 @@ error[E0308]: mismatched types
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
 </code></pre>
-<p>Para definir uma estrutura <code>Point</code> onde <code>x</code> e <code>y</code> são genéricos, mas podem ter
-tipos diferentes, podemos usar vários parâmetros de tipo genérico. Por exemplo, em
-Listagem 10-8, alteramos a definição de <code>Point</code> para ser genérica em relação aos tipos <code>T</code>
-e <code>U</code> onde <code>x</code> é do tipo <code>T</code> e <code>y</code> é do tipo <code>U</code>.</p>
+<p>Para definir uma struct <code>Point</code> em que <code>x</code> e <code>y</code> sejam genéricos, mas possam
+ter tipos diferentes, podemos usar múltiplos parâmetros de tipo genérico. Por
+exemplo, na Listagem 10-8, alteramos a definição de <code>Point</code> para ser genérica
+sobre os tipos <code>T</code> e <code>U</code>, em que <code>x</code> é do tipo <code>T</code> e <code>y</code> é do tipo <code>U</code>.</p>
 <figure class="listing" id="listing-10-8">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Point&lt;T, U&gt; {
@@ -10284,17 +10293,17 @@ fn main() {
     let both_float = Point { x: 1.0, y: 4.0 };
     let integer_and_float = Point { x: 5, y: 4.0 };
 }</code></pre>
-<figcaption><a href="#listing-10-8">Listing 10-8</a>: A <code>Point&lt;T, U&gt;</code> generic over two types so that <code>x</code> and <code>y</code> can be values of different types</figcaption>
+<figcaption><a href="#listing-10-8">Listing 10-8</a>: Um <code>Point&lt;T, U&gt;</code> genérico sobre dois tipos, para que <code>x</code> e <code>y</code> possam ter valores de tipos diferentes</figcaption>
 </figure>
-<p>Agora todas as instâncias de <code>Point</code> mostradas são permitidas! Você pode usar tantos genéricos
-digite parâmetros em uma definição como desejar, mas usando mais do que alguns faz
-seu código é difícil de ler. Se você achar que precisa de muitos tipos genéricos
-seu código, isso pode indicar que seu código precisa ser reestruturado em
-peças.</p>
-<h3 id="em-definições-de-enum"><a class="header" href="#em-definições-de-enum">Em definições de Enum</a></h3>
-<p>Assim como fizemos com structs, podemos definir enums para conter tipos de dados genéricos em seus
-variantes. Vamos dar uma outra olhada no enum <code>Option&lt;T&gt;</code> que o padrão
-biblioteca fornece, que usamos no Capítulo 6:</p>
+<p>Agora todas as instâncias de <code>Point</code> mostradas são permitidas! Você pode usar
+quantos parâmetros de tipo genérico quiser em uma definição, mas usar mais do
+que alguns torna o código difícil de ler. Se você perceber que precisa de
+muitos tipos genéricos no seu código, isso pode indicar que ele precisa ser
+reestruturado em partes menores.</p>
+<h3 id="em-definições-de-enum"><a class="header" href="#em-definições-de-enum">Em Definições de Enum</a></h3>
+<p>Assim como fizemos com structs, podemos definir enums para armazenar tipos de
+dado genéricos em suas variantes. Vamos dar outra olhada no enum <code>Option&lt;T&gt;</code>
+fornecido pela biblioteca padrão, que usamos no Capítulo 6:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Option&lt;T&gt; {
@@ -10302,14 +10311,14 @@ biblioteca fornece, que usamos no Capítulo 6:</p>
     None,
 }
 <span class="boring">}</span></code></pre>
-<p>Esta definição agora deve fazer mais sentido para você. Como você pode ver, o
-<code>Option&lt;T&gt;</code> enum é genérico sobre o tipo <code>T</code> e tem duas variantes: <code>Some</code>, que
-contém um valor do tipo <code>T</code> e uma variante <code>None</code> que não contém nenhum valor.
-Usando o enum <code>Option&lt;T&gt;</code>, podemos expressar o conceito abstrato de um
-valor opcional, e como <code>Option&lt;T&gt;</code> é genérico, podemos usar esta abstração
-não importa qual seja o tipo do valor opcional.</p>
-<p>Enums também podem usar vários tipos genéricos. A definição de <code>Result</code>
-enum que usamos no Capítulo 9 é um exemplo:</p>
+<p>Essa definição agora deve fazer mais sentido para você. Como pode ver, o enum
+<code>Option&lt;T&gt;</code> é genérico sobre o tipo <code>T</code> e tem duas variantes: <code>Some</code>, que
+contém um valor do tipo <code>T</code>, e <code>None</code>, que não contém valor algum. Usando o
+enum <code>Option&lt;T&gt;</code>, podemos expressar o conceito abstrato de um valor opcional,
+e, como <code>Option&lt;T&gt;</code> é genérico, podemos usar essa abstração independentemente
+do tipo do valor opcional.</p>
+<p>Enums também podem usar vários tipos genéricos. A definição do enum <code>Result</code>,
+que usamos no Capítulo 9, é um exemplo:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Result&lt;T, E&gt; {
@@ -10317,21 +10326,23 @@ enum que usamos no Capítulo 9 é um exemplo:</p>
     Err(E),
 }
 <span class="boring">}</span></code></pre>
-<p>O <code>Result</code> enum é genérico em dois tipos, <code>T</code> e <code>E</code>, e tem duas variantes:
+<p>O enum <code>Result</code> é genérico sobre dois tipos, <code>T</code> e <code>E</code>, e tem duas variantes:
 <code>Ok</code>, que contém um valor do tipo <code>T</code>, e <code>Err</code>, que contém um valor do tipo
-<code>E</code>. Esta definição torna conveniente usar o enum <code>Result</code> em qualquer lugar que
-tem uma operação que pode ser bem-sucedida (retornar um valor de algum tipo <code>T</code>) ou falhar
-(retorne um erro de algum tipo <code>E</code>). Na verdade, foi isso que usamos para abrir um
-arquivo na Listagem 9-3, onde <code>T</code> foi preenchido com o tipo <code>std::fs::File</code> quando
-o arquivo foi aberto com sucesso e <code>E</code> foi preenchido com o tipo
-<code>std::io::Error</code> quando houve problemas ao abrir o arquivo.</p>
-<p>Quando você reconhece situações em seu código com múltiplas estruturas ou enumerações
-definições que diferem apenas nos tipos de valores que contêm, você pode
-evite a duplicação usando tipos genéricos.</p>
+<code>E</code>. Essa definição torna conveniente usar o enum <code>Result</code> em qualquer lugar em
+que temos uma operação que pode ter sucesso, retornando um valor de algum tipo
+<code>T</code>, ou falhar, retornando um erro de algum tipo <code>E</code>. Na verdade, foi isso que
+usamos para abrir um arquivo na Listagem 9-3, em que <code>T</code> foi preenchido com o
+tipo <code>std::fs::File</code> quando o arquivo foi aberto com sucesso, e <code>E</code> foi
+preenchido com o tipo <code>std::io::Error</code> quando houve problemas ao abrir o
+arquivo.</p>
+<p>Quando você reconhece situações no código com múltiplas definições de structs
+ou enums que diferem apenas nos tipos de valores que armazenam, pode evitar
+duplicação usando tipos genéricos.</p>
 <h3 id="em-definições-de-método"><a class="header" href="#em-definições-de-método">Em Definições de Método</a></h3>
-<p>Podemos implementar métodos em structs e enums (como fizemos no Capítulo 5) e usar
-tipos genéricos em suas definições também. A Listagem 10-9 mostra o <code>Point&lt;T&gt;</code>
-struct que definimos na Listagem 10.6 com um método chamado <code>x</code> implementado nela.</p>
+<p>Podemos implementar métodos em structs e enums, como fizemos no Capítulo 5, e
+usar tipos genéricos em suas definições também. A Listagem 10-9 mostra a
+struct <code>Point&lt;T&gt;</code> que definimos na Listagem 10-6 com um método chamado <code>x</code>
+implementado nela.</p>
 <figure class="listing" id="listing-10-9">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Point&lt;T&gt; {
@@ -10350,23 +10361,24 @@ fn main() {
 
     println!("p.x = {}", p.x());
 }</code></pre>
-<figcaption><a href="#listing-10-9">Listing 10-9</a>: Implementing a method named <code>x</code> on the <code>Point&lt;T&gt;</code> struct that will return a reference to the <code>x</code> field of type <code>T</code></figcaption>
+<figcaption><a href="#listing-10-9">Listing 10-9</a>: Implementando um método chamado <code>x</code> na struct <code>Point&lt;T&gt;</code> que retorna uma referência ao campo <code>x</code> do tipo <code>T</code></figcaption>
 </figure>
 <p>Aqui, definimos um método chamado <code>x</code> em <code>Point&lt;T&gt;</code> que retorna uma referência
 aos dados no campo <code>x</code>.</p>
-<p>Observe que temos que declarar <code>T</code> logo após <code>impl</code> para que possamos usar <code>T</code> para
-especifique que estamos implementando métodos do tipo <code>Point&lt;T&gt;</code>. Ao declarar
-<code>T</code> como um tipo genérico após <code>impl</code>, Rust pode identificar que o tipo no
-colchetes angulares em <code>Point</code> é um tipo genérico em vez de um tipo concreto. Nós
-poderia ter escolhido um nome diferente para este parâmetro genérico do genérico
-parâmetro declarado na definição da estrutura, mas usar o mesmo nome é
-convencional. Se você escrever um método dentro de <code>impl</code> que declare um genérico
-tipo, esse método será definido em qualquer instância do tipo, não importa o que
-o tipo concreto acaba substituindo o tipo genérico.</p>
-<p>Também podemos especificar restrições em tipos genéricos ao definir métodos no
-tipo. Poderíamos, por exemplo, implementar métodos apenas em instâncias <code>Point&lt;f32&gt;</code>
-em vez de <code>Point&lt;T&gt;</code> instâncias com qualquer tipo genérico. Na Listagem 10-10, nós
-use o tipo concreto <code>f32</code>, o que significa que não declaramos nenhum tipo depois de <code>impl</code>.</p>
+<p>Observe que precisamos declarar <code>T</code> logo após <code>impl</code> para que possamos usar
+<code>T</code> e especificar que estamos implementando métodos no tipo <code>Point&lt;T&gt;</code>. Ao
+declarar <code>T</code> como tipo genérico depois de <code>impl</code>, o Rust consegue identificar
+que o tipo entre colchetes angulares em <code>Point</code> é um tipo genérico e não um
+tipo concreto. Poderíamos ter escolhido um nome diferente para esse parâmetro
+genérico em relação ao declarado na definição da struct, mas usar o mesmo nome
+é convencional. Se você escrever um método dentro de um <code>impl</code> que declare um
+tipo genérico, esse método será definido em qualquer instância do tipo, não
+importa qual tipo concreto acabe substituindo o tipo genérico.</p>
+<p>Também podemos especificar restrições sobre tipos genéricos ao definir métodos
+no tipo. Poderíamos, por exemplo, implementar métodos apenas em instâncias
+<code>Point&lt;f32&gt;</code>, em vez de em instâncias <code>Point&lt;T&gt;</code> com qualquer tipo genérico. Na
+Listagem 10-10, usamos o tipo concreto <code>f32</code>, o que significa que não
+declaramos nenhum tipo depois de <code>impl</code>.</p>
 <figure class="listing" id="listing-10-10">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct Point&lt;T&gt; {
@@ -10391,19 +10403,19 @@ use o tipo concreto <code>f32</code>, o que significa que não declaramos nenhum
 </span><span class="boring">
 </span><span class="boring">    println!("p.x = {}", p.x());
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-10-10">Listing 10-10</a>: An <code>impl</code> block that only applies to a struct with a particular concrete type for the generic type parameter <code>T</code></figcaption>
+<figcaption><a href="#listing-10-10">Listing 10-10</a>: Um bloco <code>impl</code> que se aplica apenas a uma struct com um tipo concreto específico para o parâmetro de tipo genérico <code>T</code></figcaption>
 </figure>
-<p>Este código significa que o tipo <code>Point&lt;f32&gt;</code> terá um <code>distance_from_origin</code>
-método; outras instâncias de <code>Point&lt;T&gt;</code> onde <code>T</code> não é do tipo <code>f32</code> não serão
-tenha esse método definido. O método mede a que distância nosso ponto está do ponto
-aponta nas coordenadas (0,0, 0,0) e usa operações matemáticas que são
-disponível apenas para tipos de ponto flutuante.</p>
-<p>Os parâmetros de tipo genérico em uma definição de estrutura nem sempre são iguais aos
-você usa nas assinaturas de método da mesma estrutura. A Listagem 10-11 usa o genérico
-digita <code>X1</code> e <code>Y1</code> para a estrutura <code>Point</code> e <code>X2</code> e <code>Y2</code> para <code>mixup</code>
-assinatura do método para tornar o exemplo mais claro. O método cria um novo <code>Point</code>
-instância com o valor <code>x</code> de <code>self</code> <code>Point</code> (do tipo <code>X1</code>) e <code>y</code>
-valor do <code>Point</code> passado (do tipo <code>Y2</code>).</p>
+<p>Esse código significa que o tipo <code>Point&lt;f32&gt;</code> terá um método
+<code>distance_from_origin</code>; outras instâncias de <code>Point&lt;T&gt;</code> em que <code>T</code> não seja do
+tipo <code>f32</code> não terão esse método definido. O método mede a distância do ponto
+até a origem, nas coordenadas <code>(0.0, 0.0)</code>, e usa operações matemáticas
+disponíveis apenas para tipos de ponto flutuante.</p>
+<p>Os parâmetros de tipo genérico em uma definição de struct nem sempre são os
+mesmos que você usa nas assinaturas de métodos dessa mesma struct. A Listagem
+10-11 usa os tipos genéricos <code>X1</code> e <code>Y1</code> para a struct <code>Point</code> e <code>X2</code> e <code>Y2</code>
+para a assinatura do método <code>mixup</code>, para deixar o exemplo mais claro. O
+método cria uma nova instância de <code>Point</code> com o valor <code>x</code> do <code>Point</code> de <code>self</code>,
+do tipo <code>X1</code>, e o valor <code>y</code> do <code>Point</code> passado como argumento, do tipo <code>Y2</code>.</p>
 <figure class="listing" id="listing-10-11">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Point&lt;X1, Y1&gt; {
@@ -10428,47 +10440,47 @@ fn main() {
 
     println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
 }</code></pre>
-<figcaption><a href="#listing-10-11">Listing 10-11</a>: A method that uses generic types that are different from its struct’s definition</figcaption>
+<figcaption><a href="#listing-10-11">Listing 10-11</a>: Um método que usa tipos genéricos diferentes dos definidos na própria struct</figcaption>
 </figure>
-<p>Em <code>main</code>, definimos um <code>Point</code> que tem um <code>i32</code> para <code>x</code> (com valor <code>5</code>)
-e um <code>f64</code> para <code>y</code> (com valor <code>10.4</code>). A variável <code>p2</code> é uma estrutura <code>Point</code>
-que tem uma fatia de string para <code>x</code> (com valor <code>"Hello"</code>) e um <code>char</code> para <code>y</code>
-(com valor <code>c</code>). Chamar <code>mixup</code> em <code>p1</code> com o argumento <code>p2</code> nos dá <code>p3</code>,
-que terá um <code>i32</code> para <code>x</code> porque <code>x</code> veio de <code>p1</code>. A variável <code>p3</code>
-terá um <code>char</code> para <code>y</code> porque <code>y</code> veio de <code>p2</code>. A macro <code>println!</code>
-chamada imprimirá <code>p3.x = 5, p3.y = c</code>.</p>
-<p>O objetivo deste exemplo é demonstrar uma situação em que alguns genéricos
-parâmetros são declarados com <code>impl</code> e alguns são declarados com o método
-definição. Aqui, os parâmetros genéricos <code>X1</code> e <code>Y1</code> são declarados após
-<code>impl</code> porque eles acompanham a definição da estrutura. Os parâmetros genéricos <code>X2</code>
-e <code>Y2</code> são declarados após <code>fn mixup</code> porque são relevantes apenas para o
-método.</p>
-<h3 id="desempenho-de-código-usando-genéricos"><a class="header" href="#desempenho-de-código-usando-genéricos">Desempenho de código usando genéricos</a></h3>
-<p>Você deve estar se perguntando se há um custo de tempo de execução ao usar o tipo genérico
-parâmetros. A boa notícia é que usar tipos genéricos não tornará seu programa
-execute mais lentamente do que seria com tipos concretos.</p>
-<p>Rust consegue isso realizando a monomorfização do código usando
-genéricos em tempo de compilação. <em>Monomorfização</em> é o processo de tornar genérico
-código em código específico preenchendo os tipos concretos que são usados ​​quando
-compilado. Neste processo, o compilador faz o oposto das etapas que usamos
-para criar a função genérica na Listagem 10-5: O compilador analisa todos os
-locais onde o código genérico é chamado e gera código para os tipos concretos
-o código genérico é chamado com.</p>
-<p>Vejamos como isso funciona usando o genérico da biblioteca padrão
-<code>Option&lt;T&gt;</code> enumeração:</p>
+<p>Em <code>main</code>, definimos um <code>Point</code> que tem um <code>i32</code> para <code>x</code>, com valor <code>5</code>, e um
+<code>f64</code> para <code>y</code>, com valor <code>10.4</code>. A variável <code>p2</code> é uma struct <code>Point</code> que tem
+uma fatia de string para <code>x</code>, com valor <code>"Hello"</code>, e um <code>char</code> para <code>y</code>, com
+valor <code>c</code>. Chamar <code>mixup</code> em <code>p1</code> com o argumento <code>p2</code> nos dá <code>p3</code>, que terá
+um <code>i32</code> para <code>x</code> porque <code>x</code> veio de <code>p1</code>. A variável <code>p3</code> terá um <code>char</code> para
+<code>y</code> porque <code>y</code> veio de <code>p2</code>. A chamada da macro <code>println!</code> imprimirá
+<code>p3.x = 5, p3.y = c</code>.</p>
+<p>O objetivo desse exemplo é demonstrar uma situação em que alguns parâmetros
+genéricos são declarados em <code>impl</code> e outros são declarados na definição do
+método. Aqui, os parâmetros genéricos <code>X1</code> e <code>Y1</code> são declarados após <code>impl</code>
+porque pertencem à definição da struct. Já os parâmetros genéricos <code>X2</code> e
+<code>Y2</code> são declarados após <code>fn mixup</code> porque só são relevantes para esse método.</p>
+<h3 id="desempenho-de-código-usando-genéricos"><a class="header" href="#desempenho-de-código-usando-genéricos">Desempenho de Código Usando Genéricos</a></h3>
+<p>Você talvez esteja se perguntando se existe algum custo em tempo de execução ao
+usar parâmetros de tipo genérico. A boa notícia é que usar tipos genéricos não
+fará seu programa rodar mais lentamente do que faria com tipos concretos.</p>
+<p>O Rust consegue isso realizando monomorfização do código que usa genéricos em
+tempo de compilação. <em>Monomorfização</em> é o processo de transformar código
+genérico em código específico, preenchendo os tipos concretos que são usados na
+compilação. Nesse processo, o compilador faz o oposto das etapas que usamos
+para criar a função genérica da Listagem 10-5: ele observa todos os lugares em
+que o código genérico é chamado e gera código para os tipos concretos com os
+quais ele foi usado.</p>
+<p>Vamos ver como isso funciona usando o enum genérico <code>Option&lt;T&gt;</code> da biblioteca
+padrão:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let integer = Some(5);
 let float = Some(5.0);
 <span class="boring">}</span></code></pre>
-<p>Quando Rust compila esse código, ele executa a monomorfização. Durante isso
-processo, o compilador lê os valores que foram usados ​​em <code>Option&lt;T&gt;</code>
-instâncias e identifica dois tipos de <code>Option&lt;T&gt;</code>: um é <code>i32</code> e o outro
-é <code>f64</code>. Como tal, expande a definição genérica de <code>Option&lt;T&gt;</code> em duas
-definições especializadas para <code>i32</code> e <code>f64</code>, substituindo assim o genérico
-definição com as específicas.</p>
-<p>A versão monomorfizada do código é semelhante à seguinte (o
-compilador usa nomes diferentes dos que estamos usando aqui para ilustração):</p>
+<p>Quando o Rust compila esse código, ele realiza monomorfização. Durante esse
+processo, o compilador lê os valores usados nas instâncias de <code>Option&lt;T&gt;</code> e
+identifica duas formas de <code>Option&lt;T&gt;</code>: uma é <code>i32</code>, e a outra é <code>f64</code>. Assim,
+ele expande a definição genérica de <code>Option&lt;T&gt;</code> em duas definições
+especializadas para <code>i32</code> e <code>f64</code>, substituindo a definição genérica pelas
+específicas.</p>
+<p>A versão monomorfizada do código é parecida com a seguinte, embora o
+compilador use nomes diferentes dos que estamos usando aqui apenas para
+ilustração:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">enum Option_i32 {
@@ -10486,12 +10498,12 @@ fn main() {
     let float = Option_f64::Some(5.0);
 }</code></pre>
 </figure>
-<p>O genérico <code>Option&lt;T&gt;</code> é substituído pelas definições específicas criadas por
-o compilador. Como Rust compila código genérico em código que especifica o
-type em cada instância, não pagamos nenhum custo de tempo de execução pelo uso de genéricos. Quando o código
-é executado, ele funciona exatamente como seria se tivéssemos duplicado cada definição por
-mão. O processo de monomorfização torna os genéricos de Rust extremamente eficientes
-em tempo de execução.</p>
+<p>O genérico <code>Option&lt;T&gt;</code> é substituído pelas definições específicas criadas pelo
+compilador. Como o Rust compila código genérico em código que especifica o tipo
+em cada instância, não pagamos custo de tempo de execução por usar genéricos.
+Quando o código roda, ele se comporta exatamente como se tivéssemos duplicado
+cada definição manualmente. O processo de monomorfização torna os genéricos do
+Rust extremamente eficientes em tempo de execução.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="definindo-comportamento-compartilhado-com-traits"><a href="#definindo-comportamento-compartilhado-com-traits" class="header">Definindo Comportamento Compartilhado com Traits</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
@@ -11489,7 +11501,7 @@ informações suficientes para permitir operações seguras de memória e proibi
 criaria ponteiros pendentes ou violaria a segurança da memória.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="lifetime-annotations-in-struct-definitions"></a></p>
-<h3 id="em-definições-de-estrutura-1"><a class="header" href="#em-definições-de-estrutura-1">Em definições de estrutura</a></h3>
+<h3 id="em-definições-de-estrutura"><a class="header" href="#em-definições-de-estrutura">Em definições de estrutura</a></h3>
 <p>Até agora, todas as structs que definimos armazenavam tipos com ownership. Podemos definir structs
 que contenham referências, mas, nesse caso, precisamos adicionar uma anotação de lifetime
 a cada referência na definição da struct. A Listagem 10-24 tem um
@@ -11807,42 +11819,45 @@ testes de integração.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="como-escrever-testes-1"><a href="#como-escrever-testes-1" class="header">Como Escrever Testes</a></h1>
 <h2 id="como-escrever-testes"><a class="header" href="#como-escrever-testes">Como escrever testes</a></h2>
-<p><em>Testes</em> são funções Rust que verificam se o código que não é de teste está funcionando em
-da maneira esperada. Os corpos das funções de teste normalmente executam essas três
-ações:</p>
+<p><em>Testes</em> são funções Rust que verificam se o código que não é de teste está se
+comportando da forma esperada. Os corpos das funções de teste normalmente
+executam estas três ações:</p>
 <ul>
-<li>Configure todos os dados ou estados necessários.</li>
-<li>Execute o código que deseja testar.</li>
-<li>Afirme que os resultados são o que você espera.</li>
+<li>Configurar os dados ou o estado necessários.</li>
+<li>Executar o código que você quer testar.</li>
+<li>Verificar se os resultados são os esperados.</li>
 </ul>
-<p>Vejamos os recursos que Rust fornece especificamente para escrever testes que
-execute essas ações, que incluem o atributo <code>test</code>, algumas macros e o
-<code>should_panic</code> atributo.</p>
+<p>Vamos ver os recursos que Rust fornece especificamente para escrever testes que
+sigam esse fluxo, incluindo o atributo <code>test</code>, algumas macros e o atributo
+<code>should_panic</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="the-anatomy-of-a-test-function"></a></p>
-<h3 id="estruturando-funções-de-teste"><a class="header" href="#estruturando-funções-de-teste">Estruturando Funções de Teste</a></h3>
-<p>Na sua forma mais simples, um teste em Rust é uma função anotada com <code>test</code>
-atributo. Atributos são metadados sobre partes do código Rust; um exemplo é
-o atributo <code>derive</code> que usamos com estruturas no Capítulo 5. Para alterar uma função
-em uma função de teste, adicione <code>#[test]</code> na linha antes de <code>fn</code>. Quando você executa seu
-testa com o comando <code>cargo test</code>, Rust cria um binário de executor de teste que executa
-as funções anotadas e relatórios sobre se cada função de teste foi aprovada ou
-falha.</p>
-<p>Sempre que fazemos um novo projeto de biblioteca com Cargo, um módulo de teste com um teste
-função nele é gerada automaticamente para nós. Este módulo oferece uma
-modelo para escrever seus testes para que você não precise procurar o exato
-estrutura e sintaxe sempre que você inicia um novo projeto. Você pode adicionar quantos
-funções de teste adicionais e quantos módulos de teste você desejar!</p>
-<p>Exploraremos alguns aspectos de como os testes funcionam, experimentando o modelo
-test antes de realmente testarmos qualquer código. Então, escreveremos alguns testes do mundo real
-que chamam algum código que escrevemos e afirmam que seu comportamento está correto.</p>
-<p>Vamos criar um novo projeto de biblioteca chamado <code>adder</code> que adicionará dois números:</p>
+<h3 id="estruturando-funções-de-teste"><a class="header" href="#estruturando-funções-de-teste">Estruturando funções de teste</a></h3>
+<p>Na forma mais simples, um teste em Rust é uma função anotada com o atributo
+<code>test</code>. Atributos são metadados sobre partes do código Rust; um exemplo é o
+atributo <code>derive</code>, que usamos com structs no Capítulo 5. Para transformar uma
+função em uma função de teste, adicione <code>#[test]</code> na linha anterior a <code>fn</code>.
+Quando você executa seus testes com o comando <code>cargo test</code>, Rust constrói um
+binário executor de testes que executa as funções anotadas e informa se cada
+função de teste passou ou falhou.</p>
+<p>Sempre que criamos um novo projeto de biblioteca com Cargo, um módulo de testes
+com uma função de teste dentro dele é gerado automaticamente. Esse módulo
+oferece um modelo para escrever seus testes, para que você não precise
+relembrar a estrutura e a sintaxe exatas toda vez que iniciar um projeto novo.
+Você pode adicionar quantas funções de teste extras e quantos módulos de teste
+quiser!</p>
+<p>Vamos explorar alguns aspectos de como os testes funcionam experimentando o
+modelo inicial antes de realmente testar qualquer código. Depois, escreveremos
+alguns testes mais realistas que chamam código escrito por nós e verificam se
+seu comportamento está correto.</p>
+<p>Vamos criar um novo projeto de biblioteca chamado <code>adder</code>, que somará dois
+números:</p>
 <pre><code class="language-console">$ cargo new adder --lib
      Created library `adder` project
 $ cd adder
 </code></pre>
-<p>O conteúdo do arquivo <em>src/lib.rs</em> em sua biblioteca <code>adder</code> deve ser parecido com
-Listagem 11-1.</p>
+<p>O conteúdo do arquivo <em>src/lib.rs</em> na sua biblioteca <code>adder</code> deve se parecer
+com a Listagem 11-1.</p>
 <figure class="listing" id="listing-11-1">
 <span class="file-name">Filename: src/lib.rs</span>
 <!-- manual-regeneration
@@ -11869,21 +11884,22 @@ mod tests {
         assert_eq!(result, 4);
     }
 }</code></pre>
-<figcaption><a href="#listing-11-1">Listing 11-1</a>: The code generated automatically by <code>cargo new</code></figcaption>
+<figcaption><a href="#listing-11-1">Listing 11-1</a>: Código gerado automaticamente por <code>cargo new</code></figcaption>
 </figure>
-<p>O arquivo começa com um exemplo de função <code>add</code> para que tenhamos algo para
-teste.</p>
-<p>Por enquanto, vamos nos concentrar apenas na função <code>it_works</code>. Observe o <code>#[test]</code>
-anotação: Este atributo indica que esta é uma função de teste, então o teste
-runner sabe tratar esta função como um teste. Também podemos ter não-teste
-funções no módulo <code>tests</code> para ajudar a configurar cenários comuns ou executar
-operações comuns, por isso sempre precisamos indicar quais funções são testes.</p>
-<p>O corpo da função de exemplo usa a macro <code>assert_eq!</code> para afirmar que <code>result</code>,
-que contém o resultado de chamar <code>add</code> com 2 e 2, é igual a 4. Este
-asserção serve como exemplo do formato de um teste típico. Vamos executá-lo
-para ver se esse teste passa.</p>
-<p>O comando <code>cargo test</code> executa todos os testes do nosso projeto, conforme mostrado na Listagem
-11-2.</p>
+<p>O arquivo começa com uma função de exemplo, <code>add</code>, para que tenhamos algo a
+testar.</p>
+<p>Por enquanto, vamos focar apenas na função <code>it_works</code>. Observe a anotação
+<code>#[test]</code>: esse atributo indica que esta é uma função de teste, para que o
+executor saiba tratá-la como tal. Também podemos ter funções que não são
+testes dentro do módulo <code>tests</code> para ajudar a montar cenários comuns ou
+executar operações repetidas, por isso sempre precisamos indicar quais funções
+são testes.</p>
+<p>O corpo da função de exemplo usa a macro <code>assert_eq!</code> para verificar que
+<code>result</code>, que contém o resultado de chamar <code>add</code> com 2 e 2, é igual a 4. Essa
+verificação serve como exemplo do formato de um teste típico. Vamos executá-lo
+para confirmar que esse teste passa.</p>
+<p>O comando <code>cargo test</code> executa todos os testes do nosso projeto, como mostra a
+Listagem 11-2.</p>
 <figure class="listing" id="listing-11-2">
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
@@ -11902,32 +11918,37 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<figcaption><a href="#listing-11-2">Listing 11-2</a>: The output from running the automatically generated test</figcaption>
+<figcaption><a href="#listing-11-2">Listing 11-2</a>: Saída da execução do teste gerado automaticamente</figcaption>
 </figure>
-<p>Cargo compilou e executou o teste. Vemos a linha <code>running 1 test</code>. O próximo
-linha mostra o nome da função de teste gerada, chamada <code>tests::it_works</code>,
-e que o resultado da execução desse teste é <code>ok</code>. O resumo geral <code>teste resultado: ok.</code> means that all the tests passed, and the portion that reads <code>1 passou; 0 falhou</code> totaliza o número de testes que passaram ou falharam.</p>
-<p>É possível marcar um teste como ignorado para que ele não seja executado em um determinado
-exemplo; abordaremos isso em <a href="#ignoring-tests-unless-specifically-requested">“Ignorando testes, a menos que especificamente
-Seção “</a><!-- ignore --> solicitada posteriormente neste capítulo. Porque nós
-não fiz isso aqui, o resumo mostra <code>0 ignored</code>. Também podemos passar um
-argumento para o comando <code>cargo test</code> para executar apenas testes cujo nome corresponda a um
-corda; isso é chamado de <em>filtragem</em> e abordaremos isso no <a href="#running-a-subset-of-tests-by-name">“Executando um
-Seção Subconjunto de testes por nome”</a><!-- ignore -->. Aqui, não
-filtrou os testes que estão sendo executados, então o final do resumo mostra <code>0 filtered out</code>.</p>
-<p>A estatística <code>0 measured</code> é para testes de benchmark que medem o desempenho.
-Os testes de benchmark estão, no momento em que este livro foi escrito, disponíveis apenas no Rust noturno. Ver
+<p>Cargo compilou e executou o teste. Vemos a linha <code>running 1 test</code>. A linha
+seguinte mostra o nome da função de teste gerada, <code>tests::it_works</code>, e que o
+resultado da execução desse teste é <code>ok</code>. O resumo geral <code>test result: ok.</code>
+significa que todos os testes passaram, e a parte que diz <code>1 passed; 0 failed</code>
+totaliza quantos testes passaram ou falharam.</p>
+<p>É possível marcar um teste como ignorado para que ele não seja executado em
+determinada ocasião; veremos isso mais adiante neste capítulo, na seção
+<a href="#ignoring-tests-unless-specifically-requested">“Ignorando testes, a menos que sejam solicitados especificamente”</a></p>
+<!-- ignore -->. Como ainda não fizemos isso aqui, o resumo mostra
+<p><code>0 ignored</code>. Também podemos passar um argumento ao comando <code>cargo test</code> para
+executar somente os testes cujo nome corresponda a uma string; isso é chamado
+de <em>filtragem</em>, e veremos esse recurso na seção
+<a href="#running-a-subset-of-tests-by-name">“Executando um subconjunto de testes por nome”</a><!-- ignore -->. Aqui,
+não filtramos os testes executados, então o fim do resumo mostra
+<code>0 filtered out</code>.</p>
+<p>A estatística <code>0 measured</code> é usada para testes de benchmark que medem
+desempenho. No momento em que este livro foi escrito, testes de benchmark só
+estavam disponíveis no Rust noturno. Veja
 <a href="../unstable-book/library-features/test.html">a documentação sobre testes de benchmark</a> para saber mais.</p>
-<p>A próxima parte da saída do teste começando em <code>Doc-tests adder</code> é para o
-resultados de quaisquer testes de documentação. Ainda não temos nenhum teste de documentação,
-mas Rust pode compilar qualquer exemplo de código que apareça em nossa documentação de API.
-Este recurso ajuda a manter seus documentos e seu código sincronizados! Discutiremos como
-escrever testes de documentação em <a href="#documentation-comments-as-tests">“Comentários de documentação como
-Testes”</a><!-- ignore --> do Capítulo 14. Por enquanto, vamos
-ignore a saída <code>Doc-tests</code>.</p>
-<p>Vamos começar a personalizar o teste de acordo com nossas necessidades. Primeiro, mude o nome de
-a função <code>it_works</code> para um nome diferente, como <code>exploration</code>, assim:</p>
-<p><span class="filename">Nome do arquivo:src/lib.rs</span></p>
+<p>A próxima parte da saída, que começa em <code>Doc-tests adder</code>, corresponde aos
+resultados de quaisquer testes de documentação. Ainda não temos testes de
+documentação, mas Rust pode compilar qualquer exemplo de código que apareça na
+nossa documentação de API. Esse recurso ajuda a manter documentação e código em
+sincronia! Vamos discutir como escrever testes de documentação na seção
+<a href="#documentation-comments-as-tests">“Comentários de documentação como testes”</a><!-- ignore --> do
+Capítulo 14. Por enquanto, vamos ignorar a saída <code>Doc-tests</code>.</p>
+<p>Vamos começar a adaptar o teste às nossas necessidades. Primeiro, altere o nome
+da função <code>it_works</code> para outro nome, como <code>exploration</code>, assim:</p>
+<p><span class="filename">Nome do arquivo: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
     left + right
 }
@@ -11942,8 +11963,8 @@ mod tests {
         assert_eq!(result, 4);
     }
 }</code></pre>
-<p>Em seguida, execute <code>cargo test</code> novamente. A saída agora mostra <code>exploration</code> em vez de
-<code>it_works</code>:</p>
+<p>Depois, execute <code>cargo test</code> novamente. Agora a saída mostra <code>exploration</code> em
+vez de <code>it_works</code>:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
@@ -11961,12 +11982,13 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Agora adicionaremos outro teste, mas desta vez faremos um teste que falha! Testes
-falha quando algo na função de teste entra em pânico. Cada teste é executado em um novo
-thread, e quando o thread principal vê que um thread de teste morreu, o teste é
-marcado como falhou. No Capítulo 9, falamos sobre como a maneira mais simples de entrar em pânico
-é chamar a macro <code>panic!</code>. Insira o novo teste como uma função chamada
-<code>another</code>, então seu arquivo <em>src/lib.rs</em> se parece com a Listagem 11-3.</p>
+<p>Agora vamos adicionar outro teste, mas desta vez faremos um teste que falha!
+Testes falham quando algo dentro da função de teste entra em pânico. Cada teste
+é executado em uma nova thread, e quando a thread principal percebe que uma
+thread de teste morreu, esse teste é marcado como falho. No Capítulo 9,
+comentamos que a forma mais simples de provocar um pânico é chamar a macro
+<code>panic!</code>. Digite o novo teste como uma função chamada <code>another</code>, para que seu
+arquivo <em>src/lib.rs</em> fique como na Listagem 11-3.</p>
 <figure class="listing" id="listing-11-3">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust panics noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
@@ -11988,10 +12010,11 @@ mod tests {
         panic!("Make this test fail");
     }
 }</code></pre>
-<figcaption><a href="#listing-11-3">Listing 11-3</a>: Adding a second test that will fail because we call the <code>panic!</code> macro</figcaption>
+<figcaption><a href="#listing-11-3">Listing 11-3</a>: Adicionando um segundo teste que falhará porque chamamos a macro <code>panic!</code></figcaption>
 </figure>
-<p>Execute os testes novamente usando <code>cargo test</code>. A saída deve ser semelhante à Listagem
-11.4, que mostra que nosso teste <code>exploration</code> passou e <code>another</code> falhou.</p>
+<p>Execute os testes novamente com <code>cargo test</code>. A saída deve se parecer com a
+Listagem 11-4, que mostra que nosso teste <code>exploration</code> passou e <code>another</code>
+falhou.</p>
 <figure class="listing" id="listing-11-4">
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
@@ -12018,37 +12041,40 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<figcaption><a href="#listing-11-4">Listing 11-4</a>: Test results when one test passes and one test fails</figcaption>
+<figcaption><a href="#listing-11-4">Listing 11-4</a>: Resultados dos testes quando um passa e outro falha</figcaption>
 </figure>
 <!-- manual-regeneration
 rg panicked listings/ch11-writing-automated-tests/listing-11-03/output.txt
 check the line number of the panic matches the line number in the following paragraph
  -->
-<p>Em vez de <code>ok</code>, a linha <code>test tests::another</code> mostra <code>FAILED</code>. Dois novos
-seções aparecem entre os resultados individuais e o resumo: A primeira
-exibe o motivo detalhado de cada falha de teste. Neste caso, obtemos o
-detalhes que <code>tests::another</code> falhou porque entrou em pânico com a mensagem <code>Make este teste falha</code> na linha 17 no arquivo <em>src/lib.rs</em>. A próxima seção lista
-apenas os nomes de todos os testes que falharam, o que é útil quando há muitos
-testes e muitos resultados detalhados de testes com falha. Podemos usar o nome de um
-falhar no teste para executar apenas esse teste para depurá-lo mais facilmente; falaremos mais
-sobre maneiras de executar testes no <a href="#controlling-how-tests-are-run">“Controlando como os testes são
-Execute”</a><!-- ignore --> seção.</p>
-<p>A linha de resumo é exibida no final: No geral, o resultado do nosso teste é <code>FAILED</code>. Nós
-teve um teste aprovado e um teste reprovado.</p>
-<p>Agora que você viu como são os resultados do teste em diferentes cenários,
-vejamos algumas macros além de <code>panic!</code> que são úteis em testes.</p>
+<p>Em vez de <code>ok</code>, a linha <code>test tests::another</code> mostra <code>FAILED</code>. Duas novas
+seções aparecem entre os resultados individuais e o resumo. A primeira exibe o
+motivo detalhado de cada falha de teste. Neste caso, vemos que
+<code>tests::another</code> falhou porque entrou em pânico com a mensagem <code>Make this test fail</code> na linha 17 do arquivo <em>src/lib.rs</em>. A seção seguinte lista apenas os
+nomes de todos os testes que falharam, o que é útil quando há muitos testes e
+muitas saídas detalhadas de falha. Podemos usar o nome de um teste que falhou
+para executá-lo isoladamente e depurá-lo com mais facilidade; falaremos mais
+sobre formas de executar testes na seção
+<a href="#controlling-how-tests-are-run">“Controlando como os testes são executados”</a></p>
+<!-- ignore -->.
+<p>A linha de resumo aparece ao final: no geral, o resultado do nosso teste é
+<code>FAILED</code>. Tivemos um teste que passou e um teste que falhou.</p>
+<p>Agora que você já viu como os resultados de teste se apresentam em cenários
+diferentes, vamos examinar algumas macros além de <code>panic!</code> que são úteis em
+testes.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="checking-results-with-the-assert-macro"></a></p>
 <h3 id="verificando-resultados-com-assert"><a class="header" href="#verificando-resultados-com-assert">Verificando resultados com <code>assert!</code></a></h3>
-<p>A macro <code>assert!</code>, fornecida pela biblioteca padrão, é útil quando você deseja
-para garantir que alguma condição em um teste seja avaliada como <code>true</code>. Nós damos o
-<code>assert!</code> macro um argumento que é avaliado como um booleano. Se o valor for
-<code>true</code>, nada acontece e o teste passa. Se o valor for <code>false</code>, o
-A macro <code>assert!</code> chama <code>panic!</code> para causar falha no teste. Usando o <code>assert!</code>
-macro nos ajuda a verificar se nosso código está funcionando da maneira que pretendemos.</p>
-<p>No Capítulo 5, Listagem 5-15, usamos uma estrutura <code>Rectangle</code> e uma <code>can_hold</code>
-método, que são repetidos aqui na Listagem 11-5. Vamos colocar esse código no
-<em>src/lib.rs</em> e, em seguida, escreva alguns testes para ele usando a macro <code>assert!</code>.</p>
+<p>A macro <code>assert!</code>, fornecida pela biblioteca padrão, é útil quando você quer
+garantir que alguma condição em um teste seja avaliada como <code>true</code>. Passamos à
+macro <code>assert!</code> um argumento que é avaliado como um booleano. Se o valor for
+<code>true</code>, nada acontece e o teste passa. Se o valor for <code>false</code>, a macro
+<code>assert!</code> chama <code>panic!</code> para fazer o teste falhar. Usar a macro <code>assert!</code> nos
+ajuda a verificar se o código está funcionando da maneira que pretendemos.</p>
+<p>No Capítulo 5, na Listagem 5-15, usamos uma struct <code>Rectangle</code> e um método
+<code>can_hold</code>, repetidos aqui na Listagem 11-5. Vamos colocar esse código no
+arquivo <em>src/lib.rs</em> e, em seguida, escrever alguns testes para ele usando a
+macro <code>assert!</code>.</p>
 <figure class="listing" id="listing-11-5">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">#[derive(Debug)]
@@ -12062,13 +12088,13 @@ impl Rectangle {
         self.width &gt; other.width &amp;&amp; self.height &gt; other.height
     }
 }</code></pre>
-<figcaption><a href="#listing-11-5">Listing 11-5</a>: The <code>Rectangle</code> struct and its <code>can_hold</code> method from Chapter 5</figcaption>
+<figcaption><a href="#listing-11-5">Listing 11-5</a>: A struct <code>Rectangle</code> e seu método <code>can_hold</code>, do Capítulo 5</figcaption>
 </figure>
-<p>O método <code>can_hold</code> retorna um booleano, o que significa que é um caso de uso perfeito
+<p>O método <code>can_hold</code> retorna um booleano, o que o torna um caso de uso perfeito
 para a macro <code>assert!</code>. Na Listagem 11-6, escrevemos um teste que exercita o
-<code>can_hold</code> criando uma instância <code>Rectangle</code> que tem uma largura de 8 e
-uma altura de 7 e afirmando que pode conter outra instância <code>Rectangle</code> que
-tem largura 5 e altura 1.</p>
+método <code>can_hold</code> criando uma instância de <code>Rectangle</code> com largura 8 e altura
+7 e verificando que ela consegue conter outra instância de <code>Rectangle</code> com
+largura 5 e altura 1.</p>
 <figure class="listing" id="listing-11-6">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">#[derive(Debug)]
@@ -12101,20 +12127,20 @@ mod tests {
         assert!(larger.can_hold(&amp;smaller));
     }
 }</code></pre>
-<figcaption><a href="#listing-11-6">Listing 11-6</a>: A test for <code>can_hold</code> that checks whether a larger rectangle can indeed hold a smaller rectangle</figcaption>
+<figcaption><a href="#listing-11-6">Listing 11-6</a>: Um teste para <code>can_hold</code> que verifica se um retângulo maior realmente consegue conter um retângulo menor</figcaption>
 </figure>
-<p>Observe a linha <code>use super::*;</code> dentro do módulo <code>tests</code>. O módulo <code>tests</code> é
-um módulo regular que segue as regras usuais de visibilidade que abordamos no Capítulo
-7 em <a href="#caminhos-para-referenciar-um-item-na-árvore-de-módulos">“Caminhos para referência a um item no módulo
-Árvore”</a><!-- ignore -->
-seção. Como o módulo <code>tests</code> é um módulo interno, precisamos trazer o
-código em teste no módulo externo no escopo do módulo interno. Nós usamos
-um glob aqui, então qualquer coisa que definirmos no módulo externo está disponível para este
-<code>tests</code> módulo.</p>
-<p>Chamamos nosso teste de <code>larger_can_hold_smaller</code> e criamos os dois
-<code>Rectangle</code> instâncias que precisamos. Então, chamamos a macro <code>assert!</code> e
-passou o resultado da chamada <code>larger.can_hold(&amp;smaller)</code>. Esta expressão é
-deveria retornar <code>true</code>, então nosso teste deve passar. Vamos descobrir!</p>
+<p>Observe a linha <code>use super::*;</code> dentro do módulo <code>tests</code>. O módulo <code>tests</code> é um
+módulo comum que segue as regras usuais de visibilidade que vimos no Capítulo 7
+na seção
+<a href="#caminhos-para-referenciar-um-item-na-árvore-de-módulos">“Caminhos para se referir a um item na árvore de módulos”</a></p>
+<!-- ignore -->. Como o módulo `tests` é um módulo interno, precisamos trazer
+<p>para o escopo do módulo interno o código em teste definido no módulo externo.
+Usamos um glob aqui, então tudo o que definirmos no módulo externo fica
+disponível para esse módulo <code>tests</code>.</p>
+<p>Chamamos nosso teste de <code>larger_can_hold_smaller</code> e criamos as duas instâncias
+de <code>Rectangle</code> de que precisamos. Em seguida, chamamos a macro <code>assert!</code> e
+passamos o resultado da chamada <code>larger.can_hold(&amp;smaller)</code>. Essa expressão
+deve retornar <code>true</code>, então nosso teste deve passar. Vamos conferir!</p>
 <pre><code class="language-console">$ cargo test
    Compiling rectangle v0.1.0 (file:///projects/rectangle)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
@@ -12132,9 +12158,9 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Isso passa! Vamos adicionar outro teste, desta vez afirmando que um valor menor
-retângulo não pode conter um retângulo maior:</p>
-<p><span class="filename">Nome do arquivo:src/lib.rs</span></p>
+<p>Ele passa! Vamos adicionar outro teste, desta vez verificando que um retângulo
+menor não pode conter um retângulo maior:</p>
+<p><span class="filename">Nome do arquivo: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">#[derive(Debug)]
 </span><span class="boring">struct Rectangle {
 </span><span class="boring">    width: u32,
@@ -12180,9 +12206,9 @@ mod tests {
         assert!(!smaller.can_hold(&amp;larger));
     }
 }</code></pre>
-<p>Como o resultado correto da função <code>can_hold</code> neste caso é <code>false</code>,
-precisamos negar esse resultado antes de passá-lo para a macro <code>assert!</code>. Como um
-resultado, nosso teste será aprovado se <code>can_hold</code> retornar <code>false</code>:</p>
+<p>Como o resultado correto da função <code>can_hold</code> nesse caso é <code>false</code>, precisamos
+negar esse resultado antes de passá-lo à macro <code>assert!</code>. Como resultado, nosso
+teste vai passar se <code>can_hold</code> retornar <code>false</code>:</p>
 <pre><code class="language-console">$ cargo test
    Compiling rectangle v0.1.0 (file:///projects/rectangle)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
@@ -12201,10 +12227,10 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Dois testes que passam! Agora vamos ver o que acontece com os resultados dos nossos testes quando
-introduzir um bug em nosso código. Vamos mudar a implementação do <code>can_hold</code>
-método substituindo o sinal de maior que (<code>&gt;</code>) por um sinal de menor que (<code>&lt;</code>)
-quando compara as larguras:</p>
+<p>Dois testes passando! Agora vamos ver o que acontece com os resultados quando
+introduzimos um bug no nosso código. Vamos mudar a implementação do método
+<code>can_hold</code>, substituindo o sinal de maior que (<code>&gt;</code>) por um sinal de menor que
+(<code>&lt;</code>) na comparação das larguras:</p>
 <pre><code class="language-rust not_desired_behavior noplayground"><span class="boring">#[derive(Debug)]
 </span><span class="boring">struct Rectangle {
 </span><span class="boring">    width: u32,
@@ -12250,7 +12276,7 @@ impl Rectangle {
 </span><span class="boring">        assert!(!smaller.can_hold(&amp;larger));
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p>A execução dos testes agora produz o seguinte:</p>
+<p>Executando os testes agora, obtemos o seguinte:</p>
 <pre><code class="language-console">$ cargo test
    Compiling rectangle v0.1.0 (file:///projects/rectangle)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
@@ -12276,24 +12302,24 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Nossos testes detectaram o bug! Porque <code>larger.width</code> é <code>8</code> e <code>smaller.width</code> é
+<p>Nossos testes detectaram o bug! Como <code>larger.width</code> é <code>8</code> e <code>smaller.width</code> é
 <code>5</code>, a comparação das larguras em <code>can_hold</code> agora retorna <code>false</code>: 8 não é
-menos de 5.</p>
+menor que 5.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="testing-equality-with-the-assert_eq-and-assert_ne-macros"></a></p>
 <h3 id="testando-igualdade-com-assert_eq-e-assert_ne"><a class="header" href="#testando-igualdade-com-assert_eq-e-assert_ne">Testando igualdade com <code>assert_eq!</code> e <code>assert_ne!</code></a></h3>
-<p>Uma maneira comum de verificar a funcionalidade é testar a igualdade entre o resultado
-do código em teste e o valor que você espera que o código retorne. Você poderia
-faça isso usando a macro <code>assert!</code> e passando para ela uma expressão usando o
-<code>==</code> operador. No entanto, este é um teste tão comum que a biblioteca padrão
-fornece um par de macros—<code>assert_eq!</code> e <code>assert_ne!</code>—para realizar este teste
-mais convenientemente. Estas macros comparam dois argumentos para igualdade ou
-desigualdade, respectivamente. Eles também imprimirão os dois valores se a afirmação
-falha, o que torna mais fácil ver <em>por que</em> o teste falhou; inversamente, o
-A macro <code>assert!</code> indica apenas que obteve um valor <code>false</code> para <code>==</code>
-expressão, sem imprimir os valores que levaram ao valor <code>false</code>.</p>
-<p>Na Listagem 11-7, escrevemos uma função chamada <code>add_two</code> que adiciona <code>2</code> ao seu
-parâmetro e então testamos esta função usando a macro <code>assert_eq!</code>.</p>
+<p>Uma forma comum de verificar funcionalidade é testar a igualdade entre o
+resultado do código em teste e o valor que você espera que esse código retorne.
+Você poderia fazer isso usando a macro <code>assert!</code> e passando a ela uma expressão
+com o operador <code>==</code>. Porém, isso é tão comum em testes que a biblioteca padrão
+fornece um par de macros, <code>assert_eq!</code> e <code>assert_ne!</code>, para realizar essa
+verificação de forma mais conveniente. Essas macros comparam dois argumentos
+quanto à igualdade ou à desigualdade, respectivamente. Elas também imprimem os
+dois valores quando a verificação falha, o que facilita entender <em>por que</em> o
+teste falhou; em contraste, a macro <code>assert!</code> apenas indica que recebeu <code>false</code>
+para a expressão com <code>==</code>, sem mostrar os valores que levaram a esse resultado.</p>
+<p>Na Listagem 11-7, escrevemos uma função chamada <code>add_two</code>, que soma <code>2</code> ao seu
+parâmetro, e depois testamos essa função usando a macro <code>assert_eq!</code>.</p>
 <figure class="listing" id="listing-11-7">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub fn add_two(a: u64) -&gt; u64 {
@@ -12310,9 +12336,9 @@ mod tests {
         assert_eq!(result, 4);
     }
 }</code></pre>
-<figcaption><a href="#listing-11-7">Listing 11-7</a>: Testing the function <code>add_two</code> using the <code>assert_eq!</code> macro</figcaption>
+<figcaption><a href="#listing-11-7">Listing 11-7</a>: Testando a função <code>add_two</code> com a macro <code>assert_eq!</code></figcaption>
 </figure>
-<p>Vamos verificar se passa!</p>
+<p>Vamos verificar se ela passa!</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
@@ -12330,11 +12356,12 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Criamos uma variável chamada <code>result</code> que contém o resultado da chamada
-<code>add_two(2)</code>. Então, passamos <code>result</code> e <code>4</code> como argumentos para o
-<code>assert_eq!</code> macro. A linha de saída para este teste é <code>test testes::it_adds_two ... ok</code>, and the <code>ok</code> indica que nosso teste passou!</p>
-<p>Vamos introduzir um bug em nosso código para ver como fica <code>assert_eq!</code> quando ele
-falha. Altere a implementação da função <code>add_two</code> para adicionar <code>3</code>:</p>
+<p>Criamos uma variável chamada <code>result</code> que guarda o resultado de chamar
+<code>add_two(2)</code>. Em seguida, passamos <code>result</code> e <code>4</code> como argumentos para a macro
+<code>assert_eq!</code>. A linha de saída desse teste é <code>test tests::it_adds_two ... ok</code>,
+e o texto <code>ok</code> indica que nosso teste passou!</p>
+<p>Vamos introduzir um bug no código para ver como <code>assert_eq!</code> se comporta quando
+falha. Altere a implementação da função <code>add_two</code> para que ela some <code>3</code>:</p>
 <pre><code class="language-rust not_desired_behavior noplayground">pub fn add_two(a: u64) -&gt; u64 {
     a + 3
 }
@@ -12376,51 +12403,52 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Nosso teste detectou o bug! O teste <code>tests::it_adds_two</code> falhou e a mensagem
-nos diz que a afirmação que falhou foi <code>left == right</code> e qual o <code>left</code>
-e <code>right</code> valores são. Esta mensagem nos ajuda a iniciar a depuração: O <code>left</code>
-argumento, onde obtivemos o resultado da chamada <code>add_two(2)</code>, foi <code>5</code>, mas o
-O argumento <code>right</code> foi <code>4</code>. Você pode imaginar que isso seria especialmente útil
-quando temos muitos testes em andamento.</p>
-<p>Observe que em algumas linguagens e estruturas de teste, os parâmetros de igualdade
-funções de asserção são chamadas <code>expected</code> e <code>actual</code>, e a ordem em que
-especificamos os assuntos dos argumentos. No entanto, em Rust, eles são chamados <code>left</code> e
-<code>right</code> e a ordem em que especificamos o valor que esperamos e o valor
-o código produz não importa. Poderíamos escrever a afirmação neste teste como
-<code>assert_eq!(4, result)</code>, o que resultaria na mesma mensagem de falha que
-exibe <code>assertion `esquerda == direita` failed</code>.</p>
-<p>A macro <code>assert_ne!</code> passará se os dois valores que lhe damos não forem iguais e
-falhará se forem iguais. Esta macro é mais útil para casos em que não estamos
-tenho certeza de qual valor <em>será</em>, mas sabemos qual valor definitivamente <em>não deveria</em>
-ser. Por exemplo, se estivermos testando uma função que certamente mudará seu
-entrada de alguma forma, mas a forma como a entrada é alterada depende do dia
-da semana em que executamos nossos testes, a melhor coisa a afirmar pode ser que o
-a saída da função não é igual à entrada.</p>
-<p>Abaixo da superfície, as macros <code>assert_eq!</code> e <code>assert_ne!</code> usam os operadores
-<code>==</code> e <code>!=</code>, respectivamente. Quando as asserções falham, essas macros imprimem seus
-argumentos usando formatação de depuração, o que significa que os valores que estão sendo comparados devem
-implemente as características <code>PartialEq</code> e <code>Debug</code>. Todos os tipos primitivos e a maioria
-os tipos de biblioteca padrão implementam essas características. Para estruturas e enums que
-você se define, precisará implementar <code>PartialEq</code> para afirmar a igualdade de
-esses tipos. Você também precisará implementar <code>Debug</code> para imprimir os valores quando o
-afirmação falha. Como ambas as características são características deriváveis, conforme mencionado em
-Listagem 5-12 no Capítulo 5, isso geralmente é tão simples quanto adicionar o
-<code>#[derive(PartialEq, Debug)]</code> anotação para sua definição de struct ou enum. Ver
-Apêndice C, <a href="#c---traits-deriváveis">“Características Deriváveis,”</a><!-- ignore --> para mais
-detalhes sobre essas e outras características deriváveis.</p>
+<p>Nosso teste detectou o bug! O teste <code>tests::it_adds_two</code> falhou, e a mensagem
+nos informa que a verificação que falhou foi <code>left == right</code> e quais são os
+valores <code>left</code> e <code>right</code>. Essa mensagem já nos ajuda a começar a depuração: o
+argumento <code>left</code>, no qual tínhamos o resultado da chamada <code>add_two(2)</code>, era
+<code>5</code>, enquanto o argumento <code>right</code> era <code>4</code>. Você pode imaginar como isso é
+especialmente útil quando temos muitos testes em execução.</p>
+<p>Observe que, em algumas linguagens e frameworks de teste, os parâmetros das
+funções de verificação de igualdade são chamados de <code>expected</code> e <code>actual</code>, e a
+ordem em que especificamos os argumentos importa. Em Rust, porém, eles se
+chamam <code>left</code> e <code>right</code>, e a ordem em que fornecemos o valor esperado e o valor
+produzido pelo código não importa. Poderíamos escrever a verificação desse
+teste como <code>assert_eq!(4, result)</code>, o que produziria a mesma mensagem de falha
+que mostra <code>assertion `left == right` failed</code>.</p>
+<p>A macro <code>assert_ne!</code> passa se os dois valores fornecidos forem diferentes e
+falha se forem iguais. Ela é mais útil em casos em que não sabemos exatamente
+qual valor <em>será</em> produzido, mas sabemos qual valor definitivamente <em>não deve</em>
+ser. Por exemplo, se estivermos testando uma função que certamente modifica sua
+entrada de alguma maneira, mas a forma dessa modificação depende do dia da
+semana em que executamos os testes, talvez a melhor verificação seja afirmar
+que a saída da função não é igual à entrada.</p>
+<p>Por baixo dos panos, as macros <code>assert_eq!</code> e <code>assert_ne!</code> usam os operadores
+<code>==</code> e <code>!=</code>, respectivamente. Quando as verificações falham, essas macros
+imprimem seus argumentos usando formatação de depuração, o que significa que os
+valores comparados precisam implementar as traits <code>PartialEq</code> e <code>Debug</code>. Todos
+os tipos primitivos e a maior parte dos tipos da biblioteca padrão implementam
+essas traits. Para structs e enums definidos por você, será necessário
+implementar <code>PartialEq</code> para verificar igualdade entre esses tipos. Também será
+necessário implementar <code>Debug</code> para imprimir os valores quando a verificação
+falhar. Como ambas são traits deriváveis, como mencionado na Listagem 5-12 do
+Capítulo 5, isso normalmente é tão simples quanto adicionar a anotação
+<code>#[derive(PartialEq, Debug)]</code> à definição da sua struct ou enum. Veja o
+Apêndice C, <a href="#c---traits-deriváveis">“Traits deriváveis”</a><!-- ignore -->, para mais
+detalhes sobre essas e outras traits deriváveis.</p>
 <h3 id="adicionando-mensagens-de-falha-personalizadas"><a class="header" href="#adicionando-mensagens-de-falha-personalizadas">Adicionando mensagens de falha personalizadas</a></h3>
-<p>Você também pode adicionar uma mensagem personalizada para ser impressa com a mensagem de falha como
-argumentos opcionais para as macros <code>assert!</code>, <code>assert_eq!</code> e <code>assert_ne!</code>. Qualquer
-argumentos especificados depois que os argumentos necessários são passados ​​para o
-Macro <code>format!</code> (discutido em <a href="#concatenating-with--or-format">“Concatenando com <code>+</code> ou
-<code>format!</code>”</a><!--
-ignore --> no Capítulo 8), para que você possa passar uma string de formato que contenha <code>{}</code>
-espaços reservados e valores para ir nesses espaços reservados. Mensagens personalizadas são úteis
-para documentar o que significa uma afirmação; quando um teste falhar, você terá uma melhor
-ideia de qual é o problema com o código.</p>
-<p>Por exemplo, digamos que temos uma função que cumprimenta as pessoas pelo nome e
-queremos testar se o nome que passamos para a função aparece na saída:</p>
-<p><span class="filename">Nome do arquivo:src/lib.rs</span></p>
+<p>Você também pode adicionar uma mensagem personalizada para ser impressa junto
+com a mensagem de falha como argumentos opcionais das macros <code>assert!</code>,
+<code>assert_eq!</code> e <code>assert_ne!</code>. Todos os argumentos especificados depois dos
+argumentos obrigatórios são repassados à macro <code>format!</code> (discutida em
+<a href="#concatenating-with--or-format">“Concatenação com <code>+</code> ou <code>format!</code>”</a><!-- ignore -->, no
+Capítulo 8), então você pode fornecer uma string de formatação com espaços
+reservados <code>{}</code> e os valores que devem preenchê-los. Mensagens personalizadas
+são úteis para documentar o que a verificação quer dizer; quando um teste
+falha, você terá uma noção melhor do que está errado no código.</p>
+<p>Por exemplo, digamos que temos uma função que cumprimenta as pessoas pelo nome
+e queremos testar se o nome passado para a função aparece na saída:</p>
+<p><span class="filename">Nome do arquivo: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground">pub fn greeting(name: &amp;str) -&gt; String {
     format!("Hello {name}!")
 }
@@ -12435,14 +12463,14 @@ mod tests {
         assert!(result.contains("Carol"));
     }
 }</code></pre>
-<p>Os requisitos para este programa ainda não foram acordados e estamos
-tenho certeza que o texto <code>Hello</code> no início da saudação mudará. Nós
-decidimos que não queremos atualizar o teste quando os requisitos mudarem,
-então, em vez de verificar a igualdade exata com o valor retornado do
-<code>greeting</code>, apenas afirmaremos que a saída contém o texto do
-parâmetro de entrada.</p>
-<p>Agora vamos introduzir um bug neste código alterando <code>greeting</code> para excluir
-<code>name</code> para ver como é a falha no teste padrão:</p>
+<p>Os requisitos desse programa ainda não foram definidos por completo, e temos
+quase certeza de que o texto <code>Hello</code> no começo da saudação vai mudar. Decidimos
+que não queremos ter de atualizar o teste sempre que os requisitos mudarem; por
+isso, em vez de verificar igualdade exata com o valor retornado por
+<code>greeting</code>, vamos apenas verificar se a saída contém o texto do parâmetro de
+entrada.</p>
+<p>Agora vamos introduzir um bug nesse código, alterando <code>greeting</code> para excluir
+<code>name</code>, para ver como é a mensagem de falha padrão:</p>
 <pre><code class="language-rust not_desired_behavior noplayground">pub fn greeting(name: &amp;str) -&gt; String {
     String::from("Hello!")
 }
@@ -12457,7 +12485,7 @@ parâmetro de entrada.</p>
 </span><span class="boring">        assert!(result.contains("Carol"));
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p>A execução deste teste produz o seguinte:</p>
+<p>Executar esse teste produz o seguinte:</p>
 <pre><code class="language-console">$ cargo test
    Compiling greeter v0.1.0 (file:///projects/greeter)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.91s
@@ -12482,11 +12510,11 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Este resultado apenas indica que a afirmação falhou e qual linha a
-a afirmação está ativada. Uma mensagem de falha mais útil imprimiria o valor do
-<code>greeting</code> função. Vamos adicionar uma mensagem de falha personalizada composta por um formato
-string com um espaço reservado preenchido com o valor real que obtivemos do
-<code>greeting</code> função:</p>
+<p>Esse resultado apenas indica que a verificação falhou e em qual linha ela
+está. Uma mensagem de falha mais útil mostraria o valor retornado por
+<code>greeting</code>. Vamos adicionar uma mensagem de falha personalizada, composta por
+uma string de formatação com um espaço reservado preenchido pelo valor real que
+obtivemos da função <code>greeting</code>:</p>
 <pre><code class="language-rust ignore"><span class="boring">pub fn greeting(name: &amp;str) -&gt; String {
 </span><span class="boring">    String::from("Hello!")
 </span><span class="boring">}
@@ -12504,7 +12532,8 @@ string com um espaço reservado preenchido com o valor real que obtivemos do
         );
     }
 <span class="boring">}</span></code></pre>
-<p>Agora, quando executarmos o teste, receberemos uma mensagem de erro mais informativa:</p>
+<p>Agora, quando executarmos o teste, teremos uma mensagem de erro mais
+informativa:</p>
 <pre><code class="language-console">$ cargo test
    Compiling greeter v0.1.0 (file:///projects/greeter)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.93s
@@ -12529,20 +12558,21 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Podemos ver o valor que realmente obtivemos na saída do teste, o que nos ajudaria
-depurar o que aconteceu em vez do que esperávamos que acontecesse.</p>
-<h3 id="verificando-se-há-pânico-com-should_panic"><a class="header" href="#verificando-se-há-pânico-com-should_panic">Verificando se há pânico com <code>should_panic</code></a></h3>
-<p>Além de verificar os valores de retorno, é importante verificar se nosso código
-lida com condições de erro conforme esperamos. Por exemplo, considere o tipo <code>Guess</code>
-que criamos no Capítulo 9, Listagem 9-13. Outro código que usa <code>Guess</code>
-depende da garantia de que <code>Guess</code> instâncias conterão apenas valores
-entre 1 e 100. Podemos escrever um teste que garanta que a tentativa de criar um
-<code>Guess</code> instância com um valor fora desse intervalo entra em pânico.</p>
-<p>Fazemos isso adicionando o atributo <code>should_panic</code> à nossa função de teste. O
-o teste será aprovado se o código dentro da função entrar em pânico; o teste falha se o código
-dentro da função não entra em pânico.</p>
-<p>A Listagem 11-8 mostra um teste que verifica se as condições de erro de <code>Guess::new</code>
-acontecem quando esperamos que aconteçam.</p>
+<p>Conseguimos ver o valor que realmente obtivemos na saída do teste, o que ajuda
+a depurar o que aconteceu, em vez de apenas o que esperávamos que tivesse
+acontecido.</p>
+<h3 id="verificando-pânicos-com-should_panic"><a class="header" href="#verificando-pânicos-com-should_panic">Verificando pânicos com <code>should_panic</code></a></h3>
+<p>Além de verificar valores de retorno, é importante confirmar se o código lida
+com condições de erro da maneira esperada. Por exemplo, considere o tipo
+<code>Guess</code> que criamos no Capítulo 9, na Listagem 9-13. Outro código que usa
+<code>Guess</code> depende da garantia de que instâncias de <code>Guess</code> conterão apenas
+valores entre 1 e 100. Podemos escrever um teste que garanta que tentar criar
+uma instância de <code>Guess</code> com um valor fora desse intervalo provoque um pânico.</p>
+<p>Fazemos isso adicionando o atributo <code>should_panic</code> à função de teste. O teste
+passa se o código dentro da função entrar em pânico; o teste falha se o código
+dentro da função não entrar em pânico.</p>
+<p>A Listagem 11-8 mostra um teste que verifica se as condições de erro de
+<code>Guess::new</code> acontecem quando esperamos.</p>
 <figure class="listing" id="listing-11-8">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub struct Guess {
@@ -12569,10 +12599,10 @@ mod tests {
         Guess::new(200);
     }
 }</code></pre>
-<figcaption><a href="#listing-11-8">Listing 11-8</a>: Testing that a condition will cause a <code>panic!</code></figcaption>
+<figcaption><a href="#listing-11-8">Listing 11-8</a>: Testando que uma condição provocará um <code>panic!</code></figcaption>
 </figure>
-<p>Colocamos o atributo <code>#[should_panic]</code> após o atributo <code>#[test]</code> e
-antes da função de teste à qual se aplica. Vejamos o resultado quando este teste
+<p>Colocamos o atributo <code>#[should_panic]</code> depois do atributo <code>#[test]</code> e antes da
+função de teste à qual ele se aplica. Vamos ver o resultado quando esse teste
 passa:</p>
 <pre><code class="language-console">$ cargo test
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
@@ -12592,7 +12622,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 </code></pre>
 <p>Parece bom! Agora vamos introduzir um bug em nosso código removendo a condição
-que a função <code>new</code> entrará em pânico se o valor for maior que 100:</p>
+de que a função <code>new</code> deve entrar em pânico quando o valor for maior que 100:</p>
 <pre><code class="language-rust not_desired_behavior noplayground"><span class="boring">pub struct Guess {
 </span><span class="boring">    value: i32,
 </span><span class="boring">}
@@ -12618,7 +12648,7 @@ impl Guess {
 </span><span class="boring">        Guess::new(200);
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p>Quando executarmos o teste na Listagem 11.8, ele falhará:</p>
+<p>Quando executarmos o teste da Listagem 11-8, ele falhará:</p>
 <pre><code class="language-console">$ cargo test
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
@@ -12639,17 +12669,17 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Não recebemos uma mensagem muito útil neste caso, mas quando olhamos para o teste
-função, vemos que ela está anotada com <code>#[should_panic]</code>. O fracasso que tivemos
-significa que o código na função de teste não causou pânico.</p>
-<p>Os testes que usam <code>should_panic</code> podem ser imprecisos. Um teste <code>should_panic</code> seria
-passar mesmo que o teste entre em pânico por um motivo diferente daquele que estávamos
-esperando. Para tornar os testes <code>should_panic</code> mais precisos, podemos adicionar um opcional
-<code>expected</code> para o atributo <code>should_panic</code>. O equipamento de teste
-certifique-se de que a mensagem de falha contenha o texto fornecido. Por exemplo,
-considere o código modificado para <code>Guess</code> na Listagem 11-9 onde a função <code>new</code>
-entra em pânico com mensagens diferentes dependendo se o valor é muito pequeno ou
-muito grande.</p>
+<p>Nesse caso, não recebemos uma mensagem muito útil, mas, olhando a função de
+teste, vemos que ela está anotada com <code>#[should_panic]</code>. A falha que obtivemos
+significa que o código dentro da função de teste não provocou pânico.</p>
+<p>Testes que usam <code>should_panic</code> podem ser imprecisos. Um teste com
+<code>should_panic</code> passa mesmo que o código entre em pânico por um motivo diferente
+daquele que esperávamos. Para tornar esses testes mais precisos, podemos
+adicionar um parâmetro opcional <code>expected</code> ao atributo <code>should_panic</code>. O
+executor de testes verificará se a mensagem de falha contém o texto fornecido.
+Por exemplo, considere o código modificado de <code>Guess</code> na Listagem 11-9, em que
+a função <code>new</code> entra em pânico com mensagens diferentes dependendo de o valor
+ser pequeno demais ou grande demais.</p>
 <figure class="listing" id="listing-11-9">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">pub struct Guess {
@@ -12684,18 +12714,18 @@ mod tests {
         Guess::new(200);
     }
 }</code></pre>
-<figcaption><a href="#listing-11-9">Listing 11-9</a>: Testing for a <code>panic!</code> with a panic message containing a specified substring</figcaption>
+<figcaption><a href="#listing-11-9">Listing 11-9</a>: Testando um <code>panic!</code> com uma mensagem de pânico que contém uma substring especificada</figcaption>
 </figure>
-<p>Este teste será aprovado porque o valor que colocamos no atributo <code>should_panic</code>
-O parâmetro <code>expected</code> é uma substring da mensagem que o <code>Guess::new</code>
-função entra em pânico com. Poderíamos ter especificado toda a mensagem de pânico que
-esperar, que neste caso seria <code>O valor da estimativa deve ser menor ou igual a 100, tenho 200</code>. O que você escolhe especificar depende de quanto do pânico
-a mensagem é única ou dinâmica e quão preciso você deseja que seu teste seja. Nesta
-caso, uma substring da mensagem de pânico é suficiente para garantir que o código no
-A função de teste executa o caso <code>else if value &gt; 100</code>.</p>
-<p>Para ver o que acontece quando um teste <code>should_panic</code> com uma mensagem <code>expected</code>
-falhar, vamos introduzir novamente um bug em nosso código trocando os corpos do
-<code>if value &lt; 1</code> e os blocos <code>else if value &gt; 100</code>:</p>
+<p>Esse teste passará porque o valor que colocamos no parâmetro <code>expected</code> do
+atributo <code>should_panic</code> é uma substring da mensagem com a qual a função
+<code>Guess::new</code> entra em pânico. Poderíamos ter especificado a mensagem completa
+de pânico esperada, que nesse caso seria <code>Guess value must be less than or equal to 100, got 200</code>. O que você escolhe especificar depende de quanto da
+mensagem é único ou dinâmico e de quão preciso você quer que o teste seja.
+Neste caso, uma substring da mensagem de pânico já basta para garantir que o
+código da função de teste execute o caso <code>else if value &gt; 100</code>.</p>
+<p>Para ver o que acontece quando um teste com <code>should_panic</code> e mensagem
+<code>expected</code> falha, vamos introduzir novamente um bug no nosso código trocando os
+corpos dos blocos <code>if value &lt; 1</code> e <code>else if value &gt; 100</code>:</p>
 <pre><code class="language-rust ignore not_desired_behavior"><span class="boring">pub struct Guess {
 </span><span class="boring">    value: i32,
 </span><span class="boring">}
@@ -12753,12 +12783,16 @@ test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>A mensagem de falha indica que este teste realmente entrou em pânico como esperávamos,
-mas a mensagem de pânico não incluía a string esperada <code>menor ou igual para 100</code>. The panic message that we did get in this case was <code>O valor da estimativa deve ser maior ou igual a 1, obteve 200</code>. Agora podemos começar a descobrir onde
-nosso bug é!</p>
+<p>A mensagem de falha indica que esse teste realmente entrou em pânico como
+esperávamos, mas a mensagem de pânico não continha a string esperada
+<code>less than or equal to 100</code>. A mensagem de pânico que recebemos neste caso foi
+<code>Guess value must be greater than or equal to 1, got 200</code>. Agora já podemos
+começar a descobrir onde está o bug!</p>
 <h3 id="usando-resultt-e-em-testes"><a class="header" href="#usando-resultt-e-em-testes">Usando <code>Result&lt;T, E&gt;</code> em testes</a></h3>
-<p>Todos os nossos testes até agora entram em pânico quando falham. Também podemos escrever testes que usam
-<code>Result&lt;T, E&gt;</code>! Aqui está o teste da Listagem 11-1, reescrito para usar <code>Result&lt;T, E&gt;</code> and return an <code>Err</code> em vez de entrar em pânico:</p>
+<p>Até agora, todos os nossos testes entram em pânico quando falham. Também podemos
+escrever testes que usem <code>Result&lt;T, E&gt;</code>! Aqui está o teste da Listagem 11-1,
+reescrito para usar <code>Result&lt;T, E&gt;</code> e retornar um <code>Err</code> em vez de entrar em
+pânico:</p>
 <pre><code class="language-rust noplayground"><span class="boring">pub fn add(left: u64, right: u64) -&gt; u64 {
 </span><span class="boring">    left + right
 </span><span class="boring">}
@@ -12778,69 +12812,73 @@ mod tests {
         }
     }
 }</code></pre>
-<p>A função <code>it_works</code> agora tem o tipo de retorno <code>Result&lt;(), String&gt;</code>. No
-corpo da função, em vez de chamar a macro <code>assert_eq!</code>, retornamos
-<code>Ok(())</code> quando o teste passar e um <code>Err</code> com um <code>String</code> dentro quando o teste
-falha.</p>
-<p>Escrever testes para que eles retornem <code>Result&lt;T, E&gt;</code> permite que você use o
-operador de ponto de interrogação no corpo dos testes, o que pode ser uma maneira conveniente de
-escreva testes que deverão falhar se alguma operação dentro deles retornar um <code>Err</code>
-variante.</p>
-<p>Você não pode usar a anotação <code>#[should_panic]</code> em testes que usam <code>Result&lt;T, E&gt;</code>. To assert that an operation returns an <code>Err</code> variante, <em>não</em> use o
-operador de ponto de interrogação no valor <code>Result&lt;T, E&gt;</code>. Em vez disso, use
-<code>assert!(value.is_err())</code>.</p>
-<p>Agora que você conhece várias maneiras de escrever testes, vamos ver o que está acontecendo
-quando executamos nossos testes e exploramos as diferentes opções que podemos usar com <code>cargo teste</code>.</p>
+<p>A função <code>it_works</code> agora tem tipo de retorno <code>Result&lt;(), String&gt;</code>. No corpo da
+função, em vez de chamar a macro <code>assert_eq!</code>, retornamos <code>Ok(())</code> quando o
+teste passa e um <code>Err</code> contendo uma <code>String</code> quando ele falha.</p>
+<p>Escrever testes para que retornem um <code>Result&lt;T, E&gt;</code> permite usar o operador de
+interrogação no corpo dos testes, o que pode ser uma maneira conveniente de
+escrever testes que devem falhar se qualquer operação interna retornar uma
+variante <code>Err</code>.</p>
+<p>Você não pode usar a anotação <code>#[should_panic]</code> em testes que usam
+<code>Result&lt;T, E&gt;</code>. Para verificar que uma operação retorna uma variante <code>Err</code>,
+<em>não</em> use o operador de interrogação sobre o valor <code>Result&lt;T, E&gt;</code>. Em vez
+disso, use <code>assert!(value.is_err())</code>.</p>
+<p>Agora que você conhece várias maneiras de escrever testes, vamos ver o que
+acontece quando executamos nossos testes e explorar as diferentes opções que
+podemos usar com <code>cargo test</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="controlando-como-os-testes-são-executados-1"><a href="#controlando-como-os-testes-são-executados-1" class="header">Controlando Como os Testes São Executados</a></h1>
 <h2 id="controlando-como-os-testes-são-executados"><a class="header" href="#controlando-como-os-testes-são-executados">Controlando como os testes são executados</a></h2>
-<p>Assim como <code>cargo run</code> compila seu código e depois executa o binário resultante,
-<code>cargo test</code> compila seu código em modo de teste e executa o teste resultante
-binário. O comportamento padrão do binário produzido por <code>cargo test</code> é executar
-todos os testes em paralelo e capturar a saída gerada durante as execuções de teste,
-impedindo que a saída seja exibida e facilitando a leitura do
-saída relacionada aos resultados do teste. Você pode, no entanto, especificar a linha de comando
-opções para alterar esse comportamento padrão.</p>
-<p>Algumas opções de linha de comando vão para <code>cargo test</code> e outras vão para o teste resultante
-binário. Para separar esses dois tipos de argumentos, você lista os argumentos que
-vá para <code>cargo test</code> seguido do separador <code>--</code> e depois os que vão para
-o binário de teste. Executar <code>cargo test --help</code> exibe as opções que você pode usar
-com <code>cargo test</code> e executar <code>cargo test -- --help</code> exibe as opções que você
-pode usar após o separador. Essas opções também estão documentadas em <a href="https://doc.rust-lang.org/rustc/tests/index.html">os “Testes”
-seção de <em>O <code>rustc</code> Livro</em></a>.</p>
-<h3 id="executando-testes-em-paralelo-ou-consecutivamente"><a class="header" href="#executando-testes-em-paralelo-ou-consecutivamente">Executando testes em paralelo ou consecutivamente</a></h3>
-<p>Quando você executa vários testes, por padrão eles são executados em paralelo usando threads,
-o que significa que eles terminam a execução mais rapidamente e você recebe feedback mais cedo. Porque
-os testes estão sendo executados ao mesmo tempo, você deve garantir que seus testes não
-dependem uns dos outros ou de qualquer estado compartilhado, incluindo um ambiente compartilhado,
-como o diretório de trabalho atual ou variáveis ​​de ambiente.</p>
-<p>Por exemplo, digamos que cada um dos seus testes execute algum código que cria um arquivo no disco
-chamado <em>test-output.txt</em> e grava alguns dados nesse arquivo. Então, cada teste
-lê os dados nesse arquivo e afirma que o arquivo contém um determinado
-valor, que é diferente em cada teste. Como os testes são executados ao mesmo tempo,
-um teste pode substituir o arquivo no intervalo entre o momento em que outro teste é
-escrevendo e lendo o arquivo. O segundo teste falhará então, não porque o
-o código está incorreto, mas porque os testes interferiram uns nos outros enquanto
-correndo em paralelo. Uma solução é garantir que cada teste grave em um
-arquivo diferente; outra solução é executar os testes um de cada vez.</p>
-<p>Se você não quiser executar os testes em paralelo ou se quiser mais detalhes
-controle sobre o número de threads usados, você pode enviar o sinalizador <code>--test-threads</code>
-e o número de threads que você deseja usar no binário de teste. Dê uma olhada
-o seguinte exemplo:</p>
+<p>Assim como <code>cargo run</code> compila seu código e depois executa o binário
+resultante, <code>cargo test</code> compila seu código em modo de teste e executa o
+binário de testes resultante. O comportamento padrão do binário produzido por
+<code>cargo test</code> é executar todos os testes em paralelo e capturar a saída gerada
+durante as execuções, impedindo que ela seja exibida e facilitando a leitura da
+saída relacionada aos resultados. Você pode, no entanto, especificar opções de
+linha de comando para alterar esse comportamento padrão.</p>
+<p>Algumas opções de linha de comando são passadas para <code>cargo test</code>, e outras são
+passadas para o binário de teste resultante. Para separar esses dois tipos de
+argumento, liste os argumentos destinados a <code>cargo test</code>, depois o separador
+<code>--</code>, e então os argumentos destinados ao binário de teste. Executar
+<code>cargo test --help</code> exibe as opções que você pode usar com <code>cargo test</code>, e
+executar <code>cargo test -- --help</code> exibe as opções que você pode usar depois do
+separador. Essas opções também estão documentadas na seção <a href="https://doc.rust-lang.org/rustc/tests/index.html">“Tests”</a> de
+<em>The <code>rustc</code> Book</em>.</p>
+<h3 id="executando-testes-em-paralelo-ou-em-sequência"><a class="header" href="#executando-testes-em-paralelo-ou-em-sequência">Executando testes em paralelo ou em sequência</a></h3>
+<p>Quando você executa vários testes, por padrão eles rodam em paralelo usando
+threads, o que significa que terminam mais rápido e você recebe feedback mais
+cedo. Como os testes estão rodando ao mesmo tempo, é preciso garantir que eles
+não dependam uns dos outros nem de algum estado compartilhado, incluindo um
+ambiente compartilhado, como o diretório de trabalho atual ou variáveis de
+ambiente.</p>
+<p>Por exemplo, imagine que cada teste execute código que cria um arquivo em disco
+chamado <em>test-output.txt</em> e escreva alguns dados nele. Em seguida, cada teste
+lê os dados desse arquivo e verifica que ele contém um determinado valor,
+diferente em cada teste. Como os testes são executados ao mesmo tempo, um teste
+pode sobrescrever o arquivo no intervalo entre outro teste escrevê-lo e lê-lo.
+O segundo teste então falhará, não porque o código esteja incorreto, mas porque
+os testes interferiram uns nos outros durante a execução em paralelo. Uma
+solução é garantir que cada teste escreva em um arquivo diferente; outra é
+executar os testes um de cada vez.</p>
+<p>Se você não quiser executar os testes em paralelo, ou se quiser um controle
+mais detalhado sobre o número de threads usadas, pode passar a flag
+<code>--test-threads</code> e a quantidade de threads desejada ao binário de teste. Veja o
+seguinte exemplo:</p>
 <pre><code class="language-console">$ cargo test -- --test-threads=1
 </code></pre>
-<p>Definimos o número de threads de teste como <code>1</code>, informando ao programa para não usar nenhum
-paralelismo. A execução dos testes usando um thread levará mais tempo do que a execução
-em paralelo, mas os testes não interferirão entre si se compartilharem
-estado.</p>
-<h3 id="mostrando-a-saída-da-função"><a class="header" href="#mostrando-a-saída-da-função">Mostrando a saída da função</a></h3>
-<p>Por padrão, se um teste for aprovado, a biblioteca de testes do Rust captura qualquer coisa impressa em
-saída padrão. Por exemplo, se chamarmos <code>println!</code> em um teste e o teste
-passa, não veremos a saída <code>println!</code> no terminal; veremos apenas o
-linha que indica que o teste foi aprovado. Se um teste falhar, veremos o que foi
-impresso na saída padrão com o restante da mensagem de falha.</p>
-<p>Como exemplo, a Listagem 11.10 tem uma função boba que imprime o valor de seu
-parâmetro e retorna 10, bem como um teste que passa e um teste que falha.</p>
+<p>Definimos o número de threads de teste como <code>1</code>, instruindo o programa a não
+usar paralelismo. Executar os testes usando apenas uma thread levará mais tempo
+do que executá-los em paralelo, mas os testes não interferirão entre si caso
+compartilhem estado.</p>
+<h3 id="mostrando-a-saída-de-funções"><a class="header" href="#mostrando-a-saída-de-funções">Mostrando a saída de funções</a></h3>
+<p>Por padrão, se um teste passa, a biblioteca de testes do Rust captura tudo o
+que foi impresso na saída padrão. Por exemplo, se chamarmos <code>println!</code> em um
+teste e esse teste passar, não veremos a saída de <code>println!</code> no terminal;
+veremos apenas a linha que indica que o teste passou. Se um teste falhar,
+veremos o que foi impresso na saída padrão junto com o restante da mensagem de
+falha.</p>
+<p>Como exemplo, a Listagem 11-10 tem uma função simples que imprime o valor de
+seu parâmetro e retorna 10, além de um teste que passa e um teste que falha.</p>
 <figure class="listing" id="listing-11-10">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust panics noplayground">fn prints_and_returns_10(a: i32) -&gt; i32 {
@@ -12864,9 +12902,9 @@ mod tests {
         assert_eq!(value, 5);
     }
 }</code></pre>
-<figcaption><a href="#listing-11-10">Listing 11-10</a>: Tests for a function that calls <code>println!</code></figcaption>
+<figcaption><a href="#listing-11-10">Listing 11-10</a>: Testes para uma função que chama <code>println!</code></figcaption>
 </figure>
-<p>Quando executarmos esses testes com <code>cargo test</code>, veremos o seguinte resultado:</p>
+<p>Quando executarmos esses testes com <code>cargo test</code>, veremos a seguinte saída:</p>
 <pre><code class="language-console">$ cargo test
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.58s
@@ -12895,16 +12933,17 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 
 error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Observe que em nenhum lugar desta saída vemos <code>I got the value 4</code>, que é
-impresso quando o teste aprovado é executado. Essa saída foi capturada. O
-a saída do teste que falhou, <code>I got the value 8</code>, aparece na seção
-da saída do resumo do teste, que também mostra a causa da falha do teste.</p>
-<p>Se quisermos ver os valores impressos para passar nos testes também, podemos dizer ao Rust para
-também mostre o resultado de testes bem-sucedidos com <code>--show-output</code>:</p>
+<p>Observe que em nenhum ponto dessa saída vemos <code>I got the value 4</code>, que é o
+texto impresso quando o teste que passa é executado. Essa saída foi capturada.
+A saída do teste que falhou, <code>I got the value 8</code>, aparece na seção do resumo de
+testes, que também mostra a causa da falha.</p>
+<p>Se quisermos ver os valores impressos também para testes que passam, podemos
+pedir ao Rust para mostrar a saída de testes bem-sucedidos com
+<code>--show-output</code>:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
 </code></pre>
-<p>Quando executamos os testes na Listagem 11-10 novamente com o sinalizador <code>--show-output</code>, nós
-veja a seguinte saída:</p>
+<p>Quando executarmos novamente os testes da Listagem 11-10 com a flag
+<code>--show-output</code>, veremos a seguinte saída:</p>
 <pre><code class="language-console">$ cargo test -- --show-output
    Compiling silly-function v0.1.0 (file:///projects/silly-function)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
@@ -12943,12 +12982,14 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; 
 error: test failed, to rerun pass `--lib`
 </code></pre>
 <h3 id="executando-um-subconjunto-de-testes-por-nome"><a class="header" href="#executando-um-subconjunto-de-testes-por-nome">Executando um subconjunto de testes por nome</a></h3>
-<p>A execução de um conjunto de testes completo às vezes pode levar muito tempo. Se você estiver trabalhando
-código em uma área específica, talvez você queira executar apenas os testes pertencentes a
-esse código. Você pode escolher quais testes executar passando <code>cargo test</code> o nome
-ou nomes dos testes que você deseja executar como argumento.</p>
-<p>Para demonstrar como executar um subconjunto de testes, primeiro criaremos três testes para
-nossa função <code>add_two</code>, conforme mostrado na Listagem 11.11, e escolha quais delas serão executadas.</p>
+<p>Executar uma suíte completa de testes às vezes pode levar bastante tempo. Se
+você estiver trabalhando em código de uma área específica, talvez queira
+executar apenas os testes relacionados àquela parte. Você pode escolher quais
+testes rodar passando ao <code>cargo test</code> o nome, ou os nomes, do(s) teste(s) que
+quer executar como argumento.</p>
+<p>Para demonstrar como executar um subconjunto de testes, primeiro criaremos três
+testes para nossa função <code>add_two</code>, como mostra a Listagem 11-11, e veremos
+quais deles são executados.</p>
 <figure class="listing" id="listing-11-11">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub fn add_two(a: u64) -&gt; u64 {
@@ -12977,9 +13018,9 @@ mod tests {
         assert_eq!(result, 102);
     }
 }</code></pre>
-<figcaption><a href="#listing-11-11">Listing 11-11</a>: Three tests with three different names</figcaption>
+<figcaption><a href="#listing-11-11">Listing 11-11</a>: Três testes com três nomes diferentes</figcaption>
 </figure>
-<p>Se executarmos os testes sem passar nenhum argumento, como vimos anteriormente, todos os
+<p>Se executarmos os testes sem passar nenhum argumento, como vimos antes, todos
 os testes serão executados em paralelo:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
@@ -13000,8 +13041,9 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<h4 id="executando-testes-únicos"><a class="header" href="#executando-testes-únicos">Executando testes únicos</a></h4>
-<p>Podemos passar o nome de qualquer função de teste para <code>cargo test</code> para executar apenas esse teste:</p>
+<h4 id="executando-testes-individuais"><a class="header" href="#executando-testes-individuais">Executando testes individuais</a></h4>
+<p>Podemos passar o nome de qualquer função de teste a <code>cargo test</code> para executar
+somente aquele teste:</p>
 <pre><code class="language-console">$ cargo test one_hundred
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.69s
@@ -13013,15 +13055,16 @@ test tests::one_hundred ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Apenas o teste com o nome <code>one_hundred</code> foi executado; os outros dois testes não corresponderam
-esse nome. A saída do teste nos informa que tivemos mais testes que não foram executados
-exibindo <code>2 filtered out</code> no final.</p>
-<p>Não podemos especificar os nomes de vários testes desta forma; apenas o primeiro valor
-dado a <code>cargo test</code> será usado. Mas existe uma maneira de executar vários testes.</p>
+<p>Apenas o teste chamado <code>one_hundred</code> foi executado; os outros dois não
+corresponderam a esse nome. A saída nos informa que havia mais testes não
+executados exibindo <code>2 filtered out</code> no final.</p>
+<p>Não podemos especificar os nomes de vários testes dessa forma; somente o
+primeiro valor fornecido a <code>cargo test</code> será usado. Mas existe uma forma de
+executar vários testes.</p>
 <h4 id="filtrando-para-executar-vários-testes"><a class="header" href="#filtrando-para-executar-vários-testes">Filtrando para executar vários testes</a></h4>
-<p>Podemos especificar parte do nome de um teste e qualquer teste cujo nome corresponda a esse valor
-será executado. Por exemplo, como o nome de dois dos nossos testes contém <code>add</code>, podemos
-execute esses dois executando <code>cargo test add</code>:</p>
+<p>Podemos especificar parte do nome de um teste, e qualquer teste cujo nome
+corresponda a esse valor será executado. Por exemplo, como os nomes de dois dos
+nossos testes contêm <code>add</code>, podemos executá-los rodando <code>cargo test add</code>:</p>
 <pre><code class="language-console">$ cargo test add
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
@@ -13034,19 +13077,19 @@ test tests::add_two_and_two ... ok
 test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Este comando executou todos os testes com <code>add</code> no nome e filtrou o teste
-chamado <code>one_hundred</code>. Observe também que o módulo no qual um teste aparece torna-se
-parte do nome do teste, para que possamos executar todos os testes em um módulo filtrando
-no nome do módulo.</p>
+<p>Esse comando executou todos os testes cujo nome contém <code>add</code> e filtrou o teste
+chamado <code>one_hundred</code>. Observe também que o módulo no qual um teste aparece
+passa a fazer parte do nome do teste, de modo que podemos executar todos os
+testes de um módulo filtrando pelo nome desse módulo.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ignoring-some-tests-unless-specifically-requested"></a></p>
-<h3 id="ignorando-testes-a-menos-que-solicitado-especificamente"><a class="header" href="#ignorando-testes-a-menos-que-solicitado-especificamente">Ignorando testes, a menos que solicitado especificamente</a></h3>
-<p>Às vezes, alguns testes específicos podem levar muito tempo para serem executados, então você
-talvez você queira excluí-los durante a maioria das execuções de <code>cargo test</code>. Em vez de
-listando como argumentos todos os testes que você deseja executar, você pode anotar o
-testes demorados usando o atributo <code>ignore</code> para excluí-los, conforme mostrado
-aqui:</p>
-<p><span class="filename">Nome do arquivo:src/lib.rs</span></p>
+<h3 id="ignorando-testes-a-menos-que-sejam-solicitados-especificamente"><a class="header" href="#ignorando-testes-a-menos-que-sejam-solicitados-especificamente">Ignorando testes, a menos que sejam solicitados especificamente</a></h3>
+<p>Às vezes, alguns testes específicos podem levar muito tempo para executar, então
+talvez você queira excluí-los da maioria das execuções de <code>cargo test</code>. Em vez
+de listar como argumentos todos os testes que deseja executar, você pode
+anotar os testes demorados com o atributo <code>ignore</code> para excluí-los, como
+mostrado aqui:</p>
+<p><span class="filename">Nome do arquivo: src/lib.rs</span></p>
 <pre><code class="language-rust noplayground"><span class="boring">pub fn add(left: u64, right: u64) -&gt; u64 {
 </span><span class="boring">    left + right
 </span><span class="boring">}
@@ -13067,8 +13110,9 @@ mod tests {
         // code that takes an hour to run
     }
 }</code></pre>
-<p>Depois de <code>#[test]</code>, adicionamos a linha <code>#[ignore]</code> ao teste que queremos excluir.
-Agora, quando executamos nossos testes, <code>it_works</code> é executado, mas <code>expensive_test</code> não:</p>
+<p>Depois de <code>#[test]</code>, adicionamos a linha <code>#[ignore]</code> ao teste que queremos
+excluir. Agora, quando executamos os testes, <code>it_works</code> roda, mas
+<code>expensive_test</code> não:</p>
 <pre><code class="language-console">$ cargo test
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.60s
@@ -13087,8 +13131,8 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>A função <code>expensive_test</code> está listada como <code>ignored</code>. Se quisermos correr apenas
-os testes ignorados, podemos usar <code>cargo test -- --ignored</code>:</p>
+<p>A função <code>expensive_test</code> aparece listada como <code>ignored</code>. Se quisermos executar
+somente os testes ignorados, podemos usar <code>cargo test -- --ignored</code>:</p>
 <pre><code class="language-console">$ cargo test -- --ignored
    Compiling adder v0.1.0 (file:///projects/adder)
     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.61s
@@ -13106,11 +13150,11 @@ running 0 tests
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
 </code></pre>
-<p>Ao controlar quais testes são executados, você pode garantir que seus resultados <code>cargo test</code>
-será devolvido rapidamente. Quando você chega a um ponto em que faz sentido verificar
-os resultados dos testes <code>ignored</code> e você tem tempo para esperar pelos resultados,
-você pode executar <code>cargo test -- --ignored</code> em vez disso. Se você quiser executar todos os testes
-sejam eles ignorados ou não, você pode executar <code>cargo test -- --include-ignored</code>.</p>
+<p>Ao controlar quais testes são executados, você pode garantir que os resultados
+de <code>cargo test</code> retornem rapidamente. Quando chegar a um ponto em que faça
+sentido verificar os resultados dos testes <code>ignored</code> e você tiver tempo para
+esperar, poderá executar <code>cargo test -- --ignored</code>. Se quiser rodar todos os
+testes, ignorados ou não, pode executar <code>cargo test -- --include-ignored</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="organização-de-testes-1"><a href="#organização-de-testes-1" class="header">Organização de Testes</a></h1>
 <h2 id="organização-de-testes"><a class="header" href="#organização-de-testes">Organização de Testes</a></h2>
@@ -13455,7 +13499,7 @@ conhecimento prévio que você precisa para entender um projeto do mundo real, c
 <li>Código de organização (<a href="#pacotes-crates-e-módulos">Capítulo 7</a><!-- ignore -->)</li>
 <li>Usando vetores e strings (<a href="#coleções-comuns">Capítulo 8</a><!-- ignore -->)</li>
 <li>Tratamento de erros (<a href="#tratamento-de-erros">Capítulo 9</a><!-- ignore -->)</li>
-<li>Usando características e tempos de vida quando apropriado (<a href="#tipos-genéricos-características-e-tempos-de-vida">Capítulo 10</a><!-- ignore -->)</li>
+<li>Usando características e tempos de vida quando apropriado (<a href="#tipos-genéricos-traits-e-lifetimes">Capítulo 10</a><!-- ignore -->)</li>
 <li>Testes de redação (<a href="#escrevendo-testes-automatizados">Capítulo 11</a><!-- ignore -->)</li>
 </ul>
 <p>Também apresentaremos brevemente encerramentos, iteradores e objetos de características, que
