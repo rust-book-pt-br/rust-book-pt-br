@@ -1,42 +1,45 @@
 ## Como escrever testes
 
-_Testes_ são funções Rust que verificam se o código que não é de teste está funcionando em
-da maneira esperada. Os corpos das funções de teste normalmente executam essas três
-ações:
+_Testes_ são funções Rust que verificam se o código que não é de teste está se
+comportando da forma esperada. Os corpos das funções de teste normalmente
+executam estas três ações:
 
-- Configure todos os dados ou estados necessários.
-- Execute o código que deseja testar.
-- Afirme que os resultados são o que você espera.
+- Configurar os dados ou o estado necessários.
+- Executar o código que você quer testar.
+- Verificar se os resultados são os esperados.
 
-Vejamos os recursos que Rust fornece especificamente para escrever testes que
-execute essas ações, que incluem o atributo `test`, algumas macros e o
-`should_panic` atributo.
+Vamos ver os recursos que Rust fornece especificamente para escrever testes que
+sigam esse fluxo, incluindo o atributo `test`, algumas macros e o atributo
+`should_panic`.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="the-anatomy-of-a-test-function"></a>
 
-### Estruturando Funções de Teste
+### Estruturando funções de teste
 
-Na sua forma mais simples, um teste em Rust é uma função anotada com `test`
-atributo. Atributos são metadados sobre partes do código Rust; um exemplo é
-o atributo `derive` que usamos com estruturas no Capítulo 5. Para alterar uma função
-em uma função de teste, adicione `#[test]` na linha antes de `fn`. Quando você executa seu
-testa com o comando `cargo test`, Rust cria um binário de executor de teste que executa
-as funções anotadas e relatórios sobre se cada função de teste foi aprovada ou
-falha.
+Na forma mais simples, um teste em Rust é uma função anotada com o atributo
+`test`. Atributos são metadados sobre partes do código Rust; um exemplo é o
+atributo `derive`, que usamos com structs no Capítulo 5. Para transformar uma
+função em uma função de teste, adicione `#[test]` na linha anterior a `fn`.
+Quando você executa seus testes com o comando `cargo test`, Rust constrói um
+binário executor de testes que executa as funções anotadas e informa se cada
+função de teste passou ou falhou.
 
-Sempre que fazemos um novo projeto de biblioteca com Cargo, um módulo de teste com um teste
-função nele é gerada automaticamente para nós. Este módulo oferece uma
-modelo para escrever seus testes para que você não precise procurar o exato
-estrutura e sintaxe sempre que você inicia um novo projeto. Você pode adicionar quantos
-funções de teste adicionais e quantos módulos de teste você desejar!
+Sempre que criamos um novo projeto de biblioteca com Cargo, um módulo de testes
+com uma função de teste dentro dele é gerado automaticamente. Esse módulo
+oferece um modelo para escrever seus testes, para que você não precise
+relembrar a estrutura e a sintaxe exatas toda vez que iniciar um projeto novo.
+Você pode adicionar quantas funções de teste extras e quantos módulos de teste
+quiser!
 
-Exploraremos alguns aspectos de como os testes funcionam, experimentando o modelo
-test antes de realmente testarmos qualquer código. Então, escreveremos alguns testes do mundo real
-que chamam algum código que escrevemos e afirmam que seu comportamento está correto.
+Vamos explorar alguns aspectos de como os testes funcionam experimentando o
+modelo inicial antes de realmente testar qualquer código. Depois, escreveremos
+alguns testes mais realistas que chamam código escrito por nós e verificam se
+seu comportamento está correto.
 
-Vamos criar um novo projeto de biblioteca chamado `adder` que adicionará dois números:
+Vamos criar um novo projeto de biblioteca chamado `adder`, que somará dois
+números:
 
 ```console
 $ cargo new adder --lib
@@ -44,10 +47,10 @@ $ cargo new adder --lib
 $ cd adder
 ```
 
-O conteúdo do arquivo _src/lib.rs_ em sua biblioteca `adder` deve ser parecido com
-Listagem 11-1.
+O conteúdo do arquivo _src/lib.rs_ na sua biblioteca `adder` deve se parecer
+com a Listagem 11-1.
 
-<Listing number="11-1" file-name="src/lib.rs" caption="The code generated automatically by `cargo new`">
+<Listing number="11-1" file-name="src/lib.rs" caption="Código gerado automaticamente por `cargo new`">
 
 <!-- manual-regeneration
 cd listings/ch11-writing-automated-tests
@@ -66,24 +69,25 @@ cd ../../..
 
 </Listing>
 
-O arquivo começa com um exemplo de função `add` para que tenhamos algo para
-teste.
+O arquivo começa com uma função de exemplo, `add`, para que tenhamos algo a
+testar.
 
-Por enquanto, vamos nos concentrar apenas na função `it_works`. Observe o `#[test]`
-anotação: Este atributo indica que esta é uma função de teste, então o teste
-runner sabe tratar esta função como um teste. Também podemos ter não-teste
-funções no módulo `tests` para ajudar a configurar cenários comuns ou executar
-operações comuns, por isso sempre precisamos indicar quais funções são testes.
+Por enquanto, vamos focar apenas na função `it_works`. Observe a anotação
+`#[test]`: esse atributo indica que esta é uma função de teste, para que o
+executor saiba tratá-la como tal. Também podemos ter funções que não são
+testes dentro do módulo `tests` para ajudar a montar cenários comuns ou
+executar operações repetidas, por isso sempre precisamos indicar quais funções
+são testes.
 
-O corpo da função de exemplo usa a macro `assert_eq!` para afirmar que `result`,
-que contém o resultado de chamar `add` com 2 e 2, é igual a 4. Este
-asserção serve como exemplo do formato de um teste típico. Vamos executá-lo
-para ver se esse teste passa.
+O corpo da função de exemplo usa a macro `assert_eq!` para verificar que
+`result`, que contém o resultado de chamar `add` com 2 e 2, é igual a 4. Essa
+verificação serve como exemplo do formato de um teste típico. Vamos executá-lo
+para confirmar que esse teste passa.
 
-O comando `cargo test` executa todos os testes do nosso projeto, conforme mostrado na Listagem
-11-2.
+O comando `cargo test` executa todos os testes do nosso projeto, como mostra a
+Listagem 11-2.
 
-<Listing number="11-2" caption="The output from running the automatically generated test">
+<Listing number="11-2" caption="Saída da execução do teste gerado automaticamente">
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/listing-11-01/output.txt}}
@@ -91,57 +95,61 @@ O comando `cargo test` executa todos os testes do nosso projeto, conforme mostra
 
 </Listing>
 
-Cargo compilou e executou o teste. Vemos a linha `running 1 test`. O próximo
-linha mostra o nome da função de teste gerada, chamada `tests::it_works`,
-e que o resultado da execução desse teste é `ok`. O resumo geral `teste
-resultado: ok.` means that all the tests passed, and the portion that reads `1
-passou; 0 falhou` totaliza o número de testes que passaram ou falharam.
+Cargo compilou e executou o teste. Vemos a linha `running 1 test`. A linha
+seguinte mostra o nome da função de teste gerada, `tests::it_works`, e que o
+resultado da execução desse teste é `ok`. O resumo geral `test result: ok.`
+significa que todos os testes passaram, e a parte que diz `1 passed; 0 failed`
+totaliza quantos testes passaram ou falharam.
 
-É possível marcar um teste como ignorado para que ele não seja executado em um determinado
-exemplo; abordaremos isso em [“Ignorando testes, a menos que especificamente
-Seção "][ignoring]<!-- ignore --> solicitada posteriormente neste capítulo. Porque nós
-não fiz isso aqui, o resumo mostra `0 ignored`. Também podemos passar um
-argumento para o comando `cargo test` para executar apenas testes cujo nome corresponda a um
-corda; isso é chamado de _filtragem_ e abordaremos isso no [“Executando um
-Seção Subconjunto de testes por nome”][subset]<!-- ignore -->. Aqui, não
-filtrou os testes que estão sendo executados, então o final do resumo mostra `0 filtered out`.
+É possível marcar um teste como ignorado para que ele não seja executado em
+determinada ocasião; veremos isso mais adiante neste capítulo, na seção
+[“Ignorando testes, a menos que sejam solicitados especificamente”][ignoring]
+<!-- ignore -->. Como ainda não fizemos isso aqui, o resumo mostra
+`0 ignored`. Também podemos passar um argumento ao comando `cargo test` para
+executar somente os testes cujo nome corresponda a uma string; isso é chamado
+de _filtragem_, e veremos esse recurso na seção
+[“Executando um subconjunto de testes por nome”][subset]<!-- ignore -->. Aqui,
+não filtramos os testes executados, então o fim do resumo mostra
+`0 filtered out`.
 
-A estatística `0 measured` é para testes de benchmark que medem o desempenho.
-Os testes de benchmark estão, no momento em que este livro foi escrito, disponíveis apenas no Rust noturno. Ver
+A estatística `0 measured` é usada para testes de benchmark que medem
+desempenho. No momento em que este livro foi escrito, testes de benchmark só
+estavam disponíveis no Rust noturno. Veja
 [a documentação sobre testes de benchmark][bench] para saber mais.
 
-A próxima parte da saída do teste começando em `Doc-tests adder` é para o
-resultados de quaisquer testes de documentação. Ainda não temos nenhum teste de documentação,
-mas Rust pode compilar qualquer exemplo de código que apareça em nossa documentação de API.
-Este recurso ajuda a manter seus documentos e seu código sincronizados! Discutiremos como
-escrever testes de documentação em [“Comentários de documentação como
-Testes”][doc-comments]<!-- ignore --> do Capítulo 14. Por enquanto, vamos
-ignore a saída `Doc-tests`.
+A próxima parte da saída, que começa em `Doc-tests adder`, corresponde aos
+resultados de quaisquer testes de documentação. Ainda não temos testes de
+documentação, mas Rust pode compilar qualquer exemplo de código que apareça na
+nossa documentação de API. Esse recurso ajuda a manter documentação e código em
+sincronia! Vamos discutir como escrever testes de documentação na seção
+[“Comentários de documentação como testes”][doc-comments]<!-- ignore --> do
+Capítulo 14. Por enquanto, vamos ignorar a saída `Doc-tests`.
 
-Vamos começar a personalizar o teste de acordo com nossas necessidades. Primeiro, mude o nome de
-a função `it_works` para um nome diferente, como `exploration`, assim:
+Vamos começar a adaptar o teste às nossas necessidades. Primeiro, altere o nome
+da função `it_works` para outro nome, como `exploration`, assim:
 
-<span class="filename">Nome do arquivo:src/lib.rs</span>
+<span class="filename">Nome do arquivo: src/lib.rs</span>
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-01-changing-test-name/src/lib.rs}}
 ```
 
-Em seguida, execute `cargo test` novamente. A saída agora mostra `exploration` em vez de
-`it_works`:
+Depois, execute `cargo test` novamente. Agora a saída mostra `exploration` em
+vez de `it_works`:
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/no-listing-01-changing-test-name/output.txt}}
 ```
 
-Agora adicionaremos outro teste, mas desta vez faremos um teste que falha! Testes
-falha quando algo na função de teste entra em pânico. Cada teste é executado em um novo
-thread, e quando o thread principal vê que um thread de teste morreu, o teste é
-marcado como falhou. No Capítulo 9, falamos sobre como a maneira mais simples de entrar em pânico
-é chamar a macro `panic!`. Insira o novo teste como uma função chamada
-`another`, então seu arquivo _src/lib.rs_ se parece com a Listagem 11-3.
+Agora vamos adicionar outro teste, mas desta vez faremos um teste que falha!
+Testes falham quando algo dentro da função de teste entra em pânico. Cada teste
+é executado em uma nova thread, e quando a thread principal percebe que uma
+thread de teste morreu, esse teste é marcado como falho. No Capítulo 9,
+comentamos que a forma mais simples de provocar um pânico é chamar a macro
+`panic!`. Digite o novo teste como uma função chamada `another`, para que seu
+arquivo _src/lib.rs_ fique como na Listagem 11-3.
 
-<Listing number="11-3" file-name="src/lib.rs" caption="Adding a second test that will fail because we call the `panic!` macro">
+<Listing number="11-3" file-name="src/lib.rs" caption="Adicionando um segundo teste que falhará porque chamamos a macro `panic!`">
 
 ```rust,panics,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-03/src/lib.rs}}
@@ -149,10 +157,11 @@ marcado como falhou. No Capítulo 9, falamos sobre como a maneira mais simples d
 
 </Listing>
 
-Execute os testes novamente usando `cargo test`. A saída deve ser semelhante à Listagem
-11.4, que mostra que nosso teste `exploration` passou e `another` falhou.
+Execute os testes novamente com `cargo test`. A saída deve se parecer com a
+Listagem 11-4, que mostra que nosso teste `exploration` passou e `another`
+falhou.
 
-<Listing number="11-4" caption="Test results when one test passes and one test fails">
+<Listing number="11-4" caption="Resultados dos testes quando um passa e outro falha">
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/listing-11-03/output.txt}}
@@ -165,22 +174,24 @@ rg panicked listings/ch11-writing-automated-tests/listing-11-03/output.txt
 check the line number of the panic matches the line number in the following paragraph
  -->
 
-Em vez de `ok`, a linha `test tests::another` mostra `FAILED`. Dois novos
-seções aparecem entre os resultados individuais e o resumo: A primeira
-exibe o motivo detalhado de cada falha de teste. Neste caso, obtemos o
-detalhes que `tests::another` falhou porque entrou em pânico com a mensagem `Make
-este teste falha` na linha 17 no arquivo _src/lib.rs_. A próxima seção lista
-apenas os nomes de todos os testes que falharam, o que é útil quando há muitos
-testes e muitos resultados detalhados de testes com falha. Podemos usar o nome de um
-falhar no teste para executar apenas esse teste para depurá-lo mais facilmente; falaremos mais
-sobre maneiras de executar testes no [“Controlando como os testes são
-Execute”][controlling-how-tests-are-run]<!-- ignore --> seção.
+Em vez de `ok`, a linha `test tests::another` mostra `FAILED`. Duas novas
+seções aparecem entre os resultados individuais e o resumo. A primeira exibe o
+motivo detalhado de cada falha de teste. Neste caso, vemos que
+`tests::another` falhou porque entrou em pânico com a mensagem `Make this test
+fail` na linha 17 do arquivo _src/lib.rs_. A seção seguinte lista apenas os
+nomes de todos os testes que falharam, o que é útil quando há muitos testes e
+muitas saídas detalhadas de falha. Podemos usar o nome de um teste que falhou
+para executá-lo isoladamente e depurá-lo com mais facilidade; falaremos mais
+sobre formas de executar testes na seção
+[“Controlando como os testes são executados”][controlling-how-tests-are-run]
+<!-- ignore -->.
 
-A linha de resumo é exibida no final: No geral, o resultado do nosso teste é `FAILED`. Nós
-teve um teste aprovado e um teste reprovado.
+A linha de resumo aparece ao final: no geral, o resultado do nosso teste é
+`FAILED`. Tivemos um teste que passou e um teste que falhou.
 
-Agora que você viu como são os resultados do teste em diferentes cenários,
-vejamos algumas macros além de `panic!` que são úteis em testes.
+Agora que você já viu como os resultados de teste se apresentam em cenários
+diferentes, vamos examinar algumas macros além de `panic!` que são úteis em
+testes.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -188,18 +199,19 @@ vejamos algumas macros além de `panic!` que são úteis em testes.
 
 ### Verificando resultados com `assert!`
 
-A macro `assert!`, fornecida pela biblioteca padrão, é útil quando você deseja
-para garantir que alguma condição em um teste seja avaliada como `true`. Nós damos o
-`assert!` macro um argumento que é avaliado como um booleano. Se o valor for
-`true`, nada acontece e o teste passa. Se o valor for `false`, o
-A macro `assert!` chama `panic!` para causar falha no teste. Usando o `assert!`
-macro nos ajuda a verificar se nosso código está funcionando da maneira que pretendemos.
+A macro `assert!`, fornecida pela biblioteca padrão, é útil quando você quer
+garantir que alguma condição em um teste seja avaliada como `true`. Passamos à
+macro `assert!` um argumento que é avaliado como um booleano. Se o valor for
+`true`, nada acontece e o teste passa. Se o valor for `false`, a macro
+`assert!` chama `panic!` para fazer o teste falhar. Usar a macro `assert!` nos
+ajuda a verificar se o código está funcionando da maneira que pretendemos.
 
-No Capítulo 5, Listagem 5-15, usamos uma estrutura `Rectangle` e uma `can_hold`
-método, que são repetidos aqui na Listagem 11-5. Vamos colocar esse código no
-_src/lib.rs_ e, em seguida, escreva alguns testes para ele usando a macro `assert!`.
+No Capítulo 5, na Listagem 5-15, usamos uma struct `Rectangle` e um método
+`can_hold`, repetidos aqui na Listagem 11-5. Vamos colocar esse código no
+arquivo _src/lib.rs_ e, em seguida, escrever alguns testes para ele usando a
+macro `assert!`.
 
-<Listing number="11-5" file-name="src/lib.rs" caption="The `Rectangle` struct and its `can_hold` method from Chapter 5">
+<Listing number="11-5" file-name="src/lib.rs" caption="A struct `Rectangle` e seu método `can_hold`, do Capítulo 5">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-05/src/lib.rs}}
@@ -207,13 +219,13 @@ _src/lib.rs_ e, em seguida, escreva alguns testes para ele usando a macro `asser
 
 </Listing>
 
-O método `can_hold` retorna um booleano, o que significa que é um caso de uso perfeito
+O método `can_hold` retorna um booleano, o que o torna um caso de uso perfeito
 para a macro `assert!`. Na Listagem 11-6, escrevemos um teste que exercita o
-`can_hold` criando uma instância `Rectangle` que tem uma largura de 8 e
-uma altura de 7 e afirmando que pode conter outra instância `Rectangle` que
-tem largura 5 e altura 1.
+método `can_hold` criando uma instância de `Rectangle` com largura 8 e altura
+7 e verificando que ela consegue conter outra instância de `Rectangle` com
+largura 5 e altura 1.
 
-<Listing number="11-6" file-name="src/lib.rs" caption="A test for `can_hold` that checks whether a larger rectangle can indeed hold a smaller rectangle">
+<Listing number="11-6" file-name="src/lib.rs" caption="Um teste para `can_hold` que verifica se um retângulo maior realmente consegue conter um retângulo menor">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-06/src/lib.rs:here}}
@@ -221,59 +233,59 @@ tem largura 5 e altura 1.
 
 </Listing>
 
-Observe a linha `use super::*;` dentro do módulo `tests`. O módulo `tests` é
-um módulo regular que segue as regras usuais de visibilidade que abordamos no Capítulo
-7 em [“Caminhos para referência a um item no módulo
-Árvore”][paths-for-referring-to-an-item-in-the-module-tree]<!-- ignore -->
-seção. Como o módulo `tests` é um módulo interno, precisamos trazer o
-código em teste no módulo externo no escopo do módulo interno. Nós usamos
-um glob aqui, então qualquer coisa que definirmos no módulo externo está disponível para este
-`tests` módulo.
+Observe a linha `use super::*;` dentro do módulo `tests`. O módulo `tests` é um
+módulo comum que segue as regras usuais de visibilidade que vimos no Capítulo 7
+na seção
+[“Caminhos para se referir a um item na árvore de módulos”][paths-for-referring-to-an-item-in-the-module-tree]
+<!-- ignore -->. Como o módulo `tests` é um módulo interno, precisamos trazer
+para o escopo do módulo interno o código em teste definido no módulo externo.
+Usamos um glob aqui, então tudo o que definirmos no módulo externo fica
+disponível para esse módulo `tests`.
 
-Chamamos nosso teste de `larger_can_hold_smaller` e criamos os dois
-`Rectangle` instâncias que precisamos. Então, chamamos a macro `assert!` e
-passou o resultado da chamada `larger.can_hold(&smaller)`. Esta expressão é
-deveria retornar `true`, então nosso teste deve passar. Vamos descobrir!
+Chamamos nosso teste de `larger_can_hold_smaller` e criamos as duas instâncias
+de `Rectangle` de que precisamos. Em seguida, chamamos a macro `assert!` e
+passamos o resultado da chamada `larger.can_hold(&smaller)`. Essa expressão
+deve retornar `true`, então nosso teste deve passar. Vamos conferir!
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/listing-11-06/output.txt}}
 ```
 
-Isso passa! Vamos adicionar outro teste, desta vez afirmando que um valor menor
-retângulo não pode conter um retângulo maior:
+Ele passa! Vamos adicionar outro teste, desta vez verificando que um retângulo
+menor não pode conter um retângulo maior:
 
-<span class="filename">Nome do arquivo:src/lib.rs</span>
+<span class="filename">Nome do arquivo: src/lib.rs</span>
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-02-adding-another-rectangle-test/src/lib.rs:here}}
 ```
 
-Como o resultado correto da função `can_hold` neste caso é `false`,
-precisamos negar esse resultado antes de passá-lo para a macro `assert!`. Como um
-resultado, nosso teste será aprovado se `can_hold` retornar `false`:
+Como o resultado correto da função `can_hold` nesse caso é `false`, precisamos
+negar esse resultado antes de passá-lo à macro `assert!`. Como resultado, nosso
+teste vai passar se `can_hold` retornar `false`:
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/no-listing-02-adding-another-rectangle-test/output.txt}}
 ```
 
-Dois testes que passam! Agora vamos ver o que acontece com os resultados dos nossos testes quando
-introduzir um bug em nosso código. Vamos mudar a implementação do `can_hold`
-método substituindo o sinal de maior que (`>`) por um sinal de menor que (`<`)
-quando compara as larguras:
+Dois testes passando! Agora vamos ver o que acontece com os resultados quando
+introduzimos um bug no nosso código. Vamos mudar a implementação do método
+`can_hold`, substituindo o sinal de maior que (`>`) por um sinal de menor que
+(`<`) na comparação das larguras:
 
 ```rust,not_desired_behavior,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-03-introducing-a-bug/src/lib.rs:here}}
 ```
 
-A execução dos testes agora produz o seguinte:
+Executando os testes agora, obtemos o seguinte:
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/no-listing-03-introducing-a-bug/output.txt}}
 ```
 
-Nossos testes detectaram o bug! Porque `larger.width` é `8` e `smaller.width` é
+Nossos testes detectaram o bug! Como `larger.width` é `8` e `smaller.width` é
 `5`, a comparação das larguras em `can_hold` agora retorna `false`: 8 não é
-menos de 5.
+menor que 5.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -281,21 +293,21 @@ menos de 5.
 
 ### Testando igualdade com `assert_eq!` e `assert_ne!`
 
-Uma maneira comum de verificar a funcionalidade é testar a igualdade entre o resultado
-do código em teste e o valor que você espera que o código retorne. Você poderia
-faça isso usando a macro `assert!` e passando para ela uma expressão usando o
-`==` operador. No entanto, este é um teste tão comum que a biblioteca padrão
-fornece um par de macros—`assert_eq!` e `assert_ne!`—para realizar este teste
-mais convenientemente. Estas macros comparam dois argumentos para igualdade ou
-desigualdade, respectivamente. Eles também imprimirão os dois valores se a afirmação
-falha, o que torna mais fácil ver _por que_ o teste falhou; inversamente, o
-A macro `assert!` indica apenas que obteve um valor `false` para `==`
-expressão, sem imprimir os valores que levaram ao valor `false`.
+Uma forma comum de verificar funcionalidade é testar a igualdade entre o
+resultado do código em teste e o valor que você espera que esse código retorne.
+Você poderia fazer isso usando a macro `assert!` e passando a ela uma expressão
+com o operador `==`. Porém, isso é tão comum em testes que a biblioteca padrão
+fornece um par de macros, `assert_eq!` e `assert_ne!`, para realizar essa
+verificação de forma mais conveniente. Essas macros comparam dois argumentos
+quanto à igualdade ou à desigualdade, respectivamente. Elas também imprimem os
+dois valores quando a verificação falha, o que facilita entender _por que_ o
+teste falhou; em contraste, a macro `assert!` apenas indica que recebeu `false`
+para a expressão com `==`, sem mostrar os valores que levaram a esse resultado.
 
-Na Listagem 11-7, escrevemos uma função chamada `add_two` que adiciona `2` ao seu
-parâmetro e então testamos esta função usando a macro `assert_eq!`.
+Na Listagem 11-7, escrevemos uma função chamada `add_two`, que soma `2` ao seu
+parâmetro, e depois testamos essa função usando a macro `assert_eq!`.
 
-<Listing number="11-7" file-name="src/lib.rs" caption="Testing the function `add_two` using the `assert_eq!` macro">
+<Listing number="11-7" file-name="src/lib.rs" caption="Testando a função `add_two` com a macro `assert_eq!`">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-07/src/lib.rs}}
@@ -303,19 +315,19 @@ parâmetro e então testamos esta função usando a macro `assert_eq!`.
 
 </Listing>
 
-Vamos verificar se passa!
+Vamos verificar se ela passa!
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/listing-11-07/output.txt}}
 ```
 
-Criamos uma variável chamada `result` que contém o resultado da chamada
-`add_two(2)`. Então, passamos `result` e `4` como argumentos para o
-`assert_eq!` macro. A linha de saída para este teste é `test testes::it_adds_two
-... ok`, and the `ok` indica que nosso teste passou!
+Criamos uma variável chamada `result` que guarda o resultado de chamar
+`add_two(2)`. Em seguida, passamos `result` e `4` como argumentos para a macro
+`assert_eq!`. A linha de saída desse teste é `test tests::it_adds_two ... ok`,
+e o texto `ok` indica que nosso teste passou!
 
-Vamos introduzir um bug em nosso código para ver como fica `assert_eq!` quando ele
-falha. Altere a implementação da função `add_two` para adicionar `3`:
+Vamos introduzir um bug no código para ver como `assert_eq!` se comporta quando
+falha. Altere a implementação da função `add_two` para que ela some `3`:
 
 ```rust,not_desired_behavior,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-04-bug-in-add-two/src/lib.rs:here}}
@@ -327,119 +339,122 @@ Execute os testes novamente:
 {{#include ../listings/ch11-writing-automated-tests/no-listing-04-bug-in-add-two/output.txt}}
 ```
 
-Nosso teste detectou o bug! O teste `tests::it_adds_two` falhou e a mensagem
-nos diz que a afirmação que falhou foi `left == right` e qual o `left`
-e `right` valores são. Esta mensagem nos ajuda a iniciar a depuração: O `left`
-argumento, onde obtivemos o resultado da chamada `add_two(2)`, foi `5`, mas o
-O argumento `right` foi `4`. Você pode imaginar que isso seria especialmente útil
-quando temos muitos testes em andamento.
+Nosso teste detectou o bug! O teste `tests::it_adds_two` falhou, e a mensagem
+nos informa que a verificação que falhou foi `left == right` e quais são os
+valores `left` e `right`. Essa mensagem já nos ajuda a começar a depuração: o
+argumento `left`, no qual tínhamos o resultado da chamada `add_two(2)`, era
+`5`, enquanto o argumento `right` era `4`. Você pode imaginar como isso é
+especialmente útil quando temos muitos testes em execução.
 
-Observe que em algumas linguagens e estruturas de teste, os parâmetros de igualdade
-funções de asserção são chamadas `expected` e `actual`, e a ordem em que
-especificamos os assuntos dos argumentos. No entanto, em Rust, eles são chamados `left` e
-`right` e a ordem em que especificamos o valor que esperamos e o valor
-o código produz não importa. Poderíamos escrever a afirmação neste teste como
-`assert_eq!(4, result)`, o que resultaria na mesma mensagem de falha que
-exibe `` assertion `esquerda == direita` failed ``.
+Observe que, em algumas linguagens e frameworks de teste, os parâmetros das
+funções de verificação de igualdade são chamados de `expected` e `actual`, e a
+ordem em que especificamos os argumentos importa. Em Rust, porém, eles se
+chamam `left` e `right`, e a ordem em que fornecemos o valor esperado e o valor
+produzido pelo código não importa. Poderíamos escrever a verificação desse
+teste como `assert_eq!(4, result)`, o que produziria a mesma mensagem de falha
+que mostra `` assertion `left == right` failed ``.
 
-A macro `assert_ne!` passará se os dois valores que lhe damos não forem iguais e
-falhará se forem iguais. Esta macro é mais útil para casos em que não estamos
-tenho certeza de qual valor _será_, mas sabemos qual valor definitivamente _não deveria_
-ser. Por exemplo, se estivermos testando uma função que certamente mudará seu
-entrada de alguma forma, mas a forma como a entrada é alterada depende do dia
-da semana em que executamos nossos testes, a melhor coisa a afirmar pode ser que o
-a saída da função não é igual à entrada.
+A macro `assert_ne!` passa se os dois valores fornecidos forem diferentes e
+falha se forem iguais. Ela é mais útil em casos em que não sabemos exatamente
+qual valor _será_ produzido, mas sabemos qual valor definitivamente _não deve_
+ser. Por exemplo, se estivermos testando uma função que certamente modifica sua
+entrada de alguma maneira, mas a forma dessa modificação depende do dia da
+semana em que executamos os testes, talvez a melhor verificação seja afirmar
+que a saída da função não é igual à entrada.
 
-Abaixo da superfície, as macros `assert_eq!` e `assert_ne!` usam os operadores
-`==` e `!=`, respectivamente. Quando as asserções falham, essas macros imprimem seus
-argumentos usando formatação de depuração, o que significa que os valores que estão sendo comparados devem
-implemente as características `PartialEq` e `Debug`. Todos os tipos primitivos e a maioria
-os tipos de biblioteca padrão implementam essas características. Para estruturas e enums que
-você se define, precisará implementar `PartialEq` para afirmar a igualdade de
-esses tipos. Você também precisará implementar `Debug` para imprimir os valores quando o
-afirmação falha. Como ambas as características são características deriváveis, conforme mencionado em
-Listagem 5-12 no Capítulo 5, isso geralmente é tão simples quanto adicionar o
-`#[derive(PartialEq, Debug)]` anotação para sua definição de struct ou enum. Ver
-Apêndice C, [“Características Deriváveis,”][derivable-traits]<!-- ignore --> para mais
-detalhes sobre essas e outras características deriváveis.
+Por baixo dos panos, as macros `assert_eq!` e `assert_ne!` usam os operadores
+`==` e `!=`, respectivamente. Quando as verificações falham, essas macros
+imprimem seus argumentos usando formatação de depuração, o que significa que os
+valores comparados precisam implementar as traits `PartialEq` e `Debug`. Todos
+os tipos primitivos e a maior parte dos tipos da biblioteca padrão implementam
+essas traits. Para structs e enums definidos por você, será necessário
+implementar `PartialEq` para verificar igualdade entre esses tipos. Também será
+necessário implementar `Debug` para imprimir os valores quando a verificação
+falhar. Como ambas são traits deriváveis, como mencionado na Listagem 5-12 do
+Capítulo 5, isso normalmente é tão simples quanto adicionar a anotação
+`#[derive(PartialEq, Debug)]` à definição da sua struct ou enum. Veja o
+Apêndice C, [“Traits deriváveis”][derivable-traits]<!-- ignore -->, para mais
+detalhes sobre essas e outras traits deriváveis.
 
 ### Adicionando mensagens de falha personalizadas
 
-Você também pode adicionar uma mensagem personalizada para ser impressa com a mensagem de falha como
-argumentos opcionais para as macros `assert!`, `assert_eq!` e `assert_ne!`. Qualquer
-argumentos especificados depois que os argumentos necessários são passados ​​para o
-Macro `format!` (discutido em [“Concatenando com `+` ou
-`format!`”][concatenating]<!--
-ignore --> no Capítulo 8), para que você possa passar uma string de formato que contenha `{}`
-espaços reservados e valores para ir nesses espaços reservados. Mensagens personalizadas são úteis
-para documentar o que significa uma afirmação; quando um teste falhar, você terá uma melhor
-ideia de qual é o problema com o código.
+Você também pode adicionar uma mensagem personalizada para ser impressa junto
+com a mensagem de falha como argumentos opcionais das macros `assert!`,
+`assert_eq!` e `assert_ne!`. Todos os argumentos especificados depois dos
+argumentos obrigatórios são repassados à macro `format!` (discutida em
+[“Concatenação com `+` ou `format!`”][concatenating]<!-- ignore -->, no
+Capítulo 8), então você pode fornecer uma string de formatação com espaços
+reservados `{}` e os valores que devem preenchê-los. Mensagens personalizadas
+são úteis para documentar o que a verificação quer dizer; quando um teste
+falha, você terá uma noção melhor do que está errado no código.
 
-Por exemplo, digamos que temos uma função que cumprimenta as pessoas pelo nome e
-queremos testar se o nome que passamos para a função aparece na saída:
+Por exemplo, digamos que temos uma função que cumprimenta as pessoas pelo nome
+e queremos testar se o nome passado para a função aparece na saída:
 
-<span class="filename">Nome do arquivo:src/lib.rs</span>
+<span class="filename">Nome do arquivo: src/lib.rs</span>
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-05-greeter/src/lib.rs}}
 ```
 
-Os requisitos para este programa ainda não foram acordados e estamos
-tenho certeza que o texto `Hello` no início da saudação mudará. Nós
-decidimos que não queremos atualizar o teste quando os requisitos mudarem,
-então, em vez de verificar a igualdade exata com o valor retornado do
-`greeting`, apenas afirmaremos que a saída contém o texto do
-parâmetro de entrada.
+Os requisitos desse programa ainda não foram definidos por completo, e temos
+quase certeza de que o texto `Hello` no começo da saudação vai mudar. Decidimos
+que não queremos ter de atualizar o teste sempre que os requisitos mudarem; por
+isso, em vez de verificar igualdade exata com o valor retornado por
+`greeting`, vamos apenas verificar se a saída contém o texto do parâmetro de
+entrada.
 
-Agora vamos introduzir um bug neste código alterando `greeting` para excluir
-`name` para ver como é a falha no teste padrão:
+Agora vamos introduzir um bug nesse código, alterando `greeting` para excluir
+`name`, para ver como é a mensagem de falha padrão:
 
 ```rust,not_desired_behavior,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-06-greeter-with-bug/src/lib.rs:here}}
 ```
 
-A execução deste teste produz o seguinte:
+Executar esse teste produz o seguinte:
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/no-listing-06-greeter-with-bug/output.txt}}
 ```
 
-Este resultado apenas indica que a afirmação falhou e qual linha a
-a afirmação está ativada. Uma mensagem de falha mais útil imprimiria o valor do
-`greeting` função. Vamos adicionar uma mensagem de falha personalizada composta por um formato
-string com um espaço reservado preenchido com o valor real que obtivemos do
-`greeting` função:
+Esse resultado apenas indica que a verificação falhou e em qual linha ela
+está. Uma mensagem de falha mais útil mostraria o valor retornado por
+`greeting`. Vamos adicionar uma mensagem de falha personalizada, composta por
+uma string de formatação com um espaço reservado preenchido pelo valor real que
+obtivemos da função `greeting`:
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-07-custom-failure-message/src/lib.rs:here}}
 ```
 
-Agora, quando executarmos o teste, receberemos uma mensagem de erro mais informativa:
+Agora, quando executarmos o teste, teremos uma mensagem de erro mais
+informativa:
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/no-listing-07-custom-failure-message/output.txt}}
 ```
 
-Podemos ver o valor que realmente obtivemos na saída do teste, o que nos ajudaria
-depurar o que aconteceu em vez do que esperávamos que acontecesse.
+Conseguimos ver o valor que realmente obtivemos na saída do teste, o que ajuda
+a depurar o que aconteceu, em vez de apenas o que esperávamos que tivesse
+acontecido.
 
-### Verificando se há pânico com `should_panic`
+### Verificando pânicos com `should_panic`
 
-Além de verificar os valores de retorno, é importante verificar se nosso código
-lida com condições de erro conforme esperamos. Por exemplo, considere o tipo `Guess`
-que criamos no Capítulo 9, Listagem 9-13. Outro código que usa `Guess`
-depende da garantia de que `Guess` instâncias conterão apenas valores
-entre 1 e 100. Podemos escrever um teste que garanta que a tentativa de criar um
-`Guess` instância com um valor fora desse intervalo entra em pânico.
+Além de verificar valores de retorno, é importante confirmar se o código lida
+com condições de erro da maneira esperada. Por exemplo, considere o tipo
+`Guess` que criamos no Capítulo 9, na Listagem 9-13. Outro código que usa
+`Guess` depende da garantia de que instâncias de `Guess` conterão apenas
+valores entre 1 e 100. Podemos escrever um teste que garanta que tentar criar
+uma instância de `Guess` com um valor fora desse intervalo provoque um pânico.
 
-Fazemos isso adicionando o atributo `should_panic` à nossa função de teste. O
-o teste será aprovado se o código dentro da função entrar em pânico; o teste falha se o código
-dentro da função não entra em pânico.
+Fazemos isso adicionando o atributo `should_panic` à função de teste. O teste
+passa se o código dentro da função entrar em pânico; o teste falha se o código
+dentro da função não entrar em pânico.
 
-A Listagem 11-8 mostra um teste que verifica se as condições de erro de `Guess::new`
-acontecem quando esperamos que aconteçam.
+A Listagem 11-8 mostra um teste que verifica se as condições de erro de
+`Guess::new` acontecem quando esperamos.
 
-<Listing number="11-8" file-name="src/lib.rs" caption="Testing that a condition will cause a `panic!`">
+<Listing number="11-8" file-name="src/lib.rs" caption="Testando que uma condição provocará um `panic!`">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-08/src/lib.rs}}
@@ -447,8 +462,8 @@ acontecem quando esperamos que aconteçam.
 
 </Listing>
 
-Colocamos o atributo `#[should_panic]` após o atributo `#[test]` e
-antes da função de teste à qual se aplica. Vejamos o resultado quando este teste
+Colocamos o atributo `#[should_panic]` depois do atributo `#[test]` e antes da
+função de teste à qual ele se aplica. Vamos ver o resultado quando esse teste
 passa:
 
 ```console
@@ -456,32 +471,32 @@ passa:
 ```
 
 Parece bom! Agora vamos introduzir um bug em nosso código removendo a condição
-que a função `new` entrará em pânico se o valor for maior que 100:
+de que a função `new` deve entrar em pânico quando o valor for maior que 100:
 
 ```rust,not_desired_behavior,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-08-guess-with-bug/src/lib.rs:here}}
 ```
 
-Quando executarmos o teste na Listagem 11.8, ele falhará:
+Quando executarmos o teste da Listagem 11-8, ele falhará:
 
 ```console
 {{#include ../listings/ch11-writing-automated-tests/no-listing-08-guess-with-bug/output.txt}}
 ```
 
-Não recebemos uma mensagem muito útil neste caso, mas quando olhamos para o teste
-função, vemos que ela está anotada com `#[should_panic]`. O fracasso que tivemos
-significa que o código na função de teste não causou pânico.
+Nesse caso, não recebemos uma mensagem muito útil, mas, olhando a função de
+teste, vemos que ela está anotada com `#[should_panic]`. A falha que obtivemos
+significa que o código dentro da função de teste não provocou pânico.
 
-Os testes que usam `should_panic` podem ser imprecisos. Um teste `should_panic` seria
-passar mesmo que o teste entre em pânico por um motivo diferente daquele que estávamos
-esperando. Para tornar os testes `should_panic` mais precisos, podemos adicionar um opcional
-`expected` para o atributo `should_panic`. O equipamento de teste
-certifique-se de que a mensagem de falha contenha o texto fornecido. Por exemplo,
-considere o código modificado para `Guess` na Listagem 11-9 onde a função `new`
-entra em pânico com mensagens diferentes dependendo se o valor é muito pequeno ou
-muito grande.
+Testes que usam `should_panic` podem ser imprecisos. Um teste com
+`should_panic` passa mesmo que o código entre em pânico por um motivo diferente
+daquele que esperávamos. Para tornar esses testes mais precisos, podemos
+adicionar um parâmetro opcional `expected` ao atributo `should_panic`. O
+executor de testes verificará se a mensagem de falha contém o texto fornecido.
+Por exemplo, considere o código modificado de `Guess` na Listagem 11-9, em que
+a função `new` entra em pânico com mensagens diferentes dependendo de o valor
+ser pequeno demais ou grande demais.
 
-<Listing number="11-9" file-name="src/lib.rs" caption="Testing for a `panic!` with a panic message containing a specified substring">
+<Listing number="11-9" file-name="src/lib.rs" caption="Testando um `panic!` com uma mensagem de pânico que contém uma substring especificada">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-09/src/lib.rs:here}}
@@ -489,18 +504,18 @@ muito grande.
 
 </Listing>
 
-Este teste será aprovado porque o valor que colocamos no atributo `should_panic`
-O parâmetro `expected` é uma substring da mensagem que o `Guess::new`
-função entra em pânico com. Poderíamos ter especificado toda a mensagem de pânico que
-esperar, que neste caso seria `O valor da estimativa deve ser menor ou igual a
-100, tenho 200`. O que você escolhe especificar depende de quanto do pânico
-a mensagem é única ou dinâmica e quão preciso você deseja que seu teste seja. Nesta
-caso, uma substring da mensagem de pânico é suficiente para garantir que o código no
-A função de teste executa o caso `else if value > 100`.
+Esse teste passará porque o valor que colocamos no parâmetro `expected` do
+atributo `should_panic` é uma substring da mensagem com a qual a função
+`Guess::new` entra em pânico. Poderíamos ter especificado a mensagem completa
+de pânico esperada, que nesse caso seria `Guess value must be less than or
+equal to 100, got 200`. O que você escolhe especificar depende de quanto da
+mensagem é único ou dinâmico e de quão preciso você quer que o teste seja.
+Neste caso, uma substring da mensagem de pânico já basta para garantir que o
+código da função de teste execute o caso `else if value > 100`.
 
-Para ver o que acontece quando um teste `should_panic` com uma mensagem `expected`
-falhar, vamos introduzir novamente um bug em nosso código trocando os corpos do
-`if value < 1` e os blocos `else if value > 100`:
+Para ver o que acontece quando um teste com `should_panic` e mensagem
+`expected` falha, vamos introduzir novamente um bug no nosso código trocando os
+corpos dos blocos `if value < 1` e `else if value > 100`:
 
 ```rust,ignore,not_desired_behavior
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-09-guess-with-panic-msg-bug/src/lib.rs:here}}
@@ -512,40 +527,40 @@ Desta vez, quando executarmos o teste `should_panic`, ele falhará:
 {{#include ../listings/ch11-writing-automated-tests/no-listing-09-guess-with-panic-msg-bug/output.txt}}
 ```
 
-A mensagem de falha indica que este teste realmente entrou em pânico como esperávamos,
-mas a mensagem de pânico não incluía a string esperada `menor ou igual
-para 100`. The panic message that we did get in this case was `O valor da estimativa deve
-ser maior ou igual a 1, obteve 200`. Agora podemos começar a descobrir onde
-nosso bug é!
+A mensagem de falha indica que esse teste realmente entrou em pânico como
+esperávamos, mas a mensagem de pânico não continha a string esperada
+`less than or equal to 100`. A mensagem de pânico que recebemos neste caso foi
+`Guess value must be greater than or equal to 1, got 200`. Agora já podemos
+começar a descobrir onde está o bug!
 
 ### Usando `Result<T, E>` em testes
 
-Todos os nossos testes até agora entram em pânico quando falham. Também podemos escrever testes que usam
-`Result<T, E>`! Aqui está o teste da Listagem 11-1, reescrito para usar `Result<T,
-E>` and return an `Err` em vez de entrar em pânico:
+Até agora, todos os nossos testes entram em pânico quando falham. Também podemos
+escrever testes que usem `Result<T, E>`! Aqui está o teste da Listagem 11-1,
+reescrito para usar `Result<T, E>` e retornar um `Err` em vez de entrar em
+pânico:
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-10-result-in-tests/src/lib.rs:here}}
 ```
 
-A função `it_works` agora tem o tipo de retorno `Result<(), String>`. No
-corpo da função, em vez de chamar a macro `assert_eq!`, retornamos
-`Ok(())` quando o teste passar e um `Err` com um `String` dentro quando o teste
-falha.
+A função `it_works` agora tem tipo de retorno `Result<(), String>`. No corpo da
+função, em vez de chamar a macro `assert_eq!`, retornamos `Ok(())` quando o
+teste passa e um `Err` contendo uma `String` quando ele falha.
 
-Escrever testes para que eles retornem `Result<T, E>` permite que você use o
-operador de ponto de interrogação no corpo dos testes, o que pode ser uma maneira conveniente de
-escreva testes que deverão falhar se alguma operação dentro deles retornar um `Err`
-variante.
+Escrever testes para que retornem um `Result<T, E>` permite usar o operador de
+interrogação no corpo dos testes, o que pode ser uma maneira conveniente de
+escrever testes que devem falhar se qualquer operação interna retornar uma
+variante `Err`.
 
-Você não pode usar a anotação `#[should_panic]` em testes que usam `Result<T,
-E>`. To assert that an operation returns an `Err` variante, _não_ use o
-operador de ponto de interrogação no valor `Result<T, E>`. Em vez disso, use
-`assert!(value.is_err())`.
+Você não pode usar a anotação `#[should_panic]` em testes que usam
+`Result<T, E>`. Para verificar que uma operação retorna uma variante `Err`,
+_não_ use o operador de interrogação sobre o valor `Result<T, E>`. Em vez
+disso, use `assert!(value.is_err())`.
 
-Agora que você conhece várias maneiras de escrever testes, vamos ver o que está acontecendo
-quando executamos nossos testes e exploramos as diferentes opções que podemos usar com `cargo
-teste`.
+Agora que você conhece várias maneiras de escrever testes, vamos ver o que
+acontece quando executamos nossos testes e explorar as diferentes opções que
+podemos usar com `cargo test`.
 
 [concatenating]: ch08-02-strings.html#concatenating-with--or-format
 [bench]: ../unstable-book/library-features/test.html

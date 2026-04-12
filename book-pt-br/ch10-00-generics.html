@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
+            window.path_to_searchindex_js = "searchindex-e2a870e7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -181,40 +181,43 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="tipos-genéricos-características-e-tempos-de-vida"><a class="header" href="#tipos-genéricos-características-e-tempos-de-vida">Tipos genéricos, características e tempos de vida</a></h1>
-<p>Cada linguagem de programação possui ferramentas para lidar eficazmente com a duplicação
-de conceitos. No Rust, uma dessas ferramentas é <em>generics</em>: substitutos abstratos para
-tipos de concreto ou outras propriedades. Podemos expressar o comportamento de genéricos ou
-como eles se relacionam com outros genéricos sem saber o que estará em seu lugar
-ao compilar e executar o código.</p>
-<p>As funções podem receber parâmetros de algum tipo genérico, em vez de um tipo concreto
-como <code>i32</code> ou <code>String</code>, da mesma forma que aceitam parâmetros com desconhecidos
-valores para executar o mesmo código em vários valores concretos. Na verdade, já
-usei genéricos no Capítulo 6 com <code>Option&lt;T&gt;</code>, no Capítulo 8 com <code>Vec&lt;T&gt;</code> e
-<code>HashMap&lt;K, V&gt;</code>, e no Capítulo 9 com <code>Result&lt;T, E&gt;</code>. Neste capítulo, você
-explore como definir seus próprios tipos, funções e métodos com genéricos!</p>
-<p>Primeiro, revisaremos como extrair uma função para reduzir a duplicação de código. Bem
-então use a mesma técnica para criar uma função genérica a partir de duas funções que
-diferem apenas nos tipos de seus parâmetros. Também explicaremos como usar
-tipos genéricos em definições de struct e enum.</p>
-<p>Em seguida, você aprenderá como usar características para definir o comportamento de maneira genérica. Você
-pode combinar características com tipos genéricos para restringir um tipo genérico a aceitar
-apenas aqueles tipos que têm um comportamento específico, em oposição a qualquer tipo.</p>
-<p>Finalmente, discutiremos <em>lifetimes</em>: uma variedade de genéricos que dão a
-informações do compilador sobre como as referências se relacionam entre si. As vidas permitem
-fornecer ao compilador informações suficientes sobre os valores emprestados para que ele possa
-garantir que as referências serão válidas em mais situações do que seriam sem
-nossa ajuda.</p>
-<h2 id="removendo-duplicação-extraindo-uma-função"><a class="header" href="#removendo-duplicação-extraindo-uma-função">Removendo duplicação extraindo uma função</a></h2>
-<p>Os genéricos nos permitem substituir tipos específicos por um espaço reservado que representa
-vários tipos para remover a duplicação de código. Antes de mergulhar na sintaxe genérica,
-vamos primeiro ver como remover a duplicação de uma forma que não envolva
-tipos genéricos extraindo uma função que substitui valores específicos por um
-espaço reservado que representa vários valores. Então, aplicaremos o mesmo
-técnica para extrair uma função genérica! Ao observar como reconhecer
-código duplicado que você pode extrair para uma função, você começará a reconhecer
-código duplicado que pode usar genéricos.</p>
-<p>Começaremos com o programa curto da Listagem 10-1 que encontra o maior
+                        <h1 id="tipos-genéricos-traits-e-lifetimes"><a class="header" href="#tipos-genéricos-traits-e-lifetimes">Tipos Genéricos, Traits e Lifetimes</a></h1>
+<p>Toda linguagem de programação tem ferramentas para lidar de forma eficaz com a
+duplicação de conceitos. Em Rust, uma dessas ferramentas são os <em>genéricos</em>:
+substitutos abstratos para tipos concretos ou outras propriedades. Podemos
+expressar o comportamento de genéricos ou como eles se relacionam com outros
+genéricos sem saber o que estará em seu lugar quando o código for compilado e
+executado.</p>
+<p>Funções podem receber parâmetros de algum tipo genérico, em vez de um tipo
+concreto como <code>i32</code> ou <code>String</code>, da mesma forma que recebem parâmetros com
+valores desconhecidos para executar o mesmo código sobre vários valores
+concretos. Na verdade, já usamos genéricos no Capítulo 6 com <code>Option&lt;T&gt;</code>, no
+Capítulo 8 com <code>Vec&lt;T&gt;</code> e <code>HashMap&lt;K, V&gt;</code>, e no Capítulo 9 com <code>Result&lt;T, E&gt;</code>.
+Neste capítulo, você vai explorar como definir seus próprios tipos, funções e
+métodos com genéricos!</p>
+<p>Primeiro, vamos revisar como extrair uma função para reduzir duplicação de
+código. Em seguida, usaremos a mesma técnica para criar uma função genérica a
+partir de duas funções que diferem apenas nos tipos de seus parâmetros.
+Também explicaremos como usar tipos genéricos em definições de structs e enums.</p>
+<p>Depois, você vai aprender a usar traits para definir comportamento de maneira
+genérica. Você pode combinar traits com tipos genéricos para restringir um tipo
+genérico a aceitar apenas tipos que tenham um comportamento específico, em vez
+de aceitar qualquer tipo.</p>
+<p>Por fim, discutiremos <em>lifetimes</em>: uma variedade de genéricos que fornece ao
+compilador informações sobre como referências se relacionam entre si.
+Lifetimes nos permitem dar ao compilador informações suficientes sobre valores
+emprestados para que ele possa garantir que referências serão válidas em mais
+situacões do que conseguiria sem a nossa ajuda.</p>
+<h2 id="removendo-duplicação-extraindo-uma-função"><a class="header" href="#removendo-duplicação-extraindo-uma-função">Removendo Duplicação Extraindo uma Função</a></h2>
+<p>Genéricos nos permitem substituir tipos específicos por um placeholder que
+representa múltiplos tipos, removendo duplicação de código. Antes de mergulhar
+na sintaxe dos genéricos, vamos primeiro ver como remover duplicação de uma
+forma que não envolva tipos genéricos, extraindo uma função que substitui
+valores específicos por um placeholder que representa vários valores. Depois,
+vamos aplicar a mesma técnica para extrair uma função genérica! Ao observar
+como reconhecer código duplicado que pode ser extraído para uma função, você
+começará a reconhecer código duplicado que pode usar genéricos.</p>
+<p>Vamos começar com o pequeno programa da Listagem 10-1, que encontra o maior
 número em uma lista.</p>
 <figure class="listing" id="listing-10-1">
 <span class="file-name">Filename: src/main.rs</span>
@@ -232,19 +235,20 @@ número em uma lista.</p>
     println!("The largest number is {largest}");
 <span class="boring">    assert_eq!(*largest, 100);
 </span>}</code></pre>
-<figcaption><a href="#listing-10-1">Listing 10-1</a>: Finding the largest number in a list of numbers</figcaption>
+<figcaption><a href="#listing-10-1">Listing 10-1</a>: Encontrando o maior número em uma lista de números</figcaption>
 </figure>
-<p>Armazenamos uma lista de inteiros na variável <code>number_list</code> e colocamos uma referência
-ao primeiro número da lista em uma variável chamada <code>largest</code>. Nós então iteramos
-através de todos os números da lista, e se o número atual for maior que
-o número armazenado em <code>largest</code>, substituímos a referência nessa variável.
-No entanto, se o número atual for menor ou igual ao maior número visto
-até agora, a variável não muda e o código passa para o próximo número
-na lista. Depois de considerar todos os números da lista, <code>largest</code> deve
-referem-se ao maior número, que neste caso é 100.</p>
-<p>Agora temos a tarefa de encontrar o maior número em duas listas diferentes de
-números. Para fazer isso, podemos optar por duplicar o código da Listagem 10-1 e usar
-a mesma lógica em dois locais diferentes do programa, conforme mostrado na Listagem 10-2.</p>
+<p>Armazenamos uma lista de inteiros na variável <code>number_list</code> e colocamos uma
+referência ao primeiro número da lista em uma variável chamada <code>largest</code>.
+Depois, iteramos por todos os números da lista e, se o número atual for maior
+do que o número armazenado em <code>largest</code>, substituímos a referência nessa
+variável. No entanto, se o número atual for menor ou igual ao maior número
+visto até aquele momento, a variável não muda, e o código segue para o próximo
+número da lista. Depois de considerar todos os números da lista, <code>largest</code>
+deverá se referir ao maior número, que neste caso é 100.</p>
+<p>Agora recebemos a tarefa de encontrar o maior número em duas listas diferentes
+de números. Para isso, podemos escolher duplicar o código da Listagem 10-1 e
+usar a mesma lógica em dois lugares diferentes do programa, como mostrado na
+Listagem 10-2.</p>
 <figure class="listing" id="listing-10-2">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -272,19 +276,19 @@ a mesma lógica em dois locais diferentes do programa, conforme mostrado na List
 
     println!("The largest number is {largest}");
 }</code></pre>
-<figcaption><a href="#listing-10-2">Listing 10-2</a>: Code to find the largest number in <em>two</em> lists of numbers</figcaption>
+<figcaption><a href="#listing-10-2">Listing 10-2</a>: Código para encontrar o maior número em <em>duas</em> listas de números</figcaption>
 </figure>
-<p>Embora esse código funcione, duplicar código é tedioso e sujeito a erros. Nós também
-temos que lembrar de atualizar o código em vários lugares quando quisermos alterar
-isto.</p>
-<p>Para eliminar esta duplicação, criaremos uma abstração definindo um
-função que opera em qualquer lista de inteiros passados ​​como parâmetro. Esse
-solução torna nosso código mais claro e nos permite expressar o conceito de encontrar o
-maior número em uma lista abstratamente.</p>
-<p>Na Listagem 10-3, extraímos o código que encontra o maior número em um
-função chamada <code>largest</code>. Então, chamamos a função para encontrar o maior número
-nas duas listas da Listagem 10-2. Também poderíamos usar a função em qualquer outro
-lista de valores <code>i32</code> que poderemos ter no futuro.</p>
+<p>Embora esse código funcione, duplicar código é tedioso e propenso a erros.
+Também precisamos lembrar de atualizar o código em vários lugares quando
+quisermos mudá-lo.</p>
+<p>Para eliminar essa duplicação, vamos criar uma abstração definindo uma função
+que opere sobre qualquer lista de inteiros passada como parâmetro. Essa solução
+deixa nosso código mais claro e nos permite expressar de forma abstrata o
+conceito de encontrar o maior número de uma lista.</p>
+<p>Na Listagem 10-3, extraímos o código que encontra o maior número para uma
+função chamada <code>largest</code>. Depois, chamamos essa função para encontrar o maior
+número nas duas listas da Listagem 10-2. Também poderíamos usar a função em
+qualquer outra lista de valores <code>i32</code> que venhamos a ter no futuro.</p>
 <figure class="listing" id="listing-10-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn largest(list: &amp;[i32]) -&gt; &amp;i32 {
@@ -312,26 +316,27 @@ fn main() {
     println!("The largest number is {result}");
 <span class="boring">    assert_eq!(*result, 6000);
 </span>}</code></pre>
-<figcaption><a href="#listing-10-3">Listing 10-3</a>: Abstracted code to find the largest number in two lists</figcaption>
+<figcaption><a href="#listing-10-3">Listing 10-3</a>: Código abstraído para encontrar o maior número em duas listas</figcaption>
 </figure>
-<p>A função <code>largest</code> possui um parâmetro chamado <code>list</code>, que representa qualquer
-fatia concreta de valores <code>i32</code> que podemos passar para a função. Como resultado,
-quando chamamos a função, o código é executado nos valores específicos que passamos
-em.</p>
-<p>Em resumo, aqui estão as etapas que executamos para alterar o código da Listagem 10.2 para
-Listagem 10-3:</p>
+<p>A função <code>largest</code> tem um parâmetro chamado <code>list</code>, que representa qualquer
+fatia concreta de valores <code>i32</code> que possamos passar para a função. Como
+resultado, quando chamamos a função, o código é executado sobre os valores
+específicos que fornecemos.</p>
+<p>Em resumo, estas foram as etapas que usamos para transformar o código da
+Listagem 10-2 em código como o da Listagem 10-3:</p>
 <ol>
-<li>Identifique código duplicado.</li>
-<li>Extraia o código duplicado no corpo da função e especifique o
-entradas e valores de retorno desse código na assinatura da função.</li>
-<li>Atualize as duas instâncias de código duplicado para chamar a função.</li>
+<li>Identificar código duplicado.</li>
+<li>Extrair o código duplicado para o corpo de uma função e especificar as
+entradas e os valores de retorno desse código na assinatura da função.</li>
+<li>Atualizar as duas instâncias do código duplicado para chamar a função.</li>
 </ol>
-<p>A seguir, usaremos essas mesmas etapas com genéricos para reduzir a duplicação de código. Em
-da mesma forma que o corpo da função pode operar em um <code>list</code> abstrato
-de valores específicos, os genéricos permitem que o código opere em tipos abstratos.</p>
-<p>Por exemplo, digamos que temos duas funções: uma que encontra o maior item em um
-fatia de valores <code>i32</code> e aquela que encontra o maior item em uma fatia de <code>char</code>
-valores. Como eliminaríamos essa duplicação? Vamos descobrir!</p>
+<p>A seguir, vamos usar essas mesmas etapas com genéricos para reduzir duplicação
+de código. Da mesma forma que o corpo da função pode operar sobre uma <code>list</code>
+abstrata em vez de valores específicos, genéricos permitem que o código opere
+sobre tipos abstratos.</p>
+<p>Por exemplo, digamos que tivéssemos duas funções: uma encontra o maior item em
+uma fatia de valores <code>i32</code>, e a outra encontra o maior item em uma fatia de
+valores <code>char</code>. Como eliminaríamos essa duplicação? Vamos descobrir!</p>
 
                     </main>
 
