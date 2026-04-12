@@ -1,4 +1,4 @@
-## O que é Ownership?
+## O que é ownership?
 
 _Ownership_ é um conjunto de regras que governa como um programa Rust gerencia
 a memória. Todo programa precisa gerenciar a forma como usa a memória do
@@ -35,8 +35,8 @@ strings.
 > Isso é chamado de _último a entrar, primeiro a sair (LIFO)_. Pense em uma
 > pilha de pratos: ao adicionar mais pratos, você os coloca no topo; quando
 > precisa de um, tira o prato do topo. Adicionar ou remover pratos do meio ou
-> da base não funcionaria tão bem. Adicionar dados recebe o nome de _pushing
-> onto the stack_, e remover dados é _popping off the stack_. Todos os dados
+> da base não funcionaria tão bem. Adicionar dados recebe o nome de _push onto
+> the stack_, e remover dados é _pop off the stack_. Todos os dados
 > armazenados na pilha precisam ter tamanho fixo e conhecido. Dados com tamanho
 > desconhecido em tempo de compilação, ou cujo tamanho pode mudar, precisam ir
 > para o heap.
@@ -71,10 +71,10 @@ strings.
 > ocorre na pilha, em vez de dados mais espalhados, como pode acontecer no
 > heap.
 >
-> Quando seu código chama uma função, os valores passados ​​para a função
-> (incluindo, potencialmente, ponteiros para dados no heap) e a função
-> variáveis ​​locais são colocadas na pilha. Quando a função terminar, aqueles
-> os valores são retirados da pilha.
+> Quando seu código chama uma função, os valores passados a ela, incluindo
+> possivelmente ponteiros para dados no heap, e as variáveis locais da função
+> são colocados na pilha. Quando a função termina, esses valores são retirados
+> da pilha.
 >
 > Acompanhar quais partes do código estão usando quais dados no heap,
 > minimizar a quantidade de dados duplicados no heap e limpar dados que já não
@@ -89,17 +89,17 @@ strings.
 Primeiro, vamos olhar para as regras de ownership. Tenha essas regras em mente
 enquanto passamos pelos exemplos que as ilustram:
 
-- Cada valor em Rust possui um _proprietário_.
-- Só pode haver um proprietário por vez.
-- Quando o proprietário sai do escopo, o valor será eliminado.
+- Cada valor em Rust tem um _dono_.
+- Só pode haver um dono por vez.
+- Quando o dono sai de escopo, o valor é descartado.
 
 ### Escopo de Variáveis
 
-Agora que ultrapassamos a sintaxe básica do Rust, não incluiremos todos os `fn main() {`
-código nos exemplos, então se você estiver acompanhando, certifique-se de colocar o
-seguintes exemplos dentro de uma função `main` manualmente. Como resultado, nossos exemplos
-será um pouco mais conciso, permitindo-nos focar nos detalhes reais em vez de
-código padrão.
+Agora que já passamos pela sintaxe básica de Rust, não incluiremos todo o
+boilerplate `fn main() {` nos exemplos. Então, se você estiver acompanhando,
+lembre-se de colocar manualmente os exemplos a seguir dentro de uma função
+`main`. Assim, eles ficam um pouco mais concisos e podemos focar nos detalhes
+reais em vez do código repetitivo.
 
 Como primeiro exemplo de ownership, vamos observar o escopo de algumas
 variáveis. Um _escopo_ é o intervalo dentro de um programa durante o qual um
@@ -162,8 +162,8 @@ quantidade de texto desconhecida em tempo de compilação. Podemos criar um
 let s = String::from("hello");
 ```
 
-O operador de dois pontos duplos `::` nos permite nomear essa função `from`
-específica sob o tipo `String`, em vez de usar algum nome como `string_from`.
+O operador de dois pontos duplos `::` nos permite associar essa função `from`
+ao tipo `String`, em vez de usar algum nome como `string_from`.
 Falaremos mais sobre essa sintaxe na seção [“Métodos”][methods]<!--
 ignore -->
 do Capítulo 5 e, quando tratarmos de namespace com módulos, em [“Caminhos para
@@ -184,8 +184,8 @@ memória.
 
 No caso de uma string literal, conhecemos o conteúdo em tempo de compilação, e
 por isso o texto é gravado diretamente no executável final. É isso que torna
-string literals rápidas e eficientes. Mas essas propriedades vêm justamente da
-imutabilidade da string literal. Infelizmente, não podemos colocar um bloco de
+literais de string rápidas e eficientes. Mas essas propriedades vêm justamente
+da imutabilidade da string literal. Infelizmente, não podemos colocar um bloco de
 memória no binário para cada pedaço de texto cujo tamanho é desconhecido em
 tempo de compilação e que pode mudar enquanto o programa roda.
 
@@ -253,7 +253,7 @@ no Rust. A Listagem 4-2 mostra um exemplo usando um inteiro.
 </Listing>
 
 Provavelmente conseguimos adivinhar o que isso faz: “Associe o valor `5` a `x`;
-depois, faça uma cópia do valor em `x` e associe-a a `y`.” Agora temos duas
+depois, faça uma cópia do valor em `x` e associe essa cópia a `y`.” Agora temos duas
 variáveis, `x` e `y`, e ambas são iguais a `5`. É exatamente isso que está
 acontecendo, porque inteiros são valores simples com tamanho fixo e conhecido,
 e esses dois valores `5` são empilhados na pilha.
@@ -338,12 +338,12 @@ invalidada:
 {{#include ../listings/ch04-understanding-ownership/no-listing-04-cant-use-after-move/output.txt}}
 ```
 
-Se você já ouviu os termos _cópia superficial_ e _cópia profunda_ enquanto trabalhava com
-outras linguagens, o conceito de copiar o ponteiro, comprimento e capacidade
-sem copiar os dados provavelmente parece fazer uma cópia superficial. Mas
-porque Rust também invalida a primeira variável, em vez de ser chamada de
-cópia superficial, é conhecida como _move_. Neste exemplo, diríamos que `s1`
-foi _movido_ para `s2`. Então, o que realmente acontece é mostrado na Figura 4-4.
+Se você já ouviu os termos _cópia superficial_ e _cópia profunda_ em outras
+linguagens, provavelmente a ideia de copiar ponteiro, comprimento e capacidade
+sem copiar os dados parece uma cópia superficial. Mas, como Rust também
+invalida a primeira variável, isso não recebe o nome de cópia superficial, e
+sim de _move_. Neste exemplo, diríamos que `s1` foi _movido_ para `s2`. O que
+realmente acontece é mostrado na Figura 4-4.
 
 <img alt="Três tabelas: tabelas s1 e s2 representando essas strings no
 pilha, respectivamente, e ambos apontando para os mesmos dados de string no heap.
@@ -358,7 +358,7 @@ Isso resolve nosso problema! Com apenas `s2` válida, quando ela sair de
 escopo, sozinha liberará a memória, e pronto.
 
 Além disso, há uma escolha de design implícita aqui: o Rust nunca cria
-automaticamente cópias "profundas" de seus dados. Portanto, qualquer cópia
+automaticamente cópias “profundas” dos seus dados. Portanto, qualquer cópia
 _automática_ pode ser considerada barata em termos de desempenho em tempo de
 execução.
 
@@ -412,8 +412,8 @@ Aqui está um exemplo do método `clone` em ação:
 Isso funciona muito bem e produz explicitamente o comportamento mostrado na
 Figura 4-3, em que os dados no heap _de fato_ são copiados.
 
-Quando você vê uma chamada para `clone`, você sabe que algum código arbitrário está sendo
-executado e esse código pode ser caro. É um indicador visual de que algo
+Quando você vê uma chamada para `clone`, sabe que algum código arbitrário está
+sendo executado e que ele pode ser caro. É um indicador visual de que algo
 diferente está acontecendo.
 
 #### Dados Somente de Pilha: `Copy`
@@ -442,7 +442,7 @@ as variáveis que o usam não são movidas; em vez disso, são copiadas de forma
 simples, continuando válidas após a atribuição a outra variável.
 
 O Rust não nos permitirá anotar um tipo com `Copy` se esse tipo, ou qualquer
-uma de suas partes, implementar a trait `Drop`. Se o tipo precisar que algo
+uma de suas partes, implementar a trait `Drop`. Se esse tipo precisar que algo
 especial aconteça quando o valor sair de escopo e adicionarmos a anotação
 `Copy` a esse tipo, receberemos um erro em tempo de compilação. Para saber
 como adicionar a anotação `Copy` ao seu tipo para implementar essa trait,
@@ -476,10 +476,10 @@ algumas anotações mostrando onde as variáveis entram e saem de escopo.
 
 </Listing>
 
-Se tentássemos usar `s` após a chamada para `takes_ownership`, Rust lançaria um
-erro em tempo de compilação. Essas verificações estáticas nos protegem de erros. Tente adicionar
-código para `main` que usa `s` e `x` para ver onde você pode usá-los e onde
-as regras de ownership impedem que você faça isso.
+Se tentássemos usar `s` após a chamada para `takes_ownership`, Rust geraria um
+erro em tempo de compilação. Essas verificações estáticas nos protegem contra
+erros. Tente adicionar código em `main` que use `s` e `x` para ver onde você
+pode usá-los e onde as regras de ownership impedem isso.
 
 ### Valores de retorno e escopo
 
@@ -500,11 +500,11 @@ outra variável o move. Quando uma variável que inclui dados no heap sai de
 escopo, o valor é limpo por `drop`, a menos que o ownership desses dados tenha
 sido movido para outra variável.
 
-Embora isso funcione, assumir ownership e depois devolvê-lo a cada função é um
-pouco tedioso. E se quisermos deixar uma função usar um valor, mas não assumir
-ownership? É muito chato que tudo o que passamos também precise
-ser repassado se quisermos usá-lo novamente, além de quaisquer dados resultantes
-do corpo da função que também podemos querer retornar.
+Embora isso funcione, assumir ownership e depois devolvê-lo em toda função é
+um pouco tedioso. E se quisermos deixar uma função usar um valor, mas sem
+assumir seu ownership? É bem inconveniente que tudo o que passamos também
+precise ser devolvido caso queiramos reutilizar o valor depois, além de
+quaisquer dados resultantes do corpo da função que também desejemos retornar.
 
 O Rust nos permite retornar vários valores usando uma tupla, como mostrado na
 Listagem 4-5.
