@@ -1,9 +1,9 @@
 ## Comentários
 
-Todos os programadores se esforçam para tornar seu código fácil de entender, mas às vezes
-explicação extra é necessária. Nestes casos, os programadores deixam _comentários_ em
-seu código-fonte que o compilador irá ignorar, mas que as pessoas que lêem o
-o código-fonte pode ser útil.
+Todo programador se esforça para tornar seu código fácil de entender, mas às
+vezes uma explicação extra é necessária. Nesses casos, programadores deixam
+_comentários_ no código-fonte, que o compilador ignora, mas que podem ser úteis
+para quem estiver lendo o código.
 
 Aqui está um comentário simples:
 
@@ -11,9 +11,9 @@ Aqui está um comentário simples:
 // hello, world
 ```
 
-No Rust, o estilo de comentário idiomático inicia um comentário com duas barras, e o
-o comentário continua até o final da linha. Para comentários que vão além de um
-única linha, você precisará incluir `//` em cada linha, assim:
+Em Rust, o estilo idiomático de comentário começa com duas barras, e o
+comentário continua até o fim da linha. Para comentários que ocupam mais de uma
+linha, você precisa incluir `//` em cada linha, assim:
 
 ```rust
 // So we're doing something complicated here, long enough that we need
@@ -21,7 +21,7 @@ o comentário continua até o final da linha. Para comentários que vão além d
 // explain what's going on.
 ```
 
-Comentários também podem ser colocados no final das linhas que contêm código:
+Comentários também podem ser colocados ao final de linhas que contêm código:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 
@@ -29,8 +29,8 @@ Comentários também podem ser colocados no final das linhas que contêm código
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-24-comments-end-of-line/src/main.rs}}
 ```
 
-Mas você os verá com mais frequência usados ​​neste formato, com o comentário em um
-linha separada acima do código que está anotando:
+Mas com mais frequência você os verá neste formato, com o comentário em uma
+linha separada acima do código que ele está anotando:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 
@@ -38,8 +38,9 @@ linha separada acima do código que está anotando:
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-25-comments-above-line/src/main.rs}}
 ```
 
-Rust também tem outro tipo de comentário, comentários de documentação, que iremos
-discutir em [“Publicando uma crate no Crates.io”][publishing]<!-- ignore -->
-seção do Capítulo 14.
+Rust também tem outro tipo de comentário, os comentários de documentação, que
+discutiremos na seção
+[“Publicando uma crate no Crates.io”][publishing]<!-- ignore --> do Capítulo
+14.
 
 [publishing]: ch14-02-publishing-to-crates-io.html
