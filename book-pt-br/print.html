@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-03a9d70c.js";
+            window.path_to_searchindex_js = "searchindex-68f481aa.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -2614,13 +2614,14 @@ nem entre em pânico nem permita acessos inválidos à memória.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="funções-1"><a href="#funções-1" class="header">Funções</a></h1>
 <h2 id="funções"><a class="header" href="#funções">Funções</a></h2>
-<p>As funções são predominantes no código Rust. Você já viu um dos mais
-funções importantes na linguagem: a função <code>main</code>, que é a entrada
-ponto de muitos programas. Você também viu a palavra-chave <code>fn</code>, que permite
-declarar novas funções.</p>
-<p>O código Rust usa <em>snake case</em> como estilo convencional para função e variável
-nomes, em que todas as letras são minúsculas e sublinham palavras separadas.
-Aqui está um programa que contém um exemplo de definição de função:</p>
+<p>Funções são onipresentes em código Rust. Você já viu uma das funções mais
+importantes da linguagem: a função <code>main</code>, que é o ponto de entrada de muitos
+programas. Você também já viu a palavra-chave <code>fn</code>, que permite declarar novas
+funções.</p>
+<p>Código Rust usa <em>snake case</em> como estilo convencional para nomes de funções e
+variáveis, em que todas as letras ficam em minúsculas e as palavras são
+separadas por sublinhados. Aqui está um programa que contém um exemplo de
+definição de função:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     println!("Hello, world!");
@@ -2631,18 +2632,19 @@ Aqui está um programa que contém um exemplo de definição de função:</p>
 fn another_function() {
     println!("Another function.");
 }</code></pre>
-<p>Definimos uma função em Rust digitando <code>fn</code> seguido por um nome de função e um
-conjunto de parênteses. As chaves informam ao compilador onde a função
-corpo começa e termina.</p>
-<p>Podemos chamar qualquer função que definimos digitando seu nome seguido por um conjunto
-de parênteses. Como <code>another_function</code> está definido no programa, pode ser
-chamado de dentro da função <code>main</code>. Observe que definimos <code>another_function</code>
-<em>depois</em> da função <code>main</code> no código-fonte; poderíamos ter definido isso antes
-também. Rust não se importa onde você define suas funções, apenas se elas estão
-definido em algum lugar em um escopo que pode ser visto pelo chamador.</p>
-<p>Vamos iniciar um novo projeto binário chamado <em>functions</em> para explorar funções
-avançar. Coloque o exemplo <code>another_function</code> em <em>src/main.rs</em> e execute-o. Você
-deverá ver a seguinte saída:</p>
+<p>Definimos uma função em Rust digitando <code>fn</code>, seguido pelo nome da função e por
+um conjunto de parênteses. As chaves informam ao compilador onde o corpo da
+função começa e termina.</p>
+<p>Podemos chamar qualquer função que tenhamos definido digitando seu nome seguido
+por um conjunto de parênteses. Como <code>another_function</code> está definida no
+programa, ela pode ser chamada de dentro da função <code>main</code>. Observe que
+definimos <code>another_function</code> <em>depois</em> da função <code>main</code> no código-fonte; também
+poderíamos tê-la definido antes. Rust não se importa com o lugar em que você
+define suas funções, apenas com o fato de elas estarem definidas em algum
+escopo visível para quem as chama.</p>
+<p>Vamos iniciar um novo projeto binário chamado <em>functions</em> para explorar melhor
+as funções. Coloque o exemplo <code>another_function</code> em <em>src/main.rs</em> e execute-o.
+Você deverá ver a seguinte saída:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s
@@ -2650,18 +2652,18 @@ deverá ver a seguinte saída:</p>
 Hello, world!
 Another function.
 </code></pre>
-<p>As linhas são executadas na ordem em que aparecem na função <code>main</code>.
-Primeiro o “Olá, mundo!” a mensagem é impressa e então <code>another_function</code> é chamado
-e sua mensagem é impressa.</p>
+<p>As linhas são executadas na ordem em que aparecem na função <code>main</code>. Primeiro, a
+mensagem “Hello, world!” é impressa; depois, <code>another_function</code> é chamada e sua
+mensagem é impressa.</p>
 <h3 id="parâmetros"><a class="header" href="#parâmetros">Parâmetros</a></h3>
-<p>Podemos definir funções para terem <em>parâmetros</em>, que são variáveis ​​especiais que
-fazem parte da assinatura de uma função. Quando uma função tem parâmetros, você pode
-forneça valores concretos para esses parâmetros. Tecnicamente, o concreto
-valores são chamados de <em>argumentos</em>, mas em conversas casuais, as pessoas tendem a usar
-as palavras <em>parâmetro</em> e <em>argumento</em> alternadamente para as variáveis
-na definição de uma função ou nos valores concretos passados ​​quando você chama um
-função.</p>
-<p>Nesta versão de <code>another_function</code> adicionamos um parâmetro:</p>
+<p>Podemos definir funções com <em>parâmetros</em>, que são variáveis especiais que
+fazem parte da assinatura de uma função. Quando uma função tem parâmetros, você
+pode fornecer valores concretos para eles. Tecnicamente, esses valores
+concretos são chamados de <em>argumentos</em>, mas, em conversas casuais, as pessoas
+tendem a usar as palavras <em>parâmetro</em> e <em>argumento</em> de forma intercambiável,
+tanto para as variáveis na definição da função quanto para os valores concretos
+passados quando você chama a função.</p>
+<p>Nesta versão de <code>another_function</code>, adicionamos um parâmetro:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     another_function(5);
@@ -2677,17 +2679,17 @@ fn another_function(x: i32) {
      Running `target/debug/functions`
 The value of x is: 5
 </code></pre>
-<p>A declaração de <code>another_function</code> possui um parâmetro denominado <code>x</code>. O tipo de
-<code>x</code> é especificado como <code>i32</code>. Quando passamos <code>5</code> para <code>another_function</code>, o
-A macro <code>println!</code> coloca <code>5</code> onde estava o par de chaves contendo <code>x</code>
-na string de formato.</p>
-<p>Nas assinaturas de funções, você <em>deve</em> declarar o tipo de cada parâmetro. Isso é
-uma decisão deliberada no design do Rust: Exigindo anotações de tipo em função
-definições significa que o compilador quase nunca precisa que você as use em outro lugar
-o código para descobrir que tipo você quer dizer. O compilador também é capaz de fornecer
-mensagens de erro mais úteis se souber quais tipos a função espera.</p>
-<p>Ao definir vários parâmetros, separe as declarações dos parâmetros com
-vírgulas, assim:</p>
+<p>A declaração de <code>another_function</code> tem um parâmetro chamado <code>x</code>. O tipo de <code>x</code>
+é especificado como <code>i32</code>. Quando passamos <code>5</code> para <code>another_function</code>, a
+macro <code>println!</code> coloca <code>5</code> no lugar do par de chaves que continha <code>x</code> na
+string de formatação.</p>
+<p>Nas assinaturas de funções, você <em>deve</em> declarar o tipo de cada parâmetro. Essa
+é uma decisão deliberada no design de Rust: exigir anotações de tipo em
+definições de função significa que o compilador quase nunca precisa que você as
+use em outras partes do código para descobrir a que tipo você está se
+referindo. O compilador também consegue fornecer mensagens de erro mais úteis
+se souber quais tipos a função espera.</p>
+<p>Ao definir vários parâmetros, separe suas declarações com vírgulas, assim:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     print_labeled_measurement(5, 'h');
@@ -2697,53 +2699,54 @@ fn print_labeled_measurement(value: i32, unit_label: char) {
     println!("The measurement is: {value}{unit_label}");
 }</code></pre>
 <p>Este exemplo cria uma função chamada <code>print_labeled_measurement</code> com dois
-parâmetros. O primeiro parâmetro é denominado <code>value</code> e é <code>i32</code>. O segundo é
-chamado <code>unit_label</code> e é do tipo <code>char</code>. A função então imprime texto contendo
-tanto o <code>value</code> quanto o <code>unit_label</code>.</p>
-<p>Vamos tentar executar este código. Substitua o programa atualmente em suas <em>funções</em>
-arquivo <em>src/main.rs</em> do projeto com o exemplo anterior e execute-o usando <code>cargo correr</code>:</p>
+parâmetros. O primeiro se chama <code>value</code> e é um <code>i32</code>. O segundo se chama
+<code>unit_label</code> e tem tipo <code>char</code>. A função então imprime um texto contendo tanto
+<code>value</code> quanto <code>unit_label</code>.</p>
+<p>Vamos experimentar esse código. Substitua o programa atual do arquivo
+<em>src/main.rs</em> do projeto <em>functions</em> pelo exemplo anterior e execute-o com
+<code>cargo run</code>:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
      Running `target/debug/functions`
 The measurement is: 5h
 </code></pre>
-<p>Porque chamamos a função com <code>5</code> como valor para <code>value</code> e <code>'h'</code> como
-o valor para <code>unit_label</code>, a saída do programa contém esses valores.</p>
-<h3 id="declarações-e-expressões"><a class="header" href="#declarações-e-expressões">Declarações e Expressões</a></h3>
-<p>Os corpos funcionais são compostos por uma série de instruções que terminam opcionalmente em um
-expressão. Até agora, as funções que cobrimos não incluíram um final
-expressão, mas você viu uma expressão como parte de uma declaração. Porque
-Rust é uma linguagem baseada em expressões, esta é uma distinção importante para
-entender. Outras línguas não têm as mesmas distinções, então vamos dar uma olhada
-o que são declarações e expressões e como suas diferenças afetam os corpos
-de funções.</p>
+<p>Como chamamos a função com <code>5</code> como valor de <code>value</code> e <code>'h'</code> como valor de
+<code>unit_label</code>, a saída do programa contém esses valores.</p>
+<h3 id="instruções-e-expressões"><a class="header" href="#instruções-e-expressões">Instruções e expressões</a></h3>
+<p>Corpos de funções são compostos por uma série de instruções, opcionalmente
+terminando com uma expressão. Até agora, as funções que vimos não incluíam uma
+expressão final, mas você já viu uma expressão como parte de uma instrução.
+Como Rust é uma linguagem baseada em expressões, essa é uma distinção
+importante de entender. Outras linguagens não fazem exatamente a mesma
+distinção, então vamos examinar o que são instruções e expressões e como suas
+diferenças afetam os corpos das funções.</p>
 <ul>
-<li><em>Declarações</em> são instruções que realizam alguma ação e não retornam
-um valor.</li>
-<li><em>Expressões</em> são avaliadas como um valor resultante.</li>
+<li><em>Instruções</em> são comandos que executam alguma ação e não retornam um valor.</li>
+<li><em>Expressões</em> são avaliadas para produzir um valor resultante.</li>
 </ul>
 <p>Vejamos alguns exemplos.</p>
-<p>Na verdade, já usamos declarações e expressões. Criando uma variável e
-atribuir um valor a ele com a palavra-chave <code>let</code> é uma afirmação. Na Listagem 3-1,
-<code>let y = 6;</code> é uma declaração.</p>
+<p>Na verdade, já usamos instruções e expressões. Criar uma variável e atribuir um
+valor a ela com a palavra-chave <code>let</code> é uma instrução. Na Listagem 3-1,
+<code>let y = 6;</code> é uma instrução.</p>
 <figure class="listing" id="listing-3-1">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let y = 6;
 }</code></pre>
-<figcaption><a href="#listing-3-1">Listing 3-1</a>: Uma declaração de função <code>main</code> contendo uma instrução</figcaption>
+<figcaption><a href="#listing-3-1">Listing 3-1</a>: Uma declaração da função <code>main</code> contendo uma instrução</figcaption>
 </figure>
-<p>As definições de funções também são declarações; todo o exemplo anterior é um
-declaração em si. (Como veremos em breve, chamar uma função não é uma tarefa
-declaração, no entanto.)</p>
-<p>As instruções não retornam valores. Portanto, você não pode atribuir uma instrução <code>let</code>
-para outra variável, como o código a seguir tenta fazer; você receberá um erro:</p>
+<p>Definições de funções também são instruções; o exemplo inteiro anterior é, por
+si só, uma instrução. Como veremos em breve, chamar uma função não é uma
+instrução.</p>
+<p>Instruções não retornam valores. Portanto, você não pode atribuir uma
+instrução <code>let</code> a outra variável, como o código a seguir tenta fazer; você
+receberá um erro:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = (let y = 6);
 }</code></pre>
-<p>Ao executar este programa, o erro que você obterá será semelhante a este:</p>
+<p>Ao executar esse programa, o erro obtido será parecido com este:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
 error: expected expression, found `let` statement
@@ -2770,18 +2773,18 @@ help: remove these parentheses
 warning: `functions` (bin "functions") generated 1 warning
 error: could not compile `functions` (bin "functions") due to 1 previous error; 1 warning emitted
 </code></pre>
-<p>A instrução <code>let y = 6</code> não retorna um valor, então não há nada para
-<code>x</code> para vincular. Isso é diferente do que acontece em outras línguas, como
-C e Ruby, onde a atribuição retorna o valor da atribuição. Naqueles
-idiomas, você pode escrever <code>x = y = 6</code> e fazer com que <code>x</code> e <code>y</code> tenham o valor
-<code>6</code>; esse não é o caso em Rust.</p>
-<p>As expressões são avaliadas como um valor e constituem a maior parte do restante do código que
-você escreverá em Rust. Considere uma operação matemática, como <code>5 + 6</code>, que é um
-expressão que avalia o valor <code>11</code>. As expressões podem fazer parte
-declarações: Na Listagem 3-1, o <code>6</code> na declaração <code>let y = 6;</code> é um
-expressão que avalia o valor <code>6</code>. Chamar uma função é um
-expressão. Chamar uma macro é uma expressão. Um novo bloco de escopo criado com
-colchetes é uma expressão, por exemplo:</p>
+<p>A instrução <code>let y = 6</code> não retorna valor algum, então não existe nada ao qual
+<code>x</code> possa se vincular. Isso é diferente do que acontece em outras linguagens,
+como C e Ruby, em que a atribuição retorna o valor atribuído. Nessas
+linguagens, você pode escrever <code>x = y = 6</code> e fazer com que tanto <code>x</code> quanto
+<code>y</code> tenham o valor <code>6</code>; em Rust, não é assim.</p>
+<p>Expressões produzem um valor e constituem a maior parte do restante do código
+que você escreverá em Rust. Considere uma operação matemática como <code>5 + 6</code>,
+que é uma expressão avaliada para o valor <code>11</code>. Expressões podem fazer parte de
+instruções: na Listagem 3-1, o <code>6</code> na instrução <code>let y = 6;</code> é uma expressão
+avaliada para o valor <code>6</code>. Chamar uma função é uma expressão. Chamar uma macro
+é uma expressão. Um novo bloco de escopo criado com chaves também é uma
+expressão, por exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let y = {
@@ -2797,19 +2800,20 @@ colchetes é uma expressão, por exemplo:</p>
     x + 1
 }</code></pre>
 <p>é um bloco que, neste caso, é avaliado como <code>4</code>. Esse valor é vinculado a <code>y</code>
-como parte da instrução <code>let</code>. Observe a linha <code>x + 1</code> sem ponto e vírgula em
-o final, que é diferente da maioria das falas que você viu até agora. Expressões fazem
-não inclui ponto e vírgula final. Se você adicionar um ponto e vírgula ao final de um
-expressão, você a transforma em uma instrução e ela não retornará um valor.
-Tenha isso em mente ao explorar os valores e expressões de retorno da função a seguir.</p>
+como parte da instrução <code>let</code>. Observe a linha <code>x + 1</code> sem ponto e vírgula no
+final, o que é diferente da maior parte das linhas que você viu até agora.
+Expressões não incluem ponto e vírgula ao final. Se você adicionar um ponto e
+vírgula ao fim de uma expressão, estará transformando-a em uma instrução, e
+ela então deixará de retornar um valor. Tenha isso em mente ao explorar os
+valores de retorno de funções e as expressões a seguir.</p>
 <h3 id="funções-com-valores-de-retorno"><a class="header" href="#funções-com-valores-de-retorno">Funções com valores de retorno</a></h3>
-<p>As funções podem retornar valores ao código que as chama. Nós não nomeamos retorno
-valores, mas devemos declarar seu tipo após uma seta (<code>-&gt;</code>). Em Ferrugem, o
-o valor de retorno da função é sinônimo do valor do final
-expressão no bloco do corpo de uma função. Você pode retornar mais cedo de um
-função usando a palavra-chave <code>return</code> e especificando um valor, mas a maioria
-funções retornam a última expressão implicitamente. Aqui está um exemplo de
-função que retorna um valor:</p>
+<p>Funções podem retornar valores para o código que as chama. Não damos nomes aos
+valores de retorno, mas precisamos declarar seu tipo após uma seta (<code>-&gt;</code>). Em
+Rust, o valor de retorno da função é sinônimo do valor da expressão final no
+bloco do corpo da função. Você pode retornar mais cedo de uma função usando a
+palavra-chave <code>return</code> e especificando um valor, mas a maioria das funções
+retorna a última expressão implicitamente. Aqui está um exemplo de função que
+retorna um valor:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn five() -&gt; i32 {
     5
@@ -2820,29 +2824,29 @@ fn main() {
 
     println!("The value of x is: {x}");
 }</code></pre>
-<p>Não há chamadas de função, macros ou mesmo instruções <code>let</code> no <code>five</code>
-função - apenas o número <code>5</code> sozinho. Essa é uma função perfeitamente válida em
-Ferrugem. Observe que o tipo de retorno da função também é especificado, como <code>-&gt; i32</code>. Tentar
-executando este código; a saída deve ficar assim:</p>
+<p>Não há chamadas de função, macros nem mesmo instruções <code>let</code> na função <code>five</code>,
+apenas o número <code>5</code> sozinho. Isso é uma função perfeitamente válida em Rust.
+Observe também que o tipo de retorno da função foi especificado como <code>-&gt; i32</code>.
+Tente executar esse código; a saída deve ser parecida com esta:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
      Running `target/debug/functions`
 The value of x is: 5
 </code></pre>
-<p>O <code>5</code> em <code>five</code> é o valor de retorno da função, e é por isso que o tipo de retorno
-é <code>i32</code>. Vamos examinar isso com mais detalhes. Existem duas partes importantes:
-Primeiro, a linha <code>let x = five();</code> mostra que estamos usando o valor de retorno de um
-função para inicializar uma variável. Como a função <code>five</code> retorna <code>5</code>,
-essa linha é igual à seguinte:</p>
+<p>O <code>5</code> em <code>five</code> é o valor de retorno da função, e por isso o tipo de retorno é
+<code>i32</code>. Vamos examinar isso com mais detalhes. Há dois pontos importantes.
+Primeiro, a linha <code>let x = five();</code> mostra que estamos usando o valor de
+retorno de uma função para inicializar uma variável. Como a função <code>five</code>
+retorna <code>5</code>, essa linha é a mesma coisa que:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let x = 5;
 <span class="boring">}</span></code></pre>
-<p>Segundo, a função <code>five</code> não possui parâmetros e define o tipo do
-valor de retorno, mas o corpo da função é um solitário <code>5</code> sem ponto e vírgula
-porque é uma expressão cujo valor queremos retornar.</p>
-<p>Vejamos outro exemplo:</p>
+<p>Segundo, a função <code>five</code> não tem parâmetros e define o tipo de retorno, mas o
+corpo da função é apenas um <code>5</code>, sem ponto e vírgula, porque essa é uma
+expressão cujo valor queremos retornar.</p>
+<p>Vamos ver outro exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = plus_one(5);
@@ -2853,9 +2857,9 @@ porque é uma expressão cujo valor queremos retornar.</p>
 fn plus_one(x: i32) -&gt; i32 {
     x + 1
 }</code></pre>
-<p>A execução deste código imprimirá <code>The value of x is: 6</code>. Mas o que acontece se nós
-coloque um ponto e vírgula no final da linha que contém <code>x + 1</code>, alterando-o de
-uma expressão para uma declaração?</p>
+<p>Executar esse código imprimirá <code>The value of x is: 6</code>. Mas o que acontece se
+colocarmos um ponto e vírgula ao final da linha que contém <code>x + 1</code>,
+transformando-a de expressão em instrução?</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = plus_one(5);
@@ -2866,7 +2870,7 @@ uma expressão para uma declaração?</p>
 fn plus_one(x: i32) -&gt; i32 {
     x + 1;
 }</code></pre>
-<p>Compilar este código produzirá um erro, como segue:</p>
+<p>Compilar esse código produzirá um erro, como este:</p>
 <pre><code class="language-console">$ cargo run
    Compiling functions v0.1.0 (file:///projects/functions)
 error[E0308]: mismatched types
@@ -2882,13 +2886,12 @@ error[E0308]: mismatched types
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `functions` (bin "functions") due to 1 previous error
 </code></pre>
-<p>A principal mensagem de erro, <code>mismatched types</code>, revela o problema central deste
-código. A definição da função <code>plus_one</code> diz que ela retornará um
-<code>i32</code>, mas as declarações não são avaliadas como um valor, que é expresso por <code>()</code>,
-o tipo de unidade. Portanto, nada é retornado, o que contradiz a função
-definição e resulta em um erro. Nesta saída, Rust fornece uma mensagem para
-possivelmente ajude a corrigir esse problema: sugere a remoção do ponto e vírgula, que
-corrigiria o erro.</p>
+<p>A principal mensagem de erro, <code>mismatched types</code>, revela o problema central
+desse código. A definição da função <code>plus_one</code> diz que ela retornará um <code>i32</code>,
+mas instruções não produzem um valor; isso é expresso por <code>()</code>, o tipo unit.
+Portanto, nada é retornado, o que contradiz a definição da função e resulta em
+erro. Nessa saída, Rust fornece até uma mensagem que pode ajudar a corrigir o
+problema: ela sugere remover o ponto e vírgula, o que resolveria o erro.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="comentários-1"><a href="#comentários-1" class="header">Comentários</a></h1>
 <h2 id="comentários"><a class="header" href="#comentários">Comentários</a></h2>
