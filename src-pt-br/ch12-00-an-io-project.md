@@ -1,43 +1,44 @@
 # Um projeto de E/S: construindo um programa de linha de comando
 
-Este capítulo é uma recapitulação das muitas habilidades que você aprendeu até agora e uma
-exploração de mais alguns recursos padrão da biblioteca. Vamos construir uma linha de comando
-ferramenta que interage com arquivo e entrada/saída de linha de comando para praticar alguns dos
-os conceitos de Rust que você tem agora em seu currículo.
+Este capítulo recapitula muitas das habilidades que você aprendeu até agora e
+explora mais alguns recursos da biblioteca padrão. Vamos construir uma
+ferramenta de linha de comando que interage com arquivos e com a entrada e
+saída da linha de comando para praticar alguns dos conceitos de Rust que você
+já domina.
 
-A velocidade, segurança, saída binária única e suporte multiplataforma do Rust o tornam
-uma linguagem ideal para criar ferramentas de linha de comando, então para o nosso projeto, vamos
-faça nossa própria versão da ferramenta clássica de pesquisa de linha de comando `grep`
-(**g**pesquise globalmente uma expressão **r**egular **e**x e **p**rint). No
-caso de uso mais simples, `grep` pesquisa em um arquivo especificado por uma string especificada. Para
-fizer isso, `grep` toma como argumentos um caminho de arquivo e uma string. Então, lê-se
-o arquivo, encontra linhas nesse arquivo que contêm o argumento string e imprime
-essas linhas.
+A velocidade, a segurança, a geração de um único binário e o suporte
+multiplataforma de Rust fazem dela uma linguagem ideal para criar ferramentas
+de linha de comando. Para o nosso projeto, vamos fazer nossa própria versão da
+clássica ferramenta de busca `grep` (**g**lobalmente buscar uma **r**egular
+**e**xpression e **p**rintar). No caso de uso mais simples, `grep` procura em
+um arquivo específico por uma string específica. Para isso, `grep` recebe como
+argumentos um caminho de arquivo e uma string. Em seguida, ele lê o arquivo,
+encontra as linhas que contêm a string informada e imprime essas linhas.
 
-Ao longo do caminho, mostraremos como fazer com que nossa ferramenta de linha de comando use o terminal
-recursos que muitas outras ferramentas de linha de comando usam. Leremos o valor de um
-variável de ambiente para permitir ao usuário configurar o comportamento de nossa ferramenta.
-Também imprimiremos mensagens de erro no fluxo padrão do console de erros (`stderr`)
-em vez da saída padrão (`stdout`) para que, por exemplo, o usuário possa
-redirecione a saída bem-sucedida para um arquivo enquanto ainda vê mensagens de erro na tela.
+Ao longo do caminho, vamos mostrar como fazer nossa ferramenta de linha de
+comando usar recursos do terminal que muitas outras ferramentas também usam.
+Leremos o valor de uma variável de ambiente para permitir que o usuário
+configure o comportamento da ferramenta. Também imprimiremos mensagens de erro
+no fluxo de erro padrão (`stderr`) em vez da saída padrão (`stdout`) para que,
+por exemplo, o usuário possa redirecionar a saída bem-sucedida para um arquivo
+e ainda assim continuar vendo as mensagens de erro na tela.
 
-Um membro da comunidade Rust, Andrew Gallant, já criou um ambiente totalmente
-versão em destaque e muito rápida de `grep`, chamada `ripgrep`. Em comparação, nosso
-versão será bastante simples, mas este capítulo lhe dará algumas das
-conhecimento prévio que você precisa para entender um projeto do mundo real, como
-`ripgrep`.
+Um membro da comunidade Rust, Andrew Gallant, já criou uma versão completa e
+muito rápida do `grep`, chamada `ripgrep`. Em comparação, nossa versão será
+bem simples, mas este capítulo vai lhe dar parte da base necessária para
+entender um projeto do mundo real como o `ripgrep`.
 
-Nosso projeto `grep` combinará uma série de conceitos que você aprendeu até agora:
+Nosso projeto `grep` vai combinar vários conceitos que você aprendeu até aqui:
 
-- Código de organização ([Capítulo 7][ch7]<!-- ignore -->)
-- Usando vetores e strings ([Capítulo 8][ch8]<!-- ignore -->)
+- Organização de código ([Capítulo 7][ch7]<!-- ignore -->)
+- Uso de vetores e strings ([Capítulo 8][ch8]<!-- ignore -->)
 - Tratamento de erros ([Capítulo 9][ch9]<!-- ignore -->)
-- Usando características e tempos de vida quando apropriado ([Capítulo 10][ch10]<!-- ignore -->)
-- Testes de redação ([Capítulo 11][ch11]<!-- ignore -->)
+- Uso de traits e lifetimes quando apropriado ([Capítulo 10][ch10]<!-- ignore -->)
+- Escrita de testes ([Capítulo 11][ch11]<!-- ignore -->)
 
-Também apresentaremos brevemente encerramentos, iteradores e objetos de características, que
-[Capítulo 13][ch13]<!-- ignore --> e [Capítulo 18][ch18]<!-- ignore --> irão
-cobrir em detalhes.
+Também apresentaremos brevemente closures, iteradores e objetos trait, que os
+[Capítulos 13][ch13]<!-- ignore --> e [18][ch18]<!-- ignore --> abordarão em
+detalhe.
 
 [ch7]: ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
 [ch8]: ch08-00-common-collections.html
