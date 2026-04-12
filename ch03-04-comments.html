@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-68f481aa.js";
+            window.path_to_searchindex_js = "searchindex-cca94a8b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -182,39 +182,40 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="comentários"><a class="header" href="#comentários">Comentários</a></h2>
-<p>Todos os programadores se esforçam para tornar seu código fácil de entender, mas às vezes
-explicação extra é necessária. Nestes casos, os programadores deixam <em>comentários</em> em
-seu código-fonte que o compilador irá ignorar, mas que as pessoas que lêem o
-o código-fonte pode ser útil.</p>
+<p>Todo programador se esforça para tornar seu código fácil de entender, mas às
+vezes uma explicação extra é necessária. Nesses casos, programadores deixam
+<em>comentários</em> no código-fonte, que o compilador ignora, mas que podem ser úteis
+para quem estiver lendo o código.</p>
 <p>Aqui está um comentário simples:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// hello, world
 <span class="boring">}</span></code></pre>
-<p>No Rust, o estilo de comentário idiomático inicia um comentário com duas barras, e o
-o comentário continua até o final da linha. Para comentários que vão além de um
-única linha, você precisará incluir <code>//</code> em cada linha, assim:</p>
+<p>Em Rust, o estilo idiomático de comentário começa com duas barras, e o
+comentário continua até o fim da linha. Para comentários que ocupam mais de uma
+linha, você precisa incluir <code>//</code> em cada linha, assim:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// So we're doing something complicated here, long enough that we need
 // multiple lines of comments to do it! Whew! Hopefully, this comment will
 // explain what's going on.
 <span class="boring">}</span></code></pre>
-<p>Comentários também podem ser colocados no final das linhas que contêm código:</p>
+<p>Comentários também podem ser colocados ao final de linhas que contêm código:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let lucky_number = 7; // I'm feeling lucky today
 }</code></pre>
-<p>Mas você os verá com mais frequência usados ​​neste formato, com o comentário em um
-linha separada acima do código que está anotando:</p>
+<p>Mas com mais frequência você os verá neste formato, com o comentário em uma
+linha separada acima do código que ele está anotando:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     // I'm feeling lucky today
     let lucky_number = 7;
 }</code></pre>
-<p>Rust também tem outro tipo de comentário, comentários de documentação, que iremos
-discutir em <a href="ch14-02-publishing-to-crates-io.html">“Publicando uma crate no Crates.io”</a><!-- ignore -->
-seção do Capítulo 14.</p>
+<p>Rust também tem outro tipo de comentário, os comentários de documentação, que
+discutiremos na seção
+<a href="ch14-02-publishing-to-crates-io.html">“Publicando uma crate no Crates.io”</a><!-- ignore --> do Capítulo
+14.</p>
 
                     </main>
 
