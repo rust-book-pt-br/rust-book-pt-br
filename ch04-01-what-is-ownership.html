@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cca94a8b.js";
+            window.path_to_searchindex_js = "searchindex-5bb5b6f2.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="o-que-é-ownership"><a class="header" href="#o-que-é-ownership">O que é Ownership?</a></h2>
+                        <h2 id="o-que-é-ownership"><a class="header" href="#o-que-é-ownership">O que é ownership?</a></h2>
 <p><em>Ownership</em> é um conjunto de regras que governa como um programa Rust gerencia
 a memória. Todo programa precisa gerenciar a forma como usa a memória do
 computador durante a execução. Algumas linguagens têm garbage collection, que
@@ -213,8 +213,8 @@ armazena valores na ordem em que eles chegam e os remove na ordem inversa.
 Isso é chamado de <em>último a entrar, primeiro a sair (LIFO)</em>. Pense em uma
 pilha de pratos: ao adicionar mais pratos, você os coloca no topo; quando
 precisa de um, tira o prato do topo. Adicionar ou remover pratos do meio ou
-da base não funcionaria tão bem. Adicionar dados recebe o nome de <em>pushing
-onto the stack</em>, e remover dados é <em>popping off the stack</em>. Todos os dados
+da base não funcionaria tão bem. Adicionar dados recebe o nome de <em>push onto
+the stack</em>, e remover dados é <em>pop off the stack</em>. Todos os dados
 armazenados na pilha precisam ter tamanho fixo e conhecido. Dados com tamanho
 desconhecido em tempo de compilação, ou cujo tamanho pode mudar, precisam ir
 para o heap.</p>
@@ -245,10 +245,10 @@ voltar à A e então novamente à B seria bem mais lento. Pelo mesmo motivo, um
 processador tende a trabalhar melhor com dados próximos uns dos outros, como
 ocorre na pilha, em vez de dados mais espalhados, como pode acontecer no
 heap.</p>
-<p>Quando seu código chama uma função, os valores passados ​​para a função
-(incluindo, potencialmente, ponteiros para dados no heap) e a função
-variáveis ​​locais são colocadas na pilha. Quando a função terminar, aqueles
-os valores são retirados da pilha.</p>
+<p>Quando seu código chama uma função, os valores passados a ela, incluindo
+possivelmente ponteiros para dados no heap, e as variáveis locais da função
+são colocados na pilha. Quando a função termina, esses valores são retirados
+da pilha.</p>
 <p>Acompanhar quais partes do código estão usando quais dados no heap,
 minimizar a quantidade de dados duplicados no heap e limpar dados que já não
 são mais necessários para que você não fique sem memória são problemas que
@@ -261,16 +261,16 @@ da forma como funciona.</p>
 <p>Primeiro, vamos olhar para as regras de ownership. Tenha essas regras em mente
 enquanto passamos pelos exemplos que as ilustram:</p>
 <ul>
-<li>Cada valor em Rust possui um <em>proprietário</em>.</li>
-<li>Só pode haver um proprietário por vez.</li>
-<li>Quando o proprietário sai do escopo, o valor será eliminado.</li>
+<li>Cada valor em Rust tem um <em>dono</em>.</li>
+<li>Só pode haver um dono por vez.</li>
+<li>Quando o dono sai de escopo, o valor é descartado.</li>
 </ul>
 <h3 id="escopo-de-variáveis"><a class="header" href="#escopo-de-variáveis">Escopo de Variáveis</a></h3>
-<p>Agora que ultrapassamos a sintaxe básica do Rust, não incluiremos todos os <code>fn main() {</code>
-código nos exemplos, então se você estiver acompanhando, certifique-se de colocar o
-seguintes exemplos dentro de uma função <code>main</code> manualmente. Como resultado, nossos exemplos
-será um pouco mais conciso, permitindo-nos focar nos detalhes reais em vez de
-código padrão.</p>
+<p>Agora que já passamos pela sintaxe básica de Rust, não incluiremos todo o
+boilerplate <code>fn main() {</code> nos exemplos. Então, se você estiver acompanhando,
+lembre-se de colocar manualmente os exemplos a seguir dentro de uma função
+<code>main</code>. Assim, eles ficam um pouco mais concisos e podemos focar nos detalhes
+reais em vez do código repetitivo.</p>
 <p>Como primeiro exemplo de ownership, vamos observar o escopo de algumas
 variáveis. Um <em>escopo</em> é o intervalo dentro de um programa durante o qual um
 item é válido. Considere a variável a seguir:</p>
@@ -327,8 +327,8 @@ quantidade de texto desconhecida em tempo de compilação. Podemos criar um
 </span><span class="boring">fn main() {
 </span>let s = String::from("hello");
 <span class="boring">}</span></code></pre>
-<p>O operador de dois pontos duplos <code>::</code> nos permite nomear essa função <code>from</code>
-específica sob o tipo <code>String</code>, em vez de usar algum nome como <code>string_from</code>.
+<p>O operador de dois pontos duplos <code>::</code> nos permite associar essa função <code>from</code>
+ao tipo <code>String</code>, em vez de usar algum nome como <code>string_from</code>.
 Falaremos mais sobre essa sintaxe na seção <a href="ch05-03-method-syntax.html#methods">“Métodos”</a><!--
 ignore -->
 do Capítulo 5 e, quando tratarmos de namespace com módulos, em <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">“Caminhos para
@@ -348,8 +348,8 @@ memória.</p>
 <h3 id="memória-e-alocação"><a class="header" href="#memória-e-alocação">Memória e Alocação</a></h3>
 <p>No caso de uma string literal, conhecemos o conteúdo em tempo de compilação, e
 por isso o texto é gravado diretamente no executável final. É isso que torna
-string literals rápidas e eficientes. Mas essas propriedades vêm justamente da
-imutabilidade da string literal. Infelizmente, não podemos colocar um bloco de
+literais de string rápidas e eficientes. Mas essas propriedades vêm justamente
+da imutabilidade da string literal. Infelizmente, não podemos colocar um bloco de
 memória no binário para cada pedaço de texto cujo tamanho é desconhecido em
 tempo de compilação e que pode mudar enquanto o programa roda.</p>
 <p>Com o tipo <code>String</code>, para suportar um trecho de texto mutável e que possa
@@ -411,7 +411,7 @@ no Rust. A Listagem 4-2 mostra um exemplo usando um inteiro.</p>
 <figcaption><a href="#listing-4-2">Listing 4-2</a>: Atribuindo o valor inteiro da variável <code>x</code> a <code>y</code></figcaption>
 </figure>
 <p>Provavelmente conseguimos adivinhar o que isso faz: “Associe o valor <code>5</code> a <code>x</code>;
-depois, faça uma cópia do valor em <code>x</code> e associe-a a <code>y</code>.” Agora temos duas
+depois, faça uma cópia do valor em <code>x</code> e associe essa cópia a <code>y</code>.” Agora temos duas
 variáveis, <code>x</code> e <code>y</code>, e ambas são iguais a <code>5</code>. É exatamente isso que está
 acontecendo, porque inteiros são valores simples com tamanho fixo e conhecido,
 e esses dois valores <code>5</code> são empilhados na pilha.</p>
@@ -498,12 +498,12 @@ help: consider cloning the value if the performance cost is acceptable
 For more information about this error, try `rustc --explain E0382`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
-<p>Se você já ouviu os termos <em>cópia superficial</em> e <em>cópia profunda</em> enquanto trabalhava com
-outras linguagens, o conceito de copiar o ponteiro, comprimento e capacidade
-sem copiar os dados provavelmente parece fazer uma cópia superficial. Mas
-porque Rust também invalida a primeira variável, em vez de ser chamada de
-cópia superficial, é conhecida como <em>move</em>. Neste exemplo, diríamos que <code>s1</code>
-foi <em>movido</em> para <code>s2</code>. Então, o que realmente acontece é mostrado na Figura 4-4.</p>
+<p>Se você já ouviu os termos <em>cópia superficial</em> e <em>cópia profunda</em> em outras
+linguagens, provavelmente a ideia de copiar ponteiro, comprimento e capacidade
+sem copiar os dados parece uma cópia superficial. Mas, como Rust também
+invalida a primeira variável, isso não recebe o nome de cópia superficial, e
+sim de <em>move</em>. Neste exemplo, diríamos que <code>s1</code> foi <em>movido</em> para <code>s2</code>. O que
+realmente acontece é mostrado na Figura 4-4.</p>
 <p><img alt="Três tabelas: tabelas s1 e s2 representando essas strings no
 pilha, respectivamente, e ambos apontando para os mesmos dados de string no heap.
 A tabela s1 está esmaecida porque s1 não é mais válida; apenas s2 pode ser usado para
@@ -514,7 +514,7 @@ sido invalidada</span></p>
 <p>Isso resolve nosso problema! Com apenas <code>s2</code> válida, quando ela sair de
 escopo, sozinha liberará a memória, e pronto.</p>
 <p>Além disso, há uma escolha de design implícita aqui: o Rust nunca cria
-automaticamente cópias “profundas” de seus dados. Portanto, qualquer cópia
+automaticamente cópias “profundas” dos seus dados. Portanto, qualquer cópia
 <em>automática</em> pode ser considerada barata em termos de desempenho em tempo de
 execução.</p>
 <h4 id="escopo-e-atribuição"><a class="header" href="#escopo-e-atribuição">Escopo e Atribuição</a></h4>
@@ -558,8 +558,8 @@ tenha visto antes.</p>
 <span class="boring">}</span></code></pre>
 <p>Isso funciona muito bem e produz explicitamente o comportamento mostrado na
 Figura 4-3, em que os dados no heap <em>de fato</em> são copiados.</p>
-<p>Quando você vê uma chamada para <code>clone</code>, você sabe que algum código arbitrário está sendo
-executado e esse código pode ser caro. É um indicador visual de que algo
+<p>Quando você vê uma chamada para <code>clone</code>, sabe que algum código arbitrário está
+sendo executado e que ele pode ser caro. É um indicador visual de que algo
 diferente está acontecendo.</p>
 <h4 id="dados-somente-de-pilha-copy"><a class="header" href="#dados-somente-de-pilha-copy">Dados Somente de Pilha: <code>Copy</code></a></h4>
 <p>Há outro detalhe sobre o qual ainda não falamos. Este código usando inteiros,
@@ -584,7 +584,7 @@ tipos armazenados na pilha, como os inteiros. Falaremos mais sobre traits no
 as variáveis que o usam não são movidas; em vez disso, são copiadas de forma
 simples, continuando válidas após a atribuição a outra variável.</p>
 <p>O Rust não nos permitirá anotar um tipo com <code>Copy</code> se esse tipo, ou qualquer
-uma de suas partes, implementar a trait <code>Drop</code>. Se o tipo precisar que algo
+uma de suas partes, implementar a trait <code>Drop</code>. Se esse tipo precisar que algo
 especial aconteça quando o valor sair de escopo e adicionarmos a anotação
 <code>Copy</code> a esse tipo, receberemos um erro em tempo de compilação. Para saber
 como adicionar a anotação <code>Copy</code> ao seu tipo para implementar essa trait,
@@ -634,10 +634,10 @@ fn makes_copy(some_integer: i32) { // some_integer comes into scope
 } // Here, some_integer goes out of scope. Nothing special happens.</code></pre>
 <figcaption><a href="#listing-4-3">Listing 4-3</a>: Funções com ownership e escopo anotados</figcaption>
 </figure>
-<p>Se tentássemos usar <code>s</code> após a chamada para <code>takes_ownership</code>, Rust lançaria um
-erro em tempo de compilação. Essas verificações estáticas nos protegem de erros. Tente adicionar
-código para <code>main</code> que usa <code>s</code> e <code>x</code> para ver onde você pode usá-los e onde
-as regras de ownership impedem que você faça isso.</p>
+<p>Se tentássemos usar <code>s</code> após a chamada para <code>takes_ownership</code>, Rust geraria um
+erro em tempo de compilação. Essas verificações estáticas nos protegem contra
+erros. Tente adicionar código em <code>main</code> que use <code>s</code> e <code>x</code> para ver onde você
+pode usá-los e onde as regras de ownership impedem isso.</p>
 <h3 id="valores-de-retorno-e-escopo"><a class="header" href="#valores-de-retorno-e-escopo">Valores de retorno e escopo</a></h3>
 <p>A devolução de valores também pode transferir ownership. A Listagem 4-4 mostra
 um exemplo de função que retorna algum valor, com anotações semelhantes às da
@@ -680,11 +680,11 @@ fn takes_and_gives_back(a_string: String) -&gt; String {
 outra variável o move. Quando uma variável que inclui dados no heap sai de
 escopo, o valor é limpo por <code>drop</code>, a menos que o ownership desses dados tenha
 sido movido para outra variável.</p>
-<p>Embora isso funcione, assumir ownership e depois devolvê-lo a cada função é um
-pouco tedioso. E se quisermos deixar uma função usar um valor, mas não assumir
-ownership? É muito chato que tudo o que passamos também precise
-ser repassado se quisermos usá-lo novamente, além de quaisquer dados resultantes
-do corpo da função que também podemos querer retornar.</p>
+<p>Embora isso funcione, assumir ownership e depois devolvê-lo em toda função é
+um pouco tedioso. E se quisermos deixar uma função usar um valor, mas sem
+assumir seu ownership? É bem inconveniente que tudo o que passamos também
+precise ser devolvido caso queiramos reutilizar o valor depois, além de
+quaisquer dados resultantes do corpo da função que também desejemos retornar.</p>
 <p>O Rust nos permite retornar vários valores usando uma tupla, como mostrado na
 Listagem 4-5.</p>
 <figure class="listing" id="listing-4-5">
