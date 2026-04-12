@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4c181ae4.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -182,20 +182,20 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="métodos"><a class="header" href="#métodos">Métodos</a></h2>
-<p>Os métodos são semelhantes às funções: nós os declaramos com a palavra-chave <code>fn</code> e um
-nome, eles podem ter parâmetros e um valor de retorno e conter algum código
-isso é executado quando o método é chamado de outro lugar. Ao contrário das funções,
-métodos são definidos dentro do contexto de uma estrutura (ou um enum ou um traço
-objeto, que abordamos no <a href="ch06-00-enums.html">Capítulo 6</a><!-- ignore --> e no <a href="ch18-02-trait-objects.html">Capítulo
-18</a><!-- ignore -->, respectivamente), e seu primeiro parâmetro é
-sempre <code>self</code>, que representa a instância da estrutura que o método está sendo
-chamado.</p>
+<p>Métodos são parecidos com funções: nós os declaramos com a palavra-chave <code>fn</code>
+e um nome, eles podem ter parâmetros e valor de retorno, e contêm algum
+código que é executado quando o método é chamado. Diferentemente das funções,
+os métodos são definidos no contexto de uma struct, de um enum ou de um trait
+object, que veremos respectivamente no <a href="ch06-00-enums.html">Capítulo 6</a><!-- ignore --> e no
+<a href="ch18-02-trait-objects.html">Capítulo 18</a><!-- ignore -->. Além disso, o primeiro parâmetro
+de um método é sempre <code>self</code>, que representa a instância da struct sobre a
+qual o método está sendo chamado.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="defining-methods"></a></p>
-<h3 id="sintaxe-do-método"><a class="header" href="#sintaxe-do-método">Sintaxe do método</a></h3>
-<p>Vamos alterar a função <code>area</code> que tem uma instância <code>Rectangle</code> como parâmetro
-e em vez disso crie um método <code>area</code> definido na estrutura <code>Rectangle</code>, conforme mostrado
-na Listagem 5-13.</p>
+<h3 id="sintaxe-de-métodos"><a class="header" href="#sintaxe-de-métodos">Sintaxe de Métodos</a></h3>
+<p>Vamos mudar a função <code>area</code>, que recebe uma instância de <code>Rectangle</code> como
+parâmetro, para um método <code>area</code> definido na própria struct <code>Rectangle</code>, como
+mostra a Listagem 5-13.</p>
 <figure class="listing" id="listing-5-13">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
@@ -221,43 +221,43 @@ fn main() {
         rect1.area()
     );
 }</code></pre>
-<figcaption><a href="#listing-5-13">Listing 5-13</a>: Defining an <code>area</code> method on the <code>Rectangle</code> struct</figcaption>
+<figcaption><a href="#listing-5-13">Listing 5-13</a>: Definindo um método <code>area</code> na struct <code>Rectangle</code></figcaption>
 </figure>
-<p>Para definir a função dentro do contexto de <code>Rectangle</code>, iniciamos um <code>impl</code>
-(implementação) bloco para <code>Rectangle</code>. Tudo dentro deste bloco <code>impl</code>
-será associado ao tipo <code>Rectangle</code>. Então, movemos a função <code>area</code>
-dentro das chaves <code>impl</code> e altere o primeiro (e neste caso, apenas)
-parâmetro seja <code>self</code> na assinatura e em qualquer lugar dentro do corpo. Em
-<code>main</code>, onde chamamos a função <code>area</code> e passamos <code>rect1</code> como argumento,
-em vez disso, podemos usar a <em>sintaxe do método</em> para chamar o método <code>area</code> em nosso <code>Rectangle</code>
-exemplo. A sintaxe do método segue uma instância: adicionamos um ponto seguido de
-o nome do método, parênteses e quaisquer argumentos.</p>
+<p>Para definir a função no contexto de <code>Rectangle</code>, começamos um bloco <code>impl</code>
+(de implementação) para <code>Rectangle</code>. Tudo dentro desse bloco <code>impl</code> ficará
+associado ao tipo <code>Rectangle</code>. Em seguida, movemos a função <code>area</code> para dentro
+das chaves do <code>impl</code> e alteramos o primeiro parâmetro, que neste caso é o
+único, para <code>self</code> na assinatura e em todo o corpo da função. Em <code>main</code>, onde
+antes chamávamos a função <code>area</code> e passávamos <code>rect1</code> como argumento, agora
+podemos usar a <em>sintaxe de métodos</em> para chamar o método <code>area</code> em nossa
+instância de <code>Rectangle</code>. A sintaxe de métodos vem depois da instância:
+adicionamos um ponto, o nome do método, parênteses e eventuais argumentos.</p>
 <p>Na assinatura de <code>area</code>, usamos <code>&amp;self</code> em vez de <code>rectangle: &amp;Rectangle</code>.
-O <code>&amp;self</code> é na verdade uma abreviação de <code>self: &amp;Self</code>. Dentro de um bloco <code>impl</code>, o
-type <code>Self</code> é um alias para o tipo ao qual o bloco <code>impl</code> se destina. Os métodos devem
-têm um parâmetro chamado <code>self</code> do tipo <code>Self</code> para seu primeiro parâmetro, então Rust
-permite abreviar isso apenas com o nome <code>self</code> no primeiro parâmetro.
-Observe que ainda precisamos usar <code>&amp;</code> na frente da abreviação <code>self</code> para
-indicam que este método pega emprestada a instância <code>Self</code>, assim como fizemos em
-<code>rectangle: &amp;Rectangle</code>. Os métodos podem assumir a propriedade de <code>self</code>, emprestar <code>self</code>
-imutavelmente, como fizemos aqui, ou emprestar <code>self</code> de forma mutável, assim como qualquer
-outro parâmetro.</p>
-<p>Escolhemos <code>&amp;self</code> aqui pelo mesmo motivo que usamos <code>&amp;Rectangle</code> na função
-versão: não queremos assumir a propriedade e queremos apenas ler os dados em
-a estrutura, não escreva nela. Se quiséssemos mudar a instância que temos
-chamado o método como parte do que o método faz, usaríamos <code>&amp;mut self</code> como
-o primeiro parâmetro. Ter um método que se aproprie da instância por
-usar apenas <code>self</code> como primeiro parâmetro é raro; essa técnica geralmente é
-usado quando o método transforma <code>self</code> em outra coisa e você deseja
-impedir que o chamador use a instância original após a transformação.</p>
-<p>A principal razão para usar métodos em vez de funções, além de
-fornecendo sintaxe de método e não tendo que repetir o tipo de <code>self</code> em cada
-assinatura do método, é para organização. Colocamos todas as coisas que podemos fazer
-com uma instância de um tipo em um bloco <code>impl</code> em vez de fazer com que futuros usuários
-do nosso código, procure recursos de <code>Rectangle</code> em vários lugares do
-biblioteca que fornecemos.</p>
-<p>Observe que podemos escolher dar a um método o mesmo nome de uma das estruturas
-campos. Por exemplo, podemos definir um método em <code>Rectangle</code> que também é denominado
+<code>&amp;self</code> é, na verdade, uma abreviação de <code>self: &amp;Self</code>. Dentro de um bloco
+<code>impl</code>, o tipo <code>Self</code> é um alias para o tipo ao qual o bloco <code>impl</code> se refere.
+Métodos precisam ter um parâmetro chamado <code>self</code> do tipo <code>Self</code> como primeiro
+parâmetro, então o Rust permite abreviar isso usando apenas o nome <code>self</code>
+nessa posição. Repare que ainda precisamos usar <code>&amp;</code> antes de <code>self</code> para
+indicar que esse método toma a instância <code>Self</code> por empréstimo, assim como
+fizemos em <code>rectangle: &amp;Rectangle</code>. Métodos podem assumir o ownership de
+<code>self</code>, tomar <code>self</code> por empréstimo imutável, como fizemos aqui, ou tomar
+<code>self</code> por empréstimo mutável, como fariam com qualquer outro parâmetro.</p>
+<p>Escolhemos <code>&amp;self</code> aqui pelo mesmo motivo que usamos <code>&amp;Rectangle</code> na versão em
+forma de função: não queremos assumir o ownership, apenas ler os dados da
+struct, sem modificá-los. Se quiséssemos alterar a instância sobre a qual o método foi
+chamado, usaríamos <code>&amp;mut self</code> como primeiro parâmetro. Métodos que assumem o
+ownership da instância usando apenas <code>self</code> como primeiro parâmetro são mais
+raros; essa técnica costuma ser usada quando o método transforma <code>self</code> em
+outra coisa e você quer impedir que o chamador use a instância original depois
+da transformação.</p>
+<p>A principal razão para usar métodos em vez de funções, além da sintaxe mais
+natural e do fato de não precisarmos repetir o tipo de <code>self</code> em toda
+assinatura, é organização. Colocamos tudo o que pode ser feito com uma
+instância de um tipo em um único bloco <code>impl</code>, em vez de obrigar usuários
+futuros do código a procurar as capacidades de <code>Rectangle</code> em vários lugares
+da biblioteca.</p>
+<p>Observe que podemos escolher dar a um método o mesmo nome de um dos campos da
+struct. Por exemplo, podemos definir um método em <code>Rectangle</code> também chamado
 <code>width</code>:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
@@ -284,67 +284,72 @@ fn main() {
     }
 }</code></pre>
 </figure>
-<p>Aqui, escolhemos fazer com que o método <code>width</code> retorne <code>true</code> se o valor em
-o campo <code>width</code> da instância for maior que <code>0</code> e <code>false</code> se o valor for
-<code>0</code>: Podemos usar um campo dentro de um método de mesmo nome para qualquer finalidade. Em
-<code>main</code>, quando seguimos <code>rect1.width</code> com parênteses, Rust sabe que queremos dizer o
-método <code>width</code>. Quando não usamos parênteses, Rust sabe que nos referimos ao campo
-<code>width</code>.</p>
-<p>Frequentemente, mas nem sempre, quando damos a um método o mesmo nome de um campo que queremos
-para retornar apenas o valor no campo e não fazer mais nada. Métodos como este
-são chamados <em>getters</em> e Rust não os implementa automaticamente para struct
-campos como algumas outras linguagens fazem. Getters são úteis porque você pode fazer o
-campo privado, mas o método público e, assim, permitir acesso somente leitura a esse
-campo como parte da API pública do tipo. Discutiremos o que é público e privado
-são e como designar um campo ou método como público ou privado no <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword">Capítulo
-7</a><!-- ignore -->.</p>
+<p>Aqui, escolhemos fazer o método <code>width</code> retornar <code>true</code> se o valor do campo
+<code>width</code> da instância for maior que <code>0</code> e <code>false</code> se esse valor for <code>0</code>. Podemos
+usar um campo dentro de um método com o mesmo nome para qualquer finalidade.
+Em <code>main</code>, quando escrevemos <code>rect1.width</code> seguido de parênteses, o Rust sabe
+que queremos dizer o método <code>width</code>. Quando não usamos parênteses, o Rust sabe
+que estamos nos referindo ao campo <code>width</code>.</p>
+<p>Muitas vezes, embora nem sempre, quando damos a um método o mesmo nome de um
+campo, queremos que ele apenas devolva o valor armazenado nesse campo e não
+faça mais nada. Métodos desse tipo são chamados de <em>getters</em>, e o Rust não os
+implementa automaticamente para campos de struct, como algumas outras
+linguagens fazem. Getters são úteis porque você pode tornar o campo privado e
+o método público, permitindo acesso somente leitura a esse campo como parte da
+API pública do tipo. Vamos discutir o que é público e privado, bem como como
+marcar um campo ou método dessa forma, no <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword">Capítulo 7</a><!-- ignore
+-->.</p>
 <section class="note" aria-role="note">
-<h3 id="onde-está-o-operador--"><a class="header" href="#onde-está-o-operador--">Onde está o operador <code>-&gt;</code>?</a></h3>
-<p>Em C e C++, dois operadores diferentes são usados ​​para chamar métodos: Você usa
-<code>.</code> se você estiver chamando um método diretamente no objeto e <code>-&gt;</code> se estiver
-chamando o método em um ponteiro para o objeto e precisa desreferenciar o
-ponteiro primeiro. Em outras palavras, se <code>object</code> for um ponteiro,
-<code>object-&gt;something()</code> é semelhante a <code>(*object).something()</code>.</p>
-<p>Rust não possui equivalente ao operador <code>-&gt;</code>; em vez disso, Rust tem um
-recurso chamado <em>referência e desreferência automática</em>. Chamar métodos é
-um dos poucos lugares em Rust com esse comportamento.</p>
-<p>Veja como funciona: quando você chama um método com <code>object.something()</code>, Rust
-adiciona automaticamente <code>&amp;</code>, <code>&amp;mut</code> ou <code>*</code> para que <code>object</code> corresponda ao
-assinatura do método. Em outras palavras, o seguinte é o mesmo:</p>
+<h3 id="onde-está-o-operador--"><a class="header" href="#onde-está-o-operador--">Onde Está o Operador <code>-&gt;</code>?</a></h3>
+<p>Em C e C++, dois operadores diferentes são usados para chamar métodos: você
+usa <code>.</code> se estiver chamando um método diretamente no objeto e <code>-&gt;</code> se
+estiver chamando o método em um ponteiro para o objeto e precisar
+desreferenciar o ponteiro primeiro. Em outras palavras, se <code>object</code> for um
+ponteiro, <code>object-&gt;something()</code> é semelhante a <code>(*object).something()</code>.</p>
+<p>O Rust não tem um equivalente ao operador <code>-&gt;</code>; em vez disso, ele conta com
+um recurso de <em>referência e desreferenciação automáticas</em>. A chamada de
+métodos é um dos poucos lugares em Rust em que esse comportamento ocorre.</p>
+<p>Funciona assim: quando você chama um método com <code>object.something()</code>, o Rust
+adiciona automaticamente <code>&amp;</code>, <code>&amp;mut</code> ou <code>*</code> para que <code>object</code> corresponda à
+assinatura do método. Em outras palavras, as linhas a seguir são
+equivalentes:</p>
 <!-- CAN'T EXTRACT SEE BUG https://github.com/rust-lang/mdBook/issues/1127 -->
-<pre><code class="language-ferrugem"># #[derivar(Depurar,Copiar,Clone)]
-# estrutura Ponto {
-#     x: f64,
-#     e: f64,
-# }
-#
-# ponto impl {
-#    fn distância(&amp;self, outro: &amp;Ponto) -&gt; f64 {
-#        deixe x_squared = f64::powi(other.x - self.x, 2);
-#        deixe y_squared = f64::powi(other.y - self.y, 2);
-#
-#        f64::sqrt(x_quadrado + y_quadrado)
-#    }
-# }
-# seja p1 = Ponto { x: 0,0, y: 0,0 };
-# seja p2 = ponto { x: 5,0, y: 6,5 };
-p1.distância(&amp;p2);
-(&amp;p1).distância(&amp;p2);
-</code></pre>
-<p>O primeiro parece muito mais limpo. Este comportamento de referência automática funciona
-porque os métodos têm um receptor claro - o tipo <code>self</code>. Dado o receptor
-e nome de um método, Rust pode descobrir definitivamente se o método é
-lendo (<code>&amp;self</code>), mutando (<code>&amp;mut self</code>) ou consumindo (<code>self</code>). O fato
-que Rust torna o empréstimo implícito para receptores de métodos é uma grande parte do
-tornando a propriedade ergonômica na prática.</p>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">#[derive(Debug,Copy,Clone)]
+</span><span class="boring">struct Point {
+</span><span class="boring">    x: f64,
+</span><span class="boring">    y: f64,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Point {
+</span><span class="boring">   fn distance(&amp;self, other: &amp;Point) -&gt; f64 {
+</span><span class="boring">       let x_squared = f64::powi(other.x - self.x, 2);
+</span><span class="boring">       let y_squared = f64::powi(other.y - self.y, 2);
+</span><span class="boring">
+</span><span class="boring">       f64::sqrt(x_squared + y_squared)
+</span><span class="boring">   }
+</span><span class="boring">}
+</span><span class="boring">let p1 = Point { x: 0.0, y: 0.0 };
+</span><span class="boring">let p2 = Point { x: 5.0, y: 6.5 };
+</span>p1.distance(&amp;p2);
+(&amp;p1).distance(&amp;p2);
+<span class="boring">}</span></code></pre>
+<p>A primeira forma parece bem mais limpa. Esse comportamento de referência
+automática funciona porque métodos têm um receptor claro: o tipo de <code>self</code>.
+Dado o receptor e o nome de um método, o Rust consegue determinar se ele está
+apenas lendo (<code>&amp;self</code>), mutando (<code>&amp;mut self</code>) ou consumindo (<code>self</code>). O fato
+de o Rust tornar implícito o empréstimo para receptores de método é uma parte
+importante do que faz o ownership ser ergonômico na prática.</p>
 </section>
-<h3 id="métodos-com-mais-parâmetros"><a class="header" href="#métodos-com-mais-parâmetros">Métodos com mais parâmetros</a></h3>
-<p>Vamos praticar o uso de métodos implementando um segundo método no <code>Rectangle</code>
-estrutura. Desta vez queremos que uma instância de <code>Rectangle</code> pegue outra instância
-de <code>Rectangle</code> e retorne <code>true</code> se o segundo <code>Rectangle</code> puder caber completamente
-dentro de <code>self</code> (o primeiro <code>Rectangle</code>); caso contrário, deverá retornar <code>false</code>.
-Ou seja, uma vez definido o método <code>can_hold</code>, queremos ser capazes de escrever
-o programa mostrado na Listagem 5-14.</p>
+<h3 id="métodos-com-mais-parâmetros"><a class="header" href="#métodos-com-mais-parâmetros">Métodos com Mais Parâmetros</a></h3>
+<p>Vamos praticar o uso de métodos implementando um segundo método na struct
+<code>Rectangle</code>. Desta vez, queremos que uma instância de <code>Rectangle</code> receba outra
+instância de <code>Rectangle</code> e retorne <code>true</code> se o segundo <code>Rectangle</code> puder caber
+inteiramente dentro de <code>self</code>, isto é, do primeiro <code>Rectangle</code>; caso
+contrário, deve retornar <code>false</code>. Em outras palavras, depois de definir o
+método <code>can_hold</code>, queremos poder escrever o programa mostrado na Listagem
+5-14.</p>
 <figure class="listing" id="listing-5-14">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore">fn main() {
@@ -364,27 +369,27 @@ o programa mostrado na Listagem 5-14.</p>
     println!("Can rect1 hold rect2? {}", rect1.can_hold(&amp;rect2));
     println!("Can rect1 hold rect3? {}", rect1.can_hold(&amp;rect3));
 }</code></pre>
-<figcaption><a href="#listing-5-14">Listing 5-14</a>: Using the as-yet-unwritten <code>can_hold</code> method</figcaption>
+<figcaption><a href="#listing-5-14">Listing 5-14</a>: Usando o método <code>can_hold</code>, que ainda não foi escrito</figcaption>
 </figure>
-<p>O resultado esperado seria semelhante ao seguinte porque ambas as dimensões do
-<code>rect2</code> são menores que as dimensões de <code>rect1</code>, mas <code>rect3</code> é mais largo que
-<code>rect1</code>:</p>
+<p>A saída esperada deve ser parecida com a seguinte, porque as duas dimensões de
+<code>rect2</code> são menores que as dimensões de <code>rect1</code>, enquanto <code>rect3</code> é mais largo
+que <code>rect1</code>:</p>
 <pre><code class="language-text">Can rect1 hold rect2? true
 Can rect1 hold rect3? false
 </code></pre>
-<p>Sabemos que queremos definir um método, então ele estará dentro do <code>impl Rectangle</code>
-bloquear. O nome do método será <code>can_hold</code> e será necessário um empréstimo imutável
-de outro <code>Rectangle</code> como parâmetro. Podemos dizer qual o tipo de
-parâmetro será observando o código que chama o método:
-<code>rect1.can_hold(&amp;rect2)</code> passa <code>&amp;rect2</code>, que é um empréstimo imutável para
+<p>Sabemos que queremos definir um método, então ele ficará dentro do bloco
+<code>impl Rectangle</code>. O nome do método será <code>can_hold</code>, e ele receberá um
+empréstimo imutável de outro <code>Rectangle</code> como parâmetro. Podemos inferir o tipo
+desse parâmetro olhando para o código que chama o método:
+<code>rect1.can_hold(&amp;rect2)</code> passa <code>&amp;rect2</code>, que é um empréstimo imutável de
 <code>rect2</code>, uma instância de <code>Rectangle</code>. Isso faz sentido porque só precisamos
-leia <code>rect2</code> (em vez de escrever, o que significaria que precisaríamos de um empréstimo mutável),
-e queremos que <code>main</code> mantenha a propriedade de <code>rect2</code> para que possamos usá-lo novamente
-depois de chamar o método <code>can_hold</code>. O valor de retorno de <code>can_hold</code> será um
-Booleano, e a implementação verificará se a largura e a altura de
-<code>self</code> são maiores que a largura e a altura do outro <code>Rectangle</code>,
-respectivamente. Vamos adicionar o novo método <code>can_hold</code> ao bloco <code>impl</code> de
-Listagem 5-13, mostrada na Listagem 5-15.</p>
+ler <code>rect2</code>, e não escrevê-lo, o que exigiria um empréstimo mutável. Além
+disso, queremos que <code>main</code> mantenha o ownership de <code>rect2</code> para poder usá-lo
+novamente depois de chamar <code>can_hold</code>. O valor de retorno de <code>can_hold</code> será
+um booleano, e a implementação verificará se a largura e a altura de <code>self</code>
+são maiores que a largura e a altura do outro <code>Rectangle</code>, respectivamente.
+Vamos adicionar esse novo método <code>can_hold</code> ao bloco <code>impl</code> da Listagem 5-13,
+como mostra a Listagem 5-15.</p>
 <figure class="listing" id="listing-5-15">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
@@ -420,25 +425,25 @@ Listagem 5-13, mostrada na Listagem 5-15.</p>
 </span><span class="boring">    println!("Can rect1 hold rect2? {}", rect1.can_hold(&amp;rect2));
 </span><span class="boring">    println!("Can rect1 hold rect3? {}", rect1.can_hold(&amp;rect3));
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-5-15">Listing 5-15</a>: Implementing the <code>can_hold</code> method on <code>Rectangle</code> that takes another <code>Rectangle</code> instance as a parameter</figcaption>
+<figcaption><a href="#listing-5-15">Listing 5-15</a>: Implementando o método <code>can_hold</code> em <code>Rectangle</code>, recebendo outra instância de <code>Rectangle</code> como parâmetro</figcaption>
 </figure>
-<p>Quando executarmos este código com a função <code>main</code> na Listagem 5.14, obteremos nosso
-saída desejada. Os métodos podem receber vários parâmetros que adicionamos ao
-assinatura após o parâmetro <code>self</code>, e esses parâmetros funcionam exatamente como
-parâmetros em funções.</p>
+<p>Quando executarmos esse código com a função <code>main</code> da Listagem 5-14,
+obteremos a saída desejada. Métodos podem receber vários parâmetros depois do
+parâmetro <code>self</code>, e esses parâmetros funcionam exatamente como parâmetros em
+funções.</p>
 <h3 id="funções-associadas"><a class="header" href="#funções-associadas">Funções Associadas</a></h3>
-<p>Todas as funções definidas em um bloco <code>impl</code> são chamadas de <em>funções associadas</em>
-porque eles estão associados ao tipo nomeado após <code>impl</code>. Podemos definir
-funções associadas que não têm <code>self</code> como primeiro parâmetro (e, portanto,
-não são métodos) porque não precisam de uma instância do tipo para trabalhar.
-Já usamos uma função como esta: a função <code>String::from</code> que é
-definido no tipo <code>String</code>.</p>
-<p>Funções associadas que não são métodos são frequentemente usadas para construtores que
-retornará uma nova instância da estrutura. Geralmente são chamados de <code>new</code>, mas
-<code>new</code> não é um nome especial e não está embutido na linguagem. Por exemplo, nós
-poderia optar por fornecer uma função associada chamada <code>square</code> que teria
-um parâmetro de dimensão e usá-lo como largura e altura, tornando-o assim
-mais fácil criar um quadrado <code>Rectangle</code> em vez de especificar o mesmo
+<p>Todas as funções definidas dentro de um bloco <code>impl</code> são chamadas de <em>funções
+associadas</em> porque estão associadas ao tipo nomeado depois de <code>impl</code>. Podemos
+definir funções associadas que não têm <code>self</code> como primeiro parâmetro e, por
+isso, não são métodos, porque elas não precisam de uma instância do tipo para
+trabalhar. Já usamos uma função assim: <code>String::from</code>, definida no tipo
+<code>String</code>.</p>
+<p>Funções associadas que não são métodos costumam ser usadas como construtores,
+retornando uma nova instância da struct. Frequentemente elas recebem o nome
+<code>new</code>, mas <code>new</code> não é um nome especial nem faz parte da linguagem. Por
+exemplo, poderíamos fornecer uma função associada chamada <code>square</code> que recebe
+um parâmetro de dimensão e o usa tanto como largura quanto como altura,
+facilitando a criação de um <code>Rectangle</code> quadrado sem precisar repetir o mesmo
 valor duas vezes:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
@@ -459,18 +464,18 @@ valor duas vezes:</p>
 </span><span class="boring">fn main() {
 </span><span class="boring">    let sq = Rectangle::square(3);
 </span><span class="boring">}</span></code></pre>
-<p>As palavras-chave <code>Self</code> no tipo de retorno e no corpo da função são
-aliases para o tipo que aparece após a palavra-chave <code>impl</code>, que neste caso
-é <code>Rectangle</code>.</p>
-<p>Para chamar esta função associada, usamos a sintaxe <code>::</code> com o nome da estrutura;
-<code>let sq = Rectangle::square(3);</code> é um exemplo. Esta função tem namespace por
-a estrutura: A sintaxe <code>::</code> é usada para funções associadas e
-namespaces criados por módulos. Discutiremos os módulos no <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Capítulo
+<p>As palavras-chave <code>Self</code> no tipo de retorno e no corpo da função são aliases
+para o tipo que aparece após a palavra-chave <code>impl</code>, que neste caso é
+<code>Rectangle</code>.</p>
+<p>Para chamar essa função associada, usamos a sintaxe <code>::</code> com o nome da struct;
+<code>let sq = Rectangle::square(3);</code> é um exemplo. Essa função fica no namespace da
+struct: a sintaxe <code>::</code> é usada tanto para funções associadas quanto para
+namespaces criados por módulos. Vamos falar sobre módulos no <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">Capítulo
 7</a><!-- ignore -->.</p>
-<h3 id="vários-blocos-impl"><a class="header" href="#vários-blocos-impl">Vários blocos <code>impl</code></a></h3>
-<p>Cada estrutura pode ter vários blocos <code>impl</code>. Por exemplo, Listagem
-5-15 é equivalente ao código mostrado na Listagem 5-16, que possui cada método em
-seu próprio bloco <code>impl</code>.</p>
+<h3 id="vários-blocos-impl"><a class="header" href="#vários-blocos-impl">Vários Blocos <code>impl</code></a></h3>
+<p>Cada struct pode ter vários blocos <code>impl</code>. Por exemplo, a Listagem 5-15 é
+equivalente ao código mostrado na Listagem 5-16, que coloca cada método em seu
+próprio bloco <code>impl</code>.</p>
 <figure class="listing" id="listing-5-16">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
 </span><span class="boring">struct Rectangle {
@@ -507,20 +512,21 @@ impl Rectangle {
 </span><span class="boring">    println!("Can rect1 hold rect2? {}", rect1.can_hold(&amp;rect2));
 </span><span class="boring">    println!("Can rect1 hold rect3? {}", rect1.can_hold(&amp;rect3));
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-5-16">Listing 5-16</a>: Rewriting Listing 5-15 using multiple <code>impl</code> blocks</figcaption>
+<figcaption><a href="#listing-5-16">Listing 5-16</a>: Reescrevendo a Listagem 5-15 com vários blocos <code>impl</code></figcaption>
 </figure>
-<p>Não há razão para separar esses métodos em vários blocos <code>impl</code> aqui,
-mas esta é uma sintaxe válida. Veremos um caso em que vários blocos <code>impl</code> são
-útil no Capítulo 10, onde discutimos tipos e características genéricos.</p>
+<p>Não há motivo para separar esses métodos em vários blocos <code>impl</code> aqui, mas
+essa é uma sintaxe válida. Veremos um caso em que vários blocos <code>impl</code> são
+úteis no Capítulo 10, quando discutirmos tipos genéricos e traits.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>As estruturas permitem criar tipos personalizados que sejam significativos para o seu domínio. Por
-usando estruturas, você pode manter dados associados conectados entre si
-e nomeie cada peça para deixar seu código claro. Nos blocos <code>impl</code>, você pode definir
-funções associadas ao seu tipo e os métodos são uma espécie de
-função associada que permite especificar o comportamento que as instâncias do seu
-estruturas têm.</p>
-<p>Mas structs não são a única maneira de criar tipos personalizados: vamos voltar para
-Recurso enum do Rust para adicionar outra ferramenta à sua caixa de ferramentas.</p>
+<p>Structs permitem criar tipos personalizados que façam sentido para o seu
+domínio. Ao usar structs, você consegue manter dados relacionados juntos e dar
+nome a cada parte, deixando o código mais claro. Em blocos <code>impl</code>, você pode
+definir funções associadas ao tipo, e métodos são uma forma de função
+associada que permite especificar o comportamento das instâncias dessas
+structs.</p>
+<p>Mas structs não são a única forma de criar tipos personalizados: vamos agora
+para o recurso de enums do Rust, adicionando mais uma ferramenta à nossa caixa
+de ferramentas.</p>
 
                     </main>
 

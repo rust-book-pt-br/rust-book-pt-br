@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4c181ae4.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -512,7 +512,8 @@ abcdefghijklmnopqrstuvwxyz012345
 <em>~/.cargo/credentials.toml</em>. Observe que esse token é um segredo: não o
 compartilhe com ninguém. Se você o compartilhar com alguém por qualquer motivo,
 deverá revogá-lo e gerar um novo token em
-<a href="https://crates.io/">crates.io</a><!-- ignore -->.</p>
+<a href="https://crates.io/">crates.io</a><!-- ignore
+-->.</p>
 <h3 id="adicionando-metadados-a-um-novo-crate"><a class="header" href="#adicionando-metadados-a-um-novo-crate">Adicionando Metadados a um Novo Crate</a></h3>
 <p>Digamos que você tenha um crate que deseja publicar. Antes de publicá-lo, será
 necessário adicionar alguns metadados na seção <code>[package]</code> do arquivo
@@ -532,10 +533,10 @@ name = "guessing_game"
 <p>Mesmo que você tenha escolhido um nome único, ao executar <code>cargo publish</code> para
 publicar o crate neste ponto, receberá um aviso e, em seguida, um erro:</p>
 <!-- manual-regeneration
-Crie um novo pacote com um nome não registrado, sem fazer mais modificações
-  ao pacote gerado, portanto faltam os campos de descrição e licença.
-Publicação cargo
-copie apenas as linhas relevantes abaixo
+Create a new package with an unregistered name, making no further modifications
+  to the generated package, so it is missing the description and license fields.
+cargo publish
+copy just the relevant lines below
 -->
 <pre><code class="language-console">$ cargo publish
     Updating crates.io index

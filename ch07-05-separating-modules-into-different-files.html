@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4c181ae4.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -187,8 +187,8 @@ Quando os módulos ficam grandes, você pode querer mover suas definições para
 arquivo para tornar o código mais fácil de navegar.</p>
 <p>Por exemplo, vamos começar com o código da Listagem 7.17 que tinha vários
 módulos de restaurante. Extrairemos módulos em arquivos em vez de ter todos os
-módulos definidos no arquivo raiz da caixa. Neste caso, o arquivo raiz da caixa é
-<em>src/lib.rs</em>, mas este procedimento também funciona com caixas binárias cuja raiz da caixa
+módulos definidos no arquivo raiz da crate. Neste caso, o arquivo raiz da crate é
+<em>src/lib.rs</em>, mas este procedimento também funciona com crates binárias cuja raiz da crate
 arquivo é <em>src/main.rs</em>.</p>
 <p>Primeiro, extrairemos o módulo <code>front_of_house</code> para seu próprio arquivo. Remova o
 código entre chaves para o módulo <code>front_of_house</code>, deixando apenas
@@ -208,7 +208,7 @@ pub fn eat_at_restaurant() {
 </figure>
 <p>Em seguida, coloque o código que estava entre chaves em um novo arquivo chamado
 <em>src/front_of_house.rs</em>, conforme mostrado na Listagem 7-22. O compilador sabe olhar
-neste arquivo porque se deparou com a declaração do módulo na raiz da caixa
+neste arquivo porque se deparou com a declaração do módulo na raiz da crate
 com o nome <code>front_of_house</code>.</p>
 <figure class="listing" id="listing-7-22">
 <span class="file-name">Filename: src/front_of_house.rs</span>
@@ -242,7 +242,7 @@ contém as definições feitas no módulo <code>hosting</code>:</p>
 <pre><code class="language-rust ignore">pub fn add_to_waitlist() {}</code></pre>
 </figure>
 <p>Se, em vez disso, colocarmos <em>hosting.rs</em> no diretório <em>src</em>, o compilador
-espere que o código <em>hosting.rs</em> esteja em um módulo <code>hosting</code> declarado na caixa
+espere que o código <em>hosting.rs</em> esteja em um módulo <code>hosting</code> declarado na crate
 root e não declarado como filho do módulo <code>front_of_house</code>. O
 regras do compilador para quais arquivos verificar o código de quais módulos significam o
 diretórios e arquivos correspondem melhor à árvore do módulo.</p>
@@ -250,7 +250,7 @@ diretórios e arquivos correspondem melhor à árvore do módulo.</p>
 <h3 id="caminhos-de-arquivo-alternativos"><a class="header" href="#caminhos-de-arquivo-alternativos">Caminhos de arquivo alternativos</a></h3>
 <p>Até agora, cobrimos os caminhos de arquivo mais idiomáticos que o compilador Rust usa,
 mas Rust também oferece suporte a um estilo mais antigo de caminho de arquivo. Para um módulo chamado
-<code>front_of_house</code> declarado na raiz da caixa, o compilador procurará o
+<code>front_of_house</code> declarado na raiz da crate, o compilador procurará o
 código do módulo em:</p>
 <ul>
 <li><em>src/front_of_house.rs</em> (o que cobrimos)</li>
@@ -275,11 +275,11 @@ modificação, mesmo que as definições residam em arquivos diferentes. Esse
 técnica permite mover módulos para novos arquivos à medida que aumentam de tamanho.</p>
 <p>Observe que a instrução <code>pub use crate::front_of_house::hosting</code> em
 <em>src/lib.rs</em> também não mudou, nem <code>use</code> tem qualquer impacto em quais arquivos
-são compilados como parte da caixa. A palavra-chave <code>mod</code> declara módulos e Rust
+são compilados como parte da crate. A palavra-chave <code>mod</code> declara módulos e Rust
 procura em um arquivo com o mesmo nome do módulo o código que entra
 esse módulo.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Rust permite dividir um pacote em várias caixas e uma caixa em módulos para que
+<p>Rust permite dividir um pacote em várias crates e uma crate em módulos para que
 que você pode consultar itens definidos em um módulo de outro módulo. Você pode
 faça isso especificando caminhos absolutos ou relativos. Esses caminhos podem ser trazidos
 no escopo com uma instrução <code>use</code> para que você possa usar um caminho mais curto para
