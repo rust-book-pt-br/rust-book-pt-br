@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -205,12 +205,12 @@ use crate::front_of_house::hosting;
 pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-11">Listing 7-11</a>: Bringing a module into scope with <code>use</code></figcaption>
+<figcaption><a href="#listing-7-11">Listing 7-11</a>: Trazendo um módulo para o escopo com <code>use</code></figcaption>
 </figure>
 <p>Adicionar <code>use</code> e um caminho em um escopo é semelhante a criar um link simbólico em
-o sistema de arquivos. Adicionando <code>use crate::front_of_house::hosting</code> na caixa
+o sistema de arquivos. Adicionando <code>use crate::front_of_house::hosting</code> na crate
 root, <code>hosting</code> agora é um nome válido nesse escopo, assim como se <code>hosting</code>
-módulo foi definido na raiz da caixa. Caminhos trazidos para o escopo com <code>use</code>
+módulo foi definido na raiz da crate. Caminhos trazidos para o escopo com <code>use</code>
 verifique também a privacidade, como qualquer outro caminho.</p>
 <p>Observe que <code>use</code> cria apenas o atalho para o escopo específico no qual o
 <code>use</code> ocorre. A Listagem 7-12 move a função <code>eat_at_restaurant</code> para uma nova
@@ -231,7 +231,7 @@ mod customer {
         hosting::add_to_waitlist();
     }
 }</code></pre>
-<figcaption><a href="#listing-7-12">Listing 7-12</a>: A <code>use</code> statement only applies in the scope it’s in.</figcaption>
+<figcaption><a href="#listing-7-12">Listing 7-12</a>: Uma instrução <code>use</code> se aplica apenas ao escopo em que foi declarada</figcaption>
 </figure>
 <p>O erro do compilador mostra que o atalho não se aplica mais ao
 <code>customer</code> módulo:</p>
@@ -282,7 +282,7 @@ use crate::front_of_house::hosting::add_to_waitlist;
 pub fn eat_at_restaurant() {
     add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-13">Listing 7-13</a>: Bringing the <code>add_to_waitlist</code> function into scope with <code>use</code>, which is unidiomatic</figcaption>
+<figcaption><a href="#listing-7-13">Listing 7-13</a>: Trazendo a função <code>add_to_waitlist</code> para o escopo com <code>use</code>, de forma pouco idiomática</figcaption>
 </figure>
 <p>Embora a Listagem 7-11 e a Listagem 7-13 realizem a mesma tarefa, a Listagem
 7-11 é a maneira idiomática de colocar uma função no escopo com <code>use</code>. Trazendo
@@ -294,7 +294,7 @@ não está claro onde <code>add_to_waitlist</code> está definido.</p>
 <p>Por outro lado, ao trazer structs, enums e outros itens com <code>use</code>,
 é idiomático especificar o caminho completo. A Listagem 7-14 mostra a maneira idiomática
 para trazer a estrutura <code>HashMap</code> da biblioteca padrão para o escopo de um binário
-caixa.</p>
+crate.</p>
 <figure class="listing" id="listing-7-14">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">use std::collections::HashMap;
@@ -303,7 +303,7 @@ fn main() {
     let mut map = HashMap::new();
     map.insert(1, 2);
 }</code></pre>
-<figcaption><a href="#listing-7-14">Listing 7-14</a>: Bringing <code>HashMap</code> into scope in an idiomatic way</figcaption>
+<figcaption><a href="#listing-7-14">Listing 7-14</a>: Trazendo <code>HashMap</code> para o escopo de forma idiomática</figcaption>
 </figure>
 <p>Não há nenhuma razão forte por trás dessa expressão: é apenas a convenção que
 surgiu, e as pessoas se acostumaram a ler e escrever código Rust dessa maneira.</p>
@@ -325,7 +325,7 @@ fn function2() -&gt; io::Result&lt;()&gt; {
     // --snip--
 <span class="boring">    Ok(())
 </span>}</code></pre>
-<figcaption><a href="#listing-7-15">Listing 7-15</a>: Bringing two types with the same name into the same scope requires using their parent modules.</figcaption>
+<figcaption><a href="#listing-7-15">Listing 7-15</a>: Trazer dois tipos com o mesmo nome para o mesmo escopo exige usar seus módulos-pai</figcaption>
 </figure>
 <p>Como você pode ver, o uso dos módulos pai distingue os dois tipos <code>Result</code>.
 Se, em vez disso, especificássemos <code>use std::fmt::Result</code> e <code>use std::io::Result</code>, teríamos
@@ -350,7 +350,7 @@ fn function2() -&gt; IoResult&lt;()&gt; {
     // --snip--
 <span class="boring">    Ok(())
 </span>}</code></pre>
-<figcaption><a href="#listing-7-16">Listing 7-16</a>: Renaming a type when it’s brought into scope with the <code>as</code> keyword</figcaption>
+<figcaption><a href="#listing-7-16">Listing 7-16</a>: Renomeando um tipo ao trazê-lo para o escopo com a palavra-chave <code>as</code></figcaption>
 </figure>
 <p>Na segunda instrução <code>use</code>, escolhemos o novo nome <code>IoResult</code> para o
 <code>std::io::Result</code> tipo, que não entrará em conflito com o <code>Result</code> de <code>std::fmt</code>
@@ -378,7 +378,7 @@ pub use crate::front_of_house::hosting;
 pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-17">Listing 7-17</a>: Making a name available for any code to use from a new scope with <code>pub use</code></figcaption>
+<figcaption><a href="#listing-7-17">Listing 7-17</a>: Disponibilizando um nome para qualquer código por meio de um novo escopo com <code>pub use</code></figcaption>
 </figure>
 <p>Antes dessa mudança, o código externo teria que chamar o <code>add_to_waitlist</code>
 função usando o caminho
@@ -392,15 +392,15 @@ sobre “frente da casa” e “fundos da casa”. Mas os clientes que visitam u
 provavelmente não pensará nas partes do restaurante nesses termos. Com <code>pub use</code>, podemos escrever nosso código com uma estrutura, mas expor uma estrutura diferente.
 Isso torna nossa biblioteca bem organizada para programadores que trabalham na biblioteca
 e programadores ligando para a biblioteca. Veremos outro exemplo de <code>pub use</code>
-e como isso afeta a documentação da sua caixa em <a href="ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api">“Exportando um Público Conveniente
+e como isso afeta a documentação da sua crate em <a href="ch14-02-publishing-to-crates-io.html#exporting-a-convenient-public-api">“Exportando um Público Conveniente
 API”</a><!-- ignore --> no Capítulo 14.</p>
 <h3 id="usando-pacotes-externos"><a class="header" href="#usando-pacotes-externos">Usando pacotes externos</a></h3>
 <p>No Capítulo 2, programamos um projeto de jogo de adivinhação que utilizou um
 pacote chamado <code>rand</code> para obter números aleatórios. Para usar <code>rand</code> em nosso projeto, nós
 adicionei esta linha a <em>Cargo.toml</em>:</p>
 <!-- When updating the version of `rand` used, also update the version of
-`rand` usado nesses arquivos para que todos correspondam:
-* ch02-00-tutorial de jogo de adivinhação.md
+`rand` used in these files so they all match:
+* ch02-00-guessing-game-tutorial.md
 * ch14-03-cargo-workspaces.md
 -->
 <figure class="listing">
@@ -412,7 +412,7 @@ adicionei esta linha a <em>Cargo.toml</em>:</p>
 <code>rand</code> pacote e quaisquer dependências de <a href="https://crates.io/">crates.io</a> e
 disponibilizar <code>rand</code> para nosso projeto.</p>
 <p>Então, para trazer as definições de <code>rand</code> para o escopo do nosso pacote, adicionamos um
-<code>use</code> linha começando com o nome da caixa, <code>rand</code>, e listou os itens que
+<code>use</code> linha começando com o nome da crate, <code>rand</code>, e listou os itens que
 queria trazer para o escopo. Lembre-se disso em <a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">“Gerando um Random
 Número”</a><!-- ignore --> no Capítulo 2, trouxemos o traço <code>Rng</code> para
 escopo e chamou a função <code>rand::thread_rng</code>:</p>
@@ -440,8 +440,8 @@ fn main() {
 <p>Membros da comunidade Rust disponibilizaram muitos pacotes em
 <a href="https://crates.io/">crates.io</a> e colocar qualquer um deles em seu pacote
 envolve as mesmas etapas: listá-los no arquivo <em>Cargo.toml</em> do seu pacote e
-usando <code>use</code> para trazer itens de suas caixas para o escopo.</p>
-<p>Observe que a biblioteca padrão <code>std</code> também é uma caixa externa ao nosso
+usando <code>use</code> para trazer itens de suas crates para o escopo.</p>
+<p>Observe que a biblioteca padrão <code>std</code> também é uma crate externa ao nosso
 pacote. Como a biblioteca padrão vem com a linguagem Rust, nós
 não é necessário alterar <em>Cargo.toml</em> para incluir <code>std</code>. Mas precisamos nos referir a
 use <code>use</code> para trazer itens de lá para o escopo do nosso pacote. Por exemplo,
@@ -451,11 +451,11 @@ com <code>HashMap</code> usaríamos esta linha:</p>
 </span>use std::collections::HashMap;
 <span class="boring">}</span></code></pre>
 <p>Este é um caminho absoluto começando com <code>std</code>, o nome da biblioteca padrão
-caixa.</p>
+crate.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-nested-paths-to-clean-up-large-use-lists"></a></p>
 <h3 id="usando-caminhos-aninhados-para-limpar-listas-use"><a class="header" href="#usando-caminhos-aninhados-para-limpar-listas-use">Usando caminhos aninhados para limpar listas <code>use</code></a></h3>
-<p>Se estivermos usando vários itens definidos na mesma caixa ou no mesmo módulo, listar
+<p>Se estivermos usando vários itens definidos na mesma crate ou no mesmo módulo, listar
 cada item em sua própria linha pode ocupar muito espaço vertical em nossos arquivos. Para
 por exemplo, essas duas declarações <code>use</code> que tivemos no jogo de adivinhação da Listagem 2-4
 traga itens de <code>std</code> para o escopo:</p>
@@ -527,9 +527,9 @@ use std::{cmp::Ordering, io};
 </span><span class="boring">        Ordering::Equal =&gt; println!("You win!"),
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-7-18">Listing 7-18</a>: Specifying a nested path to bring multiple items with the same prefix into scope</figcaption>
+<figcaption><a href="#listing-7-18">Listing 7-18</a>: Especificando um caminho aninhado para trazer múltiplos itens com o mesmo prefixo para o escopo</figcaption>
 </figure>
-<p>Em programas maiores, trazer para o escopo muitos itens da mesma caixa ou
+<p>Em programas maiores, trazer para o escopo muitos itens da mesma crate ou
 módulo usando caminhos aninhados pode reduzir o número de instruções <code>use</code> separadas
 preciso muito!</p>
 <p>Podemos usar um caminho aninhado em qualquer nível de um caminho, o que é útil ao combinar
@@ -540,7 +540,7 @@ Declarações <code>use</code>: uma que traz <code>std::io</code> para o escopo 
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::io;
 use std::io::Write;</code></pre>
-<figcaption><a href="#listing-7-19">Listing 7-19</a>: Two <code>use</code> statements where one is a subpath of the other</figcaption>
+<figcaption><a href="#listing-7-19">Listing 7-19</a>: Duas instruções <code>use</code> em que uma é subcaminho da outra</figcaption>
 </figure>
 <p>A parte comum desses dois caminhos é <code>std::io</code>, e esse é o primeiro caminho completo
 caminho. Para mesclar esses dois caminhos em uma instrução <code>use</code>, podemos usar <code>self</code> em
@@ -548,7 +548,7 @@ o caminho aninhado, conforme mostrado na Listagem 7-20.</p>
 <figure class="listing" id="listing-7-20">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::io::{self, Write};</code></pre>
-<figcaption><a href="#listing-7-20">Listing 7-20</a>: Combining the paths in Listing 7-19 into one <code>use</code> statement</figcaption>
+<figcaption><a href="#listing-7-20">Listing 7-20</a>: Combinando os caminhos da Listagem 7-19 em uma única instrução <code>use</code></figcaption>
 </figure>
 <p>Esta linha traz <code>std::io</code> e <code>std::io::Write</code> ao escopo.</p>
 <!-- Old headings. Do not remove or links may break. -->
@@ -570,7 +570,7 @@ como uma definição sua no mesmo escopo, por exemplo.</p>
 <p>O operador glob é frequentemente usado em testes para colocar tudo em teste em
 o módulo <code>tests</code>; falaremos sobre isso em <a href="ch11-01-writing-tests.html#how-to-write-tests">“Como escrever
 Testes”</a><!-- ignore --> no Capítulo 11. O operador glob também é
-às vezes usado como parte do padrão prelúdio: Consulte <a href="../std/prelude/index.html#other-preludes">a biblioteca padrão
+às vezes usado como parte do padrão prelude: Consulte <a href="../std/prelude/index.html#other-preludes">a biblioteca padrão
 documentação</a><!-- ignore --> para mais
 informações sobre esse padrão.</p>
 

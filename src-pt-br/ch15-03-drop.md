@@ -53,7 +53,7 @@ fn main() {
 <span class="caption">Listagem 15-14: Uma struct `CustomSmartPointer` que
 implementa a trait `Drop` onde colocaríamos nosso código de limpeza</span>
 
-A trait `Drop` é incluída no prelúdio, então não precisamos importá-la. Nós
+A trait `Drop` é incluída no prelude, então não precisamos importá-la. Nós
 implementamos a trait `Drop` no `CustomSmartPointer` e fornecemos uma
 implementação para o método `drop` que chama `println!`. O corpo da função
 `drop` é onde você colocaria qualquer que fosse a lógica que você gostaria que
@@ -137,7 +137,7 @@ precisamos forçar um valor a ser limpo antes, podemos usar a função
 
 A função `std::mem::drop` é diferente do método `drop` na trait `Drop`. Nós a
 chamamos passando como argumento o valor que queremos forçar a ser destruído
-cedo. Essa função está no prelúdio, então podemos modificar a `main` na Listagem
+cedo. Essa função está no prelude, então podemos modificar a `main` na Listagem
 15-14 para chamar a função `drop`, como mostra a Listagem 15-16:
 
 <span class="filename">Arquivo: src/main.rs</span>

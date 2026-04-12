@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -196,7 +196,7 @@ e <code>cargo-fmt</code> entende as convenções de um projeto que usa Cargo. Pa
 qualquer projeto Cargo, insira o seguinte:</p>
 <pre><code class="language-console">$ cargo fmt
 </code></pre>
-<p>A execução deste comando reformata todo o código Rust na caixa atual. Esse
+<p>A execução deste comando reformata todo o código Rust na crate atual. Esse
 deve alterar apenas o estilo do código, não a semântica do código. Para mais informações
 em <code>rustfmt</code>, consulte <a href="https://github.com/rust-lang/rustfmt">sua documentação</a>.</p>
 <h3 id="corrija-seu-código-com-rustfix"><a class="header" href="#corrija-seu-código-com-rustfix">Corrija seu código com <code>rustfix</code></a></h3>
@@ -240,11 +240,11 @@ código:</p>
 <p>A variável <code>x</code> agora é imutável e o aviso não aparece mais.</p>
 <p>Você também pode usar o comando <code>cargo fix</code> para fazer a transição do seu código entre
 diferentes edições do Rust. As edições são abordadas no <a href="appendix-05-editions.html">Apêndice E</a><!--
-ignorar -->.</p>
+ignore -->.</p>
 <h3 id="mais-lints-com-clippy"><a class="header" href="#mais-lints-com-clippy">Mais Lints com Clippy</a></h3>
 <p>A ferramenta Clippy é uma coleção de lints para analisar seu código para que você possa
 detecte erros comuns e melhore seu código Rust. Clippy está incluído com
-instalações padrão de ferrugem.</p>
+instalações padrão do Rust.</p>
 <p>Para executar os lints do Clippy em qualquer projeto Cargo, digite o seguinte:</p>
 <pre><code class="language-console">$ cargo clippy
 </code></pre>

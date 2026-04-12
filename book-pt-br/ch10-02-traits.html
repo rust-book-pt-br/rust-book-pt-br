@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -184,58 +184,60 @@
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="traits-defining-shared-behavior"></a></p>
 <h2 id="definindo-comportamento-compartilhado-com-características"><a class="header" href="#definindo-comportamento-compartilhado-com-características">Definindo Comportamento Compartilhado com Características</a></h2>
-<p>Uma <em>trait</em> define a funcionalidade que um determinado tipo possui e com a qual pode compartilhar
-outros tipos. Podemos usar características para definir o comportamento compartilhado de forma abstrata. Nós
-pode usar <em>limites de características</em> para especificar que um tipo genérico pode ser qualquer tipo que tenha
-determinado comportamento.</p>
-<blockquote>
-<p>Nota: As características são semelhantes a um recurso frequentemente chamado de <em>interfaces</em> em outros
-línguas, embora com algumas diferenças.</p>
-</blockquote>
-<h3 id="definindo-uma-característica"><a class="header" href="#definindo-uma-característica">Definindo uma característica</a></h3>
-<p>O comportamento de um tipo consiste nos métodos que podemos chamar nesse tipo. Diferente
-tipos compartilham o mesmo comportamento se pudermos chamar os mesmos métodos em todos esses
-tipos. As definições de características são uma forma de agrupar assinaturas de métodos para
-definir um conjunto de comportamentos necessários para atingir algum propósito.</p>
-<p>Por exemplo, digamos que temos múltiplas estruturas que contêm vários tipos e
-quantidades de texto: uma estrutura <code>NewsArticle</code> que contém uma notícia arquivada em um
-determinado local e um <code>SocialPost</code> que pode ter, no máximo, 280 caracteres
-junto com metadados que indicam se foi uma nova postagem, uma repostagem ou uma
-responda a outra postagem.</p>
-<p>Queremos criar uma caixa de biblioteca agregadora de mídia chamada <code>aggregator</code> que possa
-exibir resumos de dados que podem ser armazenados em um <code>NewsArticle</code> ou
-<code>SocialPost</code> instância. Para fazer isso, precisamos de um resumo de cada tipo, e vamos
-solicite esse resumo chamando um método <code>summarize</code> em uma instância. Listagem
-10-12 mostra a definição de um traço público <code>Summary</code> que expressa isso
+<p>Uma <em>trait</em> define a funcionalidade que um tipo específico possui e pode
+compartilhar com outros tipos. Podemos usar traits para descrever comportamento
+compartilhado de forma abstrata. Também podemos usar <em>trait bounds</em> para
+especificar que um tipo genérico pode ser qualquer tipo que tenha determinado
 comportamento.</p>
+<blockquote>
+<p>Nota: traits são parecidas com um recurso frequentemente chamado de
+<em>interfaces</em> em outras linguagens, embora existam algumas diferenças.</p>
+</blockquote>
+<h3 id="definindo-uma-trait"><a class="header" href="#definindo-uma-trait">Definindo uma Trait</a></h3>
+<p>O comportamento de um tipo consiste nos métodos que podemos chamar nesse tipo.
+Tipos diferentes compartilham o mesmo comportamento quando podemos chamar os
+mesmos métodos em todos eles. Definições de trait são uma forma de agrupar
+assinaturas de métodos para definir um conjunto de comportamentos necessários
+para atingir algum objetivo.</p>
+<p>Por exemplo, digamos que temos várias structs que armazenam tipos e quantidades
+diferentes de texto: uma struct <code>NewsArticle</code>, que representa uma notícia
+publicada em algum local, e um <code>SocialPost</code>, que pode ter no máximo 280
+caracteres, além de metadados indicando se se trata de uma nova postagem, um
+repost ou uma resposta a outra postagem.</p>
+<p>Queremos criar um crate de biblioteca agregador de mídia chamado <code>aggregator</code>,
+capaz de exibir resumos de dados que podem estar armazenados em uma instância
+de <code>NewsArticle</code> ou <code>SocialPost</code>. Para isso, precisamos de um resumo de cada
+tipo e vamos solicitá-lo chamando um método <code>summarize</code> na instância. A
+Listagem 10-12 mostra a definição de uma trait pública <code>Summary</code> que expressa
+esse comportamento.</p>
 <figure class="listing" id="listing-10-12">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub trait Summary {
     fn summarize(&amp;self) -&gt; String;
 }</code></pre>
-<figcaption><a href="#listing-10-12">Listing 10-12</a>: A <code>Summary</code> trait that consists of the behavior provided by a <code>summarize</code> method</figcaption>
+<figcaption><a href="#listing-10-12">Listing 10-12</a>: Uma trait <code>Summary</code> composta pelo comportamento fornecido por um método <code>summarize</code></figcaption>
 </figure>
-<p>Aqui, declaramos uma característica usando a palavra-chave <code>trait</code> e depois o nome da característica,
-que é <code>Summary</code> neste caso. Também declaramos a característica como <code>pub</code> para que
-caixas dependendo desta caixa também podem fazer uso dessa característica, como veremos em
-alguns exemplos. Dentro das chaves, declaramos as assinaturas dos métodos
-que descrevem os comportamentos dos tipos que implementam essa característica, que em
-este caso é <code>fn summarize(&amp;self) -&gt; String</code>.</p>
-<p>Após a assinatura do método, em vez de fornecer uma implementação dentro do curly
-colchetes, usamos ponto e vírgula. Cada tipo que implementa esta característica deve fornecer
-seu próprio comportamento personalizado para o corpo do método. O compilador irá impor
-que qualquer tipo que tenha o traço <code>Summary</code> terá o método <code>summarize</code>
-definido exatamente com esta assinatura.</p>
-<p>Uma característica pode ter vários métodos em seu corpo: as assinaturas dos métodos são listadas
-um por linha e cada linha termina com ponto e vírgula.</p>
-<h3 id="implementando-uma-característica-em-um-tipo"><a class="header" href="#implementando-uma-característica-em-um-tipo">Implementando uma característica em um tipo</a></h3>
-<p>Agora que definimos as assinaturas desejadas dos métodos do trait <code>Summary</code>,
-podemos implementá-lo nos tipos do nosso agregador de mídia. Listando 10-13 programas
-uma implementação do traço <code>Summary</code> na estrutura <code>NewsArticle</code> que usa
-o título, o autor e o local para criar o valor de retorno de
-<code>summarize</code>. Para a estrutura <code>SocialPost</code>, definimos <code>summarize</code> como o nome de usuário
-seguido por todo o texto da postagem, assumindo que o conteúdo da postagem é
-já limitado a 280 caracteres.</p>
+<p>Aqui, declaramos uma trait usando a palavra-chave <code>trait</code> seguida do nome da
+trait, que neste caso é <code>Summary</code>. Também a declaramos como <code>pub</code>, para que
+crates que dependam deste crate possam usá-la, como veremos em alguns
+exemplos. Dentro das chaves, declaramos as assinaturas dos métodos que
+descrevem os comportamentos dos tipos que implementam essa trait; neste caso,
+temos <code>fn summarize(&amp;self) -&gt; String</code>.</p>
+<p>Depois da assinatura do método, em vez de fornecer uma implementação entre
+chaves, usamos um ponto e vírgula. Cada tipo que implementar essa trait deverá
+fornecer seu próprio comportamento para o corpo do método. O compilador garante
+que qualquer tipo que implemente <code>Summary</code> terá o método <code>summarize</code> definido
+exatamente com essa assinatura.</p>
+<p>Uma trait pode ter vários métodos no corpo: as assinaturas são listadas uma por
+linha, e cada linha termina com ponto e vírgula.</p>
+<h3 id="implementando-uma-trait-em-um-tipo"><a class="header" href="#implementando-uma-trait-em-um-tipo">Implementando uma Trait em um Tipo</a></h3>
+<p>Agora que definimos as assinaturas desejadas para os métodos da trait
+<code>Summary</code>, podemos implementá-la nos tipos do nosso agregador de mídia. A
+Listagem 10-13 mostra uma implementação de <code>Summary</code> para a struct
+<code>NewsArticle</code>, usando título, autor e local para construir o valor retornado
+por <code>summarize</code>. Para a struct <code>SocialPost</code>, definimos <code>summarize</code> como o nome
+de usuário seguido do texto inteiro da postagem, assumindo que esse conteúdo já
+está limitado a 280 caracteres.</p>
 <figure class="listing" id="listing-10-13">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">pub trait Summary {
@@ -267,21 +269,21 @@ impl Summary for SocialPost {
         format!("{}: {}", self.username, self.content)
     }
 }</code></pre>
-<figcaption><a href="#listing-10-13">Listing 10-13</a>: Implementing the <code>Summary</code> trait on the <code>NewsArticle</code> and <code>SocialPost</code> types</figcaption>
+<figcaption><a href="#listing-10-13">Listing 10-13</a>: Implementando a trait <code>Summary</code> nos tipos <code>NewsArticle</code> e <code>SocialPost</code></figcaption>
 </figure>
-<p>A implementação de uma característica em um tipo é semelhante à implementação de métodos regulares. O
-a diferença é que depois de <code>impl</code>, colocamos o nome do trait que queremos implementar,
-em seguida, use a palavra-chave <code>for</code> e especifique o nome do tipo que queremos
-implementar a característica para. Dentro do bloco <code>impl</code>, colocamos as assinaturas dos métodos
-que a definição do traço definiu. Em vez de adicionar um ponto e vírgula após cada
-assinatura, usamos colchetes e preenchemos o corpo do método com o específico
-comportamento que queremos que os métodos da característica tenham para o tipo específico.</p>
-<p>Agora que a biblioteca implementou o traço <code>Summary</code> em <code>NewsArticle</code> e
-<code>SocialPost</code>, os usuários da caixa podem chamar os métodos trait em instâncias de
-<code>NewsArticle</code> e <code>SocialPost</code> da mesma forma que chamamos métodos regulares. A única
-A diferença é que o usuário deve trazer a característica para o escopo, bem como o
-tipos. Aqui está um exemplo de como uma caixa binária poderia usar nosso <code>aggregator</code>
-caixa da biblioteca:</p>
+<p>Implementar uma trait em um tipo é parecido com implementar métodos comuns. A
+diferença é que, depois de <code>impl</code>, colocamos o nome da trait que queremos
+implementar, usamos a palavra-chave <code>for</code> e então especificamos o nome do tipo
+para o qual queremos implementar a trait. Dentro do bloco <code>impl</code>, colocamos as
+assinaturas dos métodos definidos pela trait. Em vez de terminar cada
+assinatura com ponto e vírgula, usamos chaves e preenchemos o corpo do método
+com o comportamento específico que queremos para aquele tipo.</p>
+<p>Agora que a biblioteca implementa a trait <code>Summary</code> em <code>NewsArticle</code> e
+<code>SocialPost</code>, usuários do crate podem chamar os métodos da trait em instâncias
+desses tipos da mesma forma que chamamos métodos comuns. A única diferença é
+que o usuário precisa trazer para o escopo tanto a trait quanto os tipos. Aqui
+está um exemplo de como um crate binário poderia usar nosso crate de biblioteca
+<code>aggregator</code>:</p>
 <pre><code class="language-rust ignore">use aggregator::{SocialPost, Summary};
 
 fn main() {
@@ -296,35 +298,32 @@ fn main() {
 
     println!("1 new post: {}", post.summarize());
 }</code></pre>
-<p>Este código imprime `1 nova postagem: horse_ebooks: claro, como você provavelmente já
-sabe, gente.</p>
-<p>Outras caixas que dependem da caixa <code>aggregator</code> também podem trazer o <code>Summary</code>
-trait no escopo para implementar <code>Summary</code> em seus próprios tipos. Uma restrição a
-A observação é que só podemos implementar uma característica em um tipo se a característica ou o
-tipo, ou ambos, são locais para nossa caixa. Por exemplo, podemos implementar padrões
-características da biblioteca como <code>Display</code> em um tipo personalizado como <code>SocialPost</code> como parte de nosso
-<code>aggregator</code> funcionalidade crate porque o tipo <code>SocialPost</code> é local para nosso
-<code>aggregator</code> caixa. Também podemos implementar <code>Summary</code> em <code>Vec&lt;T&gt;</code> em nosso
-<code>aggregator</code> caixa porque a característica <code>Summary</code> é local para nosso <code>aggregator</code>
-caixa.</p>
-<p>Mas não podemos implementar características externas em tipos externos. Por exemplo, não podemos
-implementar a característica <code>Display</code> em <code>Vec&lt;T&gt;</code> dentro de nossa caixa <code>aggregator</code>,
-porque <code>Display</code> e <code>Vec&lt;T&gt;</code> são definidos na biblioteca padrão e
-não são locais da nossa caixa <code>aggregator</code>. Esta restrição faz parte de uma propriedade
-chamada <em>coerência</em>, e mais especificamente a <em>regra órfã</em>, assim chamada porque
-o tipo pai não está presente. Esta regra garante que o código de outras pessoas
-não pode quebrar seu código e vice-versa. Sem a regra, duas caixas poderiam
-implementar a mesma característica para o mesmo tipo, e Rust não saberia qual
-implementação a ser usada.</p>
+<p>Esse código imprime <code>1 new post: horse_ebooks: of course, as you probably already know, people</code>.</p>
+<p>Outros crates que dependem de <code>aggregator</code> também podem trazer a trait
+<code>Summary</code> para o escopo e implementá-la em seus próprios tipos. Há, porém, uma
+restrição importante: só podemos implementar uma trait em um tipo se a trait,
+o tipo, ou ambos, forem locais ao nosso crate. Por exemplo, podemos
+implementar traits da biblioteca padrão, como <code>Display</code>, em um tipo
+personalizado como <code>SocialPost</code> dentro do nosso crate <code>aggregator</code>, porque o
+tipo <code>SocialPost</code> é local. Também podemos implementar <code>Summary</code> em <code>Vec&lt;T&gt;</code> em
+nosso crate <code>aggregator</code>, porque a trait <code>Summary</code> é local ao crate.</p>
+<p>Mas não podemos implementar traits externas em tipos externos. Por exemplo, não
+podemos implementar <code>Display</code> para <code>Vec&lt;T&gt;</code> dentro do crate <code>aggregator</code>,
+porque tanto <code>Display</code> quanto <code>Vec&lt;T&gt;</code> são definidos na biblioteca padrão e,
+portanto, não são locais ao nosso crate. Essa restrição faz parte de uma
+propriedade chamada <em>coerência</em> e, mais especificamente, da chamada <em>regra
+órfã</em> (<em>orphan rule</em>). Essa regra garante que o código de outras pessoas não
+quebrará o seu, e vice-versa. Sem ela, dois crates poderiam implementar a
+mesma trait para o mesmo tipo, e o Rust não saberia qual implementação usar.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="default-implementations"></a></p>
-<h3 id="usando-implementações-padrão"><a class="header" href="#usando-implementações-padrão">Usando implementações padrão</a></h3>
-<p>Às vezes é útil ter um comportamento padrão para alguns ou todos os métodos
-em uma característica em vez de exigir implementações para todos os métodos em todos os tipos.
-Então, à medida que implementamos a característica em um tipo específico, podemos manter ou substituir
-o comportamento padrão de cada método.</p>
-<p>Na Listagem 10-14, especificamos uma string padrão para o método <code>summarize</code> do
-<code>Summary</code> trait em vez de apenas definir a assinatura do método, como fizemos em
+<h3 id="usando-implementações-padrão"><a class="header" href="#usando-implementações-padrão">Usando Implementações Padrão</a></h3>
+<p>Às vezes é útil ter um comportamento padrão para alguns ou todos os métodos de
+uma trait, em vez de exigir implementações para todos os métodos em todos os
+tipos. Assim, ao implementar a trait em um tipo específico, podemos manter ou
+substituir o comportamento padrão de cada método.</p>
+<p>Na Listagem 10-14, especificamos uma string padrão para o método <code>summarize</code> da
+trait <code>Summary</code>, em vez de definir apenas sua assinatura, como fizemos na
 Listagem 10-12.</p>
 <figure class="listing" id="listing-10-14">
 <span class="file-name">Filename: src/lib.rs</span>
@@ -355,14 +354,14 @@ Listagem 10-12.</p>
 </span><span class="boring">        format!("{}: {}", self.username, self.content)
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-10-14">Listing 10-14</a>: Defining a <code>Summary</code> trait with a default implementation of the <code>summarize</code> method</figcaption>
+<figcaption><a href="#listing-10-14">Listing 10-14</a>: Definindo uma trait <code>Summary</code> com implementação padrão do método <code>summarize</code></figcaption>
 </figure>
-<p>Para usar uma implementação padrão para resumir instâncias de <code>NewsArticle</code>, nós
-especifique um bloco <code>impl</code> vazio com <code>impl Summary for NewsArticle {}</code>.</p>
-<p>Mesmo que não estejamos mais definindo o método <code>summarize</code> em <code>NewsArticle</code>
-diretamente, fornecemos uma implementação padrão e especificamos que
-<code>NewsArticle</code> implementa a característica <code>Summary</code>. Como resultado, ainda podemos chamar
-o método <code>summarize</code> em uma instância de <code>NewsArticle</code>, assim:</p>
+<p>Para usar uma implementação padrão para resumir instâncias de <code>NewsArticle</code>,
+basta especificar um bloco <code>impl</code> vazio com <code>impl Summary for NewsArticle {}</code>.</p>
+<p>Mesmo sem definir <code>summarize</code> diretamente em <code>NewsArticle</code>, fornecemos uma
+implementação padrão e especificamos que <code>NewsArticle</code> implementa a trait
+<code>Summary</code>. Como resultado, ainda podemos chamar <code>summarize</code> em uma instância
+de <code>NewsArticle</code>, assim:</p>
 <pre><code class="language-rust ignore"><span class="boring">use aggregator::{self, NewsArticle, Summary};
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -378,19 +377,18 @@ o método <code>summarize</code> em uma instância de <code>NewsArticle</code>, 
 
     println!("New article available! {}", article.summarize());
 <span class="boring">}</span></code></pre>
-<p>Este código imprime <code>New article available! (Read more...)</code>.</p>
-<p>Criar uma implementação padrão não exige que mudemos nada
-a implementação de <code>Summary</code> em <code>SocialPost</code> na Listagem 10-13. A razão é
-que a sintaxe para substituir uma implementação padrão é a mesma que a
-sintaxe para implementar um método trait que não possui um padrão
-implementação.</p>
-<p>Implementações padrão podem chamar outros métodos com a mesma característica, mesmo que esses
-outros métodos não possuem uma implementação padrão. Dessa forma, uma característica pode
-fornecem muitas funcionalidades úteis e exigem apenas que os implementadores especifiquem
-uma pequena parte disso. Por exemplo, poderíamos definir a característica <code>Summary</code> como tendo um
-<code>summarize_author</code> cuja implementação é necessária e, em seguida, defina um
-<code>summarize</code> método que possui uma implementação padrão que chama o
-<code>summarize_author</code> método:</p>
+<p>Esse código imprime <code>New article available! (Read more...)</code>.</p>
+<p>Criar uma implementação padrão não exige que mudemos nada na implementação de
+<code>Summary</code> em <code>SocialPost</code> na Listagem 10-13. Isso porque a sintaxe para
+substituir uma implementação padrão é a mesma usada para implementar um método
+de trait que não tem implementação padrão.</p>
+<p>Implementações padrão podem chamar outros métodos da mesma trait, mesmo que
+esses outros métodos não tenham implementação padrão. Dessa forma, uma trait
+pode oferecer bastante funcionalidade útil e exigir que os implementadores
+especifiquem apenas uma pequena parte dela. Por exemplo, poderíamos definir a
+trait <code>Summary</code> com um método <code>summarize_author</code>, cuja implementação seria
+obrigatória, e depois definir um método <code>summarize</code> com implementação padrão
+que chama <code>summarize_author</code>:</p>
 <pre><code class="language-rust noplayground">pub trait Summary {
     fn summarize_author(&amp;self) -&gt; String;
 
@@ -411,8 +409,8 @@ uma pequena parte disso. Por exemplo, poderíamos definir a característica <cod
 </span><span class="boring">        format!("@{}", self.username)
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p>Para usar esta versão de <code>Summary</code>, só precisamos definir <code>summarize_author</code>
-quando implementamos a característica em um tipo:</p>
+<p>Para usar essa versão de <code>Summary</code>, precisamos apenas definir
+<code>summarize_author</code> ao implementar a trait em um tipo:</p>
 <pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
 </span><span class="boring">    fn summarize_author(&amp;self) -&gt; String;
 </span><span class="boring">
@@ -433,12 +431,11 @@ quando implementamos a característica em um tipo:</p>
         format!("@{}", self.username)
     }
 }</code></pre>
-<p>Depois de definirmos <code>summarize_author</code>, podemos chamar <code>summarize</code> em instâncias do
-<code>SocialPost</code> struct, e a implementação padrão de <code>summarize</code> chamará o
-definição de <code>summarize_author</code> que fornecemos. Porque implementamos
-<code>summarize_author</code>, o traço <code>Summary</code> nos deu o comportamento do
-<code>summarize</code> sem exigir que escrevamos mais nenhum código. Aqui está o que
-isso se parece com:</p>
+<p>Depois de definir <code>summarize_author</code>, podemos chamar <code>summarize</code> em instâncias
+da struct <code>SocialPost</code>, e a implementação padrão de <code>summarize</code> chamará a
+definição de <code>summarize_author</code> que fornecemos. Como implementamos
+<code>summarize_author</code>, a trait <code>Summary</code> nos fornece o comportamento de
+<code>summarize</code> sem exigir nenhum código extra. O resultado fica assim:</p>
 <pre><code class="language-rust ignore"><span class="boring">use aggregator::{self, SocialPost, Summary};
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -453,18 +450,18 @@ isso se parece com:</p>
 
     println!("1 new post: {}", post.summarize());
 <span class="boring">}</span></code></pre>
-<p>Este código imprime <code>1 new post: (Read more from @horse_ebooks...)</code>.</p>
-<p>Observe que não é possível chamar a implementação padrão de um
-substituindo a implementação desse mesmo método.</p>
+<p>Esse código imprime <code>1 new post: (Read more from @horse_ebooks...)</code>.</p>
+<p>Observe que não é possível chamar a implementação padrão a partir de uma
+implementação que substitui esse mesmo método.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="traits-as-parameters"></a></p>
-<h3 id="usando-características-como-parâmetros"><a class="header" href="#usando-características-como-parâmetros">Usando características como parâmetros</a></h3>
-<p>Agora que você sabe como definir e implementar características, podemos explorar como usar
-traits para definir funções que aceitam muitos tipos diferentes. Usaremos o
-<code>Summary</code> trait que implementamos nos tipos <code>NewsArticle</code> e <code>SocialPost</code> em
-Listagem 10-13 para definir uma função <code>notify</code> que chama o método <code>summarize</code>
-em seu parâmetro <code>item</code>, que é de algum tipo que implementa o <code>Summary</code>
-característica. Para fazer isso, usamos a sintaxe <code>impl Trait</code>, assim:</p>
+<h3 id="usando-traits-como-parâmetros"><a class="header" href="#usando-traits-como-parâmetros">Usando Traits como Parâmetros</a></h3>
+<p>Agora que você já sabe como definir e implementar traits, podemos explorar como
+usá-las para definir funções que aceitam muitos tipos diferentes. Usaremos a
+trait <code>Summary</code>, implementada para <code>NewsArticle</code> e <code>SocialPost</code> na Listagem
+10-13, para definir uma função <code>notify</code> que chama o método <code>summarize</code> em seu
+parâmetro <code>item</code>, que é de algum tipo que implementa <code>Summary</code>. Para fazer
+isso, usamos a sintaxe <code>impl Trait</code>, assim:</p>
 <pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
 </span><span class="boring">    fn summarize(&amp;self) -&gt; String;
 </span><span class="boring">}
@@ -498,56 +495,57 @@ característica. Para fazer isso, usamos a sintaxe <code>impl Trait</code>, assi
 </span>pub fn notify(item: &amp;impl Summary) {
     println!("Breaking news! {}", item.summarize());
 }</code></pre>
-<p>Em vez de um tipo concreto para o parâmetro <code>item</code>, especificamos o <code>impl</code>
-palavra-chave e o nome da característica. Este parâmetro aceita qualquer tipo que implemente o
-característica especificada. No corpo de <code>notify</code>, podemos chamar qualquer método em <code>item</code>
-que vêm do traço <code>Summary</code>, como <code>summarize</code>. Podemos ligar para <code>notify</code>
-e passe em qualquer instância de <code>NewsArticle</code> ou <code>SocialPost</code>. Código que chama o
-função com qualquer outro tipo, como <code>String</code> ou <code>i32</code>, não será compilada,
-porque esses tipos não implementam <code>Summary</code>.</p>
+<p>Em vez de um tipo concreto para o parâmetro <code>item</code>, especificamos a palavra-
+chave <code>impl</code> e o nome da trait. Esse parâmetro aceita qualquer tipo que
+implemente a trait especificada. No corpo de <code>notify</code>, podemos chamar em
+<code>item</code> qualquer método proveniente da trait <code>Summary</code>, como <code>summarize</code>.
+Podemos chamar <code>notify</code> passando qualquer instância de <code>NewsArticle</code> ou
+<code>SocialPost</code>. Já um código que tente chamar a função com qualquer outro tipo,
+como <code>String</code> ou <code>i32</code>, não compilará, porque esses tipos não implementam
+<code>Summary</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="fixing-the-largest-function-with-trait-bounds"></a></p>
-<h4 id="sintaxe-vinculada-à-característica"><a class="header" href="#sintaxe-vinculada-à-característica">Sintaxe vinculada à característica</a></h4>
-<p>A sintaxe <code>impl Trait</code> funciona para casos simples, mas na verdade é uma sintaxe
-açúcar para uma forma mais longa conhecida como <em>traitbound</em>; é assim:</p>
+<h4 id="sintaxe-de-trait-bounds"><a class="header" href="#sintaxe-de-trait-bounds">Sintaxe de Trait Bounds</a></h4>
+<p>A sintaxe <code>impl Trait</code> funciona bem em casos simples, mas na verdade é um
+<em>syntax sugar</em> para uma forma mais longa, conhecida como <em>trait bound</em>:</p>
 <pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item: &amp;T) {
     println!("Breaking news! {}", item.summarize());
 }</code></pre>
-<p>Esta forma mais longa é equivalente ao exemplo da seção anterior, mas é
-mais detalhado. Colocamos limites de características com a declaração do tipo genérico
-parâmetro após dois pontos e dentro de colchetes angulares.</p>
-<p>A sintaxe <code>impl Trait</code> é conveniente e proporciona um código mais conciso de maneira simples.
-casos, enquanto a sintaxe mais completa ligada a características pode expressar mais complexidade em outros
-casos. Por exemplo, podemos ter dois parâmetros que implementam <code>Summary</code>. Fazendo
-então com a sintaxe <code>impl Trait</code> fica assim:</p>
+<p>Essa forma mais longa é equivalente ao exemplo da seção anterior, apenas mais
+verbosa. Colocamos o trait bound na declaração do parâmetro de tipo genérico,
+depois de dois-pontos e dentro dos colchetes angulares.</p>
+<p>A sintaxe <code>impl Trait</code> é conveniente e gera código mais conciso em casos
+simples, enquanto a forma completa com trait bounds pode expressar situações
+mais complexas. Por exemplo, podemos ter dois parâmetros que implementam
+<code>Summary</code>. Com a sintaxe <code>impl Trait</code>, isso fica assim:</p>
 <pre><code class="language-rust ignore">pub fn notify(item1: &amp;impl Summary, item2: &amp;impl Summary) {</code></pre>
-<p>Usar <code>impl Trait</code> é apropriado se quisermos que esta função permita <code>item1</code> e
-<code>item2</code> para ter tipos diferentes (desde que ambos os tipos implementem <code>Summary</code>). Se
-queremos forçar que ambos os parâmetros tenham o mesmo tipo, porém, devemos usar um
-traço vinculado, assim:</p>
+<p>Usar <code>impl Trait</code> é apropriado se quisermos permitir que <code>item1</code> e <code>item2</code>
+tenham tipos diferentes, contanto que ambos implementem <code>Summary</code>. Se quisermos
+forçar que ambos os parâmetros tenham o mesmo tipo, porém, devemos usar um
+trait bound, assim:</p>
 <pre><code class="language-rust ignore">pub fn notify&lt;T: Summary&gt;(item1: &amp;T, item2: &amp;T) {</code></pre>
-<p>O tipo genérico <code>T</code> especificado como o tipo de <code>item1</code> e <code>item2</code>
-parâmetros restringe a função de tal forma que o tipo concreto do valor
-passado como argumento para <code>item1</code> e <code>item2</code> deve ser o mesmo.</p>
+<p>O tipo genérico <code>T</code>, usado tanto em <code>item1</code> quanto em <code>item2</code>, restringe a
+função de modo que o tipo concreto passado como argumento para ambos os
+parâmetros precisa ser o mesmo.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="specifying-multiple-trait-bounds-with-the--syntax"></a></p>
-<h4 id="vários-limites-de-características-com-a-sintaxe-"><a class="header" href="#vários-limites-de-características-com-a-sintaxe-">Vários limites de características com a sintaxe <code>+</code></a></h4>
-<p>Também podemos especificar mais de um limite de característica. Digamos que queremos que <code>notify</code> use
-formatação de exibição, bem como <code>summarize</code> em <code>item</code>: especificamos no <code>notify</code>
-definição de que <code>item</code> deve implementar <code>Display</code> e <code>Summary</code>. Nós podemos fazer
-então, usando a sintaxe <code>+</code>:</p>
+<h4 id="múltiplos-trait-bounds-com-a-sintaxe-"><a class="header" href="#múltiplos-trait-bounds-com-a-sintaxe-">Múltiplos Trait Bounds com a Sintaxe <code>+</code></a></h4>
+<p>Também podemos especificar mais de um trait bound. Digamos que queremos que
+<code>notify</code> use formatação de exibição, além de <code>summarize</code> em <code>item</code>: nesse caso,
+especificamos na definição de <code>notify</code> que <code>item</code> deve implementar <code>Display</code> e
+<code>Summary</code>. Podemos fazer isso usando a sintaxe <code>+</code>:</p>
 <pre><code class="language-rust ignore">pub fn notify(item: &amp;(impl Summary + Display)) {</code></pre>
-<p>A sintaxe <code>+</code> também é válida com limites de características em tipos genéricos:</p>
+<p>A sintaxe <code>+</code> também funciona com trait bounds em tipos genéricos:</p>
 <pre><code class="language-rust ignore">pub fn notify&lt;T: Summary + Display&gt;(item: &amp;T) {</code></pre>
-<p>Com os dois limites de características especificados, o corpo de <code>notify</code> pode chamar <code>summarize</code>
-e use <code>{}</code> para formatar <code>item</code>.</p>
-<h4 id="limites-de-características-mais-claros-com-cláusulas-where"><a class="header" href="#limites-de-características-mais-claros-com-cláusulas-where">Limites de características mais claros com cláusulas <code>where</code></a></h4>
-<p>Usar muitos limites de características tem suas desvantagens. Cada genérico tem sua própria característica
-limites, portanto, funções com vários parâmetros de tipo genérico podem conter muitos
-informações vinculadas a características entre o nome da função e sua lista de parâmetros,
-tornando a assinatura da função difícil de ler. Por esta razão, Rust tem alternativas
-sintaxe para especificar limites de características dentro de uma cláusula <code>where</code> após a função
-assinatura. Então, em vez de escrever isto:</p>
+<p>Com os dois trait bounds especificados, o corpo de <code>notify</code> pode chamar
+<code>summarize</code> e usar <code>{}</code> para formatar <code>item</code>.</p>
+<h4 id="trait-bounds-mais-claros-com-cláusulas-where"><a class="header" href="#trait-bounds-mais-claros-com-cláusulas-where">Trait Bounds Mais Claros com Cláusulas <code>where</code></a></h4>
+<p>Usar muitos trait bounds tem suas desvantagens. Cada tipo genérico recebe seus
+próprios limites, então funções com vários parâmetros genéricos podem acabar
+com muita informação espremida entre o nome da função e a lista de parâmetros,
+o que torna a assinatura difícil de ler. Por isso, o Rust oferece uma sintaxe
+alternativa para especificar trait bounds dentro de uma cláusula <code>where</code>, após
+a assinatura da função. Assim, em vez de escrever isto:</p>
 <pre><code class="language-rust ignore">fn some_function&lt;T: Display + Clone, U: Clone + Debug&gt;(t: &amp;T, u: &amp;U) -&gt; i32 {</code></pre>
 <p>podemos usar uma cláusula <code>where</code>, assim:</p>
 <pre><code class="language-rust ignore">fn some_function&lt;T, U&gt;(t: &amp;T, u: &amp;U) -&gt; i32
@@ -557,12 +555,12 @@ where
 {
 <span class="boring">    unimplemented!()
 </span><span class="boring">}</span></code></pre>
-<p>A assinatura desta função é menos confusa: o nome da função, lista de parâmetros,
-e o tipo de retorno estão próximos, semelhante a uma função sem muitas características
-limites.</p>
-<h3 id="retornando-tipos-que-implementam-características"><a class="header" href="#retornando-tipos-que-implementam-características">Retornando tipos que implementam características</a></h3>
-<p>Também podemos usar a sintaxe <code>impl Trait</code> na posição de retorno para retornar um
-valor de algum tipo que implementa uma característica, conforme mostrado aqui:</p>
+<p>A assinatura dessa função fica menos confusa: o nome da função, a lista de
+parâmetros e o tipo de retorno ficam próximos uns dos outros, como em uma
+função sem muitos trait bounds.</p>
+<h3 id="retornando-tipos-que-implementam-traits"><a class="header" href="#retornando-tipos-que-implementam-traits">Retornando Tipos que Implementam Traits</a></h3>
+<p>Também podemos usar a sintaxe <code>impl Trait</code> na posição de retorno para devolver
+um valor de algum tipo que implemente uma trait, como mostrado aqui:</p>
 <pre><code class="language-rust ignore"><span class="boring">pub trait Summary {
 </span><span class="boring">    fn summarize(&amp;self) -&gt; String;
 </span><span class="boring">}
@@ -603,20 +601,19 @@ valor de algum tipo que implementa uma característica, conforme mostrado aqui:<
         repost: false,
     }
 }</code></pre>
-<p>Ao usar <code>impl Summary</code> para o tipo de retorno, especificamos que o
-A função <code>returns_summarizable</code> retorna algum tipo que implementa <code>Summary</code>
-trait sem nomear o tipo concreto. Neste caso, <code>returns_summarizable</code>
-retorna <code>SocialPost</code>, mas o código que chama esta função não precisa saber
-que.</p>
-<p>A capacidade de especificar um tipo de retorno apenas pela característica que ele implementa é
-especialmente útil no contexto de encerramentos e iteradores, que abordamos em
-Capítulo 13. Closures e iteradores criam tipos que somente o compilador conhece ou
-tipos que são muito longos para especificar. A sintaxe <code>impl Trait</code> permite que você concisamente
-especifique que uma função retorna algum tipo que implementa a característica <code>Iterator</code>
-sem precisar escrever um tipo muito longo.</p>
-<p>No entanto, você só pode usar <code>impl Trait</code> se estiver retornando um único tipo. Para
-por exemplo, este código que retorna <code>NewsArticle</code> ou <code>SocialPost</code> com
-o tipo de retorno especificado como <code>impl Summary</code> não funcionaria:</p>
+<p>Ao usar <code>impl Summary</code> como tipo de retorno, estamos especificando que a função
+<code>returns_summarizable</code> retorna algum tipo que implementa a trait <code>Summary</code>,
+sem nomear qual é esse tipo concreto. Neste caso, <code>returns_summarizable</code>
+retorna <code>SocialPost</code>, mas o código que chama a função não precisa saber disso.</p>
+<p>A capacidade de especificar um tipo de retorno apenas pela trait que ele
+implementa é especialmente útil no contexto de closures e iteradores, que
+veremos no Capítulo 13. Closures e iteradores produzem tipos que só o
+compilador conhece ou que seriam longos demais para escrever. A sintaxe
+<code>impl Trait</code> permite declarar de forma concisa que uma função retorna algum
+tipo que implementa a trait <code>Iterator</code>, sem precisar escrever um tipo enorme.</p>
+<p>No entanto, só podemos usar <code>impl Trait</code> quando a função retorna um único tipo.
+Por exemplo, este código, que retorna <code>NewsArticle</code> ou <code>SocialPost</code> com o tipo
+de retorno especificado como <code>impl Summary</code>, não funcionaria:</p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">pub trait Summary {
 </span><span class="boring">    fn summarize(&amp;self) -&gt; String;
 </span><span class="boring">}
@@ -671,21 +668,21 @@ o tipo de retorno especificado como <code>impl Summary</code> não funcionaria:<
         }
     }
 }</code></pre>
-<p>Não é permitido retornar <code>NewsArticle</code> ou <code>SocialPost</code> devido a
-restrições sobre como a sintaxe <code>impl Trait</code> é implementada no compilador.
-Abordaremos como escrever uma função com esse comportamento na seção <a href="ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior">“Usando Trait
-Objetos para abstrair sobre comportamento compartilhado”</a><!-- ignore -->
-seção do Capítulo 18.</p>
-<h3 id="usando-limites-de-características-para-implementar-métodos-condicionalmente"><a class="header" href="#usando-limites-de-características-para-implementar-métodos-condicionalmente">Usando limites de características para implementar métodos condicionalmente</a></h3>
-<p>Usando uma característica vinculada a um bloco <code>impl</code> que usa parâmetros de tipo genérico,
-podemos implementar métodos condicionalmente para tipos que implementam o especificado
-características. Por exemplo, o tipo <code>Pair&lt;T&gt;</code> na Listagem 10-15 sempre implementa o
-<code>new</code> para retornar uma nova instância de <code>Pair&lt;T&gt;</code> (lembre-se do <a href="ch05-03-method-syntax.html#method-syntax">“Método
-Sintaxe”</a><!-- ignore --> seção do Capítulo 5 que <code>Self</code> é um tipo
-alias para o tipo do bloco <code>impl</code>, que neste caso é <code>Pair&lt;T&gt;</code>). Mas
-no próximo bloco <code>impl</code>, <code>Pair&lt;T&gt;</code> apenas implementa o método <code>cmp_display</code> se
-seu tipo interno <code>T</code> implementa a característica <code>PartialOrd</code> que permite comparação
-<em>e</em> a característica <code>Display</code> que permite a impressão.</p>
+<p>Não é permitido retornar <code>NewsArticle</code> ou <code>SocialPost</code> por causa das
+restrições de como <code>impl Trait</code> é implementado no compilador. Veremos como
+escrever uma função com esse comportamento na seção <a href="ch18-02-trait-objects.html#using-trait-objects-to-abstract-over-shared-behavior">“Usando Trait Objects
+para Abstrair Comportamento Compartilhado”</a><!-- ignore --> do
+Capítulo 18.</p>
+<h3 id="usando-trait-bounds-para-implementar-métodos-condicionalmente"><a class="header" href="#usando-trait-bounds-para-implementar-métodos-condicionalmente">Usando Trait Bounds para Implementar Métodos Condicionalmente</a></h3>
+<p>Ao usar trait bounds em um bloco <code>impl</code> com parâmetros de tipo genérico,
+podemos implementar métodos condicionalmente para tipos que satisfaçam os
+limites especificados. Por exemplo, o tipo <code>Pair&lt;T&gt;</code> da Listagem 10-15 sempre
+implementa o método <code>new</code>, que retorna uma nova instância de <code>Pair&lt;T&gt;</code>.
+Lembre-se, da seção <a href="ch05-03-method-syntax.html#method-syntax">“Sintaxe de Método”</a><!-- ignore --> do Capítulo
+5, que <code>Self</code> é um alias para o tipo do bloco <code>impl</code>, que aqui é <code>Pair&lt;T&gt;</code>.
+Mas, no bloco <code>impl</code> seguinte, <code>Pair&lt;T&gt;</code> só implementa o método
+<code>cmp_display</code> se seu tipo interno <code>T</code> implementar <code>PartialOrd</code>, que permite
+comparação, <em>e</em> <code>Display</code>, que permite impressão.</p>
 <figure class="listing" id="listing-10-15">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::fmt::Display;
@@ -710,38 +707,39 @@ impl&lt;T: Display + PartialOrd&gt; Pair&lt;T&gt; {
         }
     }
 }</code></pre>
-<figcaption><a href="#listing-10-15">Listing 10-15</a>: Conditionally implementing methods on a generic type depending on trait bounds</figcaption>
+<figcaption><a href="#listing-10-15">Listing 10-15</a>: Implementando métodos condicionalmente em um tipo genérico, dependendo de trait bounds</figcaption>
 </figure>
-<p>Também podemos implementar condicionalmente uma característica para qualquer tipo que implemente
-outra característica. Implementações de uma característica em qualquer tipo que satisfaça a característica
-limites são chamados de <em>implementações gerais</em> e são usados ​​extensivamente no
-Biblioteca padrão Rust. Por exemplo, a biblioteca padrão implementa o
-<code>ToString</code> trait em qualquer tipo que implemente o <code>Display</code> trait. O <code>impl</code>
-bloco na biblioteca padrão é semelhante a este código:</p>
+<p>Também podemos implementar condicionalmente uma trait para qualquer tipo que
+implemente outra trait. Implementações de uma trait para qualquer tipo que
+satisfaça determinados trait bounds são chamadas de <em>implementações gerais</em> e
+são muito usadas na biblioteca padrão do Rust. Por exemplo, a biblioteca
+padrão implementa a trait <code>ToString</code> para qualquer tipo que implemente
+<code>Display</code>. O bloco <code>impl</code> correspondente na biblioteca padrão se parece com
+algo assim:</p>
 <pre><code class="language-rust ignore">impl&lt;T: Display&gt; ToString for T {
     // --snip--
 }</code></pre>
 <p>Como a biblioteca padrão tem essa implementação geral, podemos chamar o método
-<code>to_string</code> método definido pela característica <code>ToString</code> em qualquer tipo que implemente
-o traço <code>Display</code>. Por exemplo, podemos transformar números inteiros em seus correspondentes
-<code>String</code> valores como este porque números inteiros implementam <code>Display</code>:</p>
+<code>to_string</code>, definido pela trait <code>ToString</code>, em qualquer tipo que implemente
+<code>Display</code>. Por exemplo, podemos transformar inteiros em seus valores <code>String</code>
+correspondentes porque inteiros implementam <code>Display</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = 3.to_string();
 <span class="boring">}</span></code></pre>
-<p>Implementações gerais aparecem na documentação da característica no
-Seção “Implementadores”.</p>
-<p>Características e limites de características nos permitem escrever código que usa parâmetros de tipo genérico para
-reduzir a duplicação, mas também especificar ao compilador que queremos o genérico
-tipo para ter um comportamento específico. O compilador pode então usar o trait vinculado
-informações para verificar se todos os tipos concretos usados ​​em nosso código fornecem o
-comportamento correto. Em linguagens de tipo dinâmico, obteríamos um erro em
-tempo de execução se chamarmos um método em um tipo que não definiu o método. Mas ferrugem
-move esses erros para o tempo de compilação para que sejamos forçados a corrigi-los
-antes mesmo que nosso código possa ser executado. Além disso, não precisamos escrever código
-que verifica o comportamento em tempo de execução, porque já verificamos na compilação
-tempo. Fazer isso melhora o desempenho sem ter que abrir mão da flexibilidade
-de genéricos.</p>
+<p>Implementações gerais aparecem na documentação da trait na seção
+“Implementors”.</p>
+<p>Traits e trait bounds nos permitem escrever código com parâmetros de tipo
+genérico para reduzir duplicação e, ao mesmo tempo, especificar ao compilador
+que queremos que o tipo genérico tenha determinado comportamento. O compilador
+pode então usar essas informações para verificar se todos os tipos concretos
+usados no código fornecem o comportamento correto. Em linguagens de tipagem
+dinâmica, receberíamos um erro em tempo de execução se chamássemos um método em
+um tipo que não o define. Em Rust, esses erros são antecipados para o tempo de
+compilação, de modo que somos obrigados a corrigi-los antes mesmo de executar o
+código. Além disso, não precisamos escrever checagens de comportamento em
+tempo de execução, porque tudo já foi validado na compilação. Isso melhora o
+desempenho sem abrir mão da flexibilidade oferecida pelos genéricos.</p>
 
                     </main>
 

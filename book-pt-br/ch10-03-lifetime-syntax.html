@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -181,31 +181,32 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="validando-referências-com-tempos-de-vida"><a class="header" href="#validando-referências-com-tempos-de-vida">Validando Referências com Tempos de Vida</a></h2>
-<p>Lifetimes são outro tipo de genérico que já usamos. Em vez de
-do que garantir que um tipo tenha o comportamento que desejamos, as vidas garantem que
-as referências são válidas enquanto precisarmos que sejam.</p>
-<p>Um detalhe que não discutimos no <a href="ch04-02-references-and-borrowing.html#references-and-borrowing">“Referências e
-A seção Emprestando ”</a><!-- ignore --> no Capítulo 4 é
-que toda referência em Rust tem uma vida útil, que é o escopo para o qual
-essa referência é válida. Na maioria das vezes, as vidas são implícitas e inferidas,
-assim como na maioria das vezes, os tipos são inferidos. Só somos obrigados a
-anote tipos quando vários tipos forem possíveis. De maneira semelhante, devemos
-anotar tempos de vida quando os tempos de vida das referências puderem ser relacionados em alguns
-maneiras diferentes. Rust exige que anotemos os relacionamentos usando genéricos
-parâmetros de vida útil para garantir que as referências reais usadas em tempo de execução serão
-definitivamente será válido.</p>
-<p>Anotar tempos de vida nem é um conceito na maioria das outras linguagens de programação
-tenho, então isso vai parecer estranho. Embora não cubramos vidas em
-na íntegra neste capítulo, discutiremos maneiras comuns que você pode encontrar
-sintaxe vitalícia para que você possa se sentir confortável com o conceito.</p>
+                        <h2 id="validando-referências-com-lifetimes"><a class="header" href="#validando-referências-com-lifetimes">Validando Referências com Lifetimes</a></h2>
+<p><em>Lifetimes</em> são outro tipo de genérico que já vimos em uso. Em vez de
+garantir que um tipo tenha o comportamento que queremos, lifetimes garantem
+que referências continuem válidas pelo tempo que precisamos delas.</p>
+<p>Um detalhe que não discutimos na seção <a href="ch04-02-references-and-borrowing.html#references-and-borrowing">“Referências e
+Borrowing”</a><!-- ignore -->, no Capítulo 4, é que toda
+referência em Rust tem um lifetime, que é o escopo durante o qual essa
+referência é válida. Na maior parte do tempo, lifetimes são implícitos e
+inferidos, assim como geralmente acontece com tipos. Só precisamos anotar tipos
+quando mais de um tipo é possível. De forma parecida, precisamos anotar
+lifetimes quando os lifetimes de referências podem se relacionar de algumas
+maneiras diferentes. O Rust exige que anotemos essas relações usando parâmetros
+genéricos de lifetime, para garantir que as referências concretas usadas em
+tempo de execução sejam de fato válidas.</p>
+<p>Anotar lifetimes não é sequer um conceito presente na maioria das outras
+linguagens de programação, então isso provavelmente vai parecer pouco familiar.
+Embora não cubramos lifetimes por completo neste capítulo, vamos discutir as
+formas mais comuns em que essa sintaxe aparece para que você se acostume com a
+ideia.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="preventing-dangling-references-with-lifetimes"></a></p>
-<h3 id="referências-pendentes"><a class="header" href="#referências-pendentes">Referências pendentes</a></h3>
-<p>O principal objetivo das vidas é evitar referências pendentes, que, se
-pudessem existir, faria com que um programa referenciasse dados diferentes dos
-dados que se pretende referenciar. Considere o programa na Listagem 10-16, que
-tem um escopo externo e um escopo interno.</p>
+<h3 id="referências-pendentes"><a class="header" href="#referências-pendentes">Referências Pendentes</a></h3>
+<p>O principal objetivo dos lifetimes é evitar referências pendentes, que, se
+fossem permitidas, fariam um programa referenciar dados diferentes daqueles
+que ele pretendia referenciar. Considere o programa da Listagem 10-16, que tem
+um escopo externo e um escopo interno.</p>
 <figure class="listing" id="listing-10-16">
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let r;
@@ -217,22 +218,22 @@ tem um escopo externo e um escopo interno.</p>
 
     println!("r: {r}");
 }</code></pre>
-<figcaption><a href="#listing-10-16">Listing 10-16</a>: An attempt to use a reference whose value has gone out of scope</figcaption>
+<figcaption><a href="#listing-10-16">Listing 10-16</a>: Tentativa de usar uma referência cujo valor já saiu de escopo</figcaption>
 </figure>
 <blockquote>
-<p>Nota: Os exemplos nas Listagens 10-16, 10-17 e 10-23 declaram variáveis
-sem dar-lhes um valor inicial, então o nome da variável existe no exterior
-escopo. À primeira vista, isso pode parecer estar em conflito com o fato de Rust ter
-sem valores nulos. No entanto, se tentarmos usar uma variável antes de atribuir-lhe um valor,
-obteremos um erro em tempo de compilação, o que mostra que de fato o Rust não permite
-valores nulos.</p>
+<p>Nota: os exemplos das Listagens 10-16, 10-17 e 10-23 declaram variáveis
+sem lhes dar um valor inicial, de modo que o nome da variável existe no
+escopo externo. À primeira vista, isso pode parecer entrar em conflito com o
+fato de Rust não ter valores nulos. No entanto, se tentarmos usar uma
+variável antes de lhe atribuir um valor, receberemos um erro em tempo de
+compilação, o que mostra que Rust realmente não permite valores nulos.</p>
 </blockquote>
 <p>O escopo externo declara uma variável chamada <code>r</code> sem valor inicial, e o
-o escopo interno declara uma variável chamada <code>x</code> com o valor inicial de <code>5</code>. Dentro
-no escopo interno, tentamos definir o valor de <code>r</code> como uma referência a <code>x</code>.
-Então, o escopo interno termina e tentamos imprimir o valor em <code>r</code>. Este código
-não compilará, porque o valor ao qual <code>r</code> está se referindo saiu do escopo
-antes de tentarmos usá-lo. Aqui está a mensagem de erro:</p>
+escopo interno declara uma variável chamada <code>x</code> com o valor inicial <code>5</code>. Dentro
+do escopo interno, tentamos definir o valor de <code>r</code> como uma referência a <code>x</code>.
+Depois, o escopo interno termina e tentamos imprimir o valor em <code>r</code>. Esse
+código não compila, porque o valor ao qual <code>r</code> se refere saiu de escopo antes
+de tentarmos usá-lo. Aqui está a mensagem de erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling chapter10 v0.1.0 (file:///projects/chapter10)
 error[E0597]: `x` does not live long enough
@@ -251,17 +252,18 @@ error[E0597]: `x` does not live long enough
 For more information about this error, try `rustc --explain E0597`.
 error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
 </code></pre>
-<p>A mensagem de erro diz que a variável <code>x</code> “não dura o suficiente”. O
-a razão é que <code>x</code> estará fora do escopo quando o escopo interno terminar na linha 7.
-Mas <code>r</code> ainda é válido para o escopo externo; porque seu escopo é maior, dizemos
-que “vive mais”. Se Rust permitisse que esse código funcionasse, <code>r</code> seria
-referenciando a memória que foi desalocada quando <code>x</code> saiu do escopo e
-qualquer coisa que tentássemos fazer com <code>r</code> não funcionaria corretamente. Então, como é que a ferrugem
-determinar que este código é inválido? Ele usa um verificador de empréstimo.</p>
-<h3 id="o-verificador-de-empréstimos"><a class="header" href="#o-verificador-de-empréstimos">O verificador de empréstimos</a></h3>
-<p>O compilador Rust possui um <em>verificador de empréstimo</em> que compara escopos para determinar
-se todos os empréstimos são válidos. A Listagem 10-17 mostra o mesmo código da Listagem
-10-16, mas com anotações mostrando os tempos de vida das variáveis.</p>
+<p>A mensagem de erro diz que a variável <code>x</code> “não vive tempo suficiente”. O motivo
+é que <code>x</code> sai de escopo quando o escopo interno termina na linha 7. Mas <code>r</code>
+ainda é válido no escopo externo; como seu escopo é maior, dizemos que ele
+“vive mais”. Se Rust permitisse esse código, <code>r</code> ficaria apontando para uma
+região de memória que já teria sido desalocada quando <code>x</code> saísse de escopo, e
+qualquer tentativa de usar <code>r</code> produziria comportamento incorreto. Como o Rust
+determina que esse código é inválido? Ele usa o <em>borrow checker</em>.</p>
+<h3 id="o-borrow-checker"><a class="header" href="#o-borrow-checker">O Borrow Checker</a></h3>
+<p>O compilador Rust possui um <em>borrow checker</em> que compara escopos para
+determinar se todos os empréstimos são válidos. A Listagem 10-17 mostra o
+mesmo código da Listagem 10-16, mas com anotações exibindo os lifetimes das
+variáveis.</p>
 <figure class="listing" id="listing-10-17">
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let r;                // ---------+-- 'a
@@ -273,16 +275,16 @@ se todos os empréstimos são válidos. A Listagem 10-17 mostra o mesmo código 
                           //          |
     println!("r: {r}");   //          |
 }                         // ---------+</code></pre>
-<figcaption><a href="#listing-10-17">Listing 10-17</a>: Annotations of the lifetimes of <code>r</code> and <code>x</code>, named <code>'a</code> and <code>'b</code>, respectively</figcaption>
+<figcaption><a href="#listing-10-17">Listing 10-17</a>: Anotações dos lifetimes de <code>r</code> e <code>x</code>, chamados <code>'a</code> e <code>'b</code>, respectivamente</figcaption>
 </figure>
-<p>Aqui, anotamos o tempo de vida de <code>r</code> com <code>'a</code> e o tempo de vida de <code>x</code>
-com <code>'b</code>. Como você pode ver, o bloco interno <code>'b</code> é muito menor que o bloco externo
-<code>'a</code> bloco vitalício. Em tempo de compilação, Rust compara o tamanho dos dois
-vidas e vê que <code>r</code> tem uma vida útil de <code>'a</code> mas que se refere à memória
-com uma vida inteira de <code>'b</code>. O programa foi rejeitado porque <code>'b</code> é menor que
-<code>'a</code>: O assunto da referência não dura tanto quanto a referência.</p>
-<p>A Listagem 10-18 corrige o código para que ele não tenha uma referência pendente e
-ele compila sem erros.</p>
+<p>Aqui, anotamos o lifetime de <code>r</code> com <code>'a</code> e o de <code>x</code> com <code>'b</code>. Como você pode
+ver, o bloco interno <code>'b</code> é muito menor que o bloco externo <code>'a</code>. Em tempo de
+compilação, o Rust compara o tamanho desses dois lifetimes e percebe que <code>r</code>
+tem lifetime <code>'a</code>, mas aponta para uma memória com lifetime <code>'b</code>. O programa é
+rejeitado porque <code>'b</code> é menor que <code>'a</code>: o valor referenciado não vive tanto
+quanto a referência.</p>
+<p>A Listagem 10-18 corrige o código para que ele não tenha uma referência
+pendente, e então ele compila sem erros.</p>
 <figure class="listing" id="listing-10-18">
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 5;            // ----------+-- 'b
@@ -292,19 +294,19 @@ ele compila sem erros.</p>
     println!("r: {r}");   //   |       |
                           // --+       |
 }                         // ----------+</code></pre>
-<figcaption><a href="#listing-10-18">Listing 10-18</a>: A valid reference because the data has a longer lifetime than the reference</figcaption>
+<figcaption><a href="#listing-10-18">Listing 10-18</a>: Uma referência válida porque os dados têm um lifetime maior que a referência</figcaption>
 </figure>
-<p>Aqui, <code>x</code> tem o tempo de vida <code>'b</code>, que neste caso é maior que <code>'a</code>. Esse
-significa que <code>r</code> pode referenciar <code>x</code> porque Rust sabe que a referência em <code>r</code> irá
-sempre será válido enquanto <code>x</code> for válido.</p>
-<p>Agora que você sabe onde estão os tempos de vida das referências e como o Rust analisa
-vidas úteis para garantir que as referências serão sempre válidas, vamos explorar
-tempos de vida em parâmetros de função e valores de retorno.</p>
-<h3 id="vidas-genéricas-em-funções"><a class="header" href="#vidas-genéricas-em-funções">Vidas genéricas em funções</a></h3>
-<p>Escreveremos uma função que retorna a maior das duas fatias de string. Esse
-A função pegará duas fatias de string e retornará uma única fatia de string. Depois
-implementamos a função <code>longest</code>, o código na Listagem 10-19 deve
-imprima <code>The longest string is abcd</code>.</p>
+<p>Aqui, <code>x</code> tem lifetime <code>'b</code>, que neste caso é maior que <code>'a</code>. Isso significa
+que <code>r</code> pode referenciar <code>x</code>, porque o Rust sabe que a referência em <code>r</code>
+continuará válida enquanto <code>x</code> for válido.</p>
+<p>Agora que você sabe onde estão os lifetimes das referências e como o Rust os
+analisa para garantir que as referências sejam sempre válidas, vamos explorar
+lifetimes genéricos em parâmetros de função e valores de retorno.</p>
+<h3 id="lifetimes-genéricos-em-funções"><a class="header" href="#lifetimes-genéricos-em-funções">Lifetimes Genéricos em Funções</a></h3>
+<p>Vamos escrever uma função que retorna a maior entre duas fatias de string. Essa
+função receberá duas fatias de string e retornará uma única fatia de string.
+Depois de implementarmos a função <code>longest</code>, o código da Listagem 10-19 deverá
+imprimir <code>The longest string is abcd</code>.</p>
 <figure class="listing" id="listing-10-19">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore">fn main() {
@@ -314,16 +316,16 @@ imprima <code>The longest string is abcd</code>.</p>
     let result = longest(string1.as_str(), string2);
     println!("The longest string is {result}");
 }</code></pre>
-<figcaption><a href="#listing-10-19">Listing 10-19</a>: A <code>main</code> function that calls the <code>longest</code> function to find the longer of two string slices</figcaption>
+<figcaption><a href="#listing-10-19">Listing 10-19</a>: Uma função <code>main</code> que chama <code>longest</code> para encontrar a maior de duas fatias de string</figcaption>
 </figure>
-<p>Observe que queremos que a função receba fatias de string, que são referências,
-em vez de strings, porque não queremos que a função <code>longest</code> assuma
-propriedade de seus parâmetros. Consulte <a href="ch04-03-slices.html#string-slices-as-parameters">“String Slices como
-Parâmetros”</a><!-- ignore --> no Capítulo 4 para mais
-discussão sobre por que os parâmetros que usamos na Listagem 10-19 são aqueles que
-querer.</p>
-<p>Se tentarmos implementar a função <code>longest</code> conforme mostrado na Listagem 10-20,
-não compilará.</p>
+<p>Observe que queremos que a função receba fatias de string, que são
+referências, em vez de strings, porque não queremos que a função <code>longest</code>
+tome ownership de seus parâmetros. Consulte <a href="ch04-03-slices.html#string-slices-as-parameters">“String Slices como
+Parâmetros”</a><!-- ignore --> no Capítulo 4 para uma
+discussão mais detalhada sobre por que os parâmetros da Listagem 10-19 são os
+que queremos.</p>
+<p>Se tentarmos implementar a função <code>longest</code> como mostrado na Listagem 10-20,
+ela não compilará.</p>
 <figure class="listing" id="listing-10-20">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
@@ -337,9 +339,9 @@ não compilará.</p>
 </span>fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {
     if x.len() &gt; y.len() { x } else { y }
 }</code></pre>
-<figcaption><a href="#listing-10-20">Listing 10-20</a>: An implementation of the <code>longest</code> function that returns the longer of two string slices but does not yet compile</figcaption>
+<figcaption><a href="#listing-10-20">Listing 10-20</a>: Uma implementação de <code>longest</code> que retorna a maior de duas fatias de string, mas ainda não compila</figcaption>
 </figure>
-<p>Em vez disso, obtemos o seguinte erro que fala sobre tempos de vida:</p>
+<p>Em vez disso, obtemos o seguinte erro, que fala sobre lifetimes:</p>
 <pre><code class="language-console">$ cargo run
    Compiling chapter10 v0.1.0 (file:///projects/chapter10)
 error[E0106]: missing lifetime specifier
@@ -357,52 +359,55 @@ help: consider introducing a named lifetime parameter
 For more information about this error, try `rustc --explain E0106`.
 error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
 </code></pre>
-<p>O texto de ajuda revela que o tipo de retorno precisa de um parâmetro genérico de vida útil
-nele porque Rust não consegue dizer se a referência retornada se refere a
-<code>x</code> ou <code>y</code>. Na verdade, também não sabemos, porque o bloco <code>if</code> no corpo
-desta função retorna uma referência para <code>x</code> e o bloco <code>else</code> retorna um
-referência a <code>y</code>!</p>
-<p>Quando definimos esta função, não sabemos os valores concretos que irão
-ser passado para esta função, então não sabemos se o caso <code>if</code> ou o caso
-<code>else</code> caso será executado. Também não sabemos a vida útil concreta do
-referências que serão passadas, então não podemos olhar para os escopos como fizemos em
-Listagens 10-17 e 10-18 para determinar se a referência que retornamos será
-seja sempre válido. O verificador de empréstimo também não pode determinar isso, porque
-não sabe como os tempos de vida de <code>x</code> e <code>y</code> se relacionam com o tempo de vida do
-valor de retorno. Para corrigir esse erro, adicionaremos parâmetros genéricos de vida útil que
-definir o relacionamento entre as referências para que o verificador de empréstimo possa
-realizar sua análise.</p>
-<h3 id="sintaxe-de-anotação-vitalícia"><a class="header" href="#sintaxe-de-anotação-vitalícia">Sintaxe de anotação vitalícia</a></h3>
-<p>As anotações vitalícias não alteram a duração de qualquer uma das referências. Em vez de,
-eles descrevem as relações dos tempos de vida de múltiplas referências para cada
-outro sem afetar a vida útil. Assim como as funções podem aceitar qualquer tipo
-quando a assinatura especifica um parâmetro de tipo genérico, as funções podem aceitar
-referências com qualquer tempo de vida especificando um parâmetro de tempo de vida genérico.</p>
-<p>As anotações vitalícias têm uma sintaxe um pouco incomum: os nomes das anotações vitalícias
-os parâmetros devem começar com um apóstrofo (<code>'</code>) e geralmente estão todos em letras minúsculas
-e muito curtos, como tipos genéricos. A maioria das pessoas usa o nome <code>'a</code> para o primeiro
-anotação vitalícia. Colocamos anotações de parâmetro de vida útil após <code>&amp;</code> de um
-referência, usando um espaço para separar a anotação do tipo da referência.</p>
-<p>Aqui estão alguns exemplos: uma referência a um <code>i32</code> sem um parâmetro de tempo de vida, um
-referência a um <code>i32</code> que possui um parâmetro de vida útil chamado <code>'a</code> e um parâmetro mutável
-referência a um <code>i32</code> que também tem o tempo de vida <code>'a</code>:</p>
+<p>O texto de ajuda revela que o tipo de retorno precisa de um parâmetro genérico
+de lifetime, porque o Rust não consegue dizer se a referência retornada se
+refere a <code>x</code> ou a <code>y</code>. Na verdade, nós também não sabemos, porque o bloco <code>if</code>
+no corpo dessa função retorna uma referência a <code>x</code>, e o bloco <code>else</code> retorna
+uma referência a <code>y</code>!</p>
+<p>Quando definimos essa função, não sabemos quais valores concretos serão
+passados para ela, então não sabemos se o caso <code>if</code> ou o caso <code>else</code> será
+executado. Também não sabemos quais são os lifetimes concretos das referências
+recebidas, então não podemos olhar para os escopos como fizemos nas Listagens
+10-17 e 10-18 para determinar se a referência que retornamos sempre será
+válida. O borrow checker também não consegue determinar isso, porque não sabe
+como os lifetimes de <code>x</code> e <code>y</code> se relacionam com o lifetime do valor de
+retorno. Para corrigir esse erro, vamos adicionar parâmetros genéricos de
+lifetime que definem a relação entre essas referências, permitindo que o
+borrow checker faça sua análise.</p>
+<h3 id="sintaxe-de-anotações-de-lifetime"><a class="header" href="#sintaxe-de-anotações-de-lifetime">Sintaxe de Anotações de Lifetime</a></h3>
+<p>Anotações de lifetime não alteram por quanto tempo as referências vivem. Em vez
+disso, elas descrevem as relações entre os lifetimes de múltiplas referências,
+sem afetar esses lifetimes. Assim como funções podem aceitar qualquer tipo
+quando a assinatura especifica um parâmetro de tipo genérico, funções podem
+aceitar referências com qualquer lifetime ao especificar um parâmetro genérico
+de lifetime.</p>
+<p>Anotações de lifetime têm uma sintaxe um pouco incomum: os nomes desses
+parâmetros devem começar com um apóstrofo (<code>'</code>) e geralmente são curtos e em
+minúsculas, como os tipos genéricos. A maioria das pessoas usa o nome <code>'a</code>
+para a primeira anotação de lifetime. Colocamos anotações de parâmetro de
+lifetime logo após o <code>&amp;</code> de uma referência, usando um espaço para separar a
+anotação do tipo da referência.</p>
+<p>Aqui estão alguns exemplos: uma referência a <code>i32</code> sem parâmetro de lifetime,
+uma referência a <code>i32</code> com um parâmetro de lifetime chamado <code>'a</code>, e uma
+referência mutável a <code>i32</code> que também tem o lifetime <code>'a</code>:</p>
 <pre><code class="language-rust ignore">&amp;i32        // a reference
 &amp;'a i32     // a reference with an explicit lifetime
 &amp;'a mut i32 // a mutable reference with an explicit lifetime</code></pre>
-<p>Uma anotação vitalícia por si só não tem muito significado, porque o
-anotações têm como objetivo informar ao Rust como os parâmetros genéricos de vida de vários
-referências se relacionam entre si. Vamos examinar como as anotações vitalícias
-relacionam-se entre si no contexto da função <code>longest</code>.</p>
+<p>Uma anotação de lifetime, sozinha, não significa muita coisa, porque essas
+anotações existem para informar ao Rust como os parâmetros genéricos de
+lifetime de várias referências se relacionam entre si. Vamos examinar como as
+anotações de lifetime se relacionam no contexto da função <code>longest</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="lifetime-annotations-in-function-signatures"></a></p>
-<h3 id="em-assinaturas-de-função"><a class="header" href="#em-assinaturas-de-função">Em assinaturas de função</a></h3>
-<p>Para usar anotações vitalícias em assinaturas de funções, precisamos declarar o
-parâmetros genéricos de vida útil entre colchetes angulares entre o nome da função e
-a lista de parâmetros, assim como fizemos com parâmetros de tipo genérico.</p>
-<p>Queremos que a assinatura expresse a seguinte restrição: O valor retornado
-a referência será válida desde que ambos os parâmetros sejam válidos. Isso é
-a relação entre a vida útil dos parâmetros e o valor de retorno.
-Nomearemos o tempo de vida como <code>'a</code> e depois o adicionaremos a cada referência, conforme mostrado em
+<h3 id="em-assinaturas-de-função"><a class="header" href="#em-assinaturas-de-função">Em Assinaturas de Função</a></h3>
+<p>Para usar anotações de lifetime em assinaturas de função, precisamos declarar
+os parâmetros genéricos de lifetime entre colchetes angulares, entre o nome da
+função e a lista de parâmetros, assim como fizemos com parâmetros de tipo
+genérico.</p>
+<p>Queremos que a assinatura expresse a seguinte restrição: a referência
+retornada será válida enquanto ambos os parâmetros forem válidos. Essa é a
+relação entre os lifetimes dos parâmetros e o valor de retorno. Vamos chamar o
+lifetime de <code>'a</code> e então adicioná-lo a cada referência, como mostrado na
 Listagem 10-21.</p>
 <figure class="listing" id="listing-10-21">
 <span class="file-name">Filename: src/main.rs</span>
@@ -417,44 +422,42 @@ Listagem 10-21.</p>
 </span>fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
     if x.len() &gt; y.len() { x } else { y }
 }</code></pre>
-<figcaption><a href="#listing-10-21">Listing 10-21</a>: The <code>longest</code> function definition specifying that all the references in the signature must have the same lifetime <code>'a</code></figcaption>
+<figcaption><a href="#listing-10-21">Listing 10-21</a>: Definição da função <code>longest</code>, especificando que todas as referências da assinatura devem ter o mesmo lifetime <code>'a</code></figcaption>
 </figure>
-<p>Este código deve compilar e produzir o resultado que desejamos quando o usamos com o
-<code>main</code> na Listagem 10-19.</p>
-<p>A assinatura da função agora informa ao Rust que durante algum tempo de vida <code>'a</code>, a função
-leva dois parâmetros, sendo que ambos são fatias de string que vivem pelo menos como
-contanto que seja vitalício <code>'a</code>. A assinatura da função também informa ao Rust que a string
-a fatia retornada da função durará pelo menos enquanto durar o tempo de vida <code>'a</code>.
-Na prática, isso significa que o tempo de vida da referência retornada pelo
-A função <code>longest</code> é igual ao menor dos tempos de vida dos valores
-referido pelos argumentos da função. Esses relacionamentos são o que queremos
-Rust para usar ao analisar este código.</p>
-<p>Lembre-se, quando especificamos os parâmetros de tempo de vida nesta assinatura de função,
-não estamos alterando o tempo de vida de nenhum valor passado ou retornado. Em vez de,
-estamos especificando que o verificador de empréstimo deve rejeitar quaisquer valores que não
-aderir a essas restrições. Observe que a função <code>longest</code> não precisa
-sabemos exatamente quanto tempo <code>x</code> e <code>y</code> viverão, apenas que algum escopo pode ser
-substituído por <code>'a</code> que irá satisfazer esta assinatura.</p>
-<p>Ao anotar tempos de vida em funções, as anotações vão para a função
-assinatura, não no corpo da função. As anotações vitalícias tornam-se parte
-o contrato da função, bem como os tipos na assinatura. Tendo
-assinaturas de função contêm o contrato vitalício significa a análise do Rust
-compilador pode ser mais simples. Se houver um problema com a forma como uma função é
-anotado ou a forma como é chamado, os erros do compilador podem apontar para a parte do
-nosso código e as restrições com mais precisão. Se, em vez disso, o compilador Rust
-fizemos mais inferências sobre o que pretendíamos com as relações das vidas
-ser, o compilador só poderá apontar para um uso de nosso código em muitas etapas
-longe da causa do problema.</p>
-<p>Quando passamos referências concretas para <code>longest</code>, o tempo de vida concreto que é
-substituído por <code>'a</code> é a parte do escopo de <code>x</code> que se sobrepõe ao
-escopo de <code>y</code>. Em outras palavras, o tempo de vida genérico <code>'a</code> obterá o concreto
-tempo de vida que é igual ao menor dos tempos de vida de <code>x</code> e <code>y</code>. Porque
-anotamos a referência retornada com o mesmo parâmetro de vida útil <code>'a</code>,
-a referência retornada também será válida para o comprimento do menor dos
-vidas úteis de <code>x</code> e <code>y</code>.</p>
-<p>Vejamos como as anotações vitalícias restringem a função <code>longest</code> por
-passando referências que têm diferentes tempos de vida concretos. A Listagem 10-22 é
-um exemplo direto.</p>
+<p>Esse código deve compilar e produzir o resultado desejado quando for usado com
+a função <code>main</code> da Listagem 10-19.</p>
+<p>A assinatura da função agora informa ao Rust que, para algum lifetime <code>'a</code>, a
+função recebe dois parâmetros, ambos fatias de string que vivem pelo menos
+enquanto <code>'a</code>. A assinatura também informa ao Rust que a fatia de string
+retornada durará pelo menos o mesmo tempo que <code>'a</code>. Na prática, isso significa
+que o lifetime da referência retornada por <code>longest</code> é o menor dos lifetimes
+dos valores referidos pelos argumentos da função. Essas relações são exatamente
+o que queremos que o Rust use ao analisar esse código.</p>
+<p>Lembre-se: quando especificamos parâmetros de lifetime nessa assinatura, não
+estamos alterando o lifetime de nenhum valor passado ou retornado. Em vez
+disso, estamos dizendo ao borrow checker que ele deve rejeitar quaisquer
+valores que não atendam a essas restrições. Observe que a função <code>longest</code> não
+precisa saber exatamente por quanto tempo <code>x</code> e <code>y</code> viverão; ela só precisa
+saber que algum escopo pode ser substituído por <code>'a</code> e satisfazer essa
+assinatura.</p>
+<p>Ao anotar lifetimes em funções, as anotações aparecem na assinatura, não no
+corpo da função. Anotações de lifetime passam a fazer parte do contrato da
+função, assim como os tipos na assinatura. Tornar esse contrato explícito
+simplifica a análise do compilador Rust. Se houver um problema na forma como
+uma função é anotada ou chamada, os erros do compilador poderão apontar com
+mais precisão para a parte do código e para a restrição envolvida. Se, em vez
+disso, o compilador Rust tentasse inferir mais do que pretendíamos nas relações
+entre lifetimes, talvez ele só conseguisse apontar para um uso do código muito
+distante da causa real do problema.</p>
+<p>Quando passamos referências concretas para <code>longest</code>, o lifetime concreto que
+substitui <code>'a</code> é a parte do escopo de <code>x</code> que se sobrepõe ao escopo de <code>y</code>. Em
+outras palavras, o lifetime genérico <code>'a</code> será instanciado com o menor dos
+lifetimes de <code>x</code> e <code>y</code>. Como anotamos a referência retornada com o mesmo
+parâmetro de lifetime <code>'a</code>, essa referência retornada também será válida apenas
+pelo menor dos lifetimes de <code>x</code> e <code>y</code>.</p>
+<p>Vamos ver como as anotações de lifetime restringem a função <code>longest</code>
+quando passamos referências com lifetimes concretos diferentes. A Listagem 10-22
+mostra um exemplo simples.</p>
 <figure class="listing" id="listing-10-22">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -470,19 +473,19 @@ um exemplo direto.</p>
 </span><span class="boring">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
 </span><span class="boring">    if x.len() &gt; y.len() { x } else { y }
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-10-22">Listing 10-22</a>: Using the <code>longest</code> function with references to <code>String</code> values that have different concrete lifetimes</figcaption>
+<figcaption><a href="#listing-10-22">Listing 10-22</a>: Usando <code>longest</code> com referências a valores <code>String</code> que têm lifetimes concretos diferentes</figcaption>
 </figure>
-<p>Neste exemplo, <code>string1</code> é válido até o final do escopo externo, <code>string2</code>
-é válido até o final do escopo interno e <code>result</code> faz referência a algo
-isso é válido até o final do escopo interno. Execute este código e você verá
-que o verificador de empréstimo aprova; ele irá compilar e imprimir <code>A string mais longa é uma string longa é longa</code>.</p>
-<p>A seguir, vamos tentar um exemplo que mostra que o tempo de vida da referência em
-<code>result</code> deve ser o menor tempo de vida dos dois argumentos. Nós moveremos o
-declaração da variável <code>result</code> fora do escopo interno, mas deixe o
-atribuição do valor à variável <code>result</code> dentro do escopo com
-<code>string2</code>. Então, moveremos o <code>println!</code> que usa <code>result</code> para fora do
-escopo interno, após o término do escopo interno. O código na Listagem 10-23 irá
-não compilar.</p>
+<p>Neste exemplo, <code>string1</code> é válido até o final do escopo externo, <code>string2</code> é
+válido até o final do escopo interno, e <code>result</code> referencia algo que também é
+válido até o fim desse escopo interno. Se você executar esse código, verá que
+o borrow checker o aprova: ele compila e imprime <code>A string mais longa é uma string longa</code>.</p>
+<p>Agora vamos tentar um exemplo que mostra que o lifetime da referência em
+<code>result</code> precisa ser o menor lifetime entre os dois argumentos. Vamos mover a
+declaração da variável <code>result</code> para fora do escopo interno, mas deixar a
+atribuição do valor de <code>result</code> dentro do escopo em que <code>string2</code> existe.
+Depois, moveremos o <code>println!</code> que usa <code>result</code> para fora do escopo interno,
+ou seja, depois que esse escopo já tiver terminado. O código da Listagem 10-23
+não compila.</p>
 <figure class="listing" id="listing-10-23">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
@@ -498,7 +501,7 @@ não compilar.</p>
 </span><span class="boring">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
 </span><span class="boring">    if x.len() &gt; y.len() { x } else { y }
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-10-23">Listing 10-23</a>: Attempting to use <code>result</code> after <code>string2</code> has gone out of scope</figcaption>
+<figcaption><a href="#listing-10-23">Listing 10-23</a>: Tentando usar <code>result</code> depois que <code>string2</code> saiu de escopo</figcaption>
 </figure>
 <p>Quando tentamos compilar este código, obtemos este erro:</p>
 <pre><code class="language-console">$ cargo run
@@ -519,29 +522,29 @@ For more information about this error, try `rustc --explain E0597`.
 error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
 </code></pre>
 <p>O erro mostra que para <code>result</code> ser válido para a instrução <code>println!</code>,
-<code>string2</code> precisaria ser válido até o final do escopo externo. A ferrugem sabe
-isso porque anotamos os tempos de vida dos parâmetros da função e retornamos
-valores usando o mesmo parâmetro de vida útil <code>'a</code>.</p>
-<p>Como humanos, podemos olhar para este código e ver que <code>string1</code> é mais longo que
-<code>string2</code> e, portanto, <code>result</code> conterá uma referência a <code>string1</code>.
-Como <code>string1</code> ainda não saiu do escopo, uma referência a <code>string1</code> será
-ainda será válido para a instrução <code>println!</code>. No entanto, o compilador não pode ver
-que a referência é válida neste caso. Dissemos a Rust que a vida de
-a referência retornada pela função <code>longest</code> é igual ao menor dos
-a vida útil das referências transmitidas. Portanto, o verificador de empréstimo
-não permite o código na Listagem 10.23 por possivelmente ter uma referência inválida.</p>
-<p>Tente projetar mais experimentos que variem os valores e a vida útil do
-referências passadas para a função <code>longest</code> e como a referência retornada
-é usado. Faça hipóteses sobre se seus experimentos passarão ou não no
-peça emprestado o verificador antes de compilar; então, verifique se você está certo!</p>
+<code>string2</code> precisaria ser válido até o final do escopo externo. Rust sabe
+isso porque anotamos os lifetimes dos parâmetros da função e retornamos
+valores usando o mesmo parâmetro de lifetime <code>'a</code>.</p>
+<p>Como humanos, podemos olhar para esse código e perceber que <code>string1</code> é maior
+que <code>string2</code> e, portanto, <code>result</code> conterá uma referência a <code>string1</code>. Como
+<code>string1</code> ainda não saiu de escopo, uma referência a <code>string1</code> continuaria
+válida para a instrução <code>println!</code>. No entanto, o compilador não consegue
+concluir isso nesse caso. Nós dissemos ao Rust que o lifetime da referência
+retornada pela função <code>longest</code> é igual ao menor lifetime das referências
+passadas. Por isso, o borrow checker não permite o código da Listagem 10-23,
+porque ele <em>poderia</em> conter uma referência inválida.</p>
+<p>Tente imaginar outros experimentos, variando os valores, os lifetimes das
+referências passadas para <code>longest</code> e a forma como a referência retornada é
+usada. Faça hipóteses sobre se seus experimentos passarão ou não pelo
+borrow checker antes de compilar; depois, veja se você acertou!</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="thinking-in-terms-of-lifetimes"></a></p>
-<h3 id="relacionamentos"><a class="header" href="#relacionamentos">Relacionamentos</a></h3>
-<p>A maneira como você precisa especificar os parâmetros de vida útil depende de qual é o seu
-função está fazendo. Por exemplo, se alterássemos a implementação do
-Função <code>longest</code> para sempre retornar o primeiro parâmetro em vez do mais longo
-fatia de string, não precisaríamos especificar um tempo de vida no parâmetro <code>y</code>. O
-o seguinte código será compilado:</p>
+<h3 id="pensando-em-relações-entre-lifetimes"><a class="header" href="#pensando-em-relações-entre-lifetimes">Pensando em Relações Entre Lifetimes</a></h3>
+<p>A forma como você precisa especificar parâmetros de lifetime depende do que sua
+função faz. Por exemplo, se alterássemos a implementação de <code>longest</code> para
+sempre retornar o primeiro parâmetro, em vez da maior fatia de string, não
+precisaríamos especificar um lifetime no parâmetro <code>y</code>. O código a seguir
+compila:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -556,11 +559,11 @@ o seguinte código será compilado:</p>
     x
 }</code></pre>
 </figure>
-<p>Especificamos um parâmetro vitalício <code>'a</code> para o parâmetro <code>x</code> e o retorno
-tipo, mas não para o parâmetro <code>y</code>, porque o tempo de vida de <code>y</code> não tem
-qualquer relacionamento com o tempo de vida de <code>x</code> ou o valor de retorno.</p>
-<p>Ao retornar uma referência de uma função, o parâmetro de tempo de vida para o
-o tipo de retorno precisa corresponder ao parâmetro de vida útil de um dos parâmetros. Se
+<p>Especificamos um parâmetro de lifetime <code>'a</code> para o parâmetro <code>x</code> e o retorno
+tipo, mas não para o parâmetro <code>y</code>, porque o lifetime de <code>y</code> não tem
+qualquer relacionamento com o lifetime de <code>x</code> ou o valor de retorno.</p>
+<p>Ao retornar uma referência de uma função, o parâmetro de lifetime para o
+o tipo de retorno precisa corresponder ao parâmetro de lifetime de um dos parâmetros. Se
 a referência retornada <em>não</em> se refere a um dos parâmetros, ela deve se referir
 para um valor criado dentro desta função. No entanto, isso seria uma pendência
 referência porque o valor sairá do escopo no final da função.
@@ -581,9 +584,9 @@ compilar:</p>
     result.as_str()
 }</code></pre>
 </figure>
-<p>Aqui, embora tenhamos especificado um parâmetro vitalício <code>'a</code> para o retorno
+<p>Aqui, embora tenhamos especificado um parâmetro de lifetime <code>'a</code> para o retorno
 tipo, esta implementação não será compilada porque o valor de retorno
-a vida útil não está relacionada de forma alguma com a vida útil dos parâmetros. Aqui está o
+a lifetime não está relacionada de forma alguma com a lifetime dos parâmetros. Aqui está o
 mensagem de erro que recebemos:</p>
 <pre><code class="language-console">$ cargo run
    Compiling chapter10 v0.1.0 (file:///projects/chapter10)
@@ -601,21 +604,21 @@ error: could not compile `chapter10` (bin "chapter10") due to 1 previous error
 </code></pre>
 <p>O problema é que <code>result</code> sai do escopo e é limpo no final
 da função <code>longest</code>. Também estamos tentando retornar uma referência para <code>result</code>
-da função. Não há como especificar parâmetros de vida útil que
+da função. Não há como especificar parâmetros de lifetime que
 mudaria a referência pendente, e Rust não nos deixaria criar uma referência pendente
 referência. Nesse caso, a melhor solução seria retornar um tipo de dados próprio
 em vez de uma referência para que a função de chamada seja responsável por
 limpando o valor.</p>
-<p>Em última análise, a sintaxe do tempo de vida trata de conectar os tempos de vida de vários
+<p>Em última análise, a sintaxe do lifetime trata de conectar os lifetimes de vários
 parâmetros e valores de retorno de funções. Uma vez conectados, Rust tem
 informações suficientes para permitir operações seguras de memória e proibir operações que
 criaria ponteiros pendentes ou violaria a segurança da memória.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="lifetime-annotations-in-struct-definitions"></a></p>
 <h3 id="em-definições-de-estrutura"><a class="header" href="#em-definições-de-estrutura">Em definições de estrutura</a></h3>
-<p>Até agora, todas as estruturas que definimos possuem tipos de propriedade. Podemos definir estruturas
-para conter referências, mas, nesse caso, precisaríamos adicionar uma vida inteira
-anotação em cada referência na definição da estrutura. A Listagem 10-24 tem um
+<p>Até agora, todas as structs que definimos armazenavam tipos com ownership. Podemos definir structs
+que contenham referências, mas, nesse caso, precisamos adicionar uma anotação de lifetime
+a cada referência na definição da struct. A Listagem 10-24 tem um
 struct chamada <code>ImportantExcerpt</code> que contém uma fatia de string.</p>
 <figure class="listing" id="listing-10-24">
 <span class="file-name">Filename: src/main.rs</span>
@@ -630,25 +633,25 @@ fn main() {
         part: first_sentence,
     };
 }</code></pre>
-<figcaption><a href="#listing-10-24">Listing 10-24</a>: A struct that holds a reference, requiring a lifetime annotation</figcaption>
+<figcaption><a href="#listing-10-24">Listing 10-24</a>: Uma struct que armazena uma referência, exigindo uma anotação de lifetime</figcaption>
 </figure>
 <p>Esta estrutura possui o único campo <code>part</code> que contém uma fatia de string, que é um
 referência. Tal como acontece com os tipos de dados genéricos, declaramos o nome do genérico
-parâmetro de vida útil entre colchetes angulares após o nome da estrutura para que
-podemos usar o parâmetro tempo de vida no corpo da definição da estrutura. Esse
+parâmetro de lifetime entre colchetes angulares após o nome da estrutura para que
+podemos usar o parâmetro lifetime no corpo da definição da estrutura. Esse
 anotação significa que uma instância de <code>ImportantExcerpt</code> não pode sobreviver à referência
 ele contém em seu campo <code>part</code>.</p>
 <p>A função <code>main</code> aqui cria uma instância da estrutura <code>ImportantExcerpt</code>
-que contém uma referência à primeira frase do <code>String</code> de propriedade do
+que contém uma referência à primeira frase da <code>String</code> pertencente à
 variável <code>novel</code>. Os dados em <code>novel</code> existem antes de <code>ImportantExcerpt</code>
 instância é criada. Além disso, <code>novel</code> não sai do escopo até depois
 o <code>ImportantExcerpt</code> sai do escopo, então a referência no
 <code>ImportantExcerpt</code> instância é válida.</p>
-<h3 id="elisão-vitalícia"><a class="header" href="#elisão-vitalícia">Elisão vitalícia</a></h3>
-<p>Você aprendeu que toda referência tem uma vida inteira e que você precisa especificar
-parâmetros de vida útil para funções ou estruturas que usam referências. No entanto, nós
+<h3 id="elisão-de-lifetime"><a class="header" href="#elisão-de-lifetime">Elisão de Lifetime</a></h3>
+<p>Você aprendeu que toda referência tem uma anotação de lifetime e que você precisa especificar
+parâmetros de lifetime para funções ou estruturas que usam referências. No entanto, nós
 tinha uma função na Listagem 4-9, mostrada novamente na Listagem 10-25, que compilava
-sem anotações vitalícias.</p>
+sem anotações de lifetime.</p>
 <figure class="listing" id="listing-10-25">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn first_word(s: &amp;str) -&gt; &amp;str {
@@ -678,94 +681,94 @@ sem anotações vitalícias.</p>
 </span><span class="boring">    // this works too, without the slice syntax!
 </span><span class="boring">    let word = first_word(my_string_literal);
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-10-25">Listing 10-25</a>: A function we defined in Listing 4-9 that compiled without lifetime annotations, even though the parameter and return type are references</figcaption>
+<figcaption><a href="#listing-10-25">Listing 10-25</a>: Uma função definida na Listagem 4-9 que compilou sem anotações de lifetime, mesmo com parâmetros e retorno sendo referências</figcaption>
 </figure>
-<p>A razão pela qual esta função é compilada sem anotações de tempo de vida é histórica:
+<p>A razão pela qual esta função é compilada sem anotações de lifetime é histórica:
 Nas versões anteriores (pré-1.0) do Rust, este código não teria sido compilado, porque
-cada referência precisava de um tempo de vida explícito. Naquela época, a função
+cada referência precisava de um lifetime explícito. Naquela época, a função
 a assinatura teria sido escrita assim:</p>
 <pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {</code></pre>
 <p>Depois de escrever muitos códigos Rust, a equipe Rust descobriu que os programadores Rust
 estavam inserindo as mesmas anotações de vida repetidamente, em particular
 situações. Estas situações eram previsíveis e seguiam algumas regras determinísticas.
 padrões. Os desenvolvedores programaram esses padrões no código do compilador para
-que o verificador de empréstimo poderia inferir o tempo de vida nessas situações e
+que o verificador de empréstimo poderia inferir o lifetime nessas situações e
 não precisaria de anotações explícitas.</p>
 <p>Este pedaço da história do Rust é relevante porque é possível que mais
 padrões determinísticos surgirão e serão adicionados ao compilador. No futuro,
-ainda menos anotações vitalícias podem ser necessárias.</p>
+ainda menos anotações de lifetime podem ser necessárias.</p>
 <p>Os padrões programados na análise de referências do Rust são chamados de
-<em>regras de elisão vitalícias</em>. Estas não são regras que os programadores devem seguir; eles são
+<em>regras de elisão de lifetime</em>. Estas não são regras que os programadores devem seguir; eles são
 um conjunto de casos particulares que o compilador irá considerar, e se o seu código
-se encaixa nesses casos, você não precisa escrever os tempos de vida explicitamente.</p>
+se encaixa nesses casos, você não precisa escrever os lifetimes explicitamente.</p>
 <p>As regras de elisão não fornecem inferência completa. Se ainda houver ambiguidade
-sobre quais tempos de vida as referências têm depois que Rust aplica as regras, o
-o compilador não adivinhará qual deveria ser o tempo de vida das referências restantes.
+sobre quais lifetimes as referências têm depois que Rust aplica as regras, o
+o compilador não adivinhará qual deveria ser o lifetime das referências restantes.
 Em vez de adivinhar, o compilador apresentará um erro que você pode resolver
-adicionando as anotações vitalícias.</p>
-<p>Os tempos de vida nos parâmetros de função ou método são chamados de <em>tempos de vida de entrada</em> e
-os tempos de vida nos valores de retorno são chamados de <em>tempos de vida de saída</em>.</p>
-<p>O compilador usa três regras para descobrir o tempo de vida das referências
+adicionando as anotações de lifetime.</p>
+<p>Os lifetimes nos parâmetros de função ou método são chamados de <em>lifetimes de entrada</em> e
+os lifetimes nos valores de retorno são chamados de <em>lifetimes de saída</em>.</p>
+<p>O compilador usa três regras para descobrir o lifetime das referências
 quando não há anotações explícitas. A primeira regra se aplica à entrada
-tempos de vida, e a segunda e terceira regras se aplicam aos tempos de vida de saída. Se o
+lifetimes, e a segunda e terceira regras se aplicam aos lifetimes de saída. Se o
 compilador chega ao final das três regras e ainda há referências para
-que não consegue calcular os tempos de vida, o compilador irá parar com um erro.
+que não consegue calcular os lifetimes, o compilador irá parar com um erro.
 Essas regras se aplicam a definições <code>fn</code>, bem como a blocos <code>impl</code>.</p>
-<p>A primeira regra é que o compilador atribua um parâmetro de tempo de vida a cada
+<p>A primeira regra é que o compilador atribua um parâmetro de lifetime a cada
 parâmetro que é uma referência. Em outras palavras, uma função com um parâmetro
-obtém um parâmetro de vida útil: <code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>; uma função com dois
-parâmetros obtém dois parâmetros de vida útil separados: <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>; e assim por diante.</p>
-<p>A segunda regra é que, se houver exatamente um parâmetro de tempo de vida de entrada, esse
-tempo de vida é atribuído a todos os parâmetros de tempo de vida de saída: <code>fn foo&lt;'a&gt;(x: &amp;'a i32) -&gt; &amp;'a i32</code>.</p>
-<p>A terceira regra é que, se houver vários parâmetros de tempo de vida de entrada, mas
-um deles é <code>&amp;self</code> ou <code>&amp;mut self</code> porque este é um método, a vida útil de
-<code>self</code> é atribuído a todos os parâmetros de vida útil de saída. Esta terceira regra faz
+obtém um parâmetro de lifetime: <code>fn foo&lt;'a&gt;(x: &amp;'a i32)</code>; uma função com dois
+parâmetros obtém dois parâmetros de lifetime separados: <code>fn foo&lt;'a, 'b&gt;(x: &amp;'a i32, y: &amp;'b i32)</code>; e assim por diante.</p>
+<p>A segunda regra é que, se houver exatamente um parâmetro de lifetime de entrada, esse
+lifetime é atribuído a todos os parâmetros de lifetime de saída: <code>fn foo&lt;'a&gt;(x: &amp;'a i32) -&gt; &amp;'a i32</code>.</p>
+<p>A terceira regra é que, se houver vários parâmetros de lifetime de entrada, mas
+um deles é <code>&amp;self</code> ou <code>&amp;mut self</code> porque este é um método, a lifetime de
+<code>self</code> é atribuído a todos os parâmetros de lifetime de saída. Esta terceira regra faz
 métodos muito mais agradáveis ​​de ler e escrever porque são necessários menos símbolos.</p>
 <p>Vamos fingir que somos o compilador. Aplicaremos essas regras para descobrir o
-tempos de vida das referências na assinatura da função <code>first_word</code> em
-Listagem 10-25. A assinatura começa sem nenhum tempo de vida associado ao
+lifetimes das referências na assinatura da função <code>first_word</code> em
+Listagem 10-25. A assinatura começa sem nenhum lifetime associado ao
 referências:</p>
 <pre><code class="language-rust ignore">fn first_word(s: &amp;str) -&gt; &amp;str {</code></pre>
 <p>Então, o compilador aplica a primeira regra, que especifica que cada parâmetro
-obtém sua própria vida útil. Vamos chamá-lo de <code>'a</code> como sempre, então agora a assinatura é
+obtém sua própria lifetime. Vamos chamá-lo de <code>'a</code> como sempre, então agora a assinatura é
 esse:</p>
 <pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;str {</code></pre>
-<p>A segunda regra se aplica porque há exatamente um tempo de vida de entrada. O segundo
-regra especifica que o tempo de vida de um parâmetro de entrada é atribuído a
-o tempo de vida da saída, então a assinatura agora é esta:</p>
+<p>A segunda regra se aplica porque há exatamente um lifetime de entrada. O segundo
+regra especifica que o lifetime de um parâmetro de entrada é atribuído a
+o lifetime da saída, então a assinatura agora é esta:</p>
 <pre><code class="language-rust ignore">fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {</code></pre>
-<p>Agora todas as referências nesta assinatura de função têm vida útil, e o
+<p>Agora todas as referências nesta assinatura de função têm lifetime, e o
 compilador pode continuar sua análise sem precisar que o programador faça anotações
-os tempos de vida nesta assinatura de função.</p>
+os lifetimes nesta assinatura de função.</p>
 <p>Vejamos outro exemplo, desta vez usando a função <code>longest</code> que tinha
-nenhum parâmetro de tempo de vida quando começamos a trabalhar com ele na Listagem 10-20:</p>
+nenhum parâmetro de lifetime quando começamos a trabalhar com ele na Listagem 10-20:</p>
 <pre><code class="language-rust ignore">fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {</code></pre>
-<p>Vamos aplicar a primeira regra: cada parâmetro tem seu próprio tempo de vida. Desta vez nós
-temos dois parâmetros em vez de um, então temos dois tempos de vida:</p>
+<p>Vamos aplicar a primeira regra: cada parâmetro tem seu próprio lifetime. Desta vez nós
+temos dois parâmetros em vez de um, então temos dois lifetimes:</p>
 <pre><code class="language-rust ignore">fn longest&lt;'a, 'b&gt;(x: &amp;'a str, y: &amp;'b str) -&gt; &amp;str {</code></pre>
 <p>Você pode ver que a segunda regra não se aplica, porque há mais de um
-vida útil da entrada. A terceira regra também não se aplica, porque <code>longest</code> é um
+lifetime da entrada. A terceira regra também não se aplica, porque <code>longest</code> é um
 função em vez de um método, portanto nenhum dos parâmetros é <code>self</code>. Depois
 trabalhando com todas as três regras, ainda não descobrimos qual será o retorno
-a vida útil do tipo é. É por isso que recebemos um erro ao tentar compilar o código em
-Listagem 10-20: O compilador trabalhou através das regras de elisão vitalícia, mas ainda assim
-não consegui descobrir todos os tempos de vida das referências na assinatura.</p>
+a lifetime do tipo é. É por isso que recebemos um erro ao tentar compilar o código em
+Listagem 10-20: O compilador trabalhou através das regras de elisão de lifetime, mas ainda assim
+não consegui descobrir todos os lifetimes das referências na assinatura.</p>
 <p>Como a terceira regra só se aplica a assinaturas de métodos, veremos
-vidas nesse contexto, veja a seguir por que a terceira regra significa que não precisamos
-anote tempos de vida em assinaturas de métodos com muita frequência.</p>
+lifetimes nesse contexto, veja a seguir por que a terceira regra significa que não precisamos
+anote lifetimes em assinaturas de métodos com muita frequência.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="lifetime-annotations-in-method-definitions"></a></p>
 <h3 id="em-definições-de-método"><a class="header" href="#em-definições-de-método">Em Definições de Método</a></h3>
-<p>Quando implementamos métodos em uma estrutura com tempos de vida, usamos a mesma sintaxe que
+<p>Quando implementamos métodos em uma estrutura com lifetimes, usamos a mesma sintaxe que
 o dos parâmetros de tipo genérico, conforme mostrado na Listagem 10-11. Onde declaramos
-e usar os parâmetros de vida útil depende se eles estão relacionados ao
+e usar os parâmetros de lifetime depende se eles estão relacionados ao
 campos struct ou os parâmetros do método e valores de retorno.</p>
-<p>Nomes vitalícios para campos struct sempre precisam ser declarados após <code>impl</code>
-palavra-chave e usada após o nome da estrutura porque esses tempos de vida fazem parte
+<p>Nomes de lifetimes para campos struct sempre precisam ser declarados após <code>impl</code>
+palavra-chave e usada após o nome da estrutura porque esses lifetimes fazem parte
 do tipo da estrutura.</p>
 <p>Nas assinaturas de métodos dentro do bloco <code>impl</code>, as referências podem estar vinculadas ao
-vida útil das referências nos campos da estrutura, ou elas podem ser independentes. Em
-Além disso, as regras de elisão vitalícia geralmente fazem com que as anotações vitalícias
+lifetime das referências nos campos da estrutura, ou elas podem ser independentes. Em
+Além disso, as regras de elisão de lifetime geralmente fazem com que as anotações de lifetime
 não são necessários em assinaturas de métodos. Vejamos alguns exemplos usando o
 struct chamada <code>ImportantExcerpt</code> que definimos na Listagem 10-24.</p>
 <p>Primeiro, usaremos um método chamado <code>level</code> cujo único parâmetro é uma referência a
@@ -794,10 +797,10 @@ struct chamada <code>ImportantExcerpt</code> que definimos na Listagem 10-24.</p
 </span><span class="boring">        part: first_sentence,
 </span><span class="boring">    };
 </span><span class="boring">}</span></code></pre>
-<p>A declaração do parâmetro vitalício após <code>impl</code> e seu uso após o nome do tipo
+<p>A declaração do parâmetro de lifetime após <code>impl</code> e seu uso após o nome do tipo
 são obrigatórios, mas por causa da primeira regra de elisão, não somos obrigados a
-anote o tempo de vida da referência a <code>self</code>.</p>
-<p>Aqui está um exemplo onde a terceira regra de elisão vitalícia se aplica:</p>
+anote o lifetime da referência a <code>self</code>.</p>
+<p>Aqui está um exemplo onde a terceira regra de elisão de lifetime se aplica:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct ImportantExcerpt&lt;'a&gt; {
 </span><span class="boring">    part: &amp;'a str,
 </span><span class="boring">}
@@ -822,32 +825,32 @@ anote o tempo de vida da referência a <code>self</code>.</p>
 </span><span class="boring">        part: first_sentence,
 </span><span class="boring">    };
 </span><span class="boring">}</span></code></pre>
-<p>Existem dois tempos de vida de entrada, então Rust aplica a primeira regra de elisão de tempo de vida
-e dá a <code>&amp;self</code> e <code>announcement</code> suas próprias vidas. Então, porque
-um dos parâmetros é <code>&amp;self</code>, o tipo de retorno obtém o tempo de vida de <code>&amp;self</code>,
-e todas as vidas foram contabilizadas.</p>
-<h3 id="a-vida-estática"><a class="header" href="#a-vida-estática">A vida estática</a></h3>
+<p>Existem dois lifetimes de entrada, então Rust aplica a primeira regra de elisão de lifetime
+e dá a <code>&amp;self</code> e <code>announcement</code> suas próprias lifetimes. Então, porque
+um dos parâmetros é <code>&amp;self</code>, o tipo de retorno obtém o lifetime de <code>&amp;self</code>,
+e todas as lifetimes foram contabilizadas.</p>
+<h3 id="o-lifetime-static"><a class="header" href="#o-lifetime-static">O Lifetime <code>static</code></a></h3>
 <p>Uma vida especial que precisamos discutir é <code>'static</code>, o que denota que o
 a referência afetada <em>pode</em> permanecer ativa durante toda a duração do programa. Todos
-literais de string têm o tempo de vida <code>'static</code>, que podemos anotar da seguinte forma:</p>
+literais de string têm o lifetime <code>'static</code>, que podemos anotar da seguinte forma:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s: &amp;'static str = "I have a static lifetime.";
 <span class="boring">}</span></code></pre>
 <p>O texto desta string é armazenado diretamente no binário do programa, que é
-sempre disponível. Portanto, o tempo de vida de todos os literais de string é <code>'static</code>.</p>
-<p>Você pode ver sugestões em mensagens de erro para usar o tempo de vida <code>'static</code>. Mas
-antes de especificar <code>'static</code> como o tempo de vida de uma referência, pense em
+sempre disponível. Portanto, o lifetime de todos os literais de string é <code>'static</code>.</p>
+<p>Você pode ver sugestões em mensagens de erro para usar o lifetime <code>'static</code>. Mas
+antes de especificar <code>'static</code> como o lifetime de uma referência, pense em
 se a referência que você tem realmente vive ou não toda a vida de
 seu programa e se você deseja. Na maioria das vezes, uma mensagem de erro
-sugerindo os resultados da vida útil <code>'static</code> da tentativa de criar um pendente
-referência ou uma incompatibilidade das vidas disponíveis. Nesses casos, a solução
-é corrigir esses problemas, não especificar o tempo de vida <code>'static</code>.</p>
+sugerindo os resultados da lifetime <code>'static</code> da tentativa de criar um pendente
+referência ou uma incompatibilidade das lifetimes disponíveis. Nesses casos, a solução
+é corrigir esses problemas, não especificar o lifetime <code>'static</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="generic-type-parameters-trait-bounds-and-lifetimes-together"></a></p>
-<h2 id="parâmetros-de-tipo-genérico-limites-de-características-e-tempos-de-vida"><a class="header" href="#parâmetros-de-tipo-genérico-limites-de-características-e-tempos-de-vida">Parâmetros de tipo genérico, limites de características e tempos de vida</a></h2>
+<h2 id="parâmetros-de-tipo-genérico-trait-bounds-e-lifetimes"><a class="header" href="#parâmetros-de-tipo-genérico-trait-bounds-e-lifetimes">Parâmetros de tipo genérico, trait bounds e lifetimes</a></h2>
 <p>Vejamos brevemente a sintaxe de especificação de parâmetros de tipo genérico, trait
-limites e tempos de vida, tudo em uma função!</p>
+limites e lifetimes, tudo em uma função!</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span><span class="boring">    let string1 = String::from("abcd");
 </span><span class="boring">    let string2 = "xyz";
@@ -878,23 +881,23 @@ duas fatias de barbante. Mas agora ele tem um parâmetro extra chamado <code>ann
 digite <code>T</code>, que pode ser preenchido por qualquer tipo que implemente <code>Display</code>
 característica conforme especificado pela cláusula <code>where</code>. Este parâmetro extra será impresso
 usando <code>{}</code>, e é por isso que o limite de característica <code>Display</code> é necessário. Porque
-tempos de vida são um tipo genérico, as declarações do parâmetro de tempo de vida
+lifetimes são um tipo genérico, as declarações do parâmetro de lifetime
 <code>'a</code> e o parâmetro de tipo genérico <code>T</code> vão na mesma lista dentro do ângulo
 colchetes após o nome da função.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
 <p>Abordamos muito neste capítulo! Agora que você sabe sobre o tipo genérico
-parâmetros, características e limites de características e parâmetros genéricos de vida útil, você está
+parâmetros, traits e trait bounds e parâmetros genéricos de lifetime, você está
 pronto para escrever código sem repetição que funcione em muitas situações diferentes.
 Os parâmetros de tipo genérico permitem aplicar o código a diferentes tipos. Características e
-limites de características garantem que, mesmo que os tipos sejam genéricos, eles terão o
-comportamento que o código precisa. Você aprendeu como usar anotações vitalícias para garantir
+trait bounds garantem que, mesmo que os tipos sejam genéricos, eles terão o
+comportamento que o código precisa. Você aprendeu como usar anotações de lifetime para garantir
 que este código flexível não terá referências pendentes. E tudo isso
 a análise acontece em tempo de compilação, o que não afeta o desempenho em tempo de execução!</p>
 <p>Acredite ou não, há muito mais para aprender sobre os tópicos que discutimos em
-neste capítulo: O Capítulo 18 discute objetos de características, que são outra maneira de usar
-características. Existem também cenários mais complexos que envolvem anotações vitalícias
+neste capítulo: O Capítulo 18 discute objetos de traits, que são outra maneira de usar
+traits. Existem também cenários mais complexos que envolvem anotações de lifetime
 que você só precisará em cenários muito avançados; para aqueles, você deve ler
-a <a href="../reference/trait-bounds.html">Referência de ferrugem</a>. Mas a seguir, você aprenderá como escrever testes em
+a <a href="https://doc.rust-lang.org/reference/trait-bounds.html">Referência do Rust</a>. Mas a seguir, você aprenderá como escrever testes em
 Rust para que você possa ter certeza de que seu código está funcionando como deveria.</p>
 
                     </main>

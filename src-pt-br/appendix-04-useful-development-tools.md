@@ -20,7 +20,7 @@ qualquer projeto Cargo, insira o seguinte:
 $ cargo fmt
 ```
 
-A execução deste comando reformata todo o código Rust na caixa atual. Esse
+A execução deste comando reformata todo o código Rust na crate atual. Esse
 deve alterar apenas o estilo do código, não a semântica do código. Para mais informações
 em `rustfmt`, consulte [sua documentação][rustfmt].
 
@@ -84,13 +84,13 @@ A variável `x` agora é imutável e o aviso não aparece mais.
 
 Você também pode usar o comando `cargo fix` para fazer a transição do seu código entre
 diferentes edições do Rust. As edições são abordadas no [Apêndice E][editions]<!--
-ignorar -->.
+ignore -->.
 
 ### Mais Lints com Clippy
 
 A ferramenta Clippy é uma coleção de lints para analisar seu código para que você possa
 detecte erros comuns e melhore seu código Rust. Clippy está incluído com
-instalações padrão de ferrugem.
+instalações padrão do Rust.
 
 Para executar os lints do Clippy em qualquer projeto Cargo, digite o seguinte:
 

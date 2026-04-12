@@ -118,7 +118,7 @@ Na verdade, já usamos declarações e expressões. Criando uma variável e
 atribuir um valor a ele com a palavra-chave `let` é uma afirmação. Na Listagem 3-1,
 `let y = 6;` é uma declaração.
 
-<Listing number="3-1" file-name="src/main.rs" caption="A `main` function declaration containing one statement">
+<Listing number="3-1" file-name="src/main.rs" caption="Uma declaração de função `main` contendo uma instrução">
 
 ```rust
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/listing-03-01/src/main.rs}}

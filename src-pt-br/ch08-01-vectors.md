@@ -219,15 +219,17 @@ mantenha diferentes tipos. Demonstramos isso na Listagem 8-9.
 
 Rust precisa saber quais tipos estarão no vetor em tempo de compilação para que
 sabe exatamente quanta memória no heap será necessária para armazenar cada elemento.
-Também devemos ser explícitos sobre quais tipos são permitidos neste vetor. Se ferrugem
-permitisse que um vetor mantivesse qualquer tipo, haveria uma chance de que um ou mais dos
-os tipos causariam erros nas operações executadas nos elementos de
-o vetor. Usar um enum mais uma expressão `match` significa que Rust garantirá
-em tempo de compilação, todos os casos possíveis são tratados, conforme discutido no Capítulo 6.
+Também devemos ser explícitos sobre quais tipos são permitidos neste vetor. Se
+o Rust permitisse que um vetor armazenasse qualquer tipo, haveria a chance de
+um ou mais desses tipos causarem erros nas operações executadas sobre os
+elementos do vetor. Usar um enum junto com uma expressão `match` significa que
+o Rust garantirá, em tempo de compilação, que todos os casos possíveis sejam
+tratados, como discutimos no Capítulo 6.
 
-Se você não conhece o conjunto exaustivo de tipos que um programa obterá em tempo de execução para
-armazenar em um vetor, a técnica enum não funcionará. Em vez disso, você pode usar uma característica
-objeto, que abordaremos no Capítulo 18.
+Se você não conhece o conjunto exaustivo de tipos que um programa receberá em
+tempo de execução para armazenar em um vetor, a técnica com enum não vai
+funcionar. Em vez disso, você pode usar um trait object, assunto que
+abordaremos no Capítulo 18.
 
 Agora que discutimos algumas das formas mais comuns de usar vetores, certifique-se
 para revisar [a documentação da API][vec-api]<!-- ignore --> para todos os muitos

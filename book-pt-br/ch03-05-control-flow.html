@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -181,18 +181,18 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="fluxo-de-controle"><a class="header" href="#fluxo-de-controle">Fluxo de controle</a></h2>
-<p>A capacidade de executar algum código dependendo se uma condição é <code>true</code> e o
-capacidade de executar algum código repetidamente enquanto uma condição é <code>true</code> são básicos
-blocos de construção na maioria das linguagens de programação. As construções mais comuns que
-permitem que você controle o fluxo de execução do código Rust são expressões <code>if</code> e
-laços.</p>
-<h3 id="if-expressões"><a class="header" href="#if-expressões"><code>if</code> Expressões</a></h3>
-<p>Uma expressão <code>if</code> permite ramificar seu código dependendo das condições. Você
-forneça uma condição e então declare: “Se esta condição for atendida, execute este bloco
-de código. Se a condição não for atendida, não execute este bloco de código.”</p>
-<p>Crie um novo projeto chamado <em>branches</em> em seu diretório <em>projects</em> para explorar
-a expressão <code>if</code>. No arquivo <em>src/main.rs</em>, insira o seguinte:</p>
+                        <h2 id="fluxo-de-controle"><a class="header" href="#fluxo-de-controle">Fluxo de Controle</a></h2>
+<p>A capacidade de executar algum código dependendo de uma condição ser <code>true</code> e a
+capacidade de executar código repetidamente enquanto uma condição for <code>true</code>
+são blocos fundamentais da maioria das linguagens de programação. As
+construções mais comuns que permitem controlar o fluxo de execução de código em
+Rust são expressões <code>if</code> e loops.</p>
+<h3 id="expressões-if"><a class="header" href="#expressões-if">Expressões <code>if</code></a></h3>
+<p>Uma expressão <code>if</code> permite ramificar o código dependendo de condições. Você
+fornece uma condição e então diz: “Se esta condição for satisfeita, execute
+este bloco de código. Se ela não for satisfeita, não execute esse bloco.”</p>
+<p>Crie um novo projeto chamado <em>branches</em> dentro do seu diretório <em>projects</em> para
+explorar a expressão <code>if</code>. No arquivo <em>src/main.rs</em>, digite o seguinte:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let number = 3;
@@ -203,28 +203,28 @@ a expressão <code>if</code>. No arquivo <em>src/main.rs</em>, insira o seguinte
         println!("condition was false");
     }
 }</code></pre>
-<p>Todas as expressões <code>if</code> começam com a palavra-chave <code>if</code>, seguida por uma condição. Em
-neste caso, a condição verifica se a variável <code>number</code> tem ou não um
-valor menor que 5. Colocamos o bloco de código para executar se a condição for
-<code>true</code> imediatamente após a condição entre colchetes. Blocos de código
-associados às condições em expressões <code>if</code> são às vezes chamados de <em>arms</em>,
-assim como os braços nas expressões <code>match</code> que discutimos em <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">“Comparando
-a suposição do número secreto”</a><!--
-ignore --> do Capítulo 2.</p>
-<p>Opcionalmente, também podemos incluir uma expressão <code>else</code>, que escolhemos fazer
-aqui, para dar ao programa um bloco alternativo de código para executar caso o
-condição avaliada como <code>false</code>. Se você não fornecer uma expressão <code>else</code> e
-a condição é <code>false</code>, o programa simplesmente pulará o bloco <code>if</code> e seguirá em frente
-para o próximo pedaço de código.</p>
-<p>Tente executar este código; você deverá ver a seguinte saída:</p>
+<p>Todas as expressões <code>if</code> começam com a palavra-chave <code>if</code>, seguida de uma
+condição. Neste caso, a condição verifica se a variável <code>number</code> tem valor
+menor que 5. Colocamos o bloco de código a ser executado caso a condição seja
+<code>true</code> logo após a condição, entre chaves. Blocos de código associados às
+condições em expressões <code>if</code> às vezes são chamados de <em>braços</em>, assim como os
+braços de expressões <code>match</code> que discutimos na seção <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">“Comparando o Palpite com
+o Número Secreto”</a><!-- ignore --> do
+Capítulo 2.</p>
+<p>Opcionalmente, também podemos incluir uma expressão <code>else</code>, como escolhemos
+fazer aqui, para fornecer ao programa um bloco alternativo de código a ser
+executado caso a condição avalie para <code>false</code>. Se você não fornecer uma
+expressão <code>else</code> e a condição for <code>false</code>, o programa simplesmente ignorará o
+bloco <code>if</code> e seguirá adiante para o próximo trecho de código.</p>
+<p>Tente executar esse código; você deverá ver a seguinte saída:</p>
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
      Running `target/debug/branches`
 condition was true
 </code></pre>
-<p>Vamos tentar alterar o valor de <code>number</code> para um valor que torne a condição
-<code>false</code> para ver o que acontece:</p>
+<p>Vamos agora alterar o valor de <code>number</code> para um valor que torne a condição
+<code>false</code>, só para ver o que acontece:</p>
 <pre><code class="language-rust ignore"><span class="boring">fn main() {
 </span>    let number = 7;
 <span class="boring">
@@ -234,15 +234,15 @@ condition was true
 </span><span class="boring">        println!("condition was false");
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p>Execute o programa novamente e observe o resultado:</p>
+<p>Execute o programa de novo e veja a saída:</p>
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
      Running `target/debug/branches`
 condition was false
 </code></pre>
-<p>Também é importante notar que a condição neste código <em>deve</em> ser <code>bool</code>. Se
-a condição não é <code>bool</code>, obteremos um erro. Por exemplo, tente executar o
+<p>Também vale notar que a condição nesse código <em>precisa</em> ser um <code>bool</code>. Se a
+condição não for um <code>bool</code>, teremos um erro. Por exemplo, tente executar o
 seguinte código:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
@@ -252,8 +252,7 @@ seguinte código:</p>
         println!("number was three");
     }
 }</code></pre>
-<p>A condição <code>if</code> é avaliada como um valor <code>3</code> desta vez, e Rust lança um
-erro:</p>
+<p>Desta vez, a condição do <code>if</code> avalia para o valor <code>3</code>, e o Rust gera um erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
 error[E0308]: mismatched types
@@ -265,12 +264,12 @@ error[E0308]: mismatched types
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `branches` (bin "branches") due to 1 previous error
 </code></pre>
-<p>O erro indica que Rust esperava <code>bool</code>, mas obteve um número inteiro. Diferente
-linguagens como Ruby e JavaScript, Rust não tentará automaticamente
-converter tipos não booleanos em booleanos. Você deve ser explícito e sempre fornecer
-<code>if</code> com um booleano como condição. Se quisermos que o bloco de código <code>if</code> seja executado
-somente quando um número não é igual a <code>0</code>, por exemplo, podemos alterar o <code>if</code>
-expressão para o seguinte:</p>
+<p>O erro indica que o Rust esperava um <code>bool</code>, mas recebeu um inteiro.
+Diferentemente de linguagens como Ruby e JavaScript, o Rust não tentará
+converter automaticamente tipos não booleanos em booleanos. Você precisa ser
+explícito e sempre fornecer ao <code>if</code> um booleano como condição. Se quisermos
+que o bloco <code>if</code> execute somente quando um número for diferente de <code>0</code>, por
+exemplo, podemos alterar a expressão <code>if</code> para a seguinte forma:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let number = 3;
@@ -279,10 +278,10 @@ expressão para o seguinte:</p>
         println!("number was something other than zero");
     }
 }</code></pre>
-<p>A execução deste código imprimirá <code>number was something other than zero</code>.</p>
-<h4 id="lidando-com-múltiplas-condições-com-else-if"><a class="header" href="#lidando-com-múltiplas-condições-com-else-if">Lidando com múltiplas condições com <code>else if</code></a></h4>
-<p>Você pode usar várias condições combinando <code>if</code> e <code>else</code> em um <code>else if</code>
-expressão. Por exemplo:</p>
+<p>Executar esse código imprimirá <code>number was something other than zero</code>.</p>
+<h4 id="tratando-múltiplas-condições-com-else-if"><a class="header" href="#tratando-múltiplas-condições-com-else-if">Tratando Múltiplas Condições com <code>else if</code></a></h4>
+<p>Você pode usar várias condições combinando <code>if</code> e <code>else</code> em uma expressão
+<code>else if</code>. Por exemplo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let number = 6;
@@ -297,26 +296,26 @@ expressão. Por exemplo:</p>
         println!("number is not divisible by 4, 3, or 2");
     }
 }</code></pre>
-<p>Este programa tem quatro caminhos possíveis que pode seguir. Depois de executá-lo, você deve
-veja a seguinte saída:</p>
+<p>Esse programa tem quatro caminhos possíveis. Depois de executá-lo, você deverá
+ver a seguinte saída:</p>
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.31s
      Running `target/debug/branches`
 number is divisible by 3
 </code></pre>
-<p>Quando este programa é executado, ele verifica cada expressão <code>if</code> e executa
-o primeiro corpo para o qual a condição é avaliada como <code>true</code>. Observe que mesmo
-embora 6 seja divisível por 2, não vemos a saída <code>number is divisible by 2</code>,
-nem vemos o texto <code>number is not divisible by 4, 3, or 2</code> do <code>else</code>
-bloquear. Isso porque Rust só executa o bloco para o primeiro <code>true</code>
-condição e, uma vez encontrada, nem verifica o resto.</p>
-<p>Usar muitas expressões <code>else if</code> pode sobrecarregar seu código, portanto, se você tiver mais
-de um, talvez você queira refatorar seu código. O Capítulo 6 descreve um poderoso
-Construção de ramificação Rust chamada <code>match</code> para esses casos.</p>
-<h4 id="usando-if-em-uma-instrução-let"><a class="header" href="#usando-if-em-uma-instrução-let">Usando <code>if</code> em uma instrução <code>let</code></a></h4>
-<p>Como <code>if</code> é uma expressão, podemos usá-la no lado direito de <code>let</code>
-instrução para atribuir o resultado a uma variável, como na Listagem 3-2.</p>
+<p>Quando esse programa é executado, ele verifica cada expressão <code>if</code> em ordem e
+executa o primeiro corpo cuja condição avalia para <code>true</code>. Observe que, mesmo
+que 6 seja divisível por 2, não vemos a saída <code>number is divisible by 2</code>, nem
+vemos o texto <code>number is not divisible by 4, 3, or 2</code> do bloco <code>else</code>. Isso
+acontece porque o Rust executa apenas o bloco correspondente à primeira
+condição <code>true</code> e, depois que encontra uma, nem sequer verifica as demais.</p>
+<p>Usar muitas expressões <code>else if</code> pode poluir o código, então, se você tiver
+mais de uma, talvez valha a pena refatorar. O Capítulo 6 descreve uma poderosa
+construção de ramificação do Rust chamada <code>match</code> para esses casos.</p>
+<h4 id="usando-if-em-uma-instrução-let"><a class="header" href="#usando-if-em-uma-instrução-let">Usando <code>if</code> em uma Instrução <code>let</code></a></h4>
+<p>Como <code>if</code> é uma expressão, podemos usá-lo no lado direito de uma instrução
+<code>let</code> para atribuir o resultado a uma variável, como na Listagem 3-2.</p>
 <figure class="listing" id="listing-3-2">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -325,23 +324,23 @@ instrução para atribuir o resultado a uma variável, como na Listagem 3-2.</p>
 
     println!("The value of number is: {number}");
 }</code></pre>
-<figcaption><a href="#listing-3-2">Listing 3-2</a>: Assigning the result of an <code>if</code> expression to a variable</figcaption>
+<figcaption><a href="#listing-3-2">Listing 3-2</a>: Atribuindo o resultado de uma expressão <code>if</code> a uma variável</figcaption>
 </figure>
-<p>A variável <code>number</code> será vinculada a um valor baseado no resultado do <code>if</code>
-expressão. Execute este código para ver o que acontece:</p>
+<p>A variável <code>number</code> ficará vinculada a um valor dependendo do resultado da
+expressão <code>if</code>. Execute esse código para ver o que acontece:</p>
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s
      Running `target/debug/branches`
 The value of number is: 5
 </code></pre>
-<p>Lembre-se de que os blocos de código são avaliados até a última expressão neles e
-os números por si só também são expressões. Neste caso, o valor do
-toda a expressão <code>if</code> depende de qual bloco de código é executado. Isto significa o
-valores que têm potencial para serem resultados de cada braço do <code>if</code> devem ser
-o mesmo tipo; na Listagem 3-2, os resultados do braço <code>if</code> e do braço <code>else</code>
-braço eram <code>i32</code> inteiros. Se os tipos forem incompatíveis, como a seguir
-por exemplo, obteremos um erro:</p>
+<p>Lembre-se de que blocos de código avaliam para a última expressão neles, e
+números sozinhos também são expressões. Neste caso, o valor da expressão <code>if</code>
+inteira depende de qual bloco de código é executado. Isso significa que os
+valores que podem surgir como resultado de cada braço do <code>if</code> precisam ter o
+mesmo tipo; na Listagem 3-2, os resultados dos braços <code>if</code> e <code>else</code> eram
+inteiros <code>i32</code>. Se os tipos não forem compatíveis, como no exemplo a seguir,
+teremos um erro:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let condition = true;
@@ -350,9 +349,9 @@ por exemplo, obteremos um erro:</p>
 
     println!("The value of number is: {number}");
 }</code></pre>
-<p>Quando tentarmos compilar este código, obteremos um erro. Os braços <code>if</code> e <code>else</code>
-têm tipos de valor incompatíveis e Rust indica exatamente onde
-encontre o problema no programa:</p>
+<p>Quando tentamos compilar esse código, recebemos um erro. Os braços <code>if</code> e
+<code>else</code> têm tipos de valor incompatíveis, e o Rust aponta exatamente onde está
+o problema no programa:</p>
 <pre><code class="language-console">$ cargo run
    Compiling branches v0.1.0 (file:///projects/branches)
 error[E0308]: `if` and `else` have incompatible types
@@ -366,38 +365,40 @@ error[E0308]: `if` and `else` have incompatible types
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `branches` (bin "branches") due to 1 previous error
 </code></pre>
-<p>A expressão no bloco <code>if</code> é avaliada como um número inteiro e a expressão em
-o bloco <code>else</code> é avaliado como uma string. Isso não funcionará, porque as variáveis ​​devem
-tem um único tipo, e Rust precisa saber definitivamente em tempo de compilação o que
-digite a variável <code>number</code>. Conhecer o tipo de <code>number</code> permite ao compilador
-verifique se o tipo é válido em todos os lugares que usamos <code>number</code>. A ferrugem não seria capaz
-faça isso se o tipo de <code>number</code> só foi determinado em tempo de execução; o compilador
-seria mais complexo e daria menos garantias sobre o código se tivesse
-para acompanhar vários tipos hipotéticos para qualquer variável.</p>
+<p>A expressão no bloco <code>if</code> avalia para um inteiro, e a expressão no bloco
+<code>else</code> avalia para uma string. Isso não funciona porque variáveis precisam ter
+um único tipo, e o Rust precisa saber de forma definitiva, em tempo de
+compilação, qual é o tipo da variável <code>number</code>. Conhecer o tipo de <code>number</code>
+permite que o compilador verifique se esse tipo é válido em todos os lugares
+em que usamos <code>number</code>. O Rust não conseguiria fazer isso se o tipo de
+<code>number</code> fosse determinado apenas em tempo de execução; o compilador seria mais
+complexo e daria menos garantias sobre o código se precisasse acompanhar
+múltiplos tipos hipotéticos para qualquer variável.</p>
 <h3 id="repetição-com-loops"><a class="header" href="#repetição-com-loops">Repetição com Loops</a></h3>
-<p>Muitas vezes é útil executar um bloco de código mais de uma vez. Para esta tarefa,
-Rust fornece vários <em>loops</em>, que serão executados no código dentro do loop
-corpo até o fim e então comece imediatamente de volta ao início. Para experimentar
-com loops, vamos fazer um novo projeto chamado <em>loops</em>.</p>
-<p>Rust tem três tipos de loops: <code>loop</code>, <code>while</code> e <code>for</code>. Vamos tentar cada um.</p>
-<h4 id="repetindo-código-com-loop"><a class="header" href="#repetindo-código-com-loop">Repetindo código com <code>loop</code></a></h4>
-<p>A palavra-chave <code>loop</code> diz ao Rust para executar um bloco de código repetidamente
-para sempre ou até que você diga explicitamente para parar.</p>
-<p>Por exemplo, altere o arquivo <em>src/main.rs</em> em seu diretório <em>loops</em> para ver
-assim:</p>
+<p>Com frequência é útil executar um bloco de código mais de uma vez. Para isso, o
+Rust fornece vários <em>loops</em>, que executam o código dentro do corpo do loop até
+o fim e então voltam imediatamente ao começo. Para experimentar com loops,
+vamos criar um novo projeto chamado <em>loops</em>.</p>
+<p>Rust tem três tipos de loop: <code>loop</code>, <code>while</code> e <code>for</code>. Vamos experimentar cada
+um deles.</p>
+<h4 id="repetindo-código-com-loop"><a class="header" href="#repetindo-código-com-loop">Repetindo Código com <code>loop</code></a></h4>
+<p>A palavra-chave <code>loop</code> diz ao Rust para executar um bloco de código repetidas
+vezes, para sempre, ou até que você diga explicitamente que ele deve parar.</p>
+<p>Como exemplo, altere o arquivo <em>src/main.rs</em> no seu diretório <em>loops</em> para que
+fique assim:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore">fn main() {
     loop {
         println!("again!");
     }
 }</code></pre>
-<p>Quando executarmos este programa, veremos <code>again!</code> impresso continuamente
-até pararmos o programa manualmente. A maioria dos terminais suporta o atalho de teclado
-<kbd>ctrl</kbd>-<kbd>C</kbd> para interromper um programa que está preso em um contínuo
-laço. Experimente:</p>
+<p>Quando executarmos esse programa, veremos <code>again!</code> sendo impresso
+continuamente, repetidas vezes, até interrompermos o programa manualmente. A
+maioria dos terminais oferece o atalho de teclado <kbd>ctrl</kbd>-<kbd>C</kbd>
+para interromper um programa preso em um loop contínuo. Experimente:</p>
 <!-- manual-regeneration
-listagens de cd/ch03-common-programming-concepts/no-listing-32-loop
-corrida de carga
+cd listings/ch03-common-programming-concepts/no-listing-32-loop
+cargo run
 CTRL-C
 -->
 <pre><code class="language-console">$ cargo run
@@ -410,25 +411,26 @@ again!
 again!
 ^Cagain!
 </code></pre>
-<p>O símbolo <code>^C</code> representa onde você pressionou <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
-<p>Você pode ou não ver a palavra <code>again!</code> impressa após <code>^C</code>, dependendo
-onde o código estava no loop quando recebeu o sinal de interrupção.</p>
-<p>Felizmente, Rust também oferece uma maneira de sair de um loop usando código. Você
-pode colocar a palavra-chave <code>break</code> dentro do loop para informar ao programa quando parar
-executando o loop. Lembre-se que fizemos isso no jogo de adivinhação no
-<a href="ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess">“Desistir após um palpite correto”</a>&lt;!– ignorar
--&gt; seção do Capítulo 2 para sair do programa quando o usuário ganhou o jogo
-adivinhando o número correto.</p>
-<p>Também usamos <code>continue</code> no jogo de adivinhação, que em um loop informa ao programa
-para pular qualquer código restante nesta iteração do loop e ir para o
-próxima iteração.</p>
-<h4 id="retornando-valores-de-loops"><a class="header" href="#retornando-valores-de-loops">Retornando Valores de Loops</a></h4>
-<p>Um dos usos de <code>loop</code> é tentar novamente uma operação que você sabe que pode falhar, como
-como verificar se um thread concluiu seu trabalho. Você também pode precisar passar
-o resultado dessa operação fora do loop para o resto do seu código. Pendência
-isso, você pode adicionar o valor que deseja retornar após a expressão <code>break</code> que você
-use para parar o loop; esse valor será retornado fora do loop para que você
-pode usá-lo, como mostrado aqui:</p>
+<p>O símbolo <code>^C</code> representa o ponto em que você pressionou
+<kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
+<p>Você pode ou não ver a palavra <code>again!</code> impressa depois de <code>^C</code>, dependendo de
+onde o código estava dentro do loop quando recebeu o sinal de interrupção.</p>
+<p>Felizmente, o Rust também fornece uma forma de sair de um loop usando código.
+Você pode colocar a palavra-chave <code>break</code> dentro do loop para dizer ao programa
+quando deve parar de executá-lo. Lembre-se de que fizemos isso no jogo de
+adivinhação, na seção <a href="ch02-00-guessing-game-tutorial.html#quitting-after-a-correct-guess">“Saindo Depois de um Palpite
+Correto”</a><!-- ignore --> do Capítulo 2, para
+encerrar o programa quando o usuário acertava o número.</p>
+<p>Também usamos <code>continue</code> no jogo de adivinhação. Dentro de um loop, essa
+palavra-chave diz ao programa para pular qualquer código restante da iteração
+atual e ir direto para a próxima.</p>
+<h4 id="retornando-valores-a-partir-de-loops"><a class="header" href="#retornando-valores-a-partir-de-loops">Retornando Valores a Partir de Loops</a></h4>
+<p>Um dos usos de <code>loop</code> é repetir uma operação que você sabe que pode falhar,
+como verificar se uma thread concluiu seu trabalho. Você também pode precisar
+passar o resultado dessa operação para fora do loop e usá-lo no restante do
+código. Para fazer isso, você pode adicionar o valor que deseja retornar após a
+expressão <code>break</code> usada para interromper o loop; esse valor será retornado para
+fora do loop, para que você possa utilizá-lo, como mostrado aqui:</p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let mut counter = 0;
 
@@ -442,23 +444,25 @@ pode usá-lo, como mostrado aqui:</p>
 
     println!("The result is {result}");
 }</code></pre>
-<p>Antes do loop, declaramos uma variável chamada <code>counter</code> e a inicializamos para
-<code>0</code>. Então, declaramos uma variável chamada <code>result</code> para armazenar o valor retornado de
-o laço. Em cada iteração do loop, adicionamos <code>1</code> à variável <code>counter</code>,
-e verifique se <code>counter</code> é igual a <code>10</code>. Quando for, usamos o
-<code>break</code> palavra-chave com o valor <code>counter * 2</code>. Após o loop, usamos um
-ponto e vírgula para finalizar a instrução que atribui o valor a <code>result</code>. Finalmente, nós
-imprima o valor em <code>result</code>, que neste caso é <code>20</code>.</p>
-<p>Você também pode <code>return</code> dentro de um loop. Enquanto <code>break</code> apenas sai do atual
-loop, <code>return</code> sempre sai da função atual.</p>
+<p>Antes do loop, declaramos uma variável chamada <code>counter</code> e a inicializamos com
+<code>0</code>. Em seguida, declaramos uma variável chamada <code>result</code> para armazenar o
+valor retornado pelo loop. Em cada iteração do loop, somamos <code>1</code> à variável
+<code>counter</code> e então verificamos se <code>counter</code> é igual a <code>10</code>. Quando isso
+acontece, usamos a palavra-chave <code>break</code> com o valor <code>counter * 2</code>. Depois do
+loop, usamos um ponto e vírgula para encerrar a instrução que atribui o valor
+a <code>result</code>. Por fim, imprimimos o valor contido em <code>result</code>, que neste caso é
+<code>20</code>.</p>
+<p>Você também pode usar <code>return</code> de dentro de um loop. Enquanto <code>break</code> sai apenas
+do loop atual, <code>return</code> sempre sai da função atual.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="loop-labels-to-disambiguate-between-multiple-loops"></a></p>
-<h4 id="desambiguando-com-rótulos-de-loop"><a class="header" href="#desambiguando-com-rótulos-de-loop">Desambiguando com rótulos de loop</a></h4>
-<p>Se você tiver loops dentro de loops, <code>break</code> e <code>continue</code> aplicam-se ao mais interno
-loop nesse ponto. Opcionalmente, você pode especificar um <em>loop label</em> em um loop que
-você pode usar com <code>break</code> ou <code>continue</code> para especificar que essas palavras-chave
-aplique ao loop rotulado em vez do loop mais interno. Os rótulos de loop devem começar
-com uma única citação. Aqui está um exemplo com dois loops aninhados:</p>
+<h4 id="desambiguando-com-rótulos-de-loop"><a class="header" href="#desambiguando-com-rótulos-de-loop">Desambiguando com Rótulos de Loop</a></h4>
+<p>Se você tiver loops dentro de loops, <code>break</code> e <code>continue</code> se aplicam ao loop
+mais interno naquele ponto. Opcionalmente, você pode especificar um <em>rótulo de
+loop</em> em um loop e então usar esse rótulo com <code>break</code> ou <code>continue</code> para
+indicar que essas palavras-chave devem se aplicar ao loop rotulado, em vez do
+mais interno. Rótulos de loop devem começar com uma aspas simples. Aqui está um
+exemplo com dois loops aninhados:</p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let mut count = 0;
     'counting_up: loop {
@@ -480,9 +484,9 @@ com uma única citação. Aqui está um exemplo com dois loops aninhados:</p>
     }
     println!("End count = {count}");
 }</code></pre>
-<p>O loop externo tem o rótulo <code>'counting_up</code> e contará de 0 a 2.
-O loop interno sem rótulo faz a contagem regressiva de 10 a 9. O primeiro <code>break</code> que
-não especifica um rótulo sairá apenas do loop interno. A <code>pausa A instrução 'counting_up;</code> sairá do loop externo. Este código imprime:</p>
+<p>O loop externo tem o rótulo <code>'counting_up</code>, e ele contará de 0 a 2. O loop
+interno, sem rótulo, conta regressivamente de 10 a 9. O primeiro <code>break</code> que
+não especifica rótulo sairá apenas do loop interno. Já a instrução <code>break 'counting_up;</code> sairá do loop externo. Esse código imprime:</p>
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s
@@ -499,15 +503,16 @@ End count = 2
 </code></pre>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="conditional-loops-with-while"></a></p>
-<h4 id="simplificando-loops-condicionais-com-while"><a class="header" href="#simplificando-loops-condicionais-com-while">Simplificando Loops Condicionais com while</a></h4>
-<p>Freqüentemente, um programa precisará avaliar uma condição dentro de um loop. Enquanto o
-condição for <code>true</code>, o loop será executado. Quando a condição deixa de ser <code>true</code>, o
-o programa chama <code>break</code>, interrompendo o loop. É possível implementar comportamento
-assim usando uma combinação de <code>loop</code>, <code>if</code>, <code>else</code> e <code>break</code>; você poderia
-tente isso agora em um programa, se desejar. No entanto, esse padrão é tão comum
-que Rust tem uma construção de linguagem integrada para ele, chamada <code>while</code> loop. Em
-Listagem 3-3, usamos <code>while</code> para repetir o programa três vezes, contando regressivamente cada
-tempo e, após o loop, imprimir uma mensagem e sair.</p>
+<h4 id="simplificando-loops-condicionais-com-while"><a class="header" href="#simplificando-loops-condicionais-com-while">Simplificando Loops Condicionais com <code>while</code></a></h4>
+<p>Um programa frequentemente precisa avaliar uma condição dentro de um loop.
+Enquanto a condição for <code>true</code>, o loop continua. Quando a condição deixa de ser
+<code>true</code>, o programa chama <code>break</code>, interrompendo o loop. É possível implementar
+esse comportamento usando uma combinação de <code>loop</code>, <code>if</code>, <code>else</code> e <code>break</code>; se
+quiser, você pode tentar isso agora em um programa. No entanto, esse padrão é
+tão comum que o Rust oferece uma construção específica para ele, chamada loop
+<code>while</code>. Na Listagem 3-3, usamos <code>while</code> para fazer o programa repetir três
+vezes, contando regressivamente, e então, depois do loop, imprimir uma mensagem
+e sair.</p>
 <figure class="listing" id="listing-3-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -521,15 +526,16 @@ tempo e, após o loop, imprimir uma mensagem e sair.</p>
 
     println!("LIFTOFF!!!");
 }</code></pre>
-<figcaption><a href="#listing-3-3">Listing 3-3</a>: Using a <code>while</code> loop to run code while a condition evaluates to <code>true</code></figcaption>
+<figcaption><a href="#listing-3-3">Listing 3-3</a>: Usando um loop <code>while</code> para executar código enquanto uma condição avalia para <code>true</code></figcaption>
 </figure>
-<p>Esta construção elimina muitos aninhamentos que seriam necessários se você usasse
-<code>loop</code>, <code>if</code>, <code>else</code> e <code>break</code>, e é mais claro. Enquanto uma condição
-avalia <code>true</code>, o código é executado; caso contrário, ele sai do loop.</p>
-<h4 id="percorrendo-uma-coleção-com-for"><a class="header" href="#percorrendo-uma-coleção-com-for">Percorrendo uma coleção com <code>for</code></a></h4>
-<p>Você pode optar por usar a construção <code>while</code> para percorrer os elementos de um
-coleção, como uma matriz. Por exemplo, o loop na Listagem 3-4 imprime cada
-elemento na matriz <code>a</code>.</p>
+<p>Essa construção elimina muito do aninhamento que seria necessário se você
+usasse <code>loop</code>, <code>if</code>, <code>else</code> e <code>break</code>, além de ficar mais clara. Enquanto a
+condição avaliar para <code>true</code>, o código é executado; caso contrário, o loop é
+encerrado.</p>
+<h4 id="percorrendo-uma-coleção-com-for"><a class="header" href="#percorrendo-uma-coleção-com-for">Percorrendo uma Coleção com <code>for</code></a></h4>
+<p>Você pode escolher usar a construção <code>while</code> para iterar sobre os elementos de
+uma coleção, como um array. Por exemplo, o loop da Listagem 3-4 imprime cada
+elemento do array <code>a</code>.</p>
 <figure class="listing" id="listing-3-4">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -542,12 +548,12 @@ elemento na matriz <code>a</code>.</p>
         index += 1;
     }
 }</code></pre>
-<figcaption><a href="#listing-3-4">Listing 3-4</a>: Looping through each element of a collection using a <code>while</code> loop</figcaption>
+<figcaption><a href="#listing-3-4">Listing 3-4</a>: Percorrendo cada elemento de uma coleção usando um loop <code>while</code></figcaption>
 </figure>
-<p>Aqui, o código faz a contagem crescente dos elementos do array. Começa no índice
-<code>0</code> e, em seguida, faz um loop até atingir o índice final na matriz (ou seja,
-quando <code>index &lt; 5</code> não for mais <code>true</code>). A execução deste código imprimirá todos
-elemento na matriz:</p>
+<p>Aqui, o código percorre os elementos do array em ordem crescente. Ele começa no
+índice <code>0</code> e continua até alcançar o índice final do array, isto é, até que
+<code>index &lt; 5</code> deixe de ser <code>true</code>. Executar esse código imprimirá todos os
+elementos do array:</p>
 <pre><code class="language-console">$ cargo run
    Compiling loops v0.1.0 (file:///projects/loops)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.32s
@@ -558,17 +564,19 @@ the value is: 30
 the value is: 40
 the value is: 50
 </code></pre>
-<p>Todos os cinco valores da matriz aparecem no terminal, conforme esperado. Mesmo que <code>index</code>
-atingirá um valor de <code>5</code> em algum ponto, o loop para de ser executado antes de tentar
-para buscar um sexto valor da matriz.</p>
-<p>No entanto, esta abordagem é propensa a erros; poderíamos causar pânico no programa se
-o valor do índice ou condição de teste está incorreto. Por exemplo, se você alterou o
-definição do array <code>a</code> para ter quatro elementos, mas esqueci de atualizar o
-condição para <code>while index &lt; 4</code>, o código entraria em pânico. Também é lento, porque
-o compilador adiciona código de tempo de execução para realizar a verificação condicional se o
-index está dentro dos limites da matriz em cada iteração do loop.</p>
-<p>Como uma alternativa mais concisa, você pode usar um loop <code>for</code> e executar algum código
-para cada item de uma coleção. Um loop <code>for</code> se parece com o código da Listagem 3-5.</p>
+<p>Os cinco valores do array aparecem no terminal, como esperado. Mesmo que
+<code>index</code> chegue ao valor <code>5</code> em algum momento, o loop para antes de tentar
+buscar um sexto valor do array.</p>
+<p>No entanto, essa abordagem é propensa a erros. Poderíamos fazer o programa
+entrar em pânico se o valor do índice ou a condição do teste estivesse errada.
+Por exemplo, se você alterasse a definição do array <code>a</code> para ter quatro
+elementos, mas esquecesse de atualizar a condição para <code>while index &lt; 4</code>, o
+código entraria em pânico. Ela também é mais lenta, porque o compilador insere
+código de tempo de execução para verificar a cada iteração se o índice está
+dentro dos limites do array.</p>
+<p>Como alternativa mais concisa, você pode usar um loop <code>for</code> e executar algum
+código para cada item de uma coleção. Um loop <code>for</code> tem a aparência do código
+na Listagem 3-5.</p>
 <figure class="listing" id="listing-3-5">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -578,26 +586,26 @@ para cada item de uma coleção. Um loop <code>for</code> se parece com o códig
         println!("the value is: {element}");
     }
 }</code></pre>
-<figcaption><a href="#listing-3-5">Listing 3-5</a>: Looping through each element of a collection using a <code>for</code> loop</figcaption>
+<figcaption><a href="#listing-3-5">Listing 3-5</a>: Percorrendo cada elemento de uma coleção usando um loop <code>for</code></figcaption>
 </figure>
 <p>Quando executarmos esse código, veremos a mesma saída da Listagem 3-4. Mais
-mais importante, agora aumentamos a segurança do código e eliminamos o
-chance de bugs que podem resultar de ir além do final do array ou não
-indo longe o suficiente e faltando alguns itens. Código de máquina gerado a partir de <code>for</code>
-loops também podem ser mais eficientes porque o índice não precisa ser
-comparado ao comprimento da matriz em cada iteração.</p>
-<p>Usando o loop <code>for</code>, você não precisaria se lembrar de alterar nenhum outro código se
-você alterou o número de valores na matriz, como faria com o método
+importante: aumentamos a segurança do código e eliminamos a chance de bugs
+resultantes de passar do fim do array ou de não percorrê-lo por completo e
+deixar elementos para trás. O código de máquina gerado para loops <code>for</code>
+também pode ser mais eficiente, porque o índice não precisa ser comparado ao
+comprimento do array em cada iteração.</p>
+<p>Usando o loop <code>for</code>, você não precisaria lembrar de alterar outro trecho de
+código se mudasse a quantidade de valores no array, como acontecia com o método
 usado na Listagem 3-4.</p>
-<p>A segurança e a concisão dos loops <code>for</code> fazem deles o loop mais comumente usado
-construir em Rust. Mesmo em situações em que você deseja executar algum código
-certo número de vezes, como no exemplo de contagem regressiva que usou um loop <code>while</code>
-na Listagem 3-3, a maioria dos Rustáceos usaria um loop <code>for</code>. A maneira de fazer isso
-seria usar um <code>Range</code>, fornecido pela biblioteca padrão, que gera
-todos os números em sequência começando de um número e terminando antes de outro
-número.</p>
-<p>Esta é a aparência da contagem regressiva usando um loop <code>for</code> e outro método
-ainda não falamos sobre <code>rev</code>, para reverter o intervalo:</p>
+<p>A segurança e a concisão dos loops <code>for</code> fazem deles a construção de loop mais
+usada em Rust. Mesmo em situações em que você quer executar algum código um
+número específico de vezes, como no exemplo da contagem regressiva feito com um
+loop <code>while</code> na Listagem 3-3, a maioria dos rustaceanos usaria um loop <code>for</code>.
+O jeito de fazer isso seria usando um <code>Range</code>, fornecido pela biblioteca
+padrão, que gera todos os números em sequência a partir de um número inicial e
+até antes de outro número.</p>
+<p>Veja como a contagem regressiva ficaria usando um loop <code>for</code> e outro método
+que ainda não discutimos, <code>rev</code>, para inverter o intervalo:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     for number in (1..4).rev() {
@@ -605,20 +613,21 @@ ainda não falamos sobre <code>rev</code>, para reverter o intervalo:</p>
     }
     println!("LIFTOFF!!!");
 }</code></pre>
-<p>Esse código é um pouco melhor, não é?</p>
+<p>Esse código fica um pouco melhor, não fica?</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Você conseguiu! Este foi um capítulo considerável: você aprendeu sobre variáveis, escalar
-e tipos de dados compostos, funções, comentários, expressões <code>if</code> e loops! Para
-praticar com os conceitos discutidos neste capítulo, tente construir programas para
-faça o seguinte:</p>
+<p>Você conseguiu! Este foi um capítulo grande: você aprendeu sobre variáveis,
+tipos de dados escalares e compostos, funções, comentários, expressões <code>if</code> e
+loops. Para praticar os conceitos discutidos neste capítulo, tente construir
+programas que façam o seguinte:</p>
 <ul>
-<li>Converta temperaturas entre Fahrenheit e Celsius.</li>
-<li>Gere o <em>n</em>ésimo número de Fibonacci.</li>
-<li>Imprima a letra da canção de Natal “Os Doze Dias de Natal”,
+<li>Converter temperaturas entre Fahrenheit e Celsius.</li>
+<li>Gerar o enésimo número de Fibonacci.</li>
+<li>Imprimir a letra da canção natalina “The Twelve Days of Christmas”,
 aproveitando a repetição da música.</li>
 </ul>
-<p>Quando você estiver pronto para seguir em frente, falaremos sobre um conceito em Rust que <em>não</em>
-comumente existem em outras linguagens de programação: propriedade.</p>
+<p>Quando estiver pronto para seguir em frente, vamos falar sobre um conceito do
+Rust que <em>não</em> existe comumente em outras linguagens de programação:
+ownership.</p>
 
                     </main>
 

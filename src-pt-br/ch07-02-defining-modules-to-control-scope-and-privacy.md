@@ -17,17 +17,17 @@ no compilador e como a maioria dos desenvolvedores organiza seu código. Nós ir
 através de exemplos de cada uma dessas regras ao longo deste capítulo, mas esta é uma
 ótimo lugar para consultar como um lembrete de como os módulos funcionam.
 
-- **Comece pela raiz da caixa**: Ao compilar uma caixa, o compilador primeiro
-procura no arquivo raiz da caixa (geralmente _src/lib.rs_ para uma caixa de biblioteca e
-_src/main.rs_ para uma caixa binária) para o código ser compilado.
-- **Declarando módulos**: No arquivo raiz da caixa, você pode declarar novos módulos;
+- **Comece pela raiz da crate**: Ao compilar uma crate, o compilador primeiro
+procura no arquivo raiz da crate (geralmente _src/lib.rs_ para uma crate de biblioteca e
+_src/main.rs_ para uma crate binária) para o código ser compilado.
+- **Declarando módulos**: No arquivo raiz da crate, você pode declarar novos módulos;
 digamos que você declare um módulo “jardim” com `mod garden;`. O compilador irá parecer
 para o código do módulo nestes locais:
 - Inline, entre chaves que substituem o ponto e vírgula após `mod
 jardim`
 - No arquivo _src/garden.rs_
 - No arquivo _src/garden/mod.rs_
-- **Declarando submódulos**: Em qualquer arquivo que não seja a raiz da caixa, você pode
+- **Declarando submódulos**: Em qualquer arquivo que não seja a raiz da crate, você pode
 declarar submódulos. Por exemplo, você pode declarar `mod vegetables;` em
 _src/garden.rs_. O compilador procurará o código do submódulo dentro do
 diretório nomeado para o módulo pai nestes locais:
@@ -35,8 +35,8 @@ diretório nomeado para o módulo pai nestes locais:
 do ponto e vírgula
 - No arquivo _src/garden/vegetables.rs_
 - No arquivo _src/garden/vegetables/mod.rs_
-- **Caminhos para código em módulos**: quando um módulo fizer parte da sua caixa, você poderá
-consulte o código nesse módulo de qualquer outro lugar na mesma caixa, desde que
+- **Caminhos para código em módulos**: quando um módulo fizer parte da sua crate, você poderá
+consulte o código nesse módulo de qualquer outro lugar na mesma crate, desde que
 conforme as regras de privacidade permitem, usando o caminho para o código. Por exemplo, um
 O tipo `Asparagus` no módulo de hortaliças seria encontrado em
 `crate::garden::vegetables::Asparagus`.
@@ -50,8 +50,8 @@ itens para reduzir a repetição de caminhos longos. Em qualquer escopo que poss
 crate::garden::vegetables::Asparagus;`, e a partir daí você só precisa
 escreva `Asparagus` para fazer uso desse tipo no escopo.
 
-Aqui, criamos uma caixa binária chamada `backyard` que ilustra essas regras.
-O diretório da caixa, também chamado _backyard_, contém esses arquivos e
+Aqui, criamos uma crate binária chamada `backyard` que ilustra essas regras.
+O diretório da crate, também chamado _backyard_, contém esses arquivos e
 diretórios:
 
 ```text
@@ -65,7 +65,7 @@ backyard
     └── main.rs
 ```
 
-O arquivo raiz da caixa neste caso é _src/main.rs_ e contém:
+O arquivo raiz da crate neste caso é _src/main.rs_ e contém:
 
 <Listing file-name="src/main.rs">
 
@@ -97,14 +97,14 @@ Agora vamos entrar em detalhes dessas regras e demonstrá-las em ação!
 
 ### Agrupando código relacionado em módulos
 
-_Módulos_ nos permitem organizar o código em uma caixa para facilitar a leitura e a reutilização.
+_Módulos_ nos permitem organizar o código em uma crate para facilitar a leitura e a reutilização.
 Os módulos também nos permitem controlar a _privacidade_ dos itens porque o código dentro de um
 o módulo é privado por padrão. Itens privados são detalhes de implementação interna
 não disponível para uso externo. Podemos optar por fazer módulos e os itens
 dentro deles públicos, o que os expõe para permitir que código externo use e dependa
 neles.
 
-Como exemplo, vamos escrever uma caixa de biblioteca que forneça a funcionalidade de um
+Como exemplo, vamos escrever uma crate de biblioteca que forneça a funcionalidade de um
 restaurante. Definiremos as assinaturas das funções, mas deixaremos seus corpos
 vazio se concentrar na organização do código e não na
 implementação de um restaurante.
@@ -116,7 +116,7 @@ pagamento, e os bartenders preparam bebidas. _Nos fundos da casa_ é onde os che
 cozinheiros trabalham na cozinha, máquinas de lavar louça limpam e gerentes fazem tarefas administrativas
 trabalhar.
 
-Para estruturar nossa caixa dessa forma, podemos organizar suas funções em grupos aninhados.
+Para estruturar nossa crate dessa forma, podemos organizar suas funções em grupos aninhados.
 módulos. Crie uma nova biblioteca chamada `restaurant` executando `cargo new
 restaurante --lib`. Em seguida, insira o código da Listagem 7-1 em _src/lib.rs_ para
 definir alguns módulos e assinaturas de funções; esse código é a frente da casa
@@ -145,7 +145,7 @@ a este código saberia onde colocar o código para manter o programa organizado.
 
 Anteriormente, mencionamos que _src/main.rs_ e _src/lib.rs_ são chamados de _crate
 raízes_. A razão para o seu nome é que o conteúdo de qualquer um destes dois
-os arquivos formam um módulo chamado `crate` na raiz da estrutura do módulo da caixa,
+os arquivos formam um módulo chamado `crate` na raiz da estrutura do módulo da crate,
 conhecida como _árvore de módulos_.
 
 A Listagem 7-2 mostra a árvore de módulos para a estrutura da Listagem 7-1.

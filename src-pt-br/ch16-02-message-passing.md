@@ -121,7 +121,7 @@ principal é apropriado.
 Quando executarmos o código da Listagem 16-8, veremos o valor impresso na thread principal:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -202,7 +202,7 @@ Ao executar o código na Listagem 16-10, você deverá ver a seguinte saída
 com uma pausa de um segundo entre cada linha:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -243,7 +243,7 @@ Isso nos dá dois threads, cada um enviando mensagens diferentes para um recepto
 Ao executar o código, sua saída deverá ser semelhante a esta:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text

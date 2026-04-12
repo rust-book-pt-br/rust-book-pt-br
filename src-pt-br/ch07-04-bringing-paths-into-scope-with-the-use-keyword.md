@@ -12,7 +12,7 @@ escopo da função `eat_at_restaurant` para que só tenhamos que especificar
 `hosting::add_to_waitlist` para chamar a função `add_to_waitlist` em
 `eat_at_restaurant`.
 
-<Listing number="7-11" file-name="src/lib.rs" caption="Bringing a module into scope with `use`">
+<Listing number="7-11" file-name="src/lib.rs" caption="Trazendo um módulo para o escopo com `use`">
 
 ```rust,noplayground,test_harness
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-11/src/lib.rs}}
@@ -21,9 +21,9 @@ escopo da função `eat_at_restaurant` para que só tenhamos que especificar
 </Listing>
 
 Adicionar `use` e um caminho em um escopo é semelhante a criar um link simbólico em
-o sistema de arquivos. Adicionando `use crate::front_of_house::hosting` na caixa
+o sistema de arquivos. Adicionando `use crate::front_of_house::hosting` na crate
 root, `hosting` agora é um nome válido nesse escopo, assim como se `hosting`
-módulo foi definido na raiz da caixa. Caminhos trazidos para o escopo com `use`
+módulo foi definido na raiz da crate. Caminhos trazidos para o escopo com `use`
 verifique também a privacidade, como qualquer outro caminho.
 
 Observe que `use` cria apenas o atalho para o escopo específico no qual o
@@ -31,7 +31,7 @@ Observe que `use` cria apenas o atalho para o escopo específico no qual o
 módulo filho chamado `customer`, que é então um escopo diferente do `use`
 instrução, então o corpo da função não será compilado.
 
-<Listing number="7-12" file-name="src/lib.rs" caption="A `use` statement only applies in the scope it’s in.">
+<Listing number="7-12" file-name="src/lib.rs" caption="Uma instrução `use` se aplica apenas ao escopo em que foi declarada">
 
 ```rust,noplayground,test_harness,does_not_compile,ignore
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-12/src/lib.rs}}
@@ -58,7 +58,7 @@ crate::front_of_house::hosting` and then called `hosting::add_to_waitlist` em
 `eat_at_restaurant`, em vez de especificar o caminho `use` até
 a função `add_to_waitlist` para obter o mesmo resultado, como na Listagem 7-13.
 
-<Listing number="7-13" file-name="src/lib.rs" caption="Bringing the `add_to_waitlist` function into scope with `use`, which is unidiomatic">
+<Listing number="7-13" file-name="src/lib.rs" caption="Trazendo a função `add_to_waitlist` para o escopo com `use`, de forma pouco idiomática">
 
 ```rust,noplayground,test_harness
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-13/src/lib.rs}}
@@ -77,9 +77,9 @@ não está claro onde `add_to_waitlist` está definido.
 Por outro lado, ao trazer structs, enums e outros itens com `use`,
 é idiomático especificar o caminho completo. A Listagem 7-14 mostra a maneira idiomática
 para trazer a estrutura `HashMap` da biblioteca padrão para o escopo de um binário
-caixa.
+crate.
 
-<Listing number="7-14" file-name="src/main.rs" caption="Bringing `HashMap` into scope in an idiomatic way">
+<Listing number="7-14" file-name="src/main.rs" caption="Trazendo `HashMap` para o escopo de forma idiomática">
 
 ```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-14/src/main.rs}}
@@ -95,7 +95,7 @@ no escopo com instruções `use`, porque Rust não permite isso. Listagem 7-15
 mostra como trazer para o escopo dois tipos `Result` que têm o mesmo nome, mas
 diferentes módulos pai e como se referir a eles.
 
-<Listing number="7-15" file-name="src/lib.rs" caption="Bringing two types with the same name into the same scope requires using their parent modules.">
+<Listing number="7-15" file-name="src/lib.rs" caption="Trazer dois tipos com o mesmo nome para o mesmo escopo exige usar seus módulos-pai">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-15/src/lib.rs:here}}
@@ -115,7 +115,7 @@ no mesmo escopo com `use`: Após o caminho, podemos especificar `as` e um novo
 nome local, ou _alias_, para o tipo. A Listagem 7.16 mostra outra maneira de escrever
 o código na Listagem 7.15 renomeando um dos dois tipos `Result` usando `as`.
 
-<Listing number="7-16" file-name="src/lib.rs" caption="Renaming a type when it’s brought into scope with the `as` keyword">
+<Listing number="7-16" file-name="src/lib.rs" caption="Renomeando um tipo ao trazê-lo para o escopo com a palavra-chave `as`">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-16/src/lib.rs:here}}
@@ -140,7 +140,7 @@ escopo.
 A Listagem 7-17 mostra o código da Listagem 7-11 com `use` no módulo raiz
 alterado para `pub use`.
 
-<Listing number="7-17" file-name="src/lib.rs" caption="Making a name available for any code to use from a new scope with `pub use`">
+<Listing number="7-17" file-name="src/lib.rs" caption="Disponibilizando um nome para qualquer código por meio de um novo escopo com `pub use`">
 
 ```rust,noplayground,test_harness
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-17/src/lib.rs}}
@@ -163,7 +163,7 @@ provavelmente não pensará nas partes do restaurante nesses termos. Com `pub
 use`, podemos escrever nosso código com uma estrutura, mas expor uma estrutura diferente.
 Isso torna nossa biblioteca bem organizada para programadores que trabalham na biblioteca
 e programadores ligando para a biblioteca. Veremos outro exemplo de `pub use`
-e como isso afeta a documentação da sua caixa em [“Exportando um Público Conveniente
+e como isso afeta a documentação da sua crate em [“Exportando um Público Conveniente
 API”][ch14-pub-use]<!-- ignore --> no Capítulo 14.
 
 ### Usando pacotes externos
@@ -173,8 +173,8 @@ pacote chamado `rand` para obter números aleatórios. Para usar `rand` em nosso
 adicionei esta linha a _Cargo.toml_:
 
 <!-- When updating the version of `rand` used, also update the version of
-`rand` usado nesses arquivos para que todos correspondam:
-* ch02-00-tutorial de jogo de adivinhação.md
+`rand` used in these files so they all match:
+* ch02-00-guessing-game-tutorial.md
 * ch14-03-cargo-workspaces.md
 -->
 
@@ -191,7 +191,7 @@ Adicionar `rand` como uma dependência em _Cargo.toml_ diz ao Cargo para baixar 
 disponibilizar `rand` para nosso projeto.
 
 Então, para trazer as definições de `rand` para o escopo do nosso pacote, adicionamos um
-`use` linha começando com o nome da caixa, `rand`, e listou os itens que
+`use` linha começando com o nome da crate, `rand`, e listou os itens que
 queria trazer para o escopo. Lembre-se disso em [“Gerando um Random
 Número”][rand]<!-- ignore --> no Capítulo 2, trouxemos o traço `Rng` para
 escopo e chamou a função `rand::thread_rng`:
@@ -203,9 +203,9 @@ escopo e chamou a função `rand::thread_rng`:
 Membros da comunidade Rust disponibilizaram muitos pacotes em
 [crates.io](https://crates.io/) e colocar qualquer um deles em seu pacote
 envolve as mesmas etapas: listá-los no arquivo _Cargo.toml_ do seu pacote e
-usando `use` para trazer itens de suas caixas para o escopo.
+usando `use` para trazer itens de suas crates para o escopo.
 
-Observe que a biblioteca padrão `std` também é uma caixa externa ao nosso
+Observe que a biblioteca padrão `std` também é uma crate externa ao nosso
 pacote. Como a biblioteca padrão vem com a linguagem Rust, nós
 não é necessário alterar _Cargo.toml_ para incluir `std`. Mas precisamos nos referir a
 use `use` para trazer itens de lá para o escopo do nosso pacote. Por exemplo,
@@ -216,7 +216,7 @@ use std::collections::HashMap;
 ```
 
 Este é um caminho absoluto começando com `std`, o nome da biblioteca padrão
-caixa.
+crate.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -224,7 +224,7 @@ caixa.
 
 ### Usando caminhos aninhados para limpar listas `use`
 
-Se estivermos usando vários itens definidos na mesma caixa ou no mesmo módulo, listar
+Se estivermos usando vários itens definidos na mesma crate ou no mesmo módulo, listar
 cada item em sua própria linha pode ocupar muito espaço vertical em nossos arquivos. Para
 por exemplo, essas duas declarações `use` que tivemos no jogo de adivinhação da Listagem 2-4
 traga itens de `std` para o escopo:
@@ -242,7 +242,7 @@ linha. Fazemos isso especificando a parte comum do caminho, seguida por dois
 dois pontos e, em seguida, colchetes em torno de uma lista das partes dos caminhos que
 diferem, conforme mostrado na Listagem 7-18.
 
-<Listing number="7-18" file-name="src/main.rs" caption="Specifying a nested path to bring multiple items with the same prefix into scope">
+<Listing number="7-18" file-name="src/main.rs" caption="Especificando um caminho aninhado para trazer múltiplos itens com o mesmo prefixo para o escopo">
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-18/src/main.rs:here}}
@@ -250,7 +250,7 @@ diferem, conforme mostrado na Listagem 7-18.
 
 </Listing>
 
-Em programas maiores, trazer para o escopo muitos itens da mesma caixa ou
+Em programas maiores, trazer para o escopo muitos itens da mesma crate ou
 módulo usando caminhos aninhados pode reduzir o número de instruções `use` separadas
 preciso muito!
 
@@ -259,7 +259,7 @@ duas instruções `use` que compartilham um subcaminho. Por exemplo, a Listagem 
 Declarações `use`: uma que traz `std::io` para o escopo e outra que traz
 `std::io::Write` no escopo.
 
-<Listing number="7-19" file-name="src/lib.rs" caption="Two `use` statements where one is a subpath of the other">
+<Listing number="7-19" file-name="src/lib.rs" caption="Duas instruções `use` em que uma é subcaminho da outra">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-19/src/lib.rs}}
@@ -271,7 +271,7 @@ A parte comum desses dois caminhos é `std::io`, e esse é o primeiro caminho co
 caminho. Para mesclar esses dois caminhos em uma instrução `use`, podemos usar `self` em
 o caminho aninhado, conforme mostrado na Listagem 7-20.
 
-<Listing number="7-20" file-name="src/lib.rs" caption="Combining the paths in Listing 7-19 into one `use` statement">
+<Listing number="7-20" file-name="src/lib.rs" caption="Combinando os caminhos da Listagem 7-19 em uma única instrução `use`">
 
 ```rust,noplayground
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-20/src/lib.rs}}
@@ -305,7 +305,7 @@ como uma definição sua no mesmo escopo, por exemplo.
 O operador glob é frequentemente usado em testes para colocar tudo em teste em
 o módulo `tests`; falaremos sobre isso em [“Como escrever
 Testes”][writing-tests]<!-- ignore --> no Capítulo 11. O operador glob também é
-às vezes usado como parte do padrão prelúdio: Consulte [a biblioteca padrão
+às vezes usado como parte do padrão prelude: Consulte [a biblioteca padrão
 documentação](../std/prelude/index.html#other-preludes)<!-- ignore --> para mais
 informações sobre esse padrão.
 

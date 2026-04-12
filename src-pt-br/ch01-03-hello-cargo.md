@@ -80,8 +80,7 @@ informações a esse arquivo, acrescentaremos outras seções.
 
 As três linhas seguintes definem as informações de configuração de que o Cargo
 precisa para compilar seu programa: o nome, a versão e a edição do Rust a ser
-usada. Falaremos sobre a chave `edition` no [Apêndice E][appendix-e]<!-- ignore
--->.
+usada. Falaremos sobre a chave `edition` no [Apêndice E][appendix-e]<!-- ignore -->.
 
 A última linha, `[dependencies]`, marca o começo de uma seção na qual você
 listará as dependências do projeto. Em Rust, pacotes de código são chamados de

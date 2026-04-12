@@ -49,8 +49,7 @@ procurar métodos da trait nesse tipo em tempo de execução. Criamos um objeto
 trait especificando algum tipo de ponteiro, como uma referência ou um smart
 pointer `Box<T>`, seguido da palavra-chave `dyn` e, então, da trait
 relevante. (Falaremos sobre a razão pela qual os objetos trait precisam usar
-um ponteiro em [“Tipos de tamanho dinâmico e a trait `Sized`”][dynamically-sized]<!--
-ignore --> no Capítulo 20.) Podemos usar objetos trait no lugar de um tipo
+um ponteiro em [“Tipos de tamanho dinâmico e a trait `Sized`”][dynamically-sized]<!-- ignore --> no Capítulo 20.) Podemos usar objetos trait no lugar de um tipo
 genérico ou concreto. Onde quer que usemos um objeto trait, o sistema de tipos
 do Rust garantirá, em tempo de compilação, que qualquer valor usado nesse
 contexto implementará a trait do objeto trait. Consequentemente, não

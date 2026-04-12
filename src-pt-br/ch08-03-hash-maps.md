@@ -35,7 +35,7 @@ O time amarelo começa com 50.
 Observe que precisamos primeiro `use` do `HashMap` da parte de coleções do
 a biblioteca padrão. Das nossas três coleções comuns, esta é a menos
 usado com frequência, por isso não está incluído nos recursos incluídos no escopo
-automaticamente no prelúdio. Os mapas hash também têm menos suporte do
+automaticamente no prelude. Os mapas hash também têm menos suporte do
 biblioteca padrão; não há macro integrada para construí-los, por exemplo.
 
 Assim como os vetores, os mapas hash armazenam seus dados na pilha. Este `HashMap` tem

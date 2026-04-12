@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -311,9 +311,9 @@ chamar <code>add_one</code>, como na Listagem 14-7.</p>
 <p>Vamos compilar o workspace executando <code>cargo build</code> no diretório <em>add</em>, no
 nível superior!</p>
 <!-- manual-regeneration
-listagens de cd/ch14-more-about-cargo/listing-14-07/add
-Construção cargo
-copie a saída abaixo; o script de atualização de saída não manipula subdiretórios em caminhos corretamente
+cd listings/ch14-more-about-cargo/listing-14-07/add
+cargo build
+copy output below; the output updating script doesn't handle subdirectories in paths properly
 -->
 <pre><code class="language-console">$ cargo build
    Compiling add_one v0.1.0 (file:///projects/add/add_one)
@@ -360,9 +360,9 @@ o workspace inteiro executando <code>cargo build</code> no diretório <em>add</e
 crate <code>rand</code> seja baixado e compilado. Receberemos um aviso porque não estamos
 usando o <code>rand</code> que trouxemos para o escopo:</p>
 <!-- manual-regeneration
-listagens de cd/ch14-mais-sobre-cargo/no-listing-03-workspace-with-external-dependency/add
-Construção cargo
-copie a saída abaixo; o script de atualização de saída não manipula subdiretórios em caminhos corretamente
+cd listings/ch14-more-about-cargo/no-listing-03-workspace-with-external-dependency/add
+cargo build
+copy output below; the output updating script doesn't handle subdirectories in paths properly
 -->
 <pre><code class="language-console">$ cargo build
     Updating crates.io index
@@ -389,9 +389,9 @@ adicionemos também aos seus arquivos <em>Cargo.toml</em>. Por exemplo, se
 adicionarmos <code>use rand;</code> ao arquivo <em>adder/src/main.rs</em> do pacote <code>adder</code>,
 obteremos um erro:</p>
 <!-- manual-regeneration
-listagens de cd/ch14-more-about-cargo/output-only-03-use-rand/add
-Construção cargo
-copie a saída abaixo; o script de atualização de saída não manipula subdiretórios em caminhos corretamente
+cd listings/ch14-more-about-cargo/output-only-03-use-rand/add
+cargo build
+copy output below; the output updating script doesn't handle subdirectories in paths properly
 -->
 <pre><code class="language-console">$ cargo build
   --snip--

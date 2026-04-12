@@ -55,7 +55,7 @@ programa pode ser um pouco diferente a cada vez, mas será semelhante ao
 seguinte:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -116,7 +116,7 @@ para `join` após o loop `for` do thread principal, a execução da Listagem 16-
 produza uma saída semelhante a esta:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -153,7 +153,7 @@ O thread principal aguardará o thread gerado terminar e então executará seu
 Loop `for`, então a saída não será mais intercalada, conforme mostrado aqui:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -235,7 +235,7 @@ Para corrigir o erro do compilador na Listagem 16-3, podemos usar a mensagem de 
 conselho:
 
 <!-- manual-regeneration
-após a regeneração automática, consulte listagens/ch16-fearless-concurrency/listing-16-03/output.txt e copie a parte relevante
+after automatic regeneration, look at listings/ch16-fearless-concurrency/listing-16-03/output.txt and copy the relevant part
 -->
 
 ```text

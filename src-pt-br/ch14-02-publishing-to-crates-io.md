@@ -291,7 +291,8 @@ Esse comando informará ao Cargo o seu token de API e o armazenará localmente e
 _~/.cargo/credentials.toml_. Observe que esse token é um segredo: não o
 compartilhe com ninguém. Se você o compartilhar com alguém por qualquer motivo,
 deverá revogá-lo e gerar um novo token em
-[crates.io](https://crates.io/)<!-- ignore -->.
+[crates.io](https://crates.io/)<!-- ignore
+-->.
 
 ### Adicionando Metadados a um Novo Crate
 
@@ -319,10 +320,10 @@ Mesmo que você tenha escolhido um nome único, ao executar `cargo publish` para
 publicar o crate neste ponto, receberá um aviso e, em seguida, um erro:
 
 <!-- manual-regeneration
-Crie um novo pacote com um nome não registrado, sem fazer mais modificações
-  ao pacote gerado, portanto faltam os campos de descrição e licença.
-Publicação cargo
-copie apenas as linhas relevantes abaixo
+Create a new package with an unregistered name, making no further modifications
+  to the generated package, so it is missing the description and license fields.
+cargo publish
+copy just the relevant lines below
 -->
 
 ```console

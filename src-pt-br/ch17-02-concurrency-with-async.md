@@ -54,7 +54,7 @@ fato de que você pode ver as mensagens aparecerem em uma ordem diferente em seu
 terminal quando você o executa:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -89,7 +89,7 @@ identificador da tarefa é, ele próprio, um future. Seu tipo `Output` é um
 Esta versão atualizada é executada até que _ambos_ os loops terminem:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -140,7 +140,7 @@ valores unitários.
 Quando executamos isso, vemos ambos futures sendo executados até a conclusão:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text
@@ -400,7 +400,7 @@ futures usa atrasos ligeiramente diferentes após o envio, as mensagens também 
 recebidos nesses diferentes intervalos:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text

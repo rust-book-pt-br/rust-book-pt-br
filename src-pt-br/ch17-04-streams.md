@@ -51,9 +51,9 @@ Infelizmente, quando tentamos executar o código, ele não compila; em vez disso
 relata que não há método `next` disponível:
 
 <!-- manual-regeneration
-listagens de cd/ch17-async-await/listing-17-21
-Construção cargo
-copie apenas a saída do erro
+cd listings/ch17-async-await/listing-17-21
+cargo build
+copy only the error output
 -->
 
 ```text

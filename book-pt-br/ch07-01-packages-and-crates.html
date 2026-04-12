@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -181,39 +181,45 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="pacotes-e-caixas"><a class="header" href="#pacotes-e-caixas">Pacotes e caixas</a></h2>
-<p>As primeiras partes do sistema de módulos que abordaremos são pacotes e engradados.</p>
-<p>Uma <em>crate</em> é a menor quantidade de código que o compilador Rust considera em um
-tempo. Mesmo se você executar <code>rustc</code> em vez de <code>cargo</code> e passar um único código-fonte
-arquivo (como fizemos em <a href="ch01-02-hello-world.html#rust-program-basics">“Rust Program Basics”</a>&lt;!– ignore
--&gt; no Capítulo 1), o compilador considera esse arquivo como uma caixa. As caixas podem
-contêm módulos, e os módulos podem ser definidos em outros arquivos que são obtidos
-compilado com a caixa, como veremos nas próximas seções.</p>
-<p>Uma caixa pode vir em uma de duas formas: uma caixa binária ou uma caixa de biblioteca.
-<em>Caixas binárias</em> são programas que você pode compilar em um executável que pode ser executado,
-como um programa de linha de comando ou um servidor. Cada um deve ter uma função chamada
-<code>main</code> que define o que acontece quando o executável é executado. Todas as caixas que temos
-criados até agora foram caixas binárias.</p>
-<p><em>Caixas de biblioteca</em> não têm uma função <code>main</code> e não compilam para um
-executável. Em vez disso, eles definem funcionalidades destinadas a serem compartilhadas com
-vários projetos. Por exemplo, a caixa <code>rand</code> que usamos no <a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">Capítulo
-2</a><!-- ignore --> fornece funcionalidade que gera números aleatórios.
-Na maioria das vezes, quando os Rustáceos dizem “caixa”, eles querem dizer caixa de biblioteca, e eles
-use “caixa” de forma intercambiável com o conceito geral de programação de uma “biblioteca”.</p>
-<p>O <em>crate root</em> é um arquivo fonte a partir do qual o compilador Rust inicia e faz
-crie o módulo raiz da sua caixa (explicaremos os módulos em profundidade em <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">“Controle
-Escopo e privacidade com módulos”</a><!-- ignore -->).</p>
-<p>Um <em>pacote</em> é um pacote de uma ou mais caixas que fornece um conjunto de
-funcionalidade. Um pacote contém um arquivo <em>Cargo.toml</em> que descreve como
-construir essas caixas. Cargo é na verdade um pacote que contém a caixa binária
-para a ferramenta de linha de comando que você está usando para construir seu código. A Carga
-O pacote também contém uma caixa de biblioteca da qual a caixa binária depende. Outro
-projetos podem depender da caixa da biblioteca Cargo para usar a mesma lógica que o Cargo
-ferramenta de linha de comando usa.</p>
-<p>Um pacote pode conter quantas caixas binárias você desejar, mas no máximo apenas uma.
-caixote da biblioteca. Um pacote deve conter pelo menos uma caixa, seja ela uma
-biblioteca ou caixa binária.</p>
-<p>Vejamos o que acontece quando criamos um pacote. Primeiro, entramos no
+                        <h2 id="pacotes-e-crates"><a class="header" href="#pacotes-e-crates">Pacotes e Crates</a></h2>
+<p>As primeiras partes do sistema de módulos que vamos abordar são pacotes e
+crates.</p>
+<p>Um <em>crate</em> é a menor unidade de código que o compilador Rust considera em um
+processo de compilação. Mesmo que você execute <code>rustc</code> diretamente em vez de
+usar <code>cargo</code>, passando um único arquivo-fonte, como fizemos em <a href="ch01-02-hello-world.html#rust-program-basics">“Noções
+Básicas de um Programa Rust”</a><!-- ignore --> no Capítulo 1, o
+compilador trata esse arquivo como um crate. Crates podem conter módulos, e os
+módulos podem ser definidos em outros arquivos que são compilados junto com o
+crate, como veremos nas próximas seções.</p>
+<p>Um crate pode ser de um de dois tipos: crate binário ou crate de biblioteca.
+<em>Crates binários</em> são programas que podem ser compilados para um executável, por
+exemplo um programa de linha de comando ou um servidor. Cada crate binário
+precisa ter uma função chamada <code>main</code>, que define o que acontece quando o
+executável é executado. Todos os crates que criamos até agora eram crates
+binários.</p>
+<p><em>Crates de biblioteca</em> não têm função <code>main</code> e não são compilados em um
+executável. Em vez disso, eles definem funcionalidades destinadas a ser
+compartilhadas com outros projetos. Por exemplo, o crate <code>rand</code>, que usamos no
+<a href="ch02-00-guessing-game-tutorial.html#generating-a-random-number">Capítulo 2</a><!-- ignore -->, fornece funcionalidades para gerar números
+aleatórios. Na maior parte do tempo, quando Rustaceans dizem “crate”, eles
+estão falando de um crate de biblioteca e usam “crate” quase como sinônimo da
+ideia geral de “biblioteca”.</p>
+<p>O <em>crate root</em> é o arquivo-fonte a partir do qual o compilador Rust começa a
+análise e monta a árvore de módulos do crate. Vamos explorar módulos com mais
+profundidade em <a href="ch07-02-defining-modules-to-control-scope-and-privacy.html">“Definindo Módulos para Controlar Escopo e
+Privacidade”</a><!-- ignore -->.</p>
+<p>Um <em>pacote</em> é um conjunto de um ou mais crates que oferece um grupo de
+funcionalidades. Um pacote contém um arquivo <em>Cargo.toml</em> que descreve como
+compilar esses crates. O próprio Cargo é, na verdade, um pacote que contém o
+crate binário da ferramenta de linha de comando que você usa para construir seu
+código. O pacote do Cargo também contém um crate de biblioteca do qual esse
+crate binário depende. Outros projetos podem depender desse crate de biblioteca
+do Cargo para reutilizar a mesma lógica que a ferramenta de linha de comando
+usa.</p>
+<p>Um pacote pode conter quantos crates binários você quiser, mas no máximo um
+crate de biblioteca. E todo pacote precisa conter pelo menos um crate, seja
+ele binário, seja de biblioteca.</p>
+<p>Vamos ver o que acontece quando criamos um pacote. Primeiro, executamos o
 comando <code>cargo new my-project</code>:</p>
 <pre><code class="language-console">$ cargo new my-project
      Created binary (application) `my-project` package
@@ -223,20 +229,22 @@ src
 $ ls my-project/src
 main.rs
 </code></pre>
-<p>Depois de executarmos <code>cargo new my-project</code>, usamos <code>ls</code> para ver o que Cargo cria. Em
-no diretório <em>my-project</em>, há um arquivo <em>Cargo.toml</em>, que nos fornece um pacote.
-Há também um diretório <em>src</em> que contém <em>main.rs</em>. Abra <em>Cargo.toml</em> em
-seu editor de texto e observe que não há menção a <em>src/main.rs</em>. Carga
-segue uma convenção de que <em>src/main.rs</em> é a raiz da caixa de uma caixa binária
-com o mesmo nome do pacote. Da mesma forma, Cargo sabe que se o pacote
-diretório contém <em>src/lib.rs</em>, o pacote contém uma caixa de biblioteca com o
-mesmo nome do pacote e <em>src/lib.rs</em> é a raiz da caixa. A carga passa
-crie arquivos raiz para <code>rustc</code> para construir a biblioteca ou binário.</p>
-<p>Aqui, temos um pacote que contém apenas <em>src/main.rs</em>, ou seja, apenas
-contém uma caixa binária chamada <code>my-project</code>. Se um pacote contém <em>src/main.rs</em>
-e <em>src/lib.rs</em>, possui duas caixas: uma binária e uma biblioteca, ambas com o mesmo
-nome como o pacote. Um pacote pode ter múltiplas caixas binárias colocando arquivos
-no diretório <em>src/bin</em>: Cada arquivo será uma caixa binária separada.</p>
+<p>Depois de executar <code>cargo new my-project</code>, usamos <code>ls</code> para ver o que o Cargo
+criou. No diretório <em>my-project</em>, há um arquivo <em>Cargo.toml</em>, que define o
+pacote. Também há um diretório <em>src</em> contendo <em>main.rs</em>. Se você abrir
+<em>Cargo.toml</em> no editor, verá que ele não menciona explicitamente
+<em>src/main.rs</em>. O Cargo segue uma convenção: <em>src/main.rs</em> é o <em>crate root</em> de
+um crate binário com o mesmo nome do pacote. Da mesma forma, se o pacote
+contiver <em>src/lib.rs</em>, o Cargo entende que ele também possui um crate de
+biblioteca com o mesmo nome do pacote, e que <em>src/lib.rs</em> é o <em>crate root</em>
+desse crate. O Cargo passa esses arquivos raiz para o <code>rustc</code>, que então
+compila a biblioteca ou o binário.</p>
+<p>Aqui, temos um pacote que contém apenas <em>src/main.rs</em>, o que significa que ele
+contém apenas um crate binário chamado <code>my-project</code>. Se um pacote contiver
+tanto <em>src/main.rs</em> quanto <em>src/lib.rs</em>, ele terá dois crates: um binário e um
+de biblioteca, ambos com o mesmo nome do pacote. Um pacote também pode ter
+vários crates binários colocando arquivos no diretório <em>src/bin</em>: cada arquivo
+nesse diretório será um crate binário separado.</p>
 
                     </main>
 

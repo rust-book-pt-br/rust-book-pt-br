@@ -6,8 +6,8 @@ arquivo para tornar o código mais fácil de navegar.
 
 Por exemplo, vamos começar com o código da Listagem 7.17 que tinha vários
 módulos de restaurante. Extrairemos módulos em arquivos em vez de ter todos os
-módulos definidos no arquivo raiz da caixa. Neste caso, o arquivo raiz da caixa é
-_src/lib.rs_, mas este procedimento também funciona com caixas binárias cuja raiz da caixa
+módulos definidos no arquivo raiz da crate. Neste caso, o arquivo raiz da crate é
+_src/lib.rs_, mas este procedimento também funciona com crates binárias cuja raiz da crate
 arquivo é _src/main.rs_.
 
 Primeiro, extrairemos o módulo `front_of_house` para seu próprio arquivo. Remova o
@@ -26,7 +26,7 @@ _src/front_of_house.rs_ na Listagem 7-22.
 
 Em seguida, coloque o código que estava entre chaves em um novo arquivo chamado
 _src/front_of_house.rs_, conforme mostrado na Listagem 7-22. O compilador sabe olhar
-neste arquivo porque se deparou com a declaração do módulo na raiz da caixa
+neste arquivo porque se deparou com a declaração do módulo na raiz da crate
 com o nome `front_of_house`.
 
 <Listing number="7-22" file-name="src/front_of_house.rs" caption="Definitions inside the `front_of_house` module in *src/front_of_house.rs*">
@@ -74,7 +74,7 @@ contém as definições feitas no módulo `hosting`:
 </Listing>
 
 Se, em vez disso, colocarmos _hosting.rs_ no diretório _src_, o compilador
-espere que o código _hosting.rs_ esteja em um módulo `hosting` declarado na caixa
+espere que o código _hosting.rs_ esteja em um módulo `hosting` declarado na crate
 root e não declarado como filho do módulo `front_of_house`. O
 regras do compilador para quais arquivos verificar o código de quais módulos significam o
 diretórios e arquivos correspondem melhor à árvore do módulo.
@@ -83,7 +83,7 @@ diretórios e arquivos correspondem melhor à árvore do módulo.
 >
 > Até agora, cobrimos os caminhos de arquivo mais idiomáticos que o compilador Rust usa,
 > mas Rust também oferece suporte a um estilo mais antigo de caminho de arquivo. Para um módulo chamado
-> `front_of_house` declarado na raiz da caixa, o compilador procurará o
+> `front_of_house` declarado na raiz da crate, o compilador procurará o
 > código do módulo em:
 >
 > - _src/front_of_house.rs_ (o que cobrimos)
@@ -110,13 +110,13 @@ técnica permite mover módulos para novos arquivos à medida que aumentam de ta
 
 Observe que a instrução `pub use crate::front_of_house::hosting` em
 _src/lib.rs_ também não mudou, nem `use` tem qualquer impacto em quais arquivos
-são compilados como parte da caixa. A palavra-chave `mod` declara módulos e Rust
+são compilados como parte da crate. A palavra-chave `mod` declara módulos e Rust
 procura em um arquivo com o mesmo nome do módulo o código que entra
 esse módulo.
 
 ## Resumo
 
-Rust permite dividir um pacote em várias caixas e uma caixa em módulos para que
+Rust permite dividir um pacote em várias crates e uma crate em módulos para que
 que você pode consultar itens definidos em um módulo de outro módulo. Você pode
 faça isso especificando caminhos absolutos ou relativos. Esses caminhos podem ser trazidos
 no escopo com uma instrução `use` para que você possa usar um caminho mais curto para

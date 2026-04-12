@@ -5,19 +5,20 @@ o teste pode ser uma forma muito eficaz de mostrar a presença de bugs, mas é
 irremediavelmente inadequado para mostrar sua ausência.” Isso não significa que não deveríamos
 tente testar o máximo que pudermos!
 
-_Correção_ em nossos programas é até que ponto nosso código faz o que
-pretendo que isso aconteça. A ferrugem é projetada com um alto grau de preocupação com o
-correcção dos programas, mas a correcção é complexa e não é fácil de provar.
+_Correção_ em nossos programas é o quanto nosso código faz o que pretendemos
+que ele faça. O Rust foi projetado com um alto grau de preocupação com a
+correção dos programas, mas correção é algo complexo e não é fácil de provar.
 O sistema de tipos do Rust assume uma grande parte desse fardo, mas o sistema de tipos
 não pode pegar tudo. Como tal, Rust inclui suporte para escrita automatizada
 testes de software.
 
 Digamos que escrevemos uma função `add_two` que adiciona 2 a qualquer número passado
-isto. A assinatura desta função aceita um número inteiro como parâmetro e retorna um
-inteiro como resultado. Quando implementamos e compilamos essa função, Rust faz tudo
-a verificação de tipo e verificação de empréstimo que você aprendeu até agora para garantir
-que, por exemplo, não estamos passando um valor `String` ou uma referência inválida
-para esta função. Mas Rust _não_ pode verificar se esta função funcionará com precisão
+isso. A assinatura dessa função aceita um inteiro como parâmetro e retorna um
+inteiro como resultado. Quando implementamos e compilamos essa função, o Rust
+faz toda a verificação de tipos e de empréstimos que você aprendeu até agora
+para garantir que, por exemplo, não estamos passando um valor `String` ou uma
+referência inválida para essa função. Mas o Rust _não_ consegue verificar se
+essa função funcionará corretamente
 o que pretendemos, que é retornar o parâmetro mais 2 em vez de, digamos, o
 parâmetro mais 10 ou o parâmetro menos 50! É aí que entram os testes.
 

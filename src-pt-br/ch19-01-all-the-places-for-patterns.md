@@ -12,8 +12,8 @@ Como discutimos no Capítulo 6, usamos padrões nos braços das expressões
 o valor corresponder ao padrão daquele braço, assim:
 
 <!--
-Formatado manualmente em vez de usar Markdown intencionalmente: Markdown não
-  suporta código em itálico no corpo de um bloco como este!
+  Manually formatted rather than using Markdown intentionally: Markdown does not
+  support italicizing code in the body of a block like this!
 -->
 
 <pre><code>match <em>VALUE</em> {
@@ -64,8 +64,8 @@ ainda que talvez não tivesse percebido. De forma mais formal, uma instrução
 `let` se parece com isto:
 
 <!--
-Formatado manualmente em vez de usar Markdown intencionalmente: Markdown não
-  suporta código em itálico no corpo de um bloco como este!
+  Manually formatted rather than using Markdown intentionally: Markdown does not
+  support italicizing code in the body of a block like this!
 -->
 
 <pre>

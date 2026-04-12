@@ -14,5 +14,6 @@ Compartilhar código com Cargo e [crates.io](https://crates.io/)<!-- ignore -->
 faz parte do que torna o ecossistema Rust útil para muitas tarefas diferentes.
 A biblioteca padrão do Rust é pequena e estável, mas crates são fáceis de
 compartilhar, usar e melhorar em um ritmo diferente do da linguagem. Não tenha
-receio de compartilhar em [crates.io](https://crates.io/)<!-- ignore --> código
+receio de compartilhar em [crates.io](https://crates.io/)<!-- ignore
+--> código
 que seja útil para você; é bem provável que também seja útil para outra pessoa!

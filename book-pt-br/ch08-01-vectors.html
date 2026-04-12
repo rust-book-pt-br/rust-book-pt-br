@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -409,14 +409,16 @@ mantenha diferentes tipos. Demonstramos isso na Listagem 8-9.</p>
 </figure>
 <p>Rust precisa saber quais tipos estarão no vetor em tempo de compilação para que
 sabe exatamente quanta memória no heap será necessária para armazenar cada elemento.
-Também devemos ser explícitos sobre quais tipos são permitidos neste vetor. Se ferrugem
-permitisse que um vetor mantivesse qualquer tipo, haveria uma chance de que um ou mais dos
-os tipos causariam erros nas operações executadas nos elementos de
-o vetor. Usar um enum mais uma expressão <code>match</code> significa que Rust garantirá
-em tempo de compilação, todos os casos possíveis são tratados, conforme discutido no Capítulo 6.</p>
-<p>Se você não conhece o conjunto exaustivo de tipos que um programa obterá em tempo de execução para
-armazenar em um vetor, a técnica enum não funcionará. Em vez disso, você pode usar uma característica
-objeto, que abordaremos no Capítulo 18.</p>
+Também devemos ser explícitos sobre quais tipos são permitidos neste vetor. Se
+o Rust permitisse que um vetor armazenasse qualquer tipo, haveria a chance de
+um ou mais desses tipos causarem erros nas operações executadas sobre os
+elementos do vetor. Usar um enum junto com uma expressão <code>match</code> significa que
+o Rust garantirá, em tempo de compilação, que todos os casos possíveis sejam
+tratados, como discutimos no Capítulo 6.</p>
+<p>Se você não conhece o conjunto exaustivo de tipos que um programa receberá em
+tempo de execução para armazenar em um vetor, a técnica com enum não vai
+funcionar. Em vez disso, você pode usar um trait object, assunto que
+abordaremos no Capítulo 18.</p>
 <p>Agora que discutimos algumas das formas mais comuns de usar vetores, certifique-se
 para revisar <a href="../std/vec/struct.Vec.html">a documentação da API</a><!-- ignore --> para todos os muitos
 métodos úteis definidos em <code>Vec&lt;T&gt;</code> pela biblioteca padrão. Por exemplo, em

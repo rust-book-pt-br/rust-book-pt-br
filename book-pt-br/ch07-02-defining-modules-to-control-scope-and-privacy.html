@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -195,16 +195,16 @@ no compilador e como a maioria dos desenvolvedores organiza seu código. Nós ir
 através de exemplos de cada uma dessas regras ao longo deste capítulo, mas esta é uma
 ótimo lugar para consultar como um lembrete de como os módulos funcionam.</p>
 <ul>
-<li><strong>Comece pela raiz da caixa</strong>: Ao compilar uma caixa, o compilador primeiro
-procura no arquivo raiz da caixa (geralmente <em>src/lib.rs</em> para uma caixa de biblioteca e
-<em>src/main.rs</em> para uma caixa binária) para o código ser compilado.</li>
-<li><strong>Declarando módulos</strong>: No arquivo raiz da caixa, você pode declarar novos módulos;
+<li><strong>Comece pela raiz da crate</strong>: Ao compilar uma crate, o compilador primeiro
+procura no arquivo raiz da crate (geralmente <em>src/lib.rs</em> para uma crate de biblioteca e
+<em>src/main.rs</em> para uma crate binária) para o código ser compilado.</li>
+<li><strong>Declarando módulos</strong>: No arquivo raiz da crate, você pode declarar novos módulos;
 digamos que você declare um módulo “jardim” com <code>mod garden;</code>. O compilador irá parecer
 para o código do módulo nestes locais:</li>
 <li>Inline, entre chaves que substituem o ponto e vírgula após <code>mod jardim</code></li>
 <li>No arquivo <em>src/garden.rs</em></li>
 <li>No arquivo <em>src/garden/mod.rs</em></li>
-<li><strong>Declarando submódulos</strong>: Em qualquer arquivo que não seja a raiz da caixa, você pode
+<li><strong>Declarando submódulos</strong>: Em qualquer arquivo que não seja a raiz da crate, você pode
 declarar submódulos. Por exemplo, você pode declarar <code>mod vegetables;</code> em
 <em>src/garden.rs</em>. O compilador procurará o código do submódulo dentro do
 diretório nomeado para o módulo pai nestes locais:</li>
@@ -212,8 +212,8 @@ diretório nomeado para o módulo pai nestes locais:</li>
 do ponto e vírgula</li>
 <li>No arquivo <em>src/garden/vegetables.rs</em></li>
 <li>No arquivo <em>src/garden/vegetables/mod.rs</em></li>
-<li><strong>Caminhos para código em módulos</strong>: quando um módulo fizer parte da sua caixa, você poderá
-consulte o código nesse módulo de qualquer outro lugar na mesma caixa, desde que
+<li><strong>Caminhos para código em módulos</strong>: quando um módulo fizer parte da sua crate, você poderá
+consulte o código nesse módulo de qualquer outro lugar na mesma crate, desde que
 conforme as regras de privacidade permitem, usando o caminho para o código. Por exemplo, um
 O tipo <code>Asparagus</code> no módulo de hortaliças seria encontrado em
 <code>crate::garden::vegetables::Asparagus</code>.</li>
@@ -226,8 +226,8 @@ itens para reduzir a repetição de caminhos longos. Em qualquer escopo que poss
 <code>crate::garden::vegetables::Asparagus</code>, você pode criar um atalho com <code>use crate::garden::vegetables::Asparagus;</code>, e a partir daí você só precisa
 escreva <code>Asparagus</code> para fazer uso desse tipo no escopo.</li>
 </ul>
-<p>Aqui, criamos uma caixa binária chamada <code>backyard</code> que ilustra essas regras.
-O diretório da caixa, também chamado <em>backyard</em>, contém esses arquivos e
+<p>Aqui, criamos uma crate binária chamada <code>backyard</code> que ilustra essas regras.
+O diretório da crate, também chamado <em>backyard</em>, contém esses arquivos e
 diretórios:</p>
 <pre><code class="language-text">backyard
 ├── Cargo.lock
@@ -238,7 +238,7 @@ diretórios:</p>
     ├── garden.rs
     └── main.rs
 </code></pre>
-<p>O arquivo raiz da caixa neste caso é <em>src/main.rs</em> e contém:</p>
+<p>O arquivo raiz da crate neste caso é <em>src/main.rs</em> e contém:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust noplayground ignore">use crate::garden::vegetables::Asparagus;
@@ -262,13 +262,13 @@ incluído também. Esse código é:</p>
 pub struct Asparagus {}</code></pre>
 <p>Agora vamos entrar em detalhes dessas regras e demonstrá-las em ação!</p>
 <h3 id="agrupando-código-relacionado-em-módulos"><a class="header" href="#agrupando-código-relacionado-em-módulos">Agrupando código relacionado em módulos</a></h3>
-<p><em>Módulos</em> nos permitem organizar o código em uma caixa para facilitar a leitura e a reutilização.
+<p><em>Módulos</em> nos permitem organizar o código em uma crate para facilitar a leitura e a reutilização.
 Os módulos também nos permitem controlar a <em>privacidade</em> dos itens porque o código dentro de um
 o módulo é privado por padrão. Itens privados são detalhes de implementação interna
 não disponível para uso externo. Podemos optar por fazer módulos e os itens
 dentro deles públicos, o que os expõe para permitir que código externo use e dependa
 neles.</p>
-<p>Como exemplo, vamos escrever uma caixa de biblioteca que forneça a funcionalidade de um
+<p>Como exemplo, vamos escrever uma crate de biblioteca que forneça a funcionalidade de um
 restaurante. Definiremos as assinaturas das funções, mas deixaremos seus corpos
 vazio se concentrar na organização do código e não na
 implementação de um restaurante.</p>
@@ -278,7 +278,7 @@ isso abrange onde os anfitriões acomodam os clientes, os servidores recebem ped
 pagamento, e os bartenders preparam bebidas. <em>Nos fundos da casa</em> é onde os chefs e
 cozinheiros trabalham na cozinha, máquinas de lavar louça limpam e gerentes fazem tarefas administrativas
 trabalhar.</p>
-<p>Para estruturar nossa caixa dessa forma, podemos organizar suas funções em grupos aninhados.
+<p>Para estruturar nossa crate dessa forma, podemos organizar suas funções em grupos aninhados.
 módulos. Crie uma nova biblioteca chamada <code>restaurant</code> executando <code>cargo new restaurante --lib</code>. Em seguida, insira o código da Listagem 7-1 em <em>src/lib.rs</em> para
 definir alguns módulos e assinaturas de funções; esse código é a frente da casa
 seção.</p>
@@ -314,7 +314,7 @@ para encontrar as definições relevantes para eles. Programadores adicionando n
 a este código saberia onde colocar o código para manter o programa organizado.</p>
 <p>Anteriormente, mencionamos que <em>src/main.rs</em> e <em>src/lib.rs</em> são chamados de <em>crate
 raízes</em>. A razão para o seu nome é que o conteúdo de qualquer um destes dois
-os arquivos formam um módulo chamado <code>crate</code> na raiz da estrutura do módulo da caixa,
+os arquivos formam um módulo chamado <code>crate</code> na raiz da estrutura do módulo da crate,
 conhecida como <em>árvore de módulos</em>.</p>
 <p>A Listagem 7-2 mostra a árvore de módulos para a estrutura da Listagem 7-1.</p>
 <figure class="listing" id="listing-7-2">

@@ -15,8 +15,7 @@ padrão que você pode usar com `derive`. Cada seção cobre:
 - Exemplos de operações que exigem esse trait
 
 Se você quiser um comportamento diferente daquele fornecido pelo atributo
-`derive`, consulte a [documentação da biblioteca padrão](../std/index.html)<!--
-ignore --> de cada trait para saber como implementá-lo manualmente.
+`derive`, consulte a [documentação da biblioteca padrão](../std/index.html)<!-- ignore --> de cada trait para saber como implementá-lo manualmente.
 
 Os traits listados aqui são os únicos definidos pela biblioteca padrão que
 podem ser implementados em seus tipos usando `derive`. Outros traits definidos

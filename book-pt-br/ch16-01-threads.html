@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -243,7 +243,7 @@ são desligados, tenham ou não terminado a execução. A saída deste
 programa pode ser um pouco diferente a cada vez, mas será semelhante ao
 seguinte:</p>
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 <pre><code class="language-text">hi number 1 from the main thread!
 hi number 1 from the spawned thread!
@@ -307,7 +307,7 @@ thread é impedido de realizar trabalho ou sair. Porque nós colocamos a chamada
 para <code>join</code> após o loop <code>for</code> do thread principal, a execução da Listagem 16-2 deve
 produza uma saída semelhante a esta:</p>
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 <pre><code class="language-text">hi number 1 from the main thread!
 hi number 2 from the main thread!
@@ -351,7 +351,7 @@ fn main() {
 <p>O thread principal aguardará o thread gerado terminar e então executará seu
 Loop <code>for</code>, então a saída não será mais intercalada, conforme mostrado aqui:</p>
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 <pre><code class="language-text">hi number 1 from the spawned thread!
 hi number 2 from the spawned thread!
@@ -459,7 +459,7 @@ também é inválido. Oh não!</p>
 <p>Para corrigir o erro do compilador na Listagem 16-3, podemos usar a mensagem de erro
 conselho:</p>
 <!-- manual-regeneration
-após a regeneração automática, consulte listagens/ch16-fearless-concurrency/listing-16-03/output.txt e copie a parte relevante
+after automatic regeneration, look at listings/ch16-fearless-concurrency/listing-16-03/output.txt and copy the relevant part
 -->
 <pre><code class="language-text">help: to force the closure to take ownership of `v` (and any other referenced variables), use the `move` keyword
   |

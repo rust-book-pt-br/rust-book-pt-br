@@ -2,51 +2,56 @@
 
 <a id="managing-growing-projects-with-packages-crates-and-modules"></a>
 
-# Pacotes, caixas e módulos
+# Pacotes, Crates e Módulos
 
-À medida que você escreve programas grandes, a organização do seu código se tornará cada vez mais
-importante. Agrupando funcionalidades relacionadas e separando o código com
-recursos, você esclarecerá onde encontrar o código que implementa um determinado
-recurso e onde ir para alterar o funcionamento de um recurso.
+À medida que você escreve programas maiores, organizar o código se torna cada
+vez mais importante. Ao agrupar funcionalidades relacionadas e separar o código
+por responsabilidades bem definidas, fica mais claro onde encontrar a
+implementação de um recurso e onde alterá-la quando necessário.
 
-Os programas que escrevemos até agora estavam em um módulo em um arquivo. Como um
-projeto crescer, você deve organizar o código dividindo-o em vários módulos
-e depois vários arquivos. Um pacote pode conter múltiplas caixas binárias e
-opcionalmente, uma caixa de biblioteca. À medida que um pacote cresce, você pode extrair partes em
-caixas separadas que se tornam dependências externas. Este capítulo cobre todos
-essas técnicas. Para projetos muito grandes que compreendem um conjunto de atividades inter-relacionadas
-pacotes que evoluem juntos, Cargo fornece espaços de trabalho, que abordaremos em
-[“Espaços de trabalho de carga”][workspaces]<!-- ignore --> no Capítulo 14.
+Até agora, os programas que escrevemos estavam em um único módulo, em um único
+arquivo. Conforme um projeto cresce, é natural dividir o código em vários
+módulos e, depois, em vários arquivos. Um pacote pode conter vários crates
+binários e, opcionalmente, um crate de biblioteca. À medida que um pacote
+evolui, você também pode extrair partes dele para crates separados, que passam
+a ser dependências externas. Este capítulo cobre todas essas técnicas. Para
+projetos muito grandes, formados por um conjunto de pacotes relacionados que
+evoluem juntos, o Cargo oferece workspaces, que veremos em [“Cargo
+Workspaces”][workspaces]<!-- ignore --> no Capítulo 14.
 
-Também discutiremos o encapsulamento de detalhes de implementação, o que permite reutilizar
-código em um nível superior: depois de implementar uma operação, outro código pode
-chame seu código por meio de sua interface pública sem precisar saber como o
-obras de implementação. A maneira como você escreve o código define quais partes são públicas para
-outro código a ser usado e quais partes são detalhes de implementação privados que você
-reserve-se o direito de alterar. Esta é outra maneira de limitar a quantidade de detalhes
-você tem que manter em sua cabeça.
+Também vamos discutir como encapsular detalhes de implementação, o que permite
+reutilizar código em um nível mais alto: depois que você implementa uma
+operação, outro código pode chamá-la por meio de sua interface pública sem
+precisar saber como a implementação funciona internamente. A forma como você
+escreve o código define quais partes são públicas e podem ser usadas por outros
+trechos, e quais partes permanecem privadas como detalhes de implementação que
+você se reserva o direito de alterar. Essa é outra maneira de limitar a
+quantidade de detalhes que você precisa manter na cabeça ao mesmo tempo.
 
-Um conceito relacionado é escopo: o contexto aninhado no qual o código é escrito tem um
-conjunto de nomes definidos como “no escopo”. Ao ler, escrever e
-ao compilar código, programadores e compiladores precisam saber se um determinado
-nome em um local específico refere-se a uma variável, função, struct, enum, módulo,
-constante ou outro item e o que esse item significa. Você pode criar escopos e
-alterar quais nomes estão dentro ou fora do escopo. Você não pode ter dois itens com o
-mesmo nome no mesmo escopo; ferramentas estão disponíveis para resolver conflitos de nomes.
+Um conceito relacionado é o de escopo: o contexto aninhado em que o código é
+escrito define um conjunto de nomes que estão “em escopo”. Ao ler, escrever e
+compilar código, tanto programadores quanto compiladores precisam saber se um
+nome em um ponto específico se refere a uma variável, função, struct, enum,
+módulo, constante ou outro item, e qual é o significado desse item. Você pode
+criar novos escopos e alterar quais nomes estão ou não disponíveis em cada um
+deles. E não é possível ter dois itens com o mesmo nome no mesmo escopo; para
+isso, existem ferramentas para resolver conflitos de nomes.
 
-Rust possui vários recursos que permitem gerenciar o seu código
-organização, incluindo quais detalhes são expostos, quais detalhes são privados,
-e quais nomes estão em cada escopo de seus programas. Essas características, às vezes
-referidos coletivamente como _sistema de módulo_, incluem:
+O Rust oferece vários recursos para gerenciar a organização do código,
+incluindo quais detalhes são expostos, quais permanecem privados e quais nomes
+estão disponíveis em cada escopo do programa. Esses recursos, às vezes
+chamados em conjunto de _sistema de módulos_, incluem:
 
-* **Packages**: Um recurso Cargo que permite construir, testar e compartilhar caixas
-* **Crates**: Uma árvore de módulos que produz uma biblioteca ou executável
-* **Modules and use**: Permitem que você controle a organização, o escopo e a privacidade de
-caminhos
-* **Paths**: Uma forma de nomear um item, como uma estrutura, função ou módulo
+* **Packages**: um recurso do Cargo que permite compilar, testar e compartilhar
+  crates
+* **Crates**: uma árvore de módulos que produz uma biblioteca ou um executável
+* **Modules and use**: permitem controlar a organização, o escopo e a
+  privacidade dos caminhos
+* **Paths**: uma forma de nomear um item, como uma struct, função ou módulo
 
-Neste capítulo, abordaremos todos esses recursos, discutiremos como eles interagem e
-explicar como usá-los para gerenciar o escopo. No final, você deverá ter uma sólida
-compreensão do sistema de módulos e ser capaz de trabalhar com osciloscópios como um profissional!
+Neste capítulo, vamos passar por todos esses recursos, discutir como eles se
+relacionam e mostrar como usá-los para gerenciar escopo. Ao final, você deve
+ter uma base sólida sobre o sistema de módulos e se sentir confortável para
+trabalhar com escopos em Rust.
 
 [workspaces]: ch14-03-cargo-workspaces.html

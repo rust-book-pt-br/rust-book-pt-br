@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -226,7 +226,7 @@ fn main() {
 }</code></pre>
 <p><span class="caption">Listagem 15-14: Uma struct <code>CustomSmartPointer</code> que
 implementa a trait <code>Drop</code> onde colocaríamos nosso código de limpeza</span></p>
-<p>A trait <code>Drop</code> é incluída no prelúdio, então não precisamos importá-la. Nós
+<p>A trait <code>Drop</code> é incluída no prelude, então não precisamos importá-la. Nós
 implementamos a trait <code>Drop</code> no <code>CustomSmartPointer</code> e fornecemos uma
 implementação para o método <code>drop</code> que chama <code>println!</code>. O corpo da função
 <code>drop</code> é onde você colocaria qualquer que fosse a lógica que você gostaria que
@@ -290,7 +290,7 @@ precisamos forçar um valor a ser limpo antes, podemos usar a função
 <code>std::mem::drop</code>.</p>
 <p>A função <code>std::mem::drop</code> é diferente do método <code>drop</code> na trait <code>Drop</code>. Nós a
 chamamos passando como argumento o valor que queremos forçar a ser destruído
-cedo. Essa função está no prelúdio, então podemos modificar a <code>main</code> na Listagem
+cedo. Essa função está no prelude, então podemos modificar a <code>main</code> na Listagem
 15-14 para chamar a função <code>drop</code>, como mostra a Listagem 15-16:</p>
 <p><span class="filename">Arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct CustomSmartPointer {

@@ -175,9 +175,9 @@ PS> Remove-Item Env:IGNORE_CASE
 Devemos obter linhas que contenham _to_ que possam ter letras maiúsculas:
 
 <!-- manual-regeneration
-listagens de cd/ch12-an-io-project/listing-12-23
-IGNORE_CASE=1 carga executada -- para poema.txt
-não é possível extrair por causa da variável de ambiente
+cd listings/ch12-an-io-project/listing-12-23
+IGNORE_CASE=1 cargo run -- to poem.txt
+can't extract because of the environment variable
 -->
 
 ```console

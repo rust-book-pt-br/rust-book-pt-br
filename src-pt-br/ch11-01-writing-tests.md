@@ -50,13 +50,13 @@ Listagem 11-1.
 <Listing number="11-1" file-name="src/lib.rs" caption="The code generated automatically by `cargo new`">
 
 <!-- manual-regeneration
-listagens de cd/testes automatizados de escrita ch11
-rm -rf listagem-11-01
-carga nova listagem-11-01 --lib --name adicionador
-listagem de cd-11-01
-echo "$ teste de carga" > saída.txt
-RUSTFLAGS="-A unused_variables -A dead_code" RUST_TEST_THREADS=1 teste de carga >> output.txt 2>&1
-git diff output.txt # confirma quaisquer alterações relevantes; descarte os irrelevantes
+cd listings/ch11-writing-automated-tests
+rm -rf listing-11-01
+cargo new listing-11-01 --lib --name adder
+cd listing-11-01
+echo "$ cargo test" > output.txt
+RUSTFLAGS="-A unused_variables -A dead_code" RUST_TEST_THREADS=1 cargo test >> output.txt 2>&1
+git diff output.txt # commit any relevant changes; discard irrelevant ones
 cd ../../..
 -->
 
@@ -161,9 +161,9 @@ Execute os testes novamente usando `cargo test`. A saída deve ser semelhante à
 </Listing>
 
 <!-- manual-regeneration
-listagens em pânico rg/ch11-writing-automated-tests/listing-11-03/output.txt
-verifique se o número da linha do pânico corresponde ao número da linha no parágrafo seguinte
--->
+rg panicked listings/ch11-writing-automated-tests/listing-11-03/output.txt
+check the line number of the panic matches the line number in the following paragraph
+ -->
 
 Em vez de `ok`, a linha `test tests::another` mostra `FAILED`. Dois novos
 seções aparecem entre os resultados individuais e o resumo: A primeira

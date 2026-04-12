@@ -6,9 +6,9 @@ conheça seu caminho.
 
 Um caminho pode assumir duas formas:
 
-- Um _caminho absoluto_ é o caminho completo começando na raiz da caixa; para código
-de uma caixa externa, o caminho absoluto começa com o nome da caixa e, para
-código da caixa atual, ele começa com o literal `crate`.
+- Um _caminho absoluto_ é o caminho completo começando na raiz da crate; para código
+de uma crate externa, o caminho absoluto começa com o nome da crate e, para
+código da crate atual, ele começa com o literal `crate`.
 - Um _caminho relativo_ começa no módulo atual e usa `self`, `super` ou
 um identificador no módulo atual.
 
@@ -20,7 +20,7 @@ Isso é o mesmo que perguntar: Qual é o caminho da função `add_to_waitlist`?
 A Listagem 7-3 contém a Listagem 7-1 com alguns dos módulos e funções removidos.
 
 Mostraremos duas maneiras de chamar a função `add_to_waitlist` a partir de uma nova função,
-`eat_at_restaurant`, definido na raiz da caixa. Esses caminhos estão corretos, mas
+`eat_at_restaurant`, definido na raiz da crate. Esses caminhos estão corretos, mas
 ainda há outro problema que impedirá a compilação deste exemplo
 como está. Explicaremos o porquê daqui a pouco.
 
@@ -151,8 +151,8 @@ Agora o código será compilado! Para ver por que adicionar a palavra-chave `pub
 esses caminhos em `eat_at_restaurant` com respeito às regras de privacidade, vamos
 observe os caminhos absolutos e relativos.
 
-No caminho absoluto, começamos com `crate`, a raiz do módulo da nossa caixa
-árvore. O módulo `front_of_house` é definido na raiz da caixa. Enquanto
+No caminho absoluto, começamos com `crate`, a raiz do módulo da nossa crate
+árvore. O módulo `front_of_house` é definido na raiz da crate. Enquanto
 `front_of_house` não é público, porque a função `eat_at_restaurant` é
 definido no mesmo módulo que `front_of_house` (ou seja, `eat_at_restaurant`
 e `front_of_house` são irmãos), podemos nos referir a `front_of_house` de
@@ -162,45 +162,45 @@ A função `add_to_waitlist` está marcada com `pub` e podemos acessar seu pai
 módulo, então esta chamada de função funciona!
 
 No caminho relativo, a lógica é a mesma do caminho absoluto, exceto pelo
-primeiro passo: em vez de começar na raiz da caixa, o caminho começa
+primeiro passo: em vez de começar na raiz da crate, o caminho começa
 `front_of_house`. O módulo `front_of_house` é definido dentro do mesmo módulo
 como `eat_at_restaurant`, então o caminho relativo começando no módulo no qual
 `eat_at_restaurant` é trabalho definido. Então, porque `hosting` e
 `add_to_waitlist` estão marcados com `pub`, o resto do caminho funciona, e este
 a chamada de função é válida!
 
-Se você planeja compartilhar sua caixa de biblioteca para que outros projetos possam usar sua
-código, sua API pública é o seu contrato com os usuários da sua caixa que determina
+Se você planeja compartilhar sua crate de biblioteca para que outros projetos possam usar sua
+código, sua API pública é o seu contrato com os usuários da sua crate que determina
 como eles podem interagir com seu código. Existem muitas considerações em torno
 gerenciar alterações em sua API pública para facilitar a dependência das pessoas
-sua caixa. Estas considerações estão além do escopo deste livro; se você estiver
+sua crate. Estas considerações estão além do escopo deste livro; se você estiver
 interessado neste tópico, consulte [as Diretrizes da API Rust][api-guidelines].
 
 > #### Melhores práticas para pacotes com binário e biblioteca
 >
-> Mencionamos que um pacote pode conter uma caixa binária _src/main.rs_
-> root, bem como uma raiz da caixa da biblioteca _src/lib.rs_, e ambas as caixas terão
+> Mencionamos que um pacote pode conter uma crate binária _src/main.rs_
+> root, bem como uma raiz da crate da biblioteca _src/lib.rs_, e ambas as crates terão
 > o nome do pacote por padrão. Normalmente, pacotes com esse padrão de
-> contendo uma biblioteca e uma caixa binária terá código suficiente no
-> caixa binária para iniciar um executável que chama o código definido na biblioteca
-> caixa. Isso permite que outros projetos se beneficiem do máximo de funcionalidades que o
-> pacote fornece porque o código da caixa da biblioteca pode ser compartilhado.
+> contendo uma biblioteca e uma crate binária terá código suficiente no
+> crate binária para iniciar um executável que chama o código definido na biblioteca
+> crate. Isso permite que outros projetos se beneficiem do máximo de funcionalidades que o
+> pacote fornece porque o código da crate da biblioteca pode ser compartilhado.
 >
 > A árvore do módulo deve ser definida em _src/lib.rs_. Então, quaisquer itens públicos podem
-> ser usado na caixa binária iniciando os caminhos com o nome do pacote.
-> A caixa binária se torna um usuário da caixa da biblioteca, assim como um completamente
-> A caixa externa usaria a caixa da biblioteca: ela só pode usar a API pública.
+> ser usado na crate binária iniciando os caminhos com o nome do pacote.
+> A crate binária se torna um usuário da crate da biblioteca, assim como um completamente
+> A crate externa usaria a crate da biblioteca: ela só pode usar a API pública.
 > Isso ajuda você a projetar uma boa API; você não é apenas o autor, mas também
 > também cliente!
 >
 > No [Capítulo 12][ch12]<!-- ignore -->, demonstraremos esta organização
-> pratique com um programa de linha de comando que conterá uma caixa binária
-> e uma caixa de biblioteca.
+> pratique com um programa de linha de comando que conterá uma crate binária
+> e uma crate de biblioteca.
 
 ### Iniciando caminhos relativos com `super`
 
 Podemos construir caminhos relativos que começam no módulo pai, em vez de
-o módulo atual ou a raiz da caixa, usando `super` no início do
+o módulo atual ou a raiz da crate, usando `super` no início do
 caminho. É como iniciar um caminho de sistema de arquivos com a sintaxe `..` que significa
 para ir para o diretório pai. Usar `super` nos permite fazer referência a um item
 que sabemos que está no módulo pai, o que pode tornar a reorganização do módulo
@@ -226,7 +226,7 @@ use `super` para ir para o módulo pai de `back_of_house`, que neste caso
 é `crate`, a raiz. A partir daí, procuramos `deliver_order` e o encontramos.
 Sucesso! Achamos que o módulo `back_of_house` e a função `deliver_order`
 provavelmente permanecerão no mesmo relacionamento um com o outro e se mudarão
-juntos caso decidamos reorganizar a árvore de módulos da caixa. Portanto, nós
+juntos caso decidamos reorganizar a árvore de módulos da crate. Portanto, nós
 usei `super` para que tenhamos menos lugares para atualizar o código no futuro se
 este código é movido para um módulo diferente.
 

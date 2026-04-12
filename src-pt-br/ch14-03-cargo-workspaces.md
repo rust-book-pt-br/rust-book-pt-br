@@ -165,9 +165,9 @@ Vamos compilar o workspace executando `cargo build` no diretório _add_, no
 nível superior!
 
 <!-- manual-regeneration
-listagens de cd/ch14-more-about-cargo/listing-14-07/add
-Construção cargo
-copie a saída abaixo; o script de atualização de saída não manipula subdiretórios em caminhos corretamente
+cd listings/ch14-more-about-cargo/listing-14-07/add
+cargo build
+copy output below; the output updating script doesn't handle subdirectories in paths properly
 -->
 
 ```console
@@ -230,9 +230,9 @@ crate `rand` seja baixado e compilado. Receberemos um aviso porque não estamos
 usando o `rand` que trouxemos para o escopo:
 
 <!-- manual-regeneration
-listagens de cd/ch14-mais-sobre-cargo/no-listing-03-workspace-with-external-dependency/add
-Construção cargo
-copie a saída abaixo; o script de atualização de saída não manipula subdiretórios em caminhos corretamente
+cd listings/ch14-more-about-cargo/no-listing-03-workspace-with-external-dependency/add
+cargo build
+copy output below; the output updating script doesn't handle subdirectories in paths properly
 -->
 
 ```console
@@ -263,9 +263,9 @@ adicionarmos `use rand;` ao arquivo _adder/src/main.rs_ do pacote `adder`,
 obteremos um erro:
 
 <!-- manual-regeneration
-listagens de cd/ch14-more-about-cargo/output-only-03-use-rand/add
-Construção cargo
-copie a saída abaixo; o script de atualização de saída não manipula subdiretórios em caminhos corretamente
+cd listings/ch14-more-about-cargo/output-only-03-use-rand/add
+cargo build
+copy output below; the output updating script doesn't handle subdirectories in paths properly
 -->
 
 ```console

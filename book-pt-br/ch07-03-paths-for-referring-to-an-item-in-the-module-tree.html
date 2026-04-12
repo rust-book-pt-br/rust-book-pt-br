@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -187,9 +187,9 @@ maneira como usamos um caminho ao navegar em um sistema de arquivos. Para chamar
 conheça seu caminho.</p>
 <p>Um caminho pode assumir duas formas:</p>
 <ul>
-<li>Um <em>caminho absoluto</em> é o caminho completo começando na raiz da caixa; para código
-de uma caixa externa, o caminho absoluto começa com o nome da caixa e, para
-código da caixa atual, ele começa com o literal <code>crate</code>.</li>
+<li>Um <em>caminho absoluto</em> é o caminho completo começando na raiz da crate; para código
+de uma crate externa, o caminho absoluto começa com o nome da crate e, para
+código da crate atual, ele começa com o literal <code>crate</code>.</li>
 <li>Um <em>caminho relativo</em> começa no módulo atual e usa <code>self</code>, <code>super</code> ou
 um identificador no módulo atual.</li>
 </ul>
@@ -199,7 +199,7 @@ separados por dois pontos duplos (<code>::</code>).</p>
 Isso é o mesmo que perguntar: Qual é o caminho da função <code>add_to_waitlist</code>?
 A Listagem 7-3 contém a Listagem 7-1 com alguns dos módulos e funções removidos.</p>
 <p>Mostraremos duas maneiras de chamar a função <code>add_to_waitlist</code> a partir de uma nova função,
-<code>eat_at_restaurant</code>, definido na raiz da caixa. Esses caminhos estão corretos, mas
+<code>eat_at_restaurant</code>, definido na raiz da crate. Esses caminhos estão corretos, mas
 ainda há outro problema que impedirá a compilação deste exemplo
 como está. Explicaremos o porquê daqui a pouco.</p>
 <p>A função <code>eat_at_restaurant</code> faz parte da API pública da nossa biblioteca, então
@@ -395,8 +395,8 @@ palavra-chave antes de sua definição, como na Listagem 7-7.</p>
 <p>Agora o código será compilado! Para ver por que adicionar a palavra-chave <code>pub</code> nos permite usar
 esses caminhos em <code>eat_at_restaurant</code> com respeito às regras de privacidade, vamos
 observe os caminhos absolutos e relativos.</p>
-<p>No caminho absoluto, começamos com <code>crate</code>, a raiz do módulo da nossa caixa
-árvore. O módulo <code>front_of_house</code> é definido na raiz da caixa. Enquanto
+<p>No caminho absoluto, começamos com <code>crate</code>, a raiz do módulo da nossa crate
+árvore. O módulo <code>front_of_house</code> é definido na raiz da crate. Enquanto
 <code>front_of_house</code> não é público, porque a função <code>eat_at_restaurant</code> é
 definido no mesmo módulo que <code>front_of_house</code> (ou seja, <code>eat_at_restaurant</code>
 e <code>front_of_house</code> são irmãos), podemos nos referir a <code>front_of_house</code> de
@@ -405,40 +405,40 @@ acesse o módulo pai de <code>hosting</code>, para que possamos acessar <code>ho
 A função <code>add_to_waitlist</code> está marcada com <code>pub</code> e podemos acessar seu pai
 módulo, então esta chamada de função funciona!</p>
 <p>No caminho relativo, a lógica é a mesma do caminho absoluto, exceto pelo
-primeiro passo: em vez de começar na raiz da caixa, o caminho começa
+primeiro passo: em vez de começar na raiz da crate, o caminho começa
 <code>front_of_house</code>. O módulo <code>front_of_house</code> é definido dentro do mesmo módulo
 como <code>eat_at_restaurant</code>, então o caminho relativo começando no módulo no qual
 <code>eat_at_restaurant</code> é trabalho definido. Então, porque <code>hosting</code> e
 <code>add_to_waitlist</code> estão marcados com <code>pub</code>, o resto do caminho funciona, e este
 a chamada de função é válida!</p>
-<p>Se você planeja compartilhar sua caixa de biblioteca para que outros projetos possam usar sua
-código, sua API pública é o seu contrato com os usuários da sua caixa que determina
+<p>Se você planeja compartilhar sua crate de biblioteca para que outros projetos possam usar sua
+código, sua API pública é o seu contrato com os usuários da sua crate que determina
 como eles podem interagir com seu código. Existem muitas considerações em torno
 gerenciar alterações em sua API pública para facilitar a dependência das pessoas
-sua caixa. Estas considerações estão além do escopo deste livro; se você estiver
+sua crate. Estas considerações estão além do escopo deste livro; se você estiver
 interessado neste tópico, consulte <a href="https://rust-lang.github.io/api-guidelines/">as Diretrizes da API Rust</a>.</p>
 <section class="note" aria-role="note">
 <h4 id="melhores-práticas-para-pacotes-com-binário-e-biblioteca"><a class="header" href="#melhores-práticas-para-pacotes-com-binário-e-biblioteca">Melhores práticas para pacotes com binário e biblioteca</a></h4>
-<p>Mencionamos que um pacote pode conter uma caixa binária <em>src/main.rs</em>
-root, bem como uma raiz da caixa da biblioteca <em>src/lib.rs</em>, e ambas as caixas terão
+<p>Mencionamos que um pacote pode conter uma crate binária <em>src/main.rs</em>
+root, bem como uma raiz da crate da biblioteca <em>src/lib.rs</em>, e ambas as crates terão
 o nome do pacote por padrão. Normalmente, pacotes com esse padrão de
-contendo uma biblioteca e uma caixa binária terá código suficiente no
-caixa binária para iniciar um executável que chama o código definido na biblioteca
-caixa. Isso permite que outros projetos se beneficiem do máximo de funcionalidades que o
-pacote fornece porque o código da caixa da biblioteca pode ser compartilhado.</p>
+contendo uma biblioteca e uma crate binária terá código suficiente no
+crate binária para iniciar um executável que chama o código definido na biblioteca
+crate. Isso permite que outros projetos se beneficiem do máximo de funcionalidades que o
+pacote fornece porque o código da crate da biblioteca pode ser compartilhado.</p>
 <p>A árvore do módulo deve ser definida em <em>src/lib.rs</em>. Então, quaisquer itens públicos podem
-ser usado na caixa binária iniciando os caminhos com o nome do pacote.
-A caixa binária se torna um usuário da caixa da biblioteca, assim como um completamente
-A caixa externa usaria a caixa da biblioteca: ela só pode usar a API pública.
+ser usado na crate binária iniciando os caminhos com o nome do pacote.
+A crate binária se torna um usuário da crate da biblioteca, assim como um completamente
+A crate externa usaria a crate da biblioteca: ela só pode usar a API pública.
 Isso ajuda você a projetar uma boa API; você não é apenas o autor, mas também
 também cliente!</p>
 <p>No <a href="ch12-00-an-io-project.html">Capítulo 12</a><!-- ignore -->, demonstraremos esta organização
-pratique com um programa de linha de comando que conterá uma caixa binária
-e uma caixa de biblioteca.</p>
+pratique com um programa de linha de comando que conterá uma crate binária
+e uma crate de biblioteca.</p>
 </section>
 <h3 id="iniciando-caminhos-relativos-com-super"><a class="header" href="#iniciando-caminhos-relativos-com-super">Iniciando caminhos relativos com <code>super</code></a></h3>
 <p>Podemos construir caminhos relativos que começam no módulo pai, em vez de
-o módulo atual ou a raiz da caixa, usando <code>super</code> no início do
+o módulo atual ou a raiz da crate, usando <code>super</code> no início do
 caminho. É como iniciar um caminho de sistema de arquivos com a sintaxe <code>..</code> que significa
 para ir para o diretório pai. Usar <code>super</code> nos permite fazer referência a um item
 que sabemos que está no módulo pai, o que pode tornar a reorganização do módulo
@@ -468,7 +468,7 @@ use <code>super</code> para ir para o módulo pai de <code>back_of_house</code>,
 é <code>crate</code>, a raiz. A partir daí, procuramos <code>deliver_order</code> e o encontramos.
 Sucesso! Achamos que o módulo <code>back_of_house</code> e a função <code>deliver_order</code>
 provavelmente permanecerão no mesmo relacionamento um com o outro e se mudarão
-juntos caso decidamos reorganizar a árvore de módulos da caixa. Portanto, nós
+juntos caso decidamos reorganizar a árvore de módulos da crate. Portanto, nós
 usei <code>super</code> para que tenhamos menos lugares para atualizar o código no futuro se
 este código é movido para um módulo diferente.</p>
 <h3 id="tornando-estruturas-e-enums-públicas"><a class="header" href="#tornando-estruturas-e-enums-públicas">Tornando Estruturas e Enums Públicas</a></h3>

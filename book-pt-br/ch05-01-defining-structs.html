@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -181,18 +181,19 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="definindo-e-instanciando-estruturas"><a class="header" href="#definindo-e-instanciando-estruturas">Definindo e instanciando estruturas</a></h2>
-<p>As estruturas são semelhantes às tuplas, discutidas em <a href="ch03-02-data-types.html#the-tuple-type">“The Tuple
-Type”</a><!-- ignore -->, pois ambas contêm vários valores relacionados. Assim como as tuplas, o
-partes de uma estrutura podem ser de tipos diferentes. Ao contrário das tuplas, em uma estrutura
-você nomeará cada dado para que fique claro o que os valores significam. Adicionando estes
-nomes significa que as estruturas são mais flexíveis que as tuplas: você não precisa confiar
-na ordem dos dados para especificar ou acessar os valores de uma instância.</p>
-<p>Para definir uma estrutura, inserimos a palavra-chave <code>struct</code> e nomeamos toda a estrutura. UM
-o nome da estrutura deve descrever o significado dos dados que estão sendo
-agrupados. Então, entre chaves, definimos os nomes e tipos de
-os pedaços de dados, que chamamos de <em>campos</em>. Por exemplo, a Listagem 5-1 mostra um
-struct que armazena informações sobre uma conta de usuário.</p>
+                        <h2 id="definindo-e-instanciando-structs"><a class="header" href="#definindo-e-instanciando-structs">Definindo e Instanciando Structs</a></h2>
+<p>Structs são parecidas com tuplas, discutidas na seção <a href="ch03-02-data-types.html#the-tuple-type">“O Tipo
+Tupla”</a><!-- ignore -->, porque ambas armazenam vários valores
+relacionados. Assim como nas tuplas, os elementos de uma struct podem ter tipos
+diferentes. A diferença é que, em uma struct, cada pedaço de dado recebe um
+nome, o que torna mais claro o significado dos valores. Por causa desses
+nomes, structs são mais flexíveis do que tuplas: você não precisa depender da
+ordem dos dados para especificar ou acessar os valores de uma instância.</p>
+<p>Para definir uma struct, usamos a palavra-chave <code>struct</code> e damos um nome à
+estrutura inteira. O nome da struct deve descrever o significado dos dados que
+estão sendo agrupados. Em seguida, entre chaves, definimos os nomes e os tipos
+dos dados que ela contém, chamados de <em>campos</em>. Por exemplo, a Listagem 5-1
+mostra uma struct que armazena informações sobre uma conta de usuário.</p>
 <figure class="listing" id="listing-5-1">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct User {
@@ -203,16 +204,16 @@ struct que armazena informações sobre uma conta de usuário.</p>
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre>
-<figcaption><a href="#listing-5-1">Listing 5-1</a>: A <code>User</code> struct definition</figcaption>
+<figcaption><a href="#listing-5-1">Listing 5-1</a>: Definição da struct <code>User</code></figcaption>
 </figure>
-<p>Para usar uma estrutura depois de defini-la, criamos uma <em>instância</em> dessa estrutura
-especificando valores concretos para cada um dos campos. Criamos uma instância por
-informando o nome da estrutura e, em seguida, adicione chaves contendo <em><code>key: valor</code></em> pares, onde as chaves são os nomes dos campos e os valores são os
-dados que queremos armazenar nesses campos. Não precisamos especificar os campos em
-na mesma ordem em que os declaramos na estrutura. Em outras palavras, o
-A definição de struct é como um modelo geral para o tipo e as instâncias são preenchidas
-nesse modelo com dados específicos para criar valores do tipo. Para
-Por exemplo, podemos declarar um usuário específico conforme mostrado na Listagem 5-2.</p>
+<p>Para usar uma struct depois de defini-la, criamos uma <em>instância</em> dela
+especificando valores concretos para cada campo. Criamos uma instância
+escrevendo o nome da struct e, em seguida, chaves contendo pares <em><code>chave: valor</code></em>, em que as chaves são os nomes dos campos e os valores são os dados
+que queremos armazenar neles. Não é necessário especificar os campos na mesma
+ordem em que eles foram declarados na struct. Em outras palavras, a definição
+da struct funciona como um modelo geral para o tipo, e as instâncias preenchem
+esse modelo com dados específicos para criar valores daquele tipo. Por
+exemplo, podemos declarar um usuário específico como mostra a Listagem 5-2.</p>
 <figure class="listing" id="listing-5-2">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
@@ -230,13 +231,14 @@ Por exemplo, podemos declarar um usuário específico conforme mostrado na Lista
         sign_in_count: 1,
     };
 }</code></pre>
-<figcaption><a href="#listing-5-2">Listing 5-2</a>: Creating an instance of the <code>User</code> struct</figcaption>
+<figcaption><a href="#listing-5-2">Listing 5-2</a>: Criando uma instância da struct <code>User</code></figcaption>
 </figure>
-<p>Para obter um valor específico de uma estrutura, usamos a notação de ponto. Por exemplo, para
-acessar o endereço de e-mail deste usuário, usamos <code>user1.email</code>. Se a instância for
-mutável, podemos alterar um valor usando a notação de ponto e atribuindo a um
-campo específico. A Listagem 5-3 mostra como alterar o valor no <code>email</code>
-campo de uma instância mutável <code>User</code>.</p>
+<p>Para obter um valor específico de uma struct, usamos notação de ponto. Por
+exemplo, para acessar o endereço de e-mail desse usuário, usamos
+<code>user1.email</code>. Se a instância for mutável, podemos alterar um valor usando a
+notação de ponto e atribuindo um novo valor a um campo específico. A Listagem
+5-3 mostra como alterar o valor do campo <code>email</code> de uma instância mutável de
+<code>User</code>.</p>
 <figure class="listing" id="listing-5-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
@@ -256,15 +258,15 @@ campo de uma instância mutável <code>User</code>.</p>
 
     user1.email = String::from("anotheremail@example.com");
 }</code></pre>
-<figcaption><a href="#listing-5-3">Listing 5-3</a>: Changing the value in the <code>email</code> field of a <code>User</code> instance</figcaption>
+<figcaption><a href="#listing-5-3">Listing 5-3</a>: Alterando o valor do campo <code>email</code> de uma instância de <code>User</code></figcaption>
 </figure>
-<p>Observe que toda a instância deve ser mutável; A ferrugem não nos permite marcar
-apenas alguns campos são mutáveis. Como acontece com qualquer expressão, podemos construir uma nova
-instância da struct como a última expressão no corpo da função a ser
-retornar implicitamente essa nova instância.</p>
-<p>A Listagem 5-4 mostra uma função <code>build_user</code> que retorna uma instância <code>User</code> com
-o e-mail e nome de usuário fornecidos. O campo <code>active</code> recebe o valor <code>true</code>, e o campo
-<code>sign_in_count</code> obtém um valor de <code>1</code>.</p>
+<p>Observe que a instância inteira precisa ser mutável; o Rust não permite marcar
+apenas alguns campos como mutáveis. Como acontece com qualquer expressão,
+também podemos construir uma nova instância da struct como a última expressão
+no corpo de uma função para retorná-la implicitamente.</p>
+<p>A Listagem 5-4 mostra uma função <code>build_user</code> que retorna uma instância de
+<code>User</code> com o e-mail e o nome de usuário fornecidos. O campo <code>active</code> recebe o
+valor <code>true</code>, e <code>sign_in_count</code> recebe o valor <code>1</code>.</p>
 <figure class="listing" id="listing-5-4">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
@@ -289,19 +291,20 @@ o e-mail e nome de usuário fornecidos. O campo <code>active</code> recebe o val
 </span><span class="boring">        String::from("someusername123"),
 </span><span class="boring">    );
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-5-4">Listing 5-4</a>: A <code>build_user</code> function that takes an email and username and returns a <code>User</code> instance</figcaption>
+<figcaption><a href="#listing-5-4">Listing 5-4</a>: Uma função <code>build_user</code> que recebe e-mail e nome de usuário e retorna uma instância de <code>User</code></figcaption>
 </figure>
-<p>Faz sentido nomear os parâmetros da função com o mesmo nome da estrutura
-campos, mas tendo que repetir os nomes dos campos <code>email</code> e <code>username</code> e
-variáveis ​​é um pouco tedioso. Se a estrutura tivesse mais campos, repetindo cada nome
-ficaria ainda mais irritante. Felizmente, existe uma abreviatura conveniente!</p>
+<p>Faz sentido dar aos parâmetros da função os mesmos nomes dos campos da struct,
+mas ter de repetir os nomes <code>email</code> e <code>username</code> tanto nos campos quanto nas
+variáveis pode ficar um pouco cansativo. Se a struct tivesse mais campos,
+repetir cada nome ficaria ainda mais incômodo. Felizmente, há uma abreviação
+conveniente!</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-the-field-init-shorthand-when-variables-and-fields-have-the-same-name"></a></p>
-<h3 id="usando-a-abreviação-de-inicialização-de-campo"><a class="header" href="#usando-a-abreviação-de-inicialização-de-campo">Usando a abreviação de inicialização de campo</a></h3>
-<p>Como os nomes dos parâmetros e os nomes dos campos struct são exatamente os mesmos em
-Listagem 5-4, podemos usar a sintaxe <em>field init shorthand</em> para reescrever
-<code>build_user</code> para que ele se comporte exatamente da mesma forma, mas não tenha o
-repetição de <code>username</code> e <code>email</code>, conforme mostrado na Listagem 5-5.</p>
+<h3 id="usando-a-abreviação-de-inicialização-de-campos"><a class="header" href="#usando-a-abreviação-de-inicialização-de-campos">Usando a Abreviação de Inicialização de Campos</a></h3>
+<p>Como os nomes dos parâmetros e os nomes dos campos da struct são exatamente os
+mesmos na Listagem 5-4, podemos usar a sintaxe <em>field init shorthand</em> para
+reescrever <code>build_user</code> de forma que ela se comporte exatamente igual, mas sem
+repetir <code>username</code> e <code>email</code>, como mostra a Listagem 5-5.</p>
 <figure class="listing" id="listing-5-5">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
@@ -326,22 +329,23 @@ repetição de <code>username</code> e <code>email</code>, conforme mostrado na 
 </span><span class="boring">        String::from("someusername123"),
 </span><span class="boring">    );
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-5-5">Listing 5-5</a>: A <code>build_user</code> function that uses field init shorthand because the <code>username</code> and <code>email</code> parameters have the same name as struct fields</figcaption>
+<figcaption><a href="#listing-5-5">Listing 5-5</a>: Uma função <code>build_user</code> que usa a abreviação de inicialização de campos porque os parâmetros <code>username</code> e <code>email</code> têm o mesmo nome dos campos da struct</figcaption>
 </figure>
-<p>Aqui, estamos criando uma nova instância da estrutura <code>User</code>, que possui um campo
-chamado <code>email</code>. Queremos definir o valor do campo <code>email</code> para o valor no
-<code>email</code> parâmetro da função <code>build_user</code>. Porque o campo <code>email</code> e
-o parâmetro <code>email</code> tem o mesmo nome, só precisamos escrever <code>email</code> em vez
-do que <code>email: email</code>.</p>
+<p>Aqui, estamos criando uma nova instância da struct <code>User</code>, que tem um campo
+chamado <code>email</code>. Queremos atribuir ao campo <code>email</code> o valor contido no
+parâmetro <code>email</code> da função <code>build_user</code>. Como o campo <code>email</code> e o parâmetro
+<code>email</code> têm o mesmo nome, só precisamos escrever <code>email</code> em vez de
+<code>email: email</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="creating-instances-from-other-instances-with-struct-update-syntax"></a></p>
-<h3 id="criando-instâncias-com-sintaxe-de-atualização-de-estrutura"><a class="header" href="#criando-instâncias-com-sintaxe-de-atualização-de-estrutura">Criando instâncias com sintaxe de atualização de estrutura</a></h3>
-<p>Muitas vezes é útil criar uma nova instância de uma estrutura que inclua a maior parte
-os valores de outra instância do mesmo tipo, mas altera alguns deles.
-Você pode fazer isso usando a sintaxe de atualização de struct.</p>
-<p>Primeiro, na Listagem 5-6 mostramos como criar uma nova instância <code>User</code> em <code>user2</code> em
-da maneira normal, sem a sintaxe de atualização. Definimos um novo valor para <code>email</code> mas
-caso contrário, use os mesmos valores de <code>user1</code> que criamos na Listagem 5-2.</p>
+<h3 id="criando-instâncias-com-a-sintaxe-de-atualização-de-struct"><a class="header" href="#criando-instâncias-com-a-sintaxe-de-atualização-de-struct">Criando Instâncias com a Sintaxe de Atualização de Struct</a></h3>
+<p>Muitas vezes é útil criar uma nova instância de uma struct que aproveite a
+maior parte dos valores de outra instância do mesmo tipo, alterando apenas
+alguns campos. Podemos fazer isso usando a sintaxe de atualização de struct.</p>
+<p>Primeiro, na Listagem 5-6, mostramos como criar uma nova instância de <code>User</code>
+em <code>user2</code> do jeito tradicional, sem a sintaxe de atualização. Definimos um
+novo valor para <code>email</code>, mas reutilizamos os mesmos valores de <code>user1</code>,
+instância criada na Listagem 5-2.</p>
 <figure class="listing" id="listing-5-6">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
@@ -368,11 +372,12 @@ caso contrário, use os mesmos valores de <code>user1</code> que criamos na List
         sign_in_count: user1.sign_in_count,
     };
 }</code></pre>
-<figcaption><a href="#listing-5-6">Listing 5-6</a>: Creating a new <code>User</code> instance using all but one of the values from <code>user1</code></figcaption>
+<figcaption><a href="#listing-5-6">Listing 5-6</a>: Criando uma nova instância de <code>User</code> usando todos os valores de <code>user1</code>, exceto um</figcaption>
 </figure>
-<p>Usando a sintaxe de atualização de struct, podemos obter o mesmo efeito com menos código, como
-mostrado na Listagem 5-7. A sintaxe <code>..</code> especifica que os campos restantes não
-definido explicitamente deve ter o mesmo valor que os campos na instância fornecida.</p>
+<p>Usando a sintaxe de atualização de struct, podemos obter o mesmo efeito com
+menos código, como mostra a Listagem 5-7. A sintaxe <code>..</code> indica que os campos
+restantes, não definidos explicitamente, devem receber os mesmos valores que
+os campos da instância fornecida.</p>
 <figure class="listing" id="listing-5-7">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct User {
@@ -397,38 +402,41 @@ definido explicitamente deve ter o mesmo valor que os campos na instância forne
         ..user1
     };
 }</code></pre>
-<figcaption><a href="#listing-5-7">Listing 5-7</a>: Using struct update syntax to set a new <code>email</code> value for a <code>User</code> instance but to use the rest of the values from <code>user1</code></figcaption>
+<figcaption><a href="#listing-5-7">Listing 5-7</a>: Usando a sintaxe de atualização de struct para definir um novo valor de <code>email</code> em uma instância de <code>User</code>, reaproveitando o restante dos valores de <code>user1</code></figcaption>
 </figure>
-<p>O código na Listagem 5-7 também cria uma instância em <code>user2</code> que possui um
-valor diferente para <code>email</code>, mas tem os mesmos valores para <code>username</code>,
-<code>active</code> e <code>sign_in_count</code> campos de <code>user1</code>. O <code>..user1</code> deve vir por último
-para especificar que quaisquer campos restantes devem obter seus valores do
-campos correspondentes em <code>user1</code>, mas podemos optar por especificar valores para como
-quantos campos quisermos em qualquer ordem, independentemente da ordem dos campos em
-a definição da estrutura.</p>
-<p>Observe que a sintaxe de atualização da estrutura usa <code>=</code> como uma atribuição; isso é porque
-ele move os dados, assim como vimos na seção <a href="ch04-01-what-is-ownership.html#variables-and-data-interacting-with-move">“Variáveis ​​​​e Dados Interagindo com
-Mover”</a><!-- ignore --> seção. Neste exemplo, não podemos mais usar
-<code>user1</code> depois de criar <code>user2</code> porque <code>String</code> no campo <code>username</code> de
-<code>user1</code> foi movido para <code>user2</code>. Se tivéssemos fornecido <code>user2</code> novos valores <code>String</code> para
-ambos <code>email</code> e <code>username</code> e, portanto, usaram apenas <code>active</code> e <code>sign_in_count</code>
-valores de <code>user1</code>, então <code>user1</code> ainda seria válido após a criação de <code>user2</code>.
-Ambos <code>active</code> e <code>sign_in_count</code> são tipos que implementam a característica <code>Copy</code>, então
-o comportamento que discutimos em <a href="ch04-01-what-is-ownership.html#stack-only-data-copy">“Dados somente para pilha: copiar”</a><!-- ignore -->
-seção seria aplicável. Também podemos usar <code>user1.email</code> neste exemplo,
-porque seu valor não foi movido de <code>user1</code>.</p>
+<p>O código da Listagem 5-7 também cria uma instância em <code>user2</code> com um valor
+diferente para <code>email</code>, mas com os mesmos valores de <code>username</code>, <code>active</code> e
+<code>sign_in_count</code> vindos de <code>user1</code>. O trecho <code>..user1</code> precisa vir por último
+para indicar que quaisquer campos restantes devem receber seus valores dos
+campos correspondentes em <code>user1</code>, mas podemos escolher explicitamente quantos
+campos quisermos, em qualquer ordem, independentemente da ordem em que eles
+foram declarados na struct.</p>
+<p>Observe que a sintaxe de atualização de struct usa <code>=</code> como uma atribuição;
+isso acontece porque ela move os dados, como vimos na seção <a href="ch04-01-what-is-ownership.html#variables-and-data-interacting-with-move">“Variáveis e
+Dados Interagindo com Move”</a><!-- ignore -->. Neste exemplo, não podemos
+mais usar <code>user1</code> depois de criar <code>user2</code>, porque a <code>String</code> armazenada no
+campo <code>username</code> de <code>user1</code> foi movida para <code>user2</code>. Se tivéssemos dado a
+<code>user2</code> novos valores <code>String</code> tanto para <code>email</code> quanto para <code>username</code>, e
+portanto usássemos de <code>user1</code> apenas os valores <code>active</code> e <code>sign_in_count</code>,
+então <code>user1</code> ainda seria válido depois da criação de <code>user2</code>. Tanto <code>active</code>
+quanto <code>sign_in_count</code> são tipos que implementam a trait <code>Copy</code>, então o
+comportamento discutido na seção <a href="ch04-01-what-is-ownership.html#stack-only-data-copy">“Dados Somente de Pilha:
+Copy”</a><!-- ignore --> se aplica aqui. Também ainda podemos usar
+<code>user1.email</code> nesse exemplo, porque o valor desse campo não foi movido para
+fora de <code>user1</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-tuple-structs-without-named-fields-to-create-different-types"></a></p>
-<h3 id="criando-tipos-diferentes-com-estruturas-de-tupla"><a class="header" href="#criando-tipos-diferentes-com-estruturas-de-tupla">Criando tipos diferentes com estruturas de tupla</a></h3>
-<p>Rust também oferece suporte a estruturas semelhantes a tuplas, chamadas <em>tuple structs</em>.
-Estruturas de tupla têm o significado adicional que o nome da estrutura fornece, mas não tem
-nomes associados aos seus campos; em vez disso, eles apenas têm os tipos de
-campos. Estruturas de tupla são úteis quando você deseja dar um nome à tupla inteira
-e tornar a tupla um tipo diferente de outras tuplas, e ao nomear cada uma
-campo como em uma estrutura regular seria detalhado ou redundante.</p>
-<p>Para definir uma estrutura de tupla, comece com a palavra-chave <code>struct</code> e o nome da estrutura
-seguido pelos tipos na tupla. Por exemplo, aqui definimos e usamos dois
-estruturas de tupla denominadas <code>Color</code> e <code>Point</code>:</p>
+<h3 id="criando-tipos-diferentes-com-tuple-structs"><a class="header" href="#criando-tipos-diferentes-com-tuple-structs">Criando Tipos Diferentes com Tuple Structs</a></h3>
+<p>Rust também oferece suporte a structs que se parecem com tuplas, chamadas
+<em>tuple structs</em>. Tuple structs têm o significado adicional fornecido pelo nome
+da struct, mas não têm nomes associados a seus campos; em vez disso, elas
+armazenam apenas os tipos dos campos. Tuple structs são úteis quando você quer
+dar um nome à tupla inteira e fazer com que ela seja um tipo diferente de
+outras tuplas, mas nomear cada campo, como em uma struct comum, seria verboso
+ou redundante.</p>
+<p>Para definir uma tuple struct, começamos com a palavra-chave <code>struct</code>, seguida
+do nome da struct e então os tipos da tupla. Por exemplo, aqui definimos e
+usamos duas tuple structs chamadas <code>Color</code> e <code>Point</code>:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct Color(i32, i32, i32);
@@ -439,27 +447,27 @@ fn main() {
     let origin = Point(0, 0, 0);
 }</code></pre>
 </figure>
-<p>Observe que os valores <code>black</code> e <code>origin</code> são de tipos diferentes porque são
-instâncias de diferentes estruturas de tupla. Cada estrutura que você define é seu próprio tipo,
-mesmo que os campos dentro da estrutura possam ter os mesmos tipos. Para
-Por exemplo, uma função que recebe um parâmetro do tipo <code>Color</code> não pode receber um
-<code>Point</code> como argumento, embora ambos os tipos sejam compostos de três <code>i32</code>
-valores. Caso contrário, as instâncias de struct de tupla são semelhantes às tuplas no sentido de que você pode
-desestruturá-los em suas partes individuais, e você pode usar um <code>.</code> seguido
-pelo índice para acessar um valor individual. Ao contrário das tuplas, estruturas de tupla
-exigem que você nomeie o tipo da estrutura ao desestruturá-la. Para
-por exemplo, escreveríamos <code>let Point(x, y, z) = origin;</code> para desestruturar o
-valores em <code>origin</code> apontam para variáveis ​​chamadas <code>x</code>, <code>y</code> e <code>z</code>.</p>
+<p>Observe que os valores <code>black</code> e <code>origin</code> têm tipos diferentes porque são
+instâncias de tuple structs diferentes. Cada struct que você define é um tipo
+próprio, mesmo que os campos internos tenham os mesmos tipos. Por exemplo, uma
+função que recebe um parâmetro do tipo <code>Color</code> não pode receber um <code>Point</code>,
+embora ambos sejam compostos de três valores <code>i32</code>. Fora isso, instâncias de
+tuple struct se comportam de forma semelhante às tuplas: você pode
+desestruturá-las em suas partes individuais e usar <code>.</code> seguido do índice para
+acessar um valor específico. Diferentemente das tuplas, porém, tuple structs
+exigem que você use o nome do tipo ao desestruturá-las. Por exemplo,
+escreveríamos <code>let Point(x, y, z) = origin;</code> para desestruturar os valores de
+<code>origin</code> em variáveis chamadas <code>x</code>, <code>y</code> e <code>z</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="unit-like-structs-without-any-fields"></a></p>
-<h3 id="definindo-estruturas-semelhantes-a-unidades"><a class="header" href="#definindo-estruturas-semelhantes-a-unidades">Definindo estruturas semelhantes a unidades</a></h3>
-<p>Você também pode definir estruturas que não possuem campos! Estes são chamados
-<em>estruturas semelhantes a unidades</em> porque elas se comportam de forma semelhante a <code>()</code>, o tipo de unidade que
-mencionamos na seção <a href="ch03-02-data-types.html#the-tuple-type">“O tipo de tupla”</a><!-- ignore -->. Semelhante a uma unidade
-structs podem ser úteis quando você precisa implementar uma característica em algum tipo, mas não
-tenha quaisquer dados que você deseja armazenar no próprio tipo. Discutiremos características
-no Capítulo 10. Aqui está um exemplo de declaração e instanciação de uma estrutura de unidade
-chamado <code>AlwaysEqual</code>:</p>
+<h3 id="definindo-structs-unit-like"><a class="header" href="#definindo-structs-unit-like">Definindo Structs Unit-Like</a></h3>
+<p>Você também pode definir structs que não têm nenhum campo. Elas são chamadas de
+<em>unit-like structs</em> porque se comportam de maneira semelhante a <code>()</code>, o tipo
+unit que mencionamos na seção <a href="ch03-02-data-types.html#the-tuple-type">“O Tipo Tupla”</a><!-- ignore -->.
+Unit-like structs podem ser úteis quando você precisa implementar uma trait em
+algum tipo, mas não quer armazenar nenhum dado nesse tipo em si. Vamos discutir
+traits no Capítulo 10. Aqui está um exemplo de declaração e instanciação de uma
+unit-like struct chamada <code>AlwaysEqual</code>:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct AlwaysEqual;
@@ -468,90 +476,93 @@ fn main() {
     let subject = AlwaysEqual;
 }</code></pre>
 </figure>
-<p>Para definir <code>AlwaysEqual</code>, usamos a palavra-chave <code>struct</code>, o nome que queremos e
-depois um ponto e vírgula. Não há necessidade de chaves ou parênteses! Então, podemos obter
-uma instância de <code>AlwaysEqual</code> na variável <code>subject</code> de maneira semelhante: usando
-o nome que definimos, sem chaves ou parênteses. Imagine isso
-mais tarde implementaremos o comportamento para este tipo de modo que cada instância de
-<code>AlwaysEqual</code> é sempre igual a todas as instâncias de qualquer outro tipo, talvez para
-ter um resultado conhecido para fins de teste. Não precisaríamos de nenhum dado para
-implemente esse comportamento! Você verá no Capítulo 10 como definir características e
-implemente-os em qualquer tipo, incluindo estruturas semelhantes a unidades.</p>
+<p>Para definir <code>AlwaysEqual</code>, usamos a palavra-chave <code>struct</code>, o nome desejado e
+então um ponto e vírgula. Não precisamos de chaves nem de parênteses! Depois,
+podemos obter uma instância de <code>AlwaysEqual</code> na variável <code>subject</code> de forma
+semelhante: usando apenas o nome definido, sem chaves nem parênteses. Imagine
+que, mais tarde, implementaremos comportamento para esse tipo de forma que toda
+instância de <code>AlwaysEqual</code> seja sempre igual a qualquer instância de qualquer
+outro tipo, talvez para ter um resultado conhecido em testes. Não precisaríamos
+de nenhum dado para implementar esse comportamento. Você verá no Capítulo 10
+como definir traits e implementá-las em qualquer tipo, incluindo unit-like
+structs.</p>
 <section class="note" aria-role="note">
-<h3 id="propriedade-de-dados-estruturais"><a class="header" href="#propriedade-de-dados-estruturais">Propriedade de dados estruturais</a></h3>
-<p>Na definição da estrutura <code>User</code> na Listagem 5-1, usamos o propriedade <code>String</code>
-tipo em vez do tipo de fatia de string <code>&amp;str</code>. Esta é uma escolha deliberada
-porque queremos que cada instância desta estrutura possua todos os seus dados e para
-esses dados serão válidos enquanto toda a estrutura for válida.</p>
-<p>Também é possível que estruturas armazenem referências a dados pertencentes a algo
-outra coisa, mas para fazer isso é necessário o uso de <em>lifetimes</em>, um recurso do Rust que iremos
-discutiremos no Capítulo 10. Tempos de vida garantem que os dados referenciados por uma estrutura
-é válido enquanto a estrutura for. Digamos que você tente armazenar uma referência
-em uma estrutura sem especificar tempos de vida, como o seguinte em
-<em>src/main.rs</em>; isso não vai funcionar:</p>
+<h3 id="ownership-dos-dados-em-structs"><a class="header" href="#ownership-dos-dados-em-structs">Ownership dos Dados em Structs</a></h3>
+<p>Na definição da struct <code>User</code> da Listagem 5-1, usamos o tipo com ownership
+<code>String</code> em vez do tipo fatia de string <code>&amp;str</code>. Essa é uma escolha
+deliberada, porque queremos que cada instância dessa struct seja dona de
+todos os seus dados e que esses dados permaneçam válidos enquanto a struct
+inteira for válida.</p>
+<p>Também é possível que structs armazenem referências a dados pertencentes a
+outra coisa, mas fazer isso exige o uso de <em>lifetimes</em>, um recurso do Rust
+que vamos discutir no Capítulo 10. Lifetimes garantem que os dados
+referenciados por uma struct sejam válidos pelo tempo que a struct precisar
+deles. Digamos que você tente armazenar uma referência em uma struct sem
+especificar lifetimes, como no exemplo a seguir em <em>src/main.rs</em>; isso não
+funcionará:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <!-- CAN'T EXTRACT SEE https://github.com/rust-lang/mdBook/issues/1127 -->
-<pre><code class="language-ferrugem ignora não_compila">estruturar usuário {
-    ativo: bool,
-    nome de usuário: &amp;str,
-    e-mail: &amp;str,
+<pre><code class="language-rust ignore does_not_compile">struct User {
+    active: bool,
+    username: &amp;str,
+    email: &amp;str,
     sign_in_count: u64,
 }
 
-fn principal() {
-    deixe usuário1 = Usuário {
-        ativo: verdadeiro,
-        nome de usuário: "algumnomedeusuario123",
-        e-mail: "alguém@exemplo.com",
+fn main() {
+    let user1 = User {
+        active: true,
+        username: "someusername123",
+        email: "someone@example.com",
         sign_in_count: 1,
     };
-}
-</code></pre>
+}</code></pre>
 </figure>
-<p>O compilador reclamará que precisa de especificadores de tempo de vida:</p>
-<pre><code class="language-console">$ corrida de carga
-   Compilando estruturas v0.1.0 (file:///projects/structs)
-erro[E0106]: especificador de tempo de vida ausente
+<p>O compilador reclamará que ele precisa de especificadores de lifetime:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling structs v0.1.0 (file:///projects/structs)
+error[E0106]: missing lifetime specifier
  --&gt; src/main.rs:3:15
   |
-3 |     nome de usuário: &amp;str,
-  |               ^ parâmetro de vida útil nomeado esperado
+3 |     username: &amp;str,
+  |               ^ expected named lifetime parameter
   |
-ajuda: considere introduzir um parâmetro de vida útil nomeado
+help: consider introducing a named lifetime parameter
   |
-1 ~ estrutura Usuário&lt;'a&gt; {
-2 |     ativo: bool,
-3 ~ nome de usuário: &amp;'a str,
+1 ~ struct User&lt;'a&gt; {
+2 |     active: bool,
+3 ~     username: &amp;'a str,
   |
 
-erro[E0106]: especificador de tempo de vida ausente
+error[E0106]: missing lifetime specifier
  --&gt; src/main.rs:4:12
   |
-4 |     e-mail: &amp;str,
-  |            ^ parâmetro de vida útil nomeado esperado
+4 |     email: &amp;str,
+  |            ^ expected named lifetime parameter
   |
-ajuda: considere introduzir um parâmetro de vida útil nomeado
+help: consider introducing a named lifetime parameter
   |
-1 ~ estrutura Usuário&lt;'a&gt; {
-2 |     ativo: bool,
-3 |     nome de usuário: &amp;str,
-4 ~ email: &amp;'a str,
+1 ~ struct User&lt;'a&gt; {
+2 |     active: bool,
+3 |     username: &amp;str,
+4 ~     email: &amp;'a str,
   |
 
-Para obter mais informações sobre esse erro, tente `rustc --explain E0106`.
-erro: não foi possível compilar `structs` (bin "structs") devido a 2 erros anteriores
+For more information about this error, try `rustc --explain E0106`.
+error: could not compile `structs` (bin "structs") due to 2 previous errors
 </code></pre>
-<p>No Capítulo 10, discutiremos como corrigir esses erros para que você possa armazenar
-referências em estruturas, mas por enquanto, corrigiremos erros como esses usando propriedades
-tipos como <code>String</code> em vez de referências como <code>&amp;str</code>.</p>
+<p>No Capítulo 10, veremos como corrigir erros como esses para que você possa
+armazenar referências em structs. Por enquanto, vamos resolver esse tipo de
+situação usando tipos com ownership, como <code>String</code>, em vez de referências
+como <code>&amp;str</code>.</p>
 </section>
 <!-- manual-regeneration
-para o erro acima
-depois de executar update-rustc.sh:
-pbcopy <listings/ch05-using-structs-to-structure-related-data/no-listing-02-reference-in-struct/output.txt
-cole acima
-adicione `> ` antes de cada linha -->
+for the error above
+after running update-rustc.sh:
+pbcopy < listings/ch05-using-structs-to-structure-related-data/no-listing-02-reference-in-struct/output.txt
+paste above
+add `> ` before every line -->
 
                     </main>
 

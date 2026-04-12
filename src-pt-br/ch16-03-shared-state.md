@@ -205,7 +205,7 @@ nosso programa alterando a linha `use`, a chamada para ` new`e a chamada para
 Este código imprimirá o seguinte:
 
 <!-- Not extracting output because changes to this output aren't significant;
-as mudanças provavelmente se devem ao fato de o threads funcionar de maneira diferente, em vez de
+the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
 
 ```text

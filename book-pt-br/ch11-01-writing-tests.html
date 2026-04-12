@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -221,13 +221,13 @@ Listagem 11-1.</p>
 <figure class="listing" id="listing-11-1">
 <span class="file-name">Filename: src/lib.rs</span>
 <!-- manual-regeneration
-listagens de cd/testes automatizados de escrita ch11
-rm -rf listagem-11-01
-carga nova listagem-11-01 --lib --name adicionador
-listagem de cd-11-01
-echo "$ teste de carga" > saída.txt
-RUSTFLAGS="-A unused_variables -A dead_code" RUST_TEST_THREADS=1 teste de carga >> output.txt 2>&1
-git diff output.txt # confirma quaisquer alterações relevantes; descarte os irrelevantes
+cd listings/ch11-writing-automated-tests
+rm -rf listing-11-01
+cargo new listing-11-01 --lib --name adder
+cd listing-11-01
+echo "$ cargo test" > output.txt
+RUSTFLAGS="-A unused_variables -A dead_code" RUST_TEST_THREADS=1 cargo test >> output.txt 2>&1
+git diff output.txt # commit any relevant changes; discard irrelevant ones
 cd ../../..
 -->
 <pre><code class="language-rust noplayground">pub fn add(left: u64, right: u64) -&gt; u64 {
@@ -396,9 +396,9 @@ error: test failed, to rerun pass `--lib`
 <figcaption><a href="#listing-11-4">Listing 11-4</a>: Test results when one test passes and one test fails</figcaption>
 </figure>
 <!-- manual-regeneration
-listagens em pânico rg/ch11-writing-automated-tests/listing-11-03/output.txt
-verifique se o número da linha do pânico corresponde ao número da linha no parágrafo seguinte
--->
+rg panicked listings/ch11-writing-automated-tests/listing-11-03/output.txt
+check the line number of the panic matches the line number in the following paragraph
+ -->
 <p>Em vez de <code>ok</code>, a linha <code>test tests::another</code> mostra <code>FAILED</code>. Dois novos
 seções aparecem entre os resultados individuais e o resumo: A primeira
 exibe o motivo detalhado de cada falha de teste. Neste caso, obtemos o

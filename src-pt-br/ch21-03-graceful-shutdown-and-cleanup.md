@@ -155,14 +155,14 @@ Inicie o servidor com `cargo run` e faça três solicitações. O terceiro pedid
 deve ocorrer um erro e, em seu terminal, você deverá ver uma saída semelhante a esta:
 
 <!-- manual-regeneration
-listagens de cd/ch21-web-server/listing-21-25
-Execução cargo
-enrolar http://127.0.0.1:7878
-enrolar http://127.0.0.1:7878
-enrolar http://127.0.0.1:7878
-a terceira solicitação apresentará erro porque o servidor será desligado
-copie a saída abaixo
-Não é possível automatizar porque a saída depende de solicitações
+cd listings/ch21-web-server/listing-21-25
+cargo run
+curl http://127.0.0.1:7878
+curl http://127.0.0.1:7878
+curl http://127.0.0.1:7878
+third request will error because server will have shut down
+copy output below
+Can't automate because the output depends on making requests
 -->
 
 ```console

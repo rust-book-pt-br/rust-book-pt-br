@@ -104,7 +104,7 @@ hierarquia para um item.
 | Símbolo| Explicação|
 | --------------------------------------- | -------------------------------------------------------------------------------------------------------------|
 | `ident::ident`| Caminho do namespace|
-| `::path`| Caminho relativo à raiz da caixa (ou seja, um caminho explicitamente absoluto)|
+| `::path`| Caminho relativo à raiz da crate (ou seja, um caminho explicitamente absoluto)|
 | `self::path`| Caminho relativo ao módulo atual (ou seja, um caminho explicitamente relativo)|
 | `super::path`| Caminho relativo ao pai do módulo atual|
 | `type::ident`, `<type as trait>::ident`| Constantes, funções e tipos associados|

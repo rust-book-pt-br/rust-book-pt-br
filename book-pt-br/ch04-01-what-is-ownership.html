@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0f8a0c55.js";
+            window.path_to_searchindex_js = "searchindex-ae7815f4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4901e489.js"></script>
@@ -202,87 +202,86 @@ strings.</p>
 <section class="note" aria-role="note">
 <h3 id="a-pilha-e-o-heap"><a class="header" href="#a-pilha-e-o-heap">A pilha e o heap</a></h3>
 <p>Muitas linguagens de programação não exigem que você pense na pilha e no
-amontoar com muita frequência. Mas em uma linguagem de programação de sistemas como Rust, seja um
-o valor está na pilha ou no heap afeta como a linguagem se comporta e por que
-você tem que tomar certas decisões. Partes de propriedade serão descritas em
-relação à pilha e ao heap mais adiante neste capítulo, então aqui está um breve
-explicação em preparação.</p>
-<p>Tanto a pilha quanto o heap são partes da memória disponíveis para seu código usar
-em tempo de execução, mas eles são estruturados de maneiras diferentes. A pilha armazena
-valores na ordem em que os obtém e remove os valores na ordem oposta
-ordem. Isso é conhecido como <em>último a entrar, primeiro a sair (LIFO)</em>. Pense em uma pilha de
-pratos: Ao adicionar mais pratos, você os coloca no topo da pilha e, quando
-você precisa de um prato, tire um de cima. Adicionar ou remover placas de
-o meio ou a parte inferior não funcionariam tão bem! Adicionar dados é chamado <em>pusing
-na pilha</em>, e a remoção de dados é chamada de <em>retirar da pilha</em>. Todos
-os dados armazenados na pilha devem ter um tamanho fixo e conhecido. Dados com um desconhecido
-tamanho em tempo de compilação ou um tamanho que pode mudar deve ser armazenado no heap
-em vez de.</p>
-<p>O heap é menos organizado: ao colocar dados no heap, você solicita um
-certa quantidade de espaço. O alocador de memória encontra um espaço vazio no heap
-que seja grande o suficiente, marca-o como em uso e retorna um <em>ponteiro</em>, que
-é o endereço desse local. Este processo é chamado <em>allocating no
-heap</em> e às vezes é abreviado como apenas <em>allocating</em> (enviando valores para
-a pilha não é considerada alocação). Como o ponteiro para o heap é um
-tamanho fixo e conhecido, você pode armazenar o ponteiro na pilha, mas quando quiser
-os dados reais, você deve seguir o ponteiro. Pense em estar sentado em um
-restaurante. Ao entrar, você informa o número de pessoas do seu grupo e
-o anfitrião encontra uma mesa vazia que cabe a todos e leva você até lá. Se
-alguém do seu grupo chegar atrasado, pode perguntar onde você se sentou
-encontrar você.</p>
-<p>Enviar para a pilha é mais rápido do que alocar no heap porque o
-o alocador nunca precisa procurar um local para armazenar novos dados; esse local é
-sempre no topo da pilha. Comparativamente, alocando espaço no heap
-requer mais trabalho porque o alocador deve primeiro encontrar um espaço grande o suficiente
-para manter os dados e, em seguida, realizar a contabilidade para se preparar para o próximo
+heap com muita frequência. Mas, em uma linguagem de programação de sistemas
+como Rust, o fato de um valor estar na pilha ou no heap afeta a forma como a
+linguagem se comporta e por que você precisa tomar certas decisões. Partes de
+ownership serão explicadas mais adiante neste capítulo em relação à pilha e
+ao heap, então aqui vai uma explicação breve para preparar o terreno.</p>
+<p>Tanto a pilha quanto o heap são regiões de memória disponíveis para o código
+em tempo de execução, mas são organizadas de formas diferentes. A pilha
+armazena valores na ordem em que eles chegam e os remove na ordem inversa.
+Isso é chamado de <em>último a entrar, primeiro a sair (LIFO)</em>. Pense em uma
+pilha de pratos: ao adicionar mais pratos, você os coloca no topo; quando
+precisa de um, tira o prato do topo. Adicionar ou remover pratos do meio ou
+da base não funcionaria tão bem. Adicionar dados recebe o nome de <em>pushing
+onto the stack</em>, e remover dados é <em>popping off the stack</em>. Todos os dados
+armazenados na pilha precisam ter tamanho fixo e conhecido. Dados com tamanho
+desconhecido em tempo de compilação, ou cujo tamanho pode mudar, precisam ir
+para o heap.</p>
+<p>O heap é menos organizado: quando você coloca dados no heap, precisa pedir
+uma certa quantidade de espaço. O alocador de memória encontra um espaço livre
+no heap que seja grande o bastante, marca esse espaço como ocupado e retorna
+um <em>ponteiro</em>, isto é, o endereço daquela região. Esse processo é chamado de
+<em>allocating on the heap</em> e às vezes é abreviado apenas para <em>allocating</em>.
+Como o ponteiro para o heap tem tamanho fixo e conhecido, podemos armazená-lo
+na pilha; mas, para acessar os dados em si, é preciso seguir o ponteiro.
+Pense em um restaurante: ao chegar, você diz quantas pessoas há no seu grupo,
+e a pessoa na recepção encontra uma mesa que acomoda todo mundo e leva vocês
+até lá. Se alguém chegar atrasado, essa pessoa pode perguntar onde vocês se
+sentaram para encontrar o grupo.</p>
+<p>Colocar dados na pilha é mais rápido do que alocar no heap porque o alocador
+nunca precisa procurar um lugar para armazenar novos dados: esse lugar está
+sempre no topo da pilha. Já alocar espaço no heap exige mais trabalho porque
+o alocador primeiro precisa encontrar uma região grande o suficiente para
+comportar os dados e depois fazer a contabilidade necessária para a próxima
 alocação.</p>
-<p>Acessar dados no heap geralmente é mais lento do que acessar dados no heap.
-pilha porque você precisa seguir um ponteiro para chegar lá. Contemporâneo
-os processadores são mais rápidos se movimentarem menos memória. Continuando o
-analogia, considere um garçom em um restaurante recebendo pedidos de muitas mesas.
-É mais eficiente reunir todos os pedidos em uma mesa antes de passar para
-a próxima mesa. Pegando um pedido da mesa A e depois um pedido da mesa B,
-então um de A novamente, e então um de B novamente seria muito mais lento
-processo. Da mesma forma, um processador geralmente pode fazer melhor seu trabalho se
-funciona em dados que estão próximos de outros dados (como estão na pilha), em vez de
-mais longe (como pode estar na pilha).</p>
+<p>Acessar dados no heap geralmente é mais lento do que acessar dados na pilha,
+porque é preciso seguir um ponteiro para chegar até eles. Processadores
+modernos costumam ser mais rápidos quando precisam se mover menos pela
+memória. Continuando a analogia, pense em uma pessoa atendendo mesas em um
+restaurante. É mais eficiente pegar todos os pedidos de uma mesa antes de ir
+para a seguinte. Pegar um pedido da mesa A, depois um da mesa B, depois
+voltar à A e então novamente à B seria bem mais lento. Pelo mesmo motivo, um
+processador tende a trabalhar melhor com dados próximos uns dos outros, como
+ocorre na pilha, em vez de dados mais espalhados, como pode acontecer no
+heap.</p>
 <p>Quando seu código chama uma função, os valores passados ​​para a função
 (incluindo, potencialmente, ponteiros para dados no heap) e a função
 variáveis ​​locais são colocadas na pilha. Quando a função terminar, aqueles
 os valores são retirados da pilha.</p>
 <p>Acompanhar quais partes do código estão usando quais dados no heap,
-minimizando a quantidade de dados duplicados no heap e limpando dados não utilizados
-dados na pilha para que você não fique sem espaço são todos problemas que
-endereços de propriedade. Depois de entender a propriedade, você não precisará pensar
-sobre a pilha e o heap com muita frequência. Mas sabendo que o objetivo principal
-propriedade é gerenciar dados heap pode ajudar a explicar por que funciona dessa maneira
-faz.</p>
+minimizar a quantidade de dados duplicados no heap e limpar dados que já não
+são mais necessários para que você não fique sem memória são problemas que
+ownership resolve. Depois que você entender ownership, não precisará pensar
+na pilha e no heap com tanta frequência. Mas saber que o objetivo principal
+de ownership é gerenciar dados no heap ajuda a entender por que ele funciona
+da forma como funciona.</p>
 </section>
-<h3 id="regras-de-propriedade"><a class="header" href="#regras-de-propriedade">Regras de propriedade</a></h3>
-<p>Primeiro, vamos dar uma olhada nas regras de propriedade. Tenha essas regras em mente enquanto
-trabalhe com os exemplos que os ilustram:</p>
+<h3 id="regras-de-ownership"><a class="header" href="#regras-de-ownership">Regras de Ownership</a></h3>
+<p>Primeiro, vamos olhar para as regras de ownership. Tenha essas regras em mente
+enquanto passamos pelos exemplos que as ilustram:</p>
 <ul>
 <li>Cada valor em Rust possui um <em>proprietário</em>.</li>
 <li>Só pode haver um proprietário por vez.</li>
 <li>Quando o proprietário sai do escopo, o valor será eliminado.</li>
 </ul>
-<h3 id="escopo-variável"><a class="header" href="#escopo-variável">Escopo Variável</a></h3>
+<h3 id="escopo-de-variáveis"><a class="header" href="#escopo-de-variáveis">Escopo de Variáveis</a></h3>
 <p>Agora que ultrapassamos a sintaxe básica do Rust, não incluiremos todos os <code>fn main() {</code>
 código nos exemplos, então se você estiver acompanhando, certifique-se de colocar o
 seguintes exemplos dentro de uma função <code>main</code> manualmente. Como resultado, nossos exemplos
 será um pouco mais conciso, permitindo-nos focar nos detalhes reais em vez de
 código padrão.</p>
-<p>Como primeiro exemplo de propriedade, veremos o alcance de algumas variáveis. UM
-<em>escopo</em> é o intervalo dentro de um programa para o qual um item é válido. Pegue o
-seguinte variável:</p>
+<p>Como primeiro exemplo de ownership, vamos observar o escopo de algumas
+variáveis. Um <em>escopo</em> é o intervalo dentro de um programa durante o qual um
+item é válido. Considere a variável a seguir:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = "hello";
 <span class="boring">}</span></code></pre>
-<p>A variável <code>s</code> refere-se a uma string literal, onde o valor da string é
-codificado no texto do nosso programa. A variável é válida a partir do ponto em
-que é declarado até o final do escopo atual. A Listagem 4-1 mostra um
-programa com comentários anotando onde a variável <code>s</code> seria válida.</p>
+<p>A variável <code>s</code> se refere a uma string literal, cujo valor está codificado no
+texto do próprio programa. A variável é válida a partir do ponto em que é
+declarada até o fim do escopo atual. A Listagem 4-1 mostra um programa com
+comentários anotando onde a variável <code>s</code> seria válida.</p>
 <figure class="listing" id="listing-4-1">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    {                      // s is not valid here, since it's not yet declared
@@ -291,49 +290,51 @@ programa com comentários anotando onde a variável <code>s</code> seria válida
         // do stuff with s
     }                      // this scope is now over, and s is no longer valid
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-4-1">Listing 4-1</a>: A variable and the scope in which it is valid</figcaption>
+<figcaption><a href="#listing-4-1">Listing 4-1</a>: Uma variável e o escopo em que ela é válida</figcaption>
 </figure>
 <p>Em outras palavras, existem dois pontos importantes no tempo aqui:</p>
 <ul>
 <li>Quando <code>s</code> entra <em>no</em> escopo, é válido.</li>
-<li>Permanece válido até sair <em>fora</em> do escopo.</li>
+<li>Ela permanece válida até sair <em>de</em> escopo.</li>
 </ul>
-<p>Neste ponto, a relação entre os escopos e quando as variáveis ​​são válidas é
-semelhante ao de outras linguagens de programação. Agora vamos construir em cima disso
-compreensão introduzindo o tipo <code>String</code>.</p>
-<h3 id="o-tipo-string"><a class="header" href="#o-tipo-string">O tipo <code>String</code></a></h3>
-<p>Para ilustrar as regras de propriedade, precisamos de um tipo de dados mais complexo
-do que aqueles que abordamos na seção <a href="ch03-02-data-types.html#data-types">“Tipos de dados”</a><!-- ignore -->
-do Capítulo 3. Os tipos abordados anteriormente são de tamanho conhecido, podem ser armazenados
-na pilha e retirados da pilha quando seu escopo terminar, e podem ser
-copiado de forma rápida e trivial para criar uma instância nova e independente se outra
-parte do código precisa usar o mesmo valor em um escopo diferente. Mas nós queremos
-observe os dados armazenados no heap e explore como Rust sabe quando
-limpe esses dados, e o tipo <code>String</code> é um ótimo exemplo.</p>
-<p>Vamos nos concentrar nas partes de <code>String</code> relacionadas à propriedade. Esses
-aspectos também se aplicam a outros tipos de dados complexos, sejam eles fornecidos por
-a biblioteca padrão ou criada por você. Discutiremos aspectos de não propriedade de
-<code>String</code> no <a href="ch08-02-strings.html">Capítulo 8</a><!-- ignore -->.</p>
-<p>Já vimos literais de string, onde um valor de string é codificado em nosso
-programa. Literais de string são convenientes, mas não são adequados para todos
-situação em que podemos querer usar texto. Uma razão é que eles são
-imutável. Outra é que nem todo valor de string pode ser conhecido quando escrevemos
-nosso código: por exemplo, e se quisermos pegar a entrada do usuário e armazená-la? Isso é
-para essas situações o Rust possui o tipo <code>String</code>. Este tipo gerencia
-dados alocados no heap e, como tal, é capaz de armazenar uma quantidade de texto que
-é desconhecido para nós em tempo de compilação. Você pode criar um <code>String</code> a partir de uma string
-literal usando a função <code>from</code>, assim:</p>
+<p>Neste ponto, a relação entre escopos e validade de variáveis é semelhante à de
+outras linguagens de programação. Agora vamos aprofundar essa ideia
+introduzindo o tipo <code>String</code>.</p>
+<h3 id="o-tipo-string"><a class="header" href="#o-tipo-string">O Tipo <code>String</code></a></h3>
+<p>Para ilustrar as regras de ownership, precisamos de um tipo de dado mais
+complexo do que aqueles que cobrimos na seção <a href="ch03-02-data-types.html#data-types">“Tipos de
+Dados”</a><!-- ignore --> do Capítulo 3. Os tipos vistos até agora têm
+tamanho conhecido, podem ser armazenados na pilha e removidos dela quando o
+escopo termina, e podem ser copiados de maneira rápida e trivial para criar
+uma nova instância independente quando outra parte do código precisar usar o
+mesmo valor em outro escopo. Mas agora queremos olhar para dados armazenados no
+heap e explorar como o Rust sabe quando deve limpá-los, e o tipo <code>String</code> é um
+ótimo exemplo.</p>
+<p>Vamos nos concentrar nas partes de <code>String</code> relacionadas a ownership. Esses
+mesmos aspectos também se aplicam a outros tipos de dados complexos, sejam eles
+fornecidos pela biblioteca padrão ou criados por você. Falaremos dos aspectos
+de <code>String</code> que não envolvem ownership no <a href="ch08-02-strings.html">Capítulo 8</a><!-- ignore -->.</p>
+<p>Já vimos literais de string, nas quais o valor da string fica codificado no
+programa. Literais de string são convenientes, mas não servem para toda
+situação em que podemos querer usar texto. Uma razão é que elas são
+imutáveis. Outra é que nem todo valor de string pode ser conhecido quando
+escrevemos o código: e se quisermos, por exemplo, ler a entrada do usuário e
+armazená-la? Para esse tipo de situação, Rust oferece o tipo <code>String</code>. Esse
+tipo gerencia dados alocados no heap e, por isso, consegue armazenar uma
+quantidade de texto desconhecida em tempo de compilação. Podemos criar um
+<code>String</code> a partir de uma string literal usando a função <code>from</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let s = String::from("hello");
 <span class="boring">}</span></code></pre>
 <p>O operador de dois pontos duplos <code>::</code> nos permite nomear essa função <code>from</code>
 específica sob o tipo <code>String</code>, em vez de usar algum nome como <code>string_from</code>.
-Falaremos mais sobre essa sintaxe na seção <a href="ch05-03-method-syntax.html#methods">“Métodos”</a><!-- ignore -->
+Falaremos mais sobre essa sintaxe na seção <a href="ch05-03-method-syntax.html#methods">“Métodos”</a><!--
+ignore -->
 do Capítulo 5 e, quando tratarmos de namespace com módulos, em <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">“Caminhos para
 Referenciar um Item na Árvore de Módulos”</a><!-- ignore --> no
 Capítulo 7.</p>
-<p>Este tipo de string <em>pode</em> sofrer mutação:</p>
+<p>Esse tipo de string <em>pode</em> ser mutado:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::from("hello");
 
@@ -341,38 +342,39 @@ Capítulo 7.</p>
 
     println!("{s}"); // this will print `hello, world!`
 <span class="boring">}</span></code></pre>
-<p>Então, qual é a diferença aqui? Por que <code>String</code> pode sofrer mutação, mas literais
-não pode? A diferença está na forma como esses dois tipos lidam com a memória.</p>
+<p>Então, qual é a diferença aqui? Por que <code>String</code> pode sofrer mutação, mas
+literais não? A diferença está na forma como esses dois tipos lidam com a
+memória.</p>
 <h3 id="memória-e-alocação"><a class="header" href="#memória-e-alocação">Memória e Alocação</a></h3>
-<p>No caso de uma string literal, conhecemos o conteúdo em tempo de compilação, então o
-o texto é codificado diretamente no executável final. É por isso que a corda
-literais são rápidos e eficientes. Mas essas propriedades só vêm da string
-imutabilidade do literal. Infelizmente, não podemos colocar uma gota de memória no
-binário para cada pedaço de texto cujo tamanho é desconhecido em tempo de compilação e cujo
-o tamanho pode mudar durante a execução do programa.</p>
-<p>Com o tipo <code>String</code>, para suportar um trecho de texto mutável e crescente,
-precisamos alocar uma quantidade de memória no heap, desconhecida em tempo de compilação,
-para segurar o conteúdo. Isso significa:</p>
+<p>No caso de uma string literal, conhecemos o conteúdo em tempo de compilação, e
+por isso o texto é gravado diretamente no executável final. É isso que torna
+string literals rápidas e eficientes. Mas essas propriedades vêm justamente da
+imutabilidade da string literal. Infelizmente, não podemos colocar um bloco de
+memória no binário para cada pedaço de texto cujo tamanho é desconhecido em
+tempo de compilação e que pode mudar enquanto o programa roda.</p>
+<p>Com o tipo <code>String</code>, para suportar um trecho de texto mutável e que possa
+crescer, precisamos alocar no heap uma quantidade de memória desconhecida em
+tempo de compilação para armazenar o conteúdo. Isso significa:</p>
 <ul>
-<li>A memória deve ser solicitada ao alocador de memória em tempo de execução.</li>
-<li>Precisamos de uma maneira de retornar essa memória ao alocador quando terminarmos
-nosso <code>String</code>.</li>
+<li>A memória precisa ser solicitada ao alocador em tempo de execução.</li>
+<li>Precisamos de uma forma de devolver essa memória ao alocador quando
+terminarmos de usar nossa <code>String</code>.</li>
 </ul>
-<p>Essa primeira parte é feita por nós: Quando chamamos <code>String::from</code>, sua implementação
-solicita a memória necessária. Isso é praticamente universal em programação
-línguas.</p>
-<p>No entanto, a segunda parte é diferente. Em idiomas com um coletor <em>garbage
-(GC)</em>, o GC monitora e limpa a memória que não está sendo usada
-mais, e não precisamos pensar sobre isso. Na maioria dos idiomas sem GC,
-é nossa responsabilidade identificar quando a memória não está mais sendo usada e
-chame o código para liberá-lo explicitamente, assim como fizemos para solicitá-lo. Fazendo isso
-corretamente tem sido historicamente um problema de programação difícil. Se esquecermos,
-vamos desperdiçar memória. Se fizermos isso muito cedo, teremos uma variável inválida. Se
-fazemos isso duas vezes, isso também é um bug. Precisamos emparelhar exatamente um <code>allocate</code> com
-exatamente um <code>free</code>.</p>
-<p>Rust segue um caminho diferente: a memória é retornada automaticamente assim que o
-variável que o possui sai do escopo. Aqui está uma versão do nosso exemplo de escopo
-da Listagem 4-1 usando um <code>String</code> em vez de uma string literal:</p>
+<p>Essa primeira parte é feita por nós: quando chamamos <code>String::from</code>, a
+implementação solicita a memória necessária. Isso é praticamente universal em
+linguagens de programação.</p>
+<p>No entanto, a segunda parte é diferente. Em linguagens com um <em>garbage
+collector (GC)</em>, o GC acompanha e limpa a memória que não está mais em uso, e
+não precisamos pensar nisso. Na maioria das linguagens sem GC, é nossa
+responsabilidade identificar quando a memória deixou de ser usada e chamar
+código para liberá-la explicitamente, assim como fizemos para solicitá-la.
+Fazer isso corretamente foi historicamente um problema difícil de programação.
+Se esquecermos, desperdiçaremos memória. Se fizermos isso cedo demais, teremos
+uma variável inválida. Se fizermos isso duas vezes, também é um bug.
+Precisamos emparelhar exatamente um <code>allocate</code> com exatamente um <code>free</code>.</p>
+<p>O Rust segue um caminho diferente: a memória é devolvida automaticamente assim
+que a variável que a possui sai de escopo. Esta é uma versão do nosso exemplo
+de escopo da Listagem 4-1 usando uma <code>String</code> em vez de uma string literal:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    {
         let s = String::from("hello"); // s is valid from this point forward
@@ -381,98 +383,99 @@ da Listagem 4-1 usando um <code>String</code> em vez de uma string literal:</p>
     }                                  // this scope is now over, and s is no
                                        // longer valid
 <span class="boring">}</span></code></pre>
-<p>Existe um ponto natural em que podemos devolver a memória que nosso <code>String</code> precisa
-para o alocador: quando <code>s</code> sai do escopo. Quando uma variável sai de
-escopo, Rust chama uma função especial para nós. Esta função é chamada
-<code>drop</code>, e é onde o autor de <code>String</code> pode colocar
-o código para retornar a memória. Rust chama <code>drop</code> automaticamente no fechamento
-colchete.</p>
+<p>Existe um ponto natural em que podemos devolver ao alocador a memória da qual
+nossa <code>String</code> precisa: quando <code>s</code> sai de escopo. Quando uma variável sai de
+escopo, o Rust chama uma função especial para nós. Essa função se chama
+<code>drop</code>, e é nela que o autor de <code>String</code> pode colocar o código que devolve a
+memória. O Rust chama <code>drop</code> automaticamente ao encontrar a chave de
+fechamento.</p>
 <blockquote>
-<p>Nota: Em C++, esse padrão de desalocação de recursos no final da lista de um item
-o tempo de vida às vezes é chamado de <em>Aquisição de recursos é inicialização (RAII)</em>.
-A função <code>drop</code> em Rust será familiar para você se você usou RAII
-padrões.</p>
+<p>Nota: em C++, esse padrão de desalocar recursos ao final da vida útil de um
+item às vezes é chamado de <em>Resource Acquisition Is Initialization (RAII)</em>.
+A função <code>drop</code> do Rust será familiar para você se já usou padrões RAII.</p>
 </blockquote>
-<p>Esse padrão tem um impacto profundo na forma como o código Rust é escrito. Pode parecer
-simples agora, mas o comportamento do código pode ser inesperado em mais
-situações complicadas quando queremos que múltiplas variáveis ​​usem os dados
-alocamos na pilha. Vamos explorar algumas dessas situações agora.</p>
+<p>Esse padrão tem um impacto profundo na forma como código Rust é escrito. Ele
+pode parecer simples agora, mas o comportamento do código pode ser inesperado
+em situações mais complicadas, quando queremos que múltiplas variáveis usem os
+dados que alocamos no heap. Vamos explorar algumas dessas situações agora.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ways-variables-and-data-interact-move"></a></p>
-<h4 id="variáveis-e-dados-interagindo-com-o-move"><a class="header" href="#variáveis-e-dados-interagindo-com-o-move">Variáveis ​​e dados interagindo com o Move</a></h4>
-<p>Múltiplas variáveis ​​podem interagir com os mesmos dados de maneiras diferentes no Rust.
-A Listagem 4-2 mostra um exemplo usando um número inteiro.</p>
+<h4 id="variáveis-e-dados-interagindo-com-move"><a class="header" href="#variáveis-e-dados-interagindo-com-move">Variáveis e Dados Interagindo com <code>move</code></a></h4>
+<p>Múltiplas variáveis podem interagir com os mesmos dados de maneiras diferentes
+no Rust. A Listagem 4-2 mostra um exemplo usando um inteiro.</p>
 <figure class="listing" id="listing-4-2">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 5;
     let y = x;
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-4-2">Listing 4-2</a>: Assigning the integer value of variable <code>x</code> to <code>y</code></figcaption>
+<figcaption><a href="#listing-4-2">Listing 4-2</a>: Atribuindo o valor inteiro da variável <code>x</code> a <code>y</code></figcaption>
 </figure>
-<p>Provavelmente podemos adivinhar o que isso está fazendo: “Ligue o valor <code>5</code> a <code>x</code>; então, faça
-uma cópia do valor em <code>x</code> e vincule-o a <code>y</code>.” Agora temos duas variáveis, <code>x</code>
-e <code>y</code>, e ambos iguais a <code>5</code>. Isto é realmente o que está acontecendo, porque inteiros
-são valores simples com um tamanho fixo e conhecido, e esses dois valores <code>5</code> são enviados
-na pilha.</p>
+<p>Provavelmente conseguimos adivinhar o que isso faz: “Associe o valor <code>5</code> a <code>x</code>;
+depois, faça uma cópia do valor em <code>x</code> e associe-a a <code>y</code>.” Agora temos duas
+variáveis, <code>x</code> e <code>y</code>, e ambas são iguais a <code>5</code>. É exatamente isso que está
+acontecendo, porque inteiros são valores simples com tamanho fixo e conhecido,
+e esses dois valores <code>5</code> são empilhados na pilha.</p>
 <p>Agora vamos dar uma olhada na versão <code>String</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("hello");
     let s2 = s1;
 <span class="boring">}</span></code></pre>
-<p>Isto parece muito semelhante, então podemos assumir que a forma como funciona seria a
-mesmo: Ou seja, a segunda linha faria uma cópia do valor em <code>s1</code> e vincularia
-para <code>s2</code>. Mas não é bem isso que acontece.</p>
-<p>Dê uma olhada na Figura 4-1 para ver o que está acontecendo com <code>String</code> sob o
-capas. Um <code>String</code> é composto de três partes, mostradas à esquerda: um ponteiro para
-a memória que contém o conteúdo da string, um comprimento e uma capacidade.
-Este grupo de dados é armazenado na pilha. À direita está a memória do
-heap que contém o conteúdo.</p>
-<p><img alt="Duas tabelas: a primeira tabela contém a representação de s1 no
-pilha, consistindo em seu comprimento (5), capacidade (5) e um ponteiro para o primeiro
-valor na segunda tabela. A segunda tabela contém a representação do
-dados de string no heap, byte por byte." src="img/trpl04-01.svg" class="center" estilo="largura: 50%;" /></p>
+<p>Isso parece muito semelhante, então podemos supor que funcione do mesmo jeito:
+isto é, que a segunda linha faria uma cópia do valor em <code>s1</code> e a associaria a
+<code>s2</code>. Mas não é bem isso que acontece.</p>
+<p>Dê uma olhada na Figura 4-1 para ver o que está acontecendo “por baixo dos
+panos” com <code>String</code>. Uma <code>String</code> é composta de três partes, mostradas à
+esquerda: um ponteiro para a memória que contém o conteúdo da string, um
+comprimento e uma capacidade. Esse conjunto de dados é armazenado na pilha. À
+direita está a memória no heap que contém o conteúdo.</p>
+<p><img alt="Duas tabelas: a primeira tabela contém a representação de s1 na
+pilha, consistindo em seu comprimento (5), capacidade (5) e um ponteiro para o
+primeiro valor da segunda tabela. A segunda tabela contém a representação dos
+dados de string no heap, byte a byte." src="img/trpl04-01.svg" class="center" style="width: 50%;" /></p>
 <p><span class="caption">Figura 4-1: A representação na memória de um <code>String</code>
 mantendo o valor <code>"hello"</code> vinculado a <code>s1</code></span></p>
-<p>O comprimento é a quantidade de memória, em bytes, que o conteúdo do <code>String</code> é
-atualmente usando. A capacidade é a quantidade total de memória, em bytes, que o
-<code>String</code> recebeu do alocador. A diferença entre comprimento e
-a capacidade é importante, mas não neste contexto, então, por enquanto, não há problema em ignorar o
-capacidade.</p>
-<p>Quando atribuímos <code>s1</code> a <code>s2</code>, os dados <code>String</code> são copiados, o que significa que copiamos o
-ponteiro, o comprimento e a capacidade que estão na pilha. Não copiamos o
-dados no heap ao qual o ponteiro se refere. Em outras palavras, os dados
-a representação na memória se parece com a Figura 4-2.</p>
-<p><img alt="Três tabelas: tabelas s1 e s2 representando essas strings no
-pilha, respectivamente, e ambos apontando para os mesmos dados de string no heap." src="img/trpl04-02.svg" class="center" style="largura: 50%;" /></p>
+<p>O comprimento é a quantidade de memória, em bytes, que o conteúdo de <code>String</code>
+está usando no momento. A capacidade é a quantidade total de memória, em
+bytes, que a <code>String</code> recebeu do alocador. A diferença entre comprimento e
+capacidade é importante, mas não neste contexto, então por enquanto podemos
+ignorar a capacidade.</p>
+<p>Quando atribuímos <code>s1</code> a <code>s2</code>, os dados de <code>String</code> são copiados, o que
+significa que copiamos o ponteiro, o comprimento e a capacidade que estão na
+pilha. Não copiamos os dados no heap para os quais o ponteiro aponta. Em
+outras palavras, a representação na memória fica como na Figura 4-2.</p>
+<p><img alt="Três tabelas: as tabelas s1 e s2 representam essas strings na
+pilha, respectivamente, e ambas apontam para os mesmos dados de string no
+heap." src="img/trpl04-02.svg" class="center" style="width: 50%;" /></p>
 <p><span class="caption">Figura 4-2: A representação na memória da variável
 <code>s2</code> que possui uma cópia do ponteiro, comprimento e capacidade de <code>s1</code></span></p>
-<p>A representação <em>não</em> se parece com a Figura 4-3, que é o que a memória
-parece que Rust também copiou os dados do heap. Se Rust fez isso, o
-operação <code>s2 = s1</code> poderia ser muito cara em termos de desempenho de tempo de execução se
-os dados na pilha eram grandes.</p>
-<p><img alt="Quatro tabelas: duas tabelas representando os dados da pilha para s1 e s2,
-e cada um aponta para sua própria cópia dos dados da string no heap." src="img/trpl04-03.svg" class="center" style="largura: 50%;" /></p>
-<p><span class="caption">Figura 4-3: Outra possibilidade para o que <code>s2 = s1</code> poderia
-faça se Rust copiou os dados do heap também</span></p>
-<p>Anteriormente, dissemos que quando uma variável sai do escopo, o Rust automaticamente
-chama a função <code>drop</code> e limpa a memória heap dessa variável. Mas
-A Figura 4-2 mostra ambos os ponteiros de dados apontando para o mesmo local. Este é um
-problema: quando <code>s2</code> e <code>s1</code> saem do escopo, ambos tentarão liberar o
-mesma memória. Isso é conhecido como erro <em>double free</em> e é um dos erros de memória
-bugs de segurança que mencionamos anteriormente. Liberar memória duas vezes pode levar à perda de memória
-corrupção, que pode potencialmente levar a vulnerabilidades de segurança.</p>
-<p>Para garantir a segurança da memória, após a linha <code>let s2 = s1;</code>, Rust considera <code>s1</code> como
-não é mais válido. Portanto, Rust não precisa liberar nada quando <code>s1</code> vai
-fora do escopo. Veja o que acontece quando você tenta usar <code>s1</code> depois que <code>s2</code> é
-criado; não vai funcionar:</p>
+<p>A representação <em>não</em> se parece com a Figura 4-3, que mostra como a memória
+ficaria se o Rust também copiasse os dados do heap. Se o Rust fizesse isso, a
+operação <code>s2 = s1</code> poderia ser muito cara em tempo de execução caso os dados no
+heap fossem grandes.</p>
+<p><img alt="Quatro tabelas: duas tabelas representam os dados da pilha para s1 e
+s2, e cada uma aponta para sua própria cópia dos dados da string no heap." src="img/trpl04-03.svg" class="center" style="width: 50%;" /></p>
+<p><span class="caption">Figura 4-3: Outra possibilidade para o que <code>s2 = s1</code>
+poderia fazer se o Rust também copiasse os dados do heap</span></p>
+<p>Anteriormente, dissemos que, quando uma variável sai de escopo, o Rust chama
+automaticamente a função <code>drop</code> e limpa a memória no heap daquela variável.
+Mas a Figura 4-2 mostra os dois ponteiros de dados apontando para o mesmo
+local. Isso é um problema: quando <code>s2</code> e <code>s1</code> saírem de escopo, ambas tentarão
+liberar a mesma memória. Isso é conhecido como erro de <em>double free</em> e é um
+dos bugs de segurança de memória que mencionamos antes. Liberar memória duas
+vezes pode levar à corrupção de memória, o que potencialmente abre espaço para
+vulnerabilidades de segurança.</p>
+<p>Para garantir a segurança de memória, depois da linha <code>let s2 = s1;</code>, o Rust
+considera <code>s1</code> como não mais válida. Portanto, o Rust não precisa liberar nada
+quando <code>s1</code> sair de escopo. Veja o que acontece quando você tenta usar <code>s1</code>
+depois que <code>s2</code> é criada; isso não funciona:</p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let s1 = String::from("hello");
     let s2 = s1;
 
     println!("{s1}, world!");
 <span class="boring">}</span></code></pre>
-<p>Você receberá um erro como este porque o Rust impede que você use o
-referência invalidada:</p>
+<p>Você receberá um erro como este porque o Rust impede que você use a referência
+invalidada:</p>
 <pre><code class="language-console">$ cargo run
    Compiling ownership v0.1.0 (file:///projects/ownership)
 error[E0382]: borrow of moved value: `s1`
@@ -506,43 +509,46 @@ pilha, respectivamente, e ambos apontando para os mesmos dados de string no heap
 A tabela s1 está esmaecida porque s1 não é mais válida; apenas s2 pode ser usado para
 acesse os dados do heap." src="img/trpl04-04.svg" class="center" style="width:
 50%;" /></p>
-<p><span class="caption">Figura 4-4: A representação na memória após <code>s1</code> foi
-foi invalidado</span></p>
-<p>Isso resolve nosso problema! Com apenas <code>s2</code> válido, quando sai do escopo
-sozinho irá liberar a memória e pronto.</p>
-<p>Além disso, há uma escolha de design que está implícita nisso: a ferrugem nunca
-crie automaticamente cópias “profundas” de seus dados. Portanto, qualquer <em>automático</em>
-a cópia pode ser considerada barata em termos de desempenho de tempo de execução.</p>
+<p><span class="caption">Figura 4-4: A representação na memória após <code>s1</code> ter
+sido invalidada</span></p>
+<p>Isso resolve nosso problema! Com apenas <code>s2</code> válida, quando ela sair de
+escopo, sozinha liberará a memória, e pronto.</p>
+<p>Além disso, há uma escolha de design implícita aqui: o Rust nunca cria
+automaticamente cópias “profundas” de seus dados. Portanto, qualquer cópia
+<em>automática</em> pode ser considerada barata em termos de desempenho em tempo de
+execução.</p>
 <h4 id="escopo-e-atribuição"><a class="header" href="#escopo-e-atribuição">Escopo e Atribuição</a></h4>
-<p>O inverso disso é verdadeiro para a relação entre escopo, propriedade e
-memória sendo liberada por meio da função <code>drop</code> também. Quando você atribui um valor completamente
-novo valor para uma variável existente, Rust chamará <code>drop</code> e liberará o original
-memória do valor imediatamente. Considere este código, por exemplo:</p>
+<p>O oposto também vale para a relação entre escopo, ownership e a liberação de
+memória por meio da função <code>drop</code>. Quando você atribui um valor totalmente novo
+a uma variável existente, o Rust chama <code>drop</code> e libera imediatamente a memória
+do valor original. Considere este código, por exemplo:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::from("hello");
     s = String::from("ahoy");
 
     println!("{s}, world!");
 <span class="boring">}</span></code></pre>
-<p>Inicialmente declaramos uma variável <code>s</code> e a vinculamos a <code>String</code> com o valor
-<code>"hello"</code>. Então, criamos imediatamente um novo <code>String</code> com o valor <code>"ahoy"</code>
-e atribua-o a <code>s</code>. Neste ponto, nada se refere ao valor original
-na pilha. A Figura 4-5 ilustra os dados da pilha e do heap agora:</p>
+<p>Inicialmente declaramos uma variável <code>s</code> e a associamos a uma <code>String</code> com o
+valor <code>"hello"</code>. Em seguida, criamos imediatamente uma nova <code>String</code> com o
+valor <code>"ahoy"</code> e a atribuímos a <code>s</code>. Nesse ponto, nada mais se refere ao valor
+original no heap. A Figura 4-5 ilustra os dados da pilha e do heap nesse
+momento:</p>
 <p><img alt="Uma tabela representando o valor da string na pilha, apontando para
-o segundo pedaço de dados de string (ahoy) no heap, com a string original
-dados (olá) esmaecidos porque não podem mais ser acessados." src="img/trpl04-05.svg" class="center" style="largura: 50%;" /></p>
-<p><span class="caption">Figura 4-5: A representação na memória após a inicial
-o valor foi substituído em sua totalidade</span></p>
-<p>A string original sai imediatamente do escopo. Rust executará o <code>drop</code>
-funcionará nele e sua memória será liberada imediatamente. Quando imprimimos o valor
-no final, será <code>"ahoy, world!"</code>.</p>
+o segundo bloco de dados de string (ahoy) no heap, com os dados originais
+(hello) esmaecidos porque não podem mais ser acessados." src="img/trpl04-05.svg" class="center" style="width: 50%;" /></p>
+<p><span class="caption">Figura 4-5: A representação na memória depois que o
+valor inicial foi completamente substituído</span></p>
+<p>A string original sai imediatamente de escopo. O Rust executará <code>drop</code> sobre
+ela, e sua memória será liberada imediatamente. Quando imprimirmos o valor no
+fim, ele será <code>"ahoy, world!"</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ways-variables-and-data-interact-clone"></a></p>
-<h4 id="variáveis-e-dados-interagindo-com-o-clone"><a class="header" href="#variáveis-e-dados-interagindo-com-o-clone">Variáveis ​​e dados interagindo com o clone</a></h4>
-<p>Se <em>queremos</em> copiar profundamente os dados heap de <code>String</code>, não apenas o
-empilhar dados, podemos usar um método comum chamado <code>clone</code>. Discutiremos o método
-sintaxe no Capítulo 5, mas como os métodos são um recurso comum em muitos
-linguagens de programação, você provavelmente já as viu antes.</p>
+<h4 id="variáveis-e-dados-interagindo-com-clone"><a class="header" href="#variáveis-e-dados-interagindo-com-clone">Variáveis e Dados Interagindo com <code>clone</code></a></h4>
+<p>Se <em>quisermos</em> copiar profundamente os dados no heap de uma <code>String</code>, e não
+apenas os dados na pilha, podemos usar um método comum chamado <code>clone</code>.
+Falaremos sobre a sintaxe de métodos no Capítulo 5, mas, como esse é um
+recurso comum em muitas linguagens de programação, é provável que você já os
+tenha visto antes.</p>
 <p>Aqui está um exemplo do método <code>clone</code> em ação:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("hello");
@@ -550,44 +556,44 @@ linguagens de programação, você provavelmente já as viu antes.</p>
 
     println!("s1 = {s1}, s2 = {s2}");
 <span class="boring">}</span></code></pre>
-<p>Isso funciona muito bem e produz explicitamente o comportamento mostrado na Figura 4-3,
-onde os dados heap <em>são</em> são copiados.</p>
+<p>Isso funciona muito bem e produz explicitamente o comportamento mostrado na
+Figura 4-3, em que os dados no heap <em>de fato</em> são copiados.</p>
 <p>Quando você vê uma chamada para <code>clone</code>, você sabe que algum código arbitrário está sendo
 executado e esse código pode ser caro. É um indicador visual de que algo
 diferente está acontecendo.</p>
-<h4 id="dados-somente-de-pilha-copiar"><a class="header" href="#dados-somente-de-pilha-copiar">Dados somente de pilha: copiar</a></h4>
-<p>Há outra ruga sobre a qual ainda não falamos. Este código usando
-inteiros – parte dos quais foi mostrado na Listagem 4-2 – funcionam e são válidos:</p>
+<h4 id="dados-somente-de-pilha-copy"><a class="header" href="#dados-somente-de-pilha-copy">Dados Somente de Pilha: <code>Copy</code></a></h4>
+<p>Há outro detalhe sobre o qual ainda não falamos. Este código usando inteiros,
+parte do qual foi mostrado na Listagem 4-2, funciona e é válido:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let x = 5;
     let y = x;
 
     println!("x = {x}, y = {y}");
 <span class="boring">}</span></code></pre>
-<p>Mas este código parece contradizer o que acabamos de aprender: não temos uma chamada para
-<code>clone</code>, mas <code>x</code> ainda é válido e não foi movido para <code>y</code>.</p>
-<p>A razão é que tipos como números inteiros que possuem um tamanho conhecido na compilação
-o tempo é armazenado inteiramente na pilha, portanto, as cópias dos valores reais são rápidas
-fazer. Isso significa que não há razão para querermos impedir que <code>x</code> seja
-válido depois de criarmos a variável <code>y</code>. Em outras palavras, não há diferença
-entre cópia profunda e superficial aqui, então ligar para <code>clone</code> não faria nada
-diferente da cópia superficial usual, e podemos deixá-la de fora.</p>
-<p>Rust tem uma anotação especial chamada <code>Copy</code> trait que podemos colocar
-tipos que são armazenados na pilha, como os inteiros (falaremos mais sobre
-características no <a href="ch10-02-traits.html">Capítulo 10</a><!-- ignore -->). Se um tipo implementa o <code>Copy</code>
-trait, as variáveis ​​que o utilizam não se movem, mas são copiadas trivialmente,
-tornando-os ainda válidos após a atribuição a outra variável.</p>
-<p>Rust não nos permitirá anotar um tipo com <code>Copy</code> se o tipo, ou qualquer uma de suas partes,
-implementou o traço <code>Drop</code>. Se o tipo precisa que algo especial aconteça
-quando o valor sai do escopo e adicionamos a anotação <code>Copy</code> a esse tipo,
-obteremos um erro em tempo de compilação. Para saber como adicionar a anotação <code>Copy</code>
-ao seu tipo para implementar a característica, consulte <a href="appendix-03-derivable-traits.html">“Derivable
-Características”</a><!-- ignore --> no Apêndice C.</p>
-<p>Então, quais tipos implementam a característica <code>Copy</code>? Você pode verificar a documentação para
-o tipo fornecido com certeza, mas como regra geral, qualquer grupo de escalares simples
-valores podem implementar <code>Copy</code>, e nada que exija alocação ou seja algum
-forma de recurso pode implementar <code>Copy</code>. Aqui estão alguns dos tipos que
-implementar <code>Copy</code>:</p>
+<p>Mas esse código parece contradizer o que acabamos de aprender: não temos uma
+chamada para <code>clone</code>, mas <code>x</code> ainda é válido e não foi movido para <code>y</code>.</p>
+<p>A razão é que tipos como números inteiros, que têm um tamanho conhecido em
+tempo de compilação, são armazenados inteiramente na pilha; por isso, copiar
+seus valores é rápido. Isso significa que não há motivo para impedir que <code>x</code>
+continue válido depois que criamos a variável <code>y</code>. Em outras palavras, aqui
+não há diferença entre cópia profunda e cópia superficial, então chamar
+<code>clone</code> não faria nada diferente da cópia superficial usual, e podemos omiti-lo.</p>
+<p>O Rust tem uma anotação especial chamada trait <code>Copy</code> que podemos usar em
+tipos armazenados na pilha, como os inteiros. Falaremos mais sobre traits no
+<a href="ch10-02-traits.html">Capítulo 10</a><!-- ignore -->. Se um tipo implementa a trait <code>Copy</code>,
+as variáveis que o usam não são movidas; em vez disso, são copiadas de forma
+simples, continuando válidas após a atribuição a outra variável.</p>
+<p>O Rust não nos permitirá anotar um tipo com <code>Copy</code> se esse tipo, ou qualquer
+uma de suas partes, implementar a trait <code>Drop</code>. Se o tipo precisar que algo
+especial aconteça quando o valor sair de escopo e adicionarmos a anotação
+<code>Copy</code> a esse tipo, receberemos um erro em tempo de compilação. Para saber
+como adicionar a anotação <code>Copy</code> ao seu tipo para implementar essa trait,
+consulte <a href="appendix-03-derivable-traits.html">“Derivable Traits”</a><!-- ignore --> no Apêndice C.</p>
+<p>Então, quais tipos implementam a trait <code>Copy</code>? Você pode verificar a
+documentação do tipo em questão para ter certeza, mas, como regra geral,
+qualquer grupo de valores escalares simples pode implementar <code>Copy</code>, e nada
+que exija alocação ou represente algum tipo de recurso pode implementar
+<code>Copy</code>. Estes são alguns dos tipos que implementam <code>Copy</code>:</p>
 <ul>
 <li>Todos os tipos inteiros, como <code>u32</code>.</li>
 <li>O tipo booleano, <code>bool</code>, com valores <code>true</code> e <code>false</code>.</li>
@@ -596,11 +602,11 @@ implementar <code>Copy</code>:</p>
 <li>Tuplas, se contiverem apenas tipos que também implementem <code>Copy</code>. Por exemplo,
 <code>(i32, i32)</code> implementa <code>Copy</code>, mas <code>(i32, String)</code> não.</li>
 </ul>
-<h3 id="propriedade-e-funções"><a class="header" href="#propriedade-e-funções">Propriedade e Funções</a></h3>
-<p>A mecânica de passar um valor para uma função é semelhante àquelas quando
-atribuir um valor a uma variável. Passar uma variável para uma função moverá ou
-copiar, assim como a atribuição faz. A Listagem 4-3 tem um exemplo com algumas anotações
-mostrando onde as variáveis ​​entram e saem do escopo.</p>
+<h3 id="ownership-e-funções"><a class="header" href="#ownership-e-funções">Ownership e Funções</a></h3>
+<p>A mecânica de passar um valor para uma função é semelhante à de atribuí-lo a
+uma variável. Passar uma variável para uma função move ou copia esse valor,
+assim como acontece em uma atribuição. A Listagem 4-3 traz um exemplo com
+algumas anotações mostrando onde as variáveis entram e saem de escopo.</p>
 <figure class="listing" id="listing-4-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -626,16 +632,16 @@ fn takes_ownership(some_string: String) { // some_string comes into scope
 fn makes_copy(some_integer: i32) { // some_integer comes into scope
     println!("{some_integer}");
 } // Here, some_integer goes out of scope. Nothing special happens.</code></pre>
-<figcaption><a href="#listing-4-3">Listing 4-3</a>: Functions with ownership and scope annotated</figcaption>
+<figcaption><a href="#listing-4-3">Listing 4-3</a>: Funções com ownership e escopo anotados</figcaption>
 </figure>
 <p>Se tentássemos usar <code>s</code> após a chamada para <code>takes_ownership</code>, Rust lançaria um
 erro em tempo de compilação. Essas verificações estáticas nos protegem de erros. Tente adicionar
 código para <code>main</code> que usa <code>s</code> e <code>x</code> para ver onde você pode usá-los e onde
-as regras de propriedade impedem que você faça isso.</p>
+as regras de ownership impedem que você faça isso.</p>
 <h3 id="valores-de-retorno-e-escopo"><a class="header" href="#valores-de-retorno-e-escopo">Valores de retorno e escopo</a></h3>
-<p>A devolução de valores também pode transferir a propriedade. A Listagem 4-4 mostra um exemplo de
-função que retorna algum valor, com anotações semelhantes às da Listagem
-4-3.</p>
+<p>A devolução de valores também pode transferir ownership. A Listagem 4-4 mostra
+um exemplo de função que retorna algum valor, com anotações semelhantes às da
+Listagem 4-3.</p>
 <figure class="listing" id="listing-4-4">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -668,18 +674,19 @@ fn takes_and_gives_back(a_string: String) -&gt; String {
 
     a_string  // a_string is returned and moves out to the calling function
 }</code></pre>
-<figcaption><a href="#listing-4-4">Listing 4-4</a>: Transferring ownership of return values</figcaption>
+<figcaption><a href="#listing-4-4">Listing 4-4</a>: Transferindo ownership de valores de retorno</figcaption>
 </figure>
-<p>A propriedade de uma variável sempre segue o mesmo padrão: Atribuir um
-valor para outra variável o move. Quando uma variável que inclui dados sobre o
-heap sai do escopo, o valor será limpo por <code>drop</code>, a menos que a propriedade
-dos dados foi movido para outra variável.</p>
-<p>Embora isso funcione, assumir a propriedade e depois devolvê-la a cada
-função é um pouco tediosa. E se quisermos deixar uma função usar um valor, mas
-não assumir a propriedade? É muito chato que tudo o que passamos também precise
+<p>O ownership de uma variável sempre segue o mesmo padrão: atribuir um valor a
+outra variável o move. Quando uma variável que inclui dados no heap sai de
+escopo, o valor é limpo por <code>drop</code>, a menos que o ownership desses dados tenha
+sido movido para outra variável.</p>
+<p>Embora isso funcione, assumir ownership e depois devolvê-lo a cada função é um
+pouco tedioso. E se quisermos deixar uma função usar um valor, mas não assumir
+ownership? É muito chato que tudo o que passamos também precise
 ser repassado se quisermos usá-lo novamente, além de quaisquer dados resultantes
 do corpo da função que também podemos querer retornar.</p>
-<p>Rust nos permite retornar vários valores usando uma tupla, conforme mostrado na Listagem 4.5.</p>
+<p>O Rust nos permite retornar vários valores usando uma tupla, como mostrado na
+Listagem 4-5.</p>
 <figure class="listing" id="listing-4-5">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -695,11 +702,11 @@ fn calculate_length(s: String) -&gt; (String, usize) {
 
     (s, length)
 }</code></pre>
-<figcaption><a href="#listing-4-5">Listing 4-5</a>: Returning ownership of parameters</figcaption>
+<figcaption><a href="#listing-4-5">Listing 4-5</a>: Retornando ownership de parâmetros</figcaption>
 </figure>
-<p>Mas isso é muita cerimônia e muito trabalho para um conceito que deveria ser
-comum. Felizmente para nós, Rust tem um recurso para usar um valor sem
-transferência de propriedade: referências.</p>
+<p>Mas isso é muita cerimônia e trabalho para um conceito que deveria ser comum.
+Felizmente, o Rust tem um recurso para usar um valor sem transferir ownership:
+referências.</p>
 
                     </main>
 
