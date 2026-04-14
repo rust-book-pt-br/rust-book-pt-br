@@ -1,4 +1,6 @@
 book/
+book-pt-br/
+
 *~
 .idea
 .DS_Store
