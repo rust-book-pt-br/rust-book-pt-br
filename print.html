@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-5bb5b6f2.js";
+            window.path_to_searchindex_js = "searchindex-1028195e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -4699,18 +4699,19 @@ extra para obter esse controle.</p>
 falar mais sobre esses conceitos ao longo do restante do livro. Vamos agora
 para o Capítulo 5 e ver como agrupar pedaços de dados em uma <code>struct</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="usando-estruturas-para-estruturar-dados-relacionados"><a class="header" href="#usando-estruturas-para-estruturar-dados-relacionados">Usando estruturas para estruturar dados relacionados</a></h1>
-<p>Uma <em>struct</em>, ou <em>estrutura</em>, é um tipo de dados personalizado que permite empacotar
-juntos e nomear vários valores relacionados que constituem um grupo significativo. Se
-você está familiarizado com uma linguagem orientada a objetos, uma estrutura é como um objeto
-atributos de dados. Neste capítulo, compararemos e contrastaremos tuplas com
-structs para desenvolver o que você já sabe e demonstrar quando structs são um
-melhor maneira de agrupar dados.</p>
-<p>Demonstraremos como definir e instanciar estruturas. Discutiremos como
-definir funções associadas, especialmente o tipo de funções associadas chamadas
-<em>methods</em>, para especificar o comportamento associado a um tipo de estrutura. Estruturas e enums
-(discutido no Capítulo 6) são os blocos de construção para a criação de novos tipos em seu
-domínio do programa para aproveitar ao máximo a verificação de tipo em tempo de compilação do Rust.</p>
+<h1 id="usando-structs-para-agrupar-dados-relacionados"><a class="header" href="#usando-structs-para-agrupar-dados-relacionados">Usando structs para agrupar dados relacionados</a></h1>
+<p>Uma <em>struct</em>, ou <em>estrutura</em>, é um tipo de dado personalizado que permite
+agrupar e nomear vários valores relacionados que, juntos, formam um conjunto
+com significado. Se você tem familiaridade com uma linguagem orientada a
+objetos, uma struct se parece com os atributos de dados de um objeto. Neste
+capítulo, vamos comparar tuplas e structs para expandir o que você já sabe e
+mostrar em que situações structs são a melhor forma de agrupar dados.</p>
+<p>Vamos ver como definir e instanciar structs. Também discutiremos como definir
+funções associadas, especialmente o tipo de função associada chamado
+<em>method</em>, para especificar comportamentos ligados a um tipo de struct. Structs
+e enums, que serão discutidos no Capítulo 6, são os blocos fundamentais para
+criar novos tipos no domínio do seu programa e aproveitar ao máximo a
+verificação de tipos em tempo de compilação que Rust oferece.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="definindo-e-instanciando-structs-1"><a href="#definindo-e-instanciando-structs-1" class="header">Definindo e Instanciando Structs</a></h1>
 <h2 id="definindo-e-instanciando-structs"><a class="header" href="#definindo-e-instanciando-structs">Definindo e Instanciando Structs</a></h2>
