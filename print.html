@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1028195e.js";
+            window.path_to_searchindex_js = "searchindex-a3947041.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -6154,23 +6154,22 @@ pode usar os dados contidos no valor correspondente.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="the-match-control-flow-operator"></a></p>
 <h2 id="a-construção-de-fluxo-de-controle-match"><a class="header" href="#a-construção-de-fluxo-de-controle-match">A construção de fluxo de controle <code>match</code></a></h2>
-<p>Rust tem uma construção de fluxo de controle extremamente poderosa chamada <code>match</code> que
-permite comparar um valor com uma série de padrões e depois executar
-código com base em qual padrão corresponde. Os padrões podem ser compostos de valores literais,
-nomes de variáveis, curingas e muitas outras coisas; <a href="#padrões-e-correspondência">Capítulo
-19</a><!-- ignore --> abrange todos os diferentes tipos de padrões
-e o que eles fazem. O poder de <code>match</code> vem da expressividade do
-padrões e o fato de que o compilador confirma que todos os casos possíveis são
-manipulado.</p>
-<p>Pense em uma expressão <code>match</code> como uma máquina de classificação de moedas: Slide de moedas
-por uma trilha com buracos de tamanhos variados ao longo dela, e cada moeda cai
-o primeiro buraco que encontra e onde se encaixa. Da mesma forma, os valores vão
-através de cada padrão em <code>match</code>, e no primeiro padrão o valor “se ajusta”,
-o valor cai no bloco de código associado a ser usado durante a execução.</p>
-<p>Falando em moedas, vamos usá-las como exemplo usando <code>match</code>! Podemos escrever um
-função que pega uma moeda americana desconhecida e, de forma semelhante à contagem
-máquina, determina qual moeda é e retorna seu valor em centavos, conforme mostrado
-na Listagem 6-3.</p>
+<p>Rust tem uma construção de fluxo de controle extremamente poderosa chamada
+<code>match</code>, que permite comparar um valor com uma série de padrões e então
+executar código com base em qual padrão corresponde. Padrões podem ser formados
+por valores literais, nomes de variáveis, curingas e muitas outras coisas; o
+<a href="#padrões-e-correspondência">Capítulo 19</a><!-- ignore --> aborda todos os tipos de padrões
+e o que eles fazem. O poder de <code>match</code> vem da expressividade desses padrões e
+do fato de o compilador confirmar que todos os casos possíveis foram tratados.</p>
+<p>Pense em uma expressão <code>match</code> como uma máquina de classificar moedas: as
+moedas deslizam por uma trilha com buracos de tamanhos variados, e cada moeda
+cai no primeiro buraco em que ela cabe. Da mesma forma, valores passam por cada
+padrão de um <code>match</code>, e, no primeiro padrão em que o valor “se encaixa”, ele
+cai no bloco de código associado para ser usado durante a execução.</p>
+<p>Já que falamos em moedas, vamos usá-las como exemplo com <code>match</code>! Podemos
+escrever uma função que recebe uma moeda americana desconhecida e, de forma
+parecida com uma máquina de contagem, determina qual moeda é e retorna seu
+valor em centavos, como mostra a Listagem 6-3.</p>
 <figure class="listing" id="listing-6-3">
 <pre class="playground"><code class="language-rust edition2024">enum Coin {
     Penny,
@@ -6189,32 +6188,34 @@ fn value_in_cents(coin: Coin) -&gt; u8 {
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre>
-<figcaption><a href="#listing-6-3">Listing 6-3</a>: An enum and a <code>match</code> expression that has the variants of the enum as its patterns</figcaption>
+<figcaption><a href="#listing-6-3">Listing 6-3</a>: Um enum e uma expressão <code>match</code> que usa as variantes desse enum como padrões</figcaption>
 </figure>
-<p>Vamos dividir <code>match</code> na função <code>value_in_cents</code>. Primeiro, listamos
-a palavra-chave <code>match</code> seguida por uma expressão, que neste caso é o valor
-<code>coin</code>. Isso parece muito semelhante a uma expressão condicional usada com <code>if</code>, mas
-há uma grande diferença: com <code>if</code>, a condição precisa ser avaliada como
-Valor booleano, mas aqui pode ser de qualquer tipo. O tipo de <code>coin</code> neste exemplo
-é o <code>Coin</code> enum que definimos na primeira linha.</p>
-<p>Em seguida estão os braços <code>match</code>. Um braço tem duas partes: um padrão e algum código. O
-o primeiro braço aqui tem um padrão que é o valor <code>Coin::Penny</code> e depois o <code>=&gt;</code>
-operador que separa o padrão e o código a ser executado. O código neste caso
-é apenas o valor <code>1</code>. Cada braço é separado do próximo por uma vírgula.</p>
-<p>Quando a expressão <code>match</code> é executada, ela compara o valor resultante com
-o padrão de cada braço, em ordem. Se um padrão corresponder ao valor, o código
-associado a esse padrão é executado. Se esse padrão não corresponder ao
-valor, a execução continua para o braço seguinte, tal como numa máquina de classificação de moedas.
-Podemos ter quantos braços precisarmos: Na Listagem 6-3, nosso <code>match</code> tem quatro braços.</p>
-<p>O código associado a cada braço é uma expressão e o valor resultante de
-a expressão no braço correspondente é o valor retornado para o
-expressão <code>match</code> inteira.</p>
-<p>Normalmente não usamos chaves se o código do braço de correspondência for curto, pois é
-na Listagem 6-3, onde cada braço retorna apenas um valor. Se você quiser executar vários
-linhas de código em um braço de correspondência, você deve usar colchetes e a vírgula
-seguir o braço é então opcional. Por exemplo, o código a seguir imprime
-“Um centavo da sorte!” toda vez que o método é chamado com <code>Coin::Penny</code>, mas
-ainda retorna o último valor do bloco, <code>1</code>:</p>
+<p>Vamos destrinchar o <code>match</code> da função <code>value_in_cents</code>. Primeiro, temos a
+palavra-chave <code>match</code>, seguida por uma expressão, que neste caso é o valor
+<code>coin</code>. Isso parece bastante com uma expressão condicional usada com <code>if</code>, mas
+há uma grande diferença: com <code>if</code>, a condição precisa ser avaliada para um
+valor booleano; aqui, ela pode ser de qualquer tipo. O tipo de <code>coin</code>, neste
+exemplo, é o enum <code>Coin</code> que definimos na primeira linha.</p>
+<p>Depois vêm os braços do <code>match</code>. Um braço tem duas partes: um padrão e algum
+código. O primeiro braço aqui tem como padrão o valor <code>Coin::Penny</code> e, em
+seguida, o operador <code>=&gt;</code>, que separa o padrão do código a ser executado. O
+código, neste caso, é apenas o valor <code>1</code>. Cada braço é separado do seguinte
+por uma vírgula.</p>
+<p>Quando a expressão <code>match</code> é executada, ela compara o valor resultante com o
+padrão de cada braço, em ordem. Se um padrão corresponder ao valor, o código
+associado a esse padrão é executado. Se esse padrão não corresponder, a
+execução continua para o próximo braço, como numa máquina de classificar
+moedas. Podemos ter quantos braços precisarmos: na Listagem 6-3, nosso <code>match</code>
+tem quatro braços.</p>
+<p>O código associado a cada braço é uma expressão, e o valor resultante da
+expressão no braço correspondente é o valor retornado pela expressão <code>match</code>
+inteira.</p>
+<p>Normalmente não usamos chaves quando o código do braço é curto, como na
+Listagem 6-3, em que cada braço apenas retorna um valor. Se você quiser
+executar várias linhas de código em um braço de <code>match</code>, deve usar chaves, e a
+vírgula após esse braço passa então a ser opcional. Por exemplo, o código a
+seguir imprime “Lucky penny!” toda vez que o método é chamado com
+<code>Coin::Penny</code>, mas ainda retorna o último valor do bloco, <code>1</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">enum Coin {
 </span><span class="boring">    Penny,
 </span><span class="boring">    Nickel,
@@ -6235,16 +6236,17 @@ ainda retorna o último valor do bloco, <code>1</code>:</p>
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre>
-<h3 id="padrões-que-se-vinculam-a-valores"><a class="header" href="#padrões-que-se-vinculam-a-valores">Padrões que se vinculam a valores</a></h3>
-<p>Outra característica útil dos braços de fósforo é que eles podem se ligar às partes do
-valores que correspondem ao padrão. É assim que podemos extrair valores de enum
-variantes.</p>
-<p>Como exemplo, vamos alterar uma de nossas variantes de enum para armazenar dados dentro dela.
-De 1999 a 2008, os Estados Unidos cunharam moedas com diferentes
-projetos para cada um dos 50 estados de um lado. Nenhuma outra moeda obteve estado
-designs, portanto, apenas os quartos têm esse valor extra. Podemos adicionar essas informações
-nosso <code>enum</code> alterando a variante <code>Quarter</code> para incluir um valor <code>UsState</code>
-armazenado dentro dele, o que fizemos na Listagem 6-4.</p>
+<h3 id="padrões-que-se-ligam-a-valores"><a class="header" href="#padrões-que-se-ligam-a-valores">Padrões que se ligam a valores</a></h3>
+<p>Outro recurso útil dos braços de <code>match</code> é que eles podem se ligar às partes
+dos valores que correspondem ao padrão. É assim que podemos extrair valores de
+variantes de enum.</p>
+<p>Como exemplo, vamos alterar uma das variantes do nosso enum para armazenar
+dados dentro dela. De 1999 a 2008, os Estados Unidos cunharam moedas de 25
+centavos com desenhos diferentes para cada um dos 50 estados em um dos lados.
+Nenhuma outra moeda recebeu desenhos de estados, então apenas os quarters têm
+esse valor extra. Podemos adicionar essa informação ao nosso <code>enum</code> alterando a
+variante <code>Quarter</code> para incluir um valor <code>UsState</code> armazenado dentro dela, como
+fizemos na Listagem 6-4.</p>
 <figure class="listing" id="listing-6-4">
 <pre class="playground"><code class="language-rust edition2024">#[derive(Debug)] // so we can inspect the state in a minute
 enum UsState {
@@ -6261,16 +6263,16 @@ enum Coin {
 }
 <span class="boring">
 </span><span class="boring">fn main() {}</span></code></pre>
-<figcaption><a href="#listing-6-4">Listing 6-4</a>: A <code>Coin</code> enum in which the <code>Quarter</code> variant also holds a <code>UsState</code> value</figcaption>
+<figcaption><a href="#listing-6-4">Listing 6-4</a>: Um enum <code>Coin</code> em que a variante <code>Quarter</code> também armazena um valor <code>UsState</code></figcaption>
 </figure>
-<p>Vamos imaginar que um amigo esteja tentando coletar todos os 50 bairros estaduais. Enquanto
-classificarmos nossos trocos por tipo de moeda, também chamaremos o nome do
-estado associado a cada trimestre para que, se for um que nosso amigo não tenha,
-eles podem adicioná-lo à sua coleção.</p>
-<p>Na expressão de correspondência deste código, adicionamos uma variável chamada <code>state</code> ao
-padrão que corresponde aos valores da variante <code>Coin::Quarter</code>. Quando um
-<code>Coin::Quarter</code> corresponde, a variável <code>state</code> será vinculada ao valor desse
-estado do trimestre. Então, podemos usar <code>state</code> no código desse braço, assim:</p>
+<p>Vamos imaginar que um amigo esteja tentando colecionar todos os 50 quarters de
+estados. Enquanto classificamos nosso troco por tipo de moeda, também diremos o
+nome do estado associado a cada quarter para que, se for um que nosso amigo não
+tenha, ele possa adicioná-lo à coleção.</p>
+<p>Na expressão <code>match</code> deste código, adicionamos uma variável chamada <code>state</code> ao
+padrão que corresponde a valores da variante <code>Coin::Quarter</code>. Quando um
+<code>Coin::Quarter</code> corresponder, a variável <code>state</code> será ligada ao valor do estado
+daquele quarter. Depois, podemos usar <code>state</code> no código desse braço, assim:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)]
 </span><span class="boring">enum UsState {
 </span><span class="boring">    Alabama,
@@ -6300,25 +6302,23 @@ estado do trimestre. Então, podemos usar <code>state</code> no código desse br
 </span><span class="boring">fn main() {
 </span><span class="boring">    value_in_cents(Coin::Quarter(UsState::Alaska));
 </span><span class="boring">}</span></code></pre>
-<p>Se ligássemos para <code>value_in_cents(Coin::Quarter(UsState::Alaska))</code>, <code>coin</code>
-seria <code>Coin::Quarter(UsState::Alaska)</code>. Quando comparamos esse valor com cada
-dos braços do jogo, nenhum deles combina até chegarmos a <code>Coin::Quarter(state)</code>. No
-nesse ponto, a ligação para <code>state</code> será o valor <code>UsState::Alaska</code>. Pudermos
-então use essa ligação na expressão <code>println!</code>, obtendo assim o interior
-valor de estado da variante enum <code>Coin</code> para <code>Quarter</code>.</p>
+<p>Se chamássemos <code>value_in_cents(Coin::Quarter(UsState::Alaska))</code>, <code>coin</code> seria
+<code>Coin::Quarter(UsState::Alaska)</code>. Quando comparamos esse valor com cada um dos
+braços do <code>match</code>, nenhum deles corresponde até chegarmos a
+<code>Coin::Quarter(state)</code>. Nesse ponto, a ligação <code>state</code> terá o valor
+<code>UsState::Alaska</code>. Podemos então usar essa ligação na expressão <code>println!</code>,
+obtendo assim o valor interno do estado da variante <code>Coin::Quarter</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="matching-with-optiont"></a></p>
-<h3 id="o-padrão-optiont-match"><a class="header" href="#o-padrão-optiont-match">O padrão <code>Option&lt;T&gt;</code> <code>match</code></a></h3>
-<p>Na seção anterior, queríamos obter o valor interno <code>T</code> de <code>Some</code>
-caso ao usar <code>Option&lt;T&gt;</code>; também podemos lidar com <code>Option&lt;T&gt;</code> usando <code>match</code>, como
-fizemos com o <code>Coin</code> enum! Em vez de comparar moedas, compararemos o
-variantes de <code>Option&lt;T&gt;</code>, mas a forma como a expressão <code>match</code> funciona continua sendo a
-mesmo.</p>
-<p>Digamos que queremos escrever uma função que receba <code>Option&lt;i32&gt;</code> e, se
-há um valor dentro, adiciona 1 a esse valor. Se não houver um valor dentro,
-a função deve retornar o valor <code>None</code> e não tentar realizar qualquer
-operações.</p>
-<p>Esta função é muito fácil de escrever, graças a <code>match</code>, e será semelhante a
+<h3 id="o-padrão-match-com-optiont"><a class="header" href="#o-padrão-match-com-optiont">O padrão <code>match</code> com <code>Option&lt;T&gt;</code></a></h3>
+<p>Na seção anterior, queríamos obter o valor interno <code>T</code> do caso <code>Some</code> ao usar
+<code>Option&lt;T&gt;</code>; também podemos tratar <code>Option&lt;T&gt;</code> com <code>match</code>, assim como fizemos
+com o enum <code>Coin</code>! Em vez de comparar moedas, vamos comparar as variantes de
+<code>Option&lt;T&gt;</code>, mas a forma como a expressão <code>match</code> funciona continua a mesma.</p>
+<p>Digamos que queremos escrever uma função que recebe um <code>Option&lt;i32&gt;</code> e, se
+houver um valor dentro, soma 1 a esse valor. Se não houver valor algum, a
+função deve retornar <code>None</code> e não tentar executar operação nenhuma.</p>
+<p>Essa função é muito fácil de escrever graças a <code>match</code>, e ficará como a
 Listagem 6-5.</p>
 <figure class="listing" id="listing-6-5">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
@@ -6333,11 +6333,11 @@ Listagem 6-5.</p>
     let six = plus_one(five);
     let none = plus_one(None);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-6-5">Listing 6-5</a>: A function that uses a <code>match</code> expression on an <code>Option&lt;i32&gt;</code></figcaption>
+<figcaption><a href="#listing-6-5">Listing 6-5</a>: Uma função que usa uma expressão <code>match</code> sobre um <code>Option&lt;i32&gt;</code></figcaption>
 </figure>
-<p>Vamos examinar a primeira execução de <code>plus_one</code> com mais detalhes. Quando ligamos
-<code>plus_one(five)</code>, a variável <code>x</code> no corpo de <code>plus_one</code> terá o
-valor <code>Some(5)</code>. Em seguida, comparamos isso com cada braço da partida:</p>
+<p>Vamos examinar a primeira execução de <code>plus_one</code> com mais detalhes. Quando
+chamamos <code>plus_one(five)</code>, a variável <code>x</code> no corpo de <code>plus_one</code> terá o valor
+<code>Some(5)</code>. Em seguida, comparamos isso com cada braço do <code>match</code>:</p>
 <pre><code class="language-rust ignore"><span class="boring">fn main() {
 </span><span class="boring">    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
 </span><span class="boring">        match x {
@@ -6350,7 +6350,7 @@ valor <code>Some(5)</code>. Em seguida, comparamos isso com cada braço da parti
 </span><span class="boring">    let six = plus_one(five);
 </span><span class="boring">    let none = plus_one(None);
 </span><span class="boring">}</span></code></pre>
-<p>O valor <code>Some(5)</code> não corresponde ao padrão <code>None</code>, então continuamos para o
+<p>O valor <code>Some(5)</code> não corresponde ao padrão <code>None</code>, então seguimos para o
 próximo braço:</p>
 <pre><code class="language-rust ignore"><span class="boring">fn main() {
 </span><span class="boring">    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
@@ -6364,12 +6364,12 @@ próximo braço:</p>
 </span><span class="boring">    let six = plus_one(five);
 </span><span class="boring">    let none = plus_one(None);
 </span><span class="boring">}</span></code></pre>
-<p><code>Some(5)</code> corresponde a <code>Some(i)</code>? É verdade! Temos a mesma variante. O <code>i</code>
-se liga ao valor contido em <code>Some</code>, então <code>i</code> assume o valor <code>5</code>. O código em
-o braço de correspondência é então executado, então adicionamos 1 ao valor de <code>i</code> e criamos um
-novo valor <code>Some</code> com nosso total <code>6</code> dentro.</p>
-<p>Agora vamos considerar a segunda chamada de <code>plus_one</code> na Listagem 6-5, onde <code>x</code> é
-<code>None</code>. Entramos no <code>match</code> e comparamos com o primeiro braço:</p>
+<p><code>Some(5)</code> corresponde a <code>Some(i)</code>? Sim! Temos a mesma variante. O <code>i</code> se liga
+ao valor contido em <code>Some</code>, então <code>i</code> recebe o valor <code>5</code>. O código daquele
+braço do <code>match</code> é então executado, somamos 1 ao valor de <code>i</code> e criamos um
+novo valor <code>Some</code> com o total <code>6</code> dentro.</p>
+<p>Agora vamos considerar a segunda chamada de <code>plus_one</code> na Listagem 6-5, em que
+<code>x</code> é <code>None</code>. Entramos no <code>match</code> e comparamos com o primeiro braço:</p>
 <pre><code class="language-rust ignore"><span class="boring">fn main() {
 </span><span class="boring">    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
 </span><span class="boring">        match x {
@@ -6382,18 +6382,18 @@ novo valor <code>Some</code> com nosso total <code>6</code> dentro.</p>
 </span><span class="boring">    let six = plus_one(five);
 </span><span class="boring">    let none = plus_one(None);
 </span><span class="boring">}</span></code></pre>
-<p>Combina! Não há valor a ser adicionado, então o programa para e retorna o
-<code>None</code> valor no lado direito de <code>=&gt;</code>. Como o primeiro braço combinou, nenhum outro
-braços são comparados.</p>
-<p>Combinar <code>match</code> e enums é útil em muitas situações. Você verá isso
-padrão muito no código Rust: <code>match</code> contra um enum, vincule uma variável ao
-dados dentro e, em seguida, execute o código com base nele. É um pouco complicado no começo, mas
-depois de se acostumar, você desejará tê-lo em todos os idiomas. Isso é
-consistentemente um favorito do usuário.</p>
-<h3 id="as-partidas-são-exaustivas"><a class="header" href="#as-partidas-são-exaustivas">As partidas são exaustivas</a></h3>
-<p>Há outro aspecto de <code>match</code> que precisamos discutir: os padrões dos braços devem
-cobrir todas as possibilidades. Considere esta versão da nossa função <code>plus_one</code>,
-que tem um bug e não compila:</p>
+<p>Ele corresponde! Não há valor a ser somado, então o programa para e retorna o
+valor <code>None</code> que está do lado direito de <code>=&gt;</code>. Como o primeiro braço
+correspondeu, nenhum outro braço é comparado.</p>
+<p>Combinar <code>match</code> e enums é útil em muitas situações. Você verá bastante esse
+padrão em código Rust: fazer <code>match</code> sobre um enum, ligar uma variável aos
+dados internos e então executar código com base nisso. No começo ele parece um
+pouco complicado, mas, depois que você se acostuma, acaba desejando ter isso em
+todas as linguagens. É consistentemente um dos recursos favoritos dos usuários.</p>
+<h3 id="matches-são-exaustivos"><a class="header" href="#matches-são-exaustivos">Matches são exaustivos</a></h3>
+<p>Há outro aspecto de <code>match</code> que precisamos discutir: os padrões dos braços
+devem cobrir todas as possibilidades. Considere esta versão da nossa função
+<code>plus_one</code>, que tem um bug e não compila:</p>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    fn plus_one(x: Option&lt;i32&gt;) -&gt; Option&lt;i32&gt; {
         match x {
@@ -6405,9 +6405,9 @@ que tem um bug e não compila:</p>
 </span><span class="boring">    let six = plus_one(five);
 </span><span class="boring">    let none = plus_one(None);
 </span><span class="boring">}</span></code></pre>
-<p>Não cuidamos do caso <code>None</code>, então esse código causará um bug. Felizmente, é
-um bug que Rust sabe como capturar. Se tentarmos compilar este código, obteremos isso
-erro:</p>
+<p>Não tratamos o caso <code>None</code>, então esse código causará um bug. Felizmente, esse
+é um bug que Rust sabe capturar. Se tentarmos compilar esse código, obteremos
+este erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling enums v0.1.0 (file:///projects/enums)
 error[E0004]: non-exhaustive patterns: `None` not covered
@@ -6431,22 +6431,23 @@ help: ensure that all possible cases are being handled by adding a match arm wit
 For more information about this error, try `rustc --explain E0004`.
 error: could not compile `enums` (bin "enums") due to 1 previous error
 </code></pre>
-<p>Rust sabe que não cobrimos todos os casos possíveis e até sabe quais
-padrão que esquecemos! As partidas em Rust são <em>exaustivas</em>: devemos esgotar até o último
+<p>Rust sabe que não cobrimos todos os casos possíveis e até sabe qual padrão foi
+esquecido! Matches em Rust são <em>exaustivos</em>: precisamos cobrir até a última
 possibilidade para que o código seja válido. Especialmente no caso de
-<code>Option&lt;T&gt;</code>, quando Rust nos impede de esquecer de lidar explicitamente com o
-<code>None</code> caso, isso nos protege de assumir que temos um valor quando poderíamos
-têm nulo, tornando impossível o erro de um bilhão de dólares discutido anteriormente.</p>
-<h3 id="padrões-pega-tudo-e-o-espaço-reservado-_"><a class="header" href="#padrões-pega-tudo-e-o-espaço-reservado-_">Padrões pega-tudo e o espaço reservado <code>_</code></a></h3>
-<p>Usando enums, também podemos realizar ações especiais para alguns valores específicos, mas
-para todos os outros valores, execute uma ação padrão. Imagine que estamos implementando um jogo
-onde, se você lançar um 3 em um lançamento de dados, seu jogador não se move, mas em vez disso
-ganha um chapéu novo e chique. Se você tirar um 7, seu jogador perde um chapéu chique. Para todos
-outros valores, seu jogador move esse número de espaços no tabuleiro de jogo. Aqui está
-um <code>match</code> que implementa essa lógica, com o resultado do lançamento dos dados
-codificado em vez de um valor aleatório, e todas as outras lógicas representadas por
-funcionam sem órgãos porque a sua implementação efectiva está fora do alcance
-este exemplo:</p>
+<code>Option&lt;T&gt;</code>, quando Rust nos impede de esquecer de tratar explicitamente o caso
+<code>None</code>, ela nos protege de assumir que temos um valor quando na verdade
+poderíamos ter <code>null</code>, tornando impossível o erro de um bilhão de dólares
+discutido antes.</p>
+<h3 id="padrões-pega-tudo-e-o-marcador-_"><a class="header" href="#padrões-pega-tudo-e-o-marcador-_">Padrões pega-tudo e o marcador <code>_</code></a></h3>
+<p>Usando enums, também podemos realizar ações especiais para alguns valores
+específicos e, para todos os outros, executar uma ação padrão. Imagine que
+estamos implementando um jogo em que, se você tirar 3 em uma rolagem de dado,
+seu personagem não se move, mas ganha um chapéu novo e elegante. Se você tirar
+7, seu personagem perde um chapéu elegante. Para todos os outros valores, seu
+personagem anda aquele número de casas no tabuleiro. Aqui está um <code>match</code> que
+implementa essa lógica, com o resultado do dado fixado no código em vez de ser
+um valor aleatório, e toda a outra lógica representada por funções sem corpo,
+porque implementá-las de verdade foge do escopo deste exemplo:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let dice_roll = 9;
     match dice_roll {
@@ -6459,24 +6460,25 @@ este exemplo:</p>
     fn remove_fancy_hat() {}
     fn move_player(num_spaces: u8) {}
 <span class="boring">}</span></code></pre>
-<p>Para os dois primeiros braços, os padrões são os valores literais <code>3</code> e <code>7</code>. Para
-o último braço que cobre todos os outros valores possíveis, o padrão é o
-variável que escolhemos nomear <code>other</code>. O código executado para o braço <code>other</code>
-usa a variável passando-a para a função <code>move_player</code>.</p>
-<p>Este código compila, mesmo que não tenhamos listado todos os valores possíveis
-<code>u8</code> pode ter, porque o último padrão corresponderá a todos os valores, não especificamente
-listado. Este padrão abrangente atende ao requisito de que <code>match</code> deve ser
-exaustivo. Observe que temos que colocar o braço pega-tudo por último porque o
-os padrões são avaliados em ordem. Se tivéssemos colocado o braço pega-tudo antes, o
-outros braços nunca funcionariam, então Rust nos avisará se adicionarmos braços após um
-pega tudo!</p>
-<p>Rust também tem um padrão que podemos usar quando queremos algo abrangente, mas não queremos
-<em>use</em> o valor no padrão pega-tudo: <code>_</code> é um padrão especial que corresponde
-qualquer valor e não se vincula a esse valor. Isso diz a Rust que não vamos
-use o valor, para que Rust não nos avise sobre uma variável não utilizada.</p>
-<p>Vamos mudar as regras do jogo: agora, se você tirar qualquer resultado diferente de 3 ou
-um 7, você deve rolar novamente. Não precisamos mais usar o valor genérico, então
-podemos alterar nosso código para usar <code>_</code> em vez da variável chamada <code>other</code>:</p>
+<p>Nos dois primeiros braços, os padrões são os valores literais <code>3</code> e <code>7</code>. Para
+o último braço, que cobre todos os outros valores possíveis, o padrão é a
+variável que escolhemos chamar de <code>other</code>. O código executado para o braço
+<code>other</code> usa essa variável ao passá-la para a função <code>move_player</code>.</p>
+<p>Esse código compila mesmo sem listarmos todos os valores possíveis de um <code>u8</code>,
+porque o último padrão corresponderá a todos os valores não listados
+explicitamente. Esse padrão pega-tudo atende ao requisito de que <code>match</code> deve
+ser exaustivo. Observe que precisamos colocar o braço pega-tudo por último,
+porque os padrões são avaliados em ordem. Se tivéssemos colocado o braço
+pega-tudo antes, os outros braços nunca seriam executados, então Rust nos
+avisará se adicionarmos braços depois de um pega-tudo.</p>
+<p>Rust também tem um padrão que podemos usar quando queremos um pega-tudo, mas
+não queremos <em>usar</em> o valor capturado por ele: <code>_</code> é um padrão especial que
+corresponde a qualquer valor e não se liga a ele. Isso diz ao Rust que não
+vamos usar o valor, então ela não nos avisará sobre uma variável não utilizada.</p>
+<p>Vamos mudar as regras do jogo: agora, se você tirar qualquer valor diferente de
+3 ou 7, deve rolar novamente. Não precisamos mais usar o valor pega-tudo,
+então podemos alterar o código para usar <code>_</code> em vez da variável chamada
+<code>other</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let dice_roll = 9;
     match dice_roll {
@@ -6489,12 +6491,14 @@ podemos alterar nosso código para usar <code>_</code> em vez da variável chama
     fn remove_fancy_hat() {}
     fn reroll() {}
 <span class="boring">}</span></code></pre>
-<p>Este exemplo também atende ao requisito de exaustividade porque estamos explicitamente
-ignorando todos os outros valores no último braço; não esquecemos nada.</p>
-<p>Por fim, mudaremos as regras do jogo mais uma vez para que nada mais
-acontece no seu turno se você rolar algo diferente de 3 ou 7. Podemos expressar
-que usando o valor unitário (o tipo de tupla vazia que mencionamos em <a href="#the-tuple-type">“The Tuple
-Digite”</a><!-- ignore --> seção) como o código que acompanha o braço <code>_</code>:</p>
+<p>Este exemplo também atende ao requisito de exaustividade porque estamos
+explicitamente ignorando todos os outros valores no último braço; não
+esquecemos nada.</p>
+<p>Por fim, vamos mudar as regras do jogo mais uma vez, de modo que nada mais
+aconteça no turno se você tirar qualquer coisa diferente de 3 ou 7. Podemos
+expressar isso usando o valor unitário, o tipo de tupla vazia mencionado na
+seção <a href="#the-tuple-type">“O tipo tupla”</a><!-- ignore -->, como o código associado ao braço
+<code>_</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let dice_roll = 9;
     match dice_roll {
@@ -6506,13 +6510,13 @@ Digite”</a><!-- ignore --> seção) como o código que acompanha o braço <cod
     fn add_fancy_hat() {}
     fn remove_fancy_hat() {}
 <span class="boring">}</span></code></pre>
-<p>Aqui, estamos dizendo explicitamente ao Rust que não usaremos nenhum outro valor
-que não corresponde a um padrão em um braço anterior e não queremos executar nenhum
-código neste caso.</p>
-<p>Há mais informações sobre padrões e correspondência que abordaremos no <a href="#padrões-e-correspondência">Capítulo
-19</a><!-- ignore -->. Por enquanto, vamos passar para o
-Sintaxe <code>if let</code>, que pode ser útil em situações onde a expressão <code>match</code>
-é um pouco prolixo.</p>
+<p>Aqui, estamos dizendo explicitamente ao Rust que não vamos usar nenhum outro
+valor que não corresponda a um padrão de um braço anterior e que também não
+queremos executar código algum nesse caso.</p>
+<p>Há mais sobre padrões e correspondência no <a href="#padrões-e-correspondência">Capítulo
+19</a><!-- ignore -->. Por enquanto, vamos seguir para a sintaxe
+<code>if let</code>, que pode ser útil em situações em que a expressão <code>match</code> fica um
+pouco verbosa.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="fluxo-de-controle-conciso-com-if-let-e-letelse-1"><a href="#fluxo-de-controle-conciso-com-if-let-e-letelse-1" class="header">Fluxo de Controle Conciso com if let e let...else</a></h1>
 <h2 id="fluxo-de-controle-conciso-com-if-let-e-letelse"><a class="header" href="#fluxo-de-controle-conciso-com-if-let-e-letelse">Fluxo de Controle Conciso com <code>if let</code> e <code>let...else</code></a></h2>
