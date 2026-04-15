@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8eadf77c.js";
+            window.path_to_searchindex_js = "searchindex-162de759.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,26 +181,25 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="tratamento-de-erros"><a class="header" href="#tratamento-de-erros">Tratamento de erros</a></h1>
-<p>Erros são uma realidade no software, então Rust tem vários recursos para
-lidar com situações em que algo dá errado. Em muitos casos, Rust requer
-você reconheça a possibilidade de um erro e tome alguma ação antes de seu
-o código será compilado. Este requisito torna seu programa mais robusto, garantindo
-que você descobrirá erros e os tratará adequadamente antes de implantar seu
-código para produção!</p>
-<p>Rust agrupa os erros em duas categorias principais: recuperáveis ​​e irrecuperáveis
-erros. Para um <em>erro recuperável</em>, como um erro de <em>arquivo não encontrado</em>, nós mais
-provavelmente deseja apenas relatar o problema ao usuário e tentar novamente a operação.
-<em>Erros irrecuperáveis</em> são sempre sintomas de bugs, como tentar acessar um
-localização além do final de uma matriz e, portanto, queremos interromper imediatamente o
-programa.</p>
-<p>A maioria das linguagens não distingue entre esses dois tipos de erros e lida com
-ambos da mesma forma, utilizando mecanismos como exceções. Ferrugem não tem
-exceções. Em vez disso, tem o tipo <code>Result&lt;T, E&gt;</code> para erros recuperáveis ​​e
-a macro <code>panic!</code> que interrompe a execução quando o programa encontra um
-erro irrecuperável. Este capítulo cobre ligar para <code>panic!</code> primeiro e depois falar
-sobre como retornar valores <code>Result&lt;T, E&gt;</code>. Além disso, exploraremos
-considerações ao decidir se deve tentar se recuperar de um erro ou parar
+                        <h1 id="tratamento-de-erros"><a class="header" href="#tratamento-de-erros">Tratamento de Erros</a></h1>
+<p>Erros são um fato da vida no software, então Rust oferece vários recursos para
+lidar com situações em que algo dá errado. Em muitos casos, Rust exige que
+você reconheça a possibilidade de erro e tome alguma ação antes que seu código
+compile. Esse requisito torna o programa mais robusto, garantindo que você
+descubra e trate os erros adequadamente antes de colocá-lo em produção!</p>
+<p>Rust agrupa os erros em duas grandes categorias: erros recuperáveis e
+irrecuperáveis. Para um <em>erro recuperável</em>, como <em>arquivo não encontrado</em>, o
+mais provável é que queiramos apenas informar o problema à pessoa usuária e
+tentar novamente a operação. Já <em>erros irrecuperáveis</em> são sempre sintomas de
+bugs, como tentar acessar uma posição além do fim de um array, então queremos
+interromper imediatamente o programa.</p>
+<p>A maioria das linguagens não distingue entre esses dois tipos de erro e trata
+ambos da mesma forma, usando mecanismos como exceções. Rust não tem exceções.
+Em vez disso, ele tem o tipo <code>Result&lt;T, E&gt;</code> para erros recuperáveis e a macro
+<code>panic!</code>, que interrompe a execução quando o programa encontra um erro
+irrecuperável. Neste capítulo, veremos primeiro chamadas a <code>panic!</code> e depois
+falaremos sobre retornar valores <code>Result&lt;T, E&gt;</code>. Além disso, exploraremos
+critérios para decidir se é melhor tentar se recuperar de um erro ou encerrar a
 execução.</p>
 
                     </main>

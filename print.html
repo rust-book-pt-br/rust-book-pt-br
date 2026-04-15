@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8eadf77c.js";
+            window.path_to_searchindex_js = "searchindex-162de759.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -512,8 +512,8 @@ aparecerem, verifique se o Rust está na variável de sistema <code>%PATH%</code
 <pre><code class="language-console">$ echo $PATH
 </code></pre>
 <p>Se isso estiver correto e o Rust ainda assim não funcionar, há vários lugares
-em que você pode conseguir ajuda. Descubra como entrar em contato com outras
-Rustaceans (um apelido brincalhão que usamos para nós mesmos) na <a href="https://www.rust-lang.org/community">página da
+em que você pode conseguir ajuda. Descubra como entrar em contato com outros
+rustaceanos (um apelido brincalhão que usamos para nós mesmos) na <a href="https://www.rust-lang.org/community">página da
 comunidade</a>.</p>
 <h3 id="atualizando-e-desinstalando"><a class="header" href="#atualizando-e-desinstalando">Atualizando e desinstalando</a></h3>
 <p>Depois que o Rust estiver instalado via <code>rustup</code>, atualizar para uma versão
@@ -720,8 +720,8 @@ ajudará você a escrever programas Rust do mundo real.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="olá-cargo-1"><a href="#olá-cargo-1" class="header">Olá, Cargo!</a></h1>
 <h2 id="olá-cargo"><a class="header" href="#olá-cargo">Olá, Cargo!</a></h2>
-<p>Cargo é o sistema de build e gerenciador de pacotes do Rust. A maioria das
-Rustaceans usa essa ferramenta para gerenciar seus projetos Rust, porque Cargo
+<p>Cargo é o sistema de build e gerenciador de pacotes do Rust. A maioria dos
+rustaceanos usa essa ferramenta para gerenciar seus projetos Rust, porque Cargo
 cuida de muitas tarefas para você, como compilar seu código, baixar as
 bibliotecas das quais ele depende e compilar essas bibliotecas. Chamamos as
 bibliotecas de que seu código precisa de <em>dependências</em>.</p>
@@ -790,7 +790,7 @@ listará as dependências do projeto. Em Rust, pacotes de código são chamados 
 precisaremos no primeiro projeto do Capítulo 2, então usaremos essa seção
 naquela ocasião.</p>
 <p>Agora abra <em>src/main.rs</em> e dê uma olhada:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     println!("Hello, world!");
 }</code></pre>
@@ -860,9 +860,10 @@ rapidamente se seu código compila, mas não produz um executável:</p>
 mais rápido do que <code>cargo build</code>, porque pula a etapa de gerar o executável. Se
 você estiver checando seu trabalho continuamente enquanto escreve código, usar
 <code>cargo check</code> acelera o processo de descobrir se o projeto ainda está
-compilando! Por isso, muitas Rustaceans executam <code>cargo check</code> periodicamente
-enquanto escrevem seus programas, para garantir que tudo continua compilando.
-Depois, quando estão prontas para usar o executável, executam <code>cargo build</code>.</p>
+compilando! Por isso, muitos rustaceanos executam <code>cargo check</code>
+periodicamente enquanto escrevem seus programas, para garantir que tudo
+continua compilando. Depois, quando estão prontos para usar o executável,
+executam <code>cargo build</code>.</p>
 <p>Vamos recapitular o que aprendemos até aqui sobre Cargo:</p>
 <ul>
 <li>Podemos criar um projeto usando <code>cargo new</code>.</li>
@@ -1156,9 +1157,9 @@ detalhes.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="handling-potential-failure-with-the-result-type"></a></p>
 <h3 id="lidando-com-falhas-potenciais-com-result"><a class="header" href="#lidando-com-falhas-potenciais-com-result">Lidando com falhas potenciais com <code>Result</code></a></h3>
-<p>Ainda estamos trabalhando nesta linha de código. Estamos agora discutindo uma terceira linha de
-texto, mas observe que ainda faz parte de uma única linha lógica de código. O próximo
-parte é este método:</p>
+<p>Ainda estamos trabalhando nessa linha de código. Agora estamos discutindo uma
+terceira linha de texto, mas observe que ela ainda faz parte de uma única
+linha lógica de código. A próxima parte é este método:</p>
 <pre><code class="language-rust ignore"><span class="boring">use std::io;
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -1176,32 +1177,30 @@ parte é este método:</p>
 </span><span class="boring">}</span></code></pre>
 <p>Poderíamos ter escrito este código como:</p>
 <pre><code class="language-rust ignore">io::stdin().read_line(&amp;mut guess).expect("Failed to read line");</code></pre>
-<p>No entanto, uma linha longa é difícil de ler, por isso é melhor dividi-la. Isso é
-muitas vezes é aconselhável introduzir uma nova linha e outros espaços em branco para ajudar a separar longos
-linhas quando você chama um método com a sintaxe <code>.method_name()</code>. Agora vamos
-discuta o que esta linha faz.</p>
-<p>Como mencionado anteriormente, <code>read_line</code> coloca tudo o que o usuário digita
-na string que passamos para ele, mas ele também retorna um valor <code>Result</code>.
-<a href="../std/result/enum.Result.html"><code>Result</code></a><!--
-ignore --> é uma <a href="#enums-e-correspondência-de-padrões"><em>enumeração</em></a><!-- ignore -->,
-geralmente chamada de <em>enum</em>,
-que é um tipo que pode estar em um dos vários estados possíveis. Chamamos cada um
-possível indicar uma <em>variante</em>.</p>
-<p><a href="#enums-e-correspondência-de-padrões">Capítulo 6</a><!-- ignore --> abordará enums com mais detalhes. O objetivo
-desses tipos <code>Result</code> é codificar informações de tratamento de erros.</p>
-<p>As variantes de <code>Result</code> são <code>Ok</code> e <code>Err</code>. A variante <code>Ok</code> indica o
-a operação foi bem-sucedida e contém o valor gerado com sucesso.
-A variante <code>Err</code> significa que a operação falhou e contém informações
-sobre como ou por que a operação falhou.</p>
-<p>Valores do tipo <code>Result</code>, como valores de qualquer tipo, possuem métodos definidos em
-eles. Uma instância de <code>Result</code> tem um <a href="../std/result/enum.Result.html#method.expect"><code>expect</code> método</a><!-- ignore -->
-que você pode ligar. Se esta instância de <code>Result</code> for um valor <code>Err</code>, <code>expect</code>
-fará com que o programa trave e exiba a mensagem que você passou como
-argumento para <code>expect</code>. Se o método <code>read_line</code> retornar um <code>Err</code>, seria
-provavelmente será o resultado de um erro proveniente do sistema operacional subjacente.
-Se esta instância de <code>Result</code> for um valor <code>Ok</code>, <code>expect</code> receberá o retorno
-valor que <code>Ok</code> está mantendo e retornar apenas esse valor para você para que você possa
-use-o. Nesse caso, esse valor é o número de bytes na entrada do usuário.</p>
+<p>No entanto, uma linha longa é difícil de ler, por isso é melhor dividi-la.
+Muitas vezes, vale a pena introduzir uma quebra de linha e outros espaços em
+branco para separar linhas longas quando você chama um método com a sintaxe
+<code>.method_name()</code>. Agora vamos discutir o que essa linha faz.</p>
+<p>Como mencionamos antes, <code>read_line</code> coloca tudo o que a pessoa usuária digita
+na string que passamos a ele, mas também retorna um valor <code>Result</code>.
+<a href="../std/result/enum.Result.html"><code>Result</code></a><!-- ignore --> é uma <a href="#enums-e-pattern-matching"><em>enumeração</em></a><!-- ignore -->,
+geralmente chamada de <em>enum</em>, que é um tipo que pode estar em um dentre vários
+estados possíveis. Chamamos cada estado possível de <em>variante</em>.</p>
+<p><a href="#enums-e-pattern-matching">Capítulo 6</a><!-- ignore --> abordará enums em mais detalhes. O propósito
+de tipos <code>Result</code> é codificar informações sobre tratamento de erros.</p>
+<p>As variantes de <code>Result</code> são <code>Ok</code> e <code>Err</code>. A variante <code>Ok</code> indica que a
+operação foi bem-sucedida e contém o valor gerado com sucesso. A variante
+<code>Err</code> significa que a operação falhou e contém informações sobre como ou por
+que ela falhou.</p>
+<p>Valores do tipo <code>Result</code>, como valores de qualquer outro tipo, têm métodos
+definidos neles. Uma instância de <code>Result</code> tem um <a href="../std/result/enum.Result.html#method.expect">método
+<code>expect</code></a><!-- ignore --> que você pode chamar. Se essa instância de
+<code>Result</code> for um valor <code>Err</code>, <code>expect</code> fará o programa encerrar e exibirá a
+mensagem que você passou como argumento para <code>expect</code>. Se o método <code>read_line</code>
+retornar um <code>Err</code>, isso provavelmente será resultado de um erro vindo do
+sistema operacional subjacente. Se essa instância de <code>Result</code> for um valor
+<code>Ok</code>, <code>expect</code> pegará o valor que <code>Ok</code> está contendo e o retornará para você
+usar. Nesse caso, esse valor é o número de bytes da entrada da pessoa usuária.</p>
 <p>Se você não chamar <code>expect</code>, o programa será compilado, mas você receberá um aviso:</p>
 <pre><code class="language-console">$ cargo build
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
@@ -1223,13 +1222,13 @@ warning: `guessing_game` (bin "guessing_game") generated 1 warning
 </code></pre>
 <p>Rust avisa que você não usou o valor <code>Result</code> retornado de <code>read_line</code>,
 indicando que o programa não tratou um possível erro.</p>
-<p>A maneira correta de suprimir o aviso é escrever um código de tratamento de erros,
-mas no nosso caso só queremos travar este programa quando ocorrer um problema, então
-pode usar <code>expect</code>. Você aprenderá como se recuperar de erros no <a href="#erros-recuperáveis-com-result-1">Capítulo
-9</a><!-- ignore -->.</p>
-<h3 id="imprimindo-valores-com-println-espaços-reservados"><a class="header" href="#imprimindo-valores-com-println-espaços-reservados">Imprimindo valores com <code>println!</code> espaços reservados</a></h3>
-<p>Além da chave de fechamento, há apenas mais uma linha para discutir em
-o código até agora:</p>
+<p>A forma correta de suprimir o aviso é escrever código de tratamento de erros,
+mas, no nosso caso, queremos apenas encerrar o programa quando ocorrer um
+problema, então podemos usar <code>expect</code>. Você aprenderá como se recuperar de
+erros no <a href="#erros-recuperáveis-com-result-1">Capítulo 9</a><!-- ignore -->.</p>
+<h3 id="imprimindo-valores-com-placeholders-de-println"><a class="header" href="#imprimindo-valores-com-placeholders-de-println">Imprimindo valores com placeholders de <code>println!</code></a></h3>
+<p>Além da chave de fechamento, há apenas mais uma linha para discutir no código
+até aqui:</p>
 <pre><code class="language-rust ignore"><span class="boring">use std::io;
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -1245,14 +1244,15 @@ o código até agora:</p>
 </span><span class="boring">
 </span>    println!("You guessed: {guess}");
 <span class="boring">}</span></code></pre>
-<p>Esta linha imprime a string que agora contém a entrada do usuário. O conjunto <code>{}</code> de
-colchetes são um espaço reservado: pense em <code>{}</code> como pequenas pinças de caranguejo que seguram
-um valor em vigor. Ao imprimir o valor de uma variável, o nome da variável pode
-entre entre colchetes. Ao imprimir o resultado da avaliação de um
-expressão, coloque colchetes vazios na string de formato e siga o
-string de formato com uma lista de expressões separadas por vírgula para imprimir em cada vazio
-espaço reservado para colchetes na mesma ordem. Imprimindo uma variável e o resultado
-de uma expressão em uma chamada para <code>println!</code> ficaria assim:</p>
+<p>Essa linha imprime a string que agora contém a entrada da pessoa usuária. O
+conjunto <code>{}</code> de chaves funciona como um placeholder: pense em <code>{}</code> como
+pequenas garras de caranguejo segurando um valor no lugar. Ao imprimir o valor
+de uma variável, o nome da variável pode ir entre as chaves. Ao imprimir o
+resultado da avaliação de uma expressão, coloque chaves vazias na string de
+formatação e, em seguida, acrescente à string de formatação uma lista de
+expressões separadas por vírgula, a serem impressas em cada placeholder vazio,
+na mesma ordem. Imprimir uma variável e o resultado de uma expressão em uma
+única chamada a <code>println!</code> ficaria assim:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let x = 5;
@@ -1260,7 +1260,7 @@ let y = 10;
 
 println!("x = {x} and y + 2 = {}", y + 2);
 <span class="boring">}</span></code></pre>
-<p>Este código imprimiria <code>x = 5 and y + 2 = 12</code>.</p>
+<p>Esse código imprimiria <code>x = 5 and y + 2 = 12</code>.</p>
 <h3 id="testando-a-primeira-parte"><a class="header" href="#testando-a-primeira-parte">Testando a primeira parte</a></h3>
 <p>Vamos testar a primeira parte do jogo de adivinhação. Execute-o usando <code>cargo run</code>:</p>
 <!-- manual-regeneration
@@ -1277,28 +1277,30 @@ Please input your guess.
 6
 You guessed: 6
 </code></pre>
-<p>Neste ponto, a primeira parte do jogo está concluída: estamos recebendo informações do
-teclado e depois imprimi-lo.</p>
+<p>Neste ponto, a primeira parte do jogo está concluída: estamos recebendo entrada
+do teclado e depois imprimindo essa entrada.</p>
 <h2 id="gerando-um-número-secreto"><a class="header" href="#gerando-um-número-secreto">Gerando um número secreto</a></h2>
-<p>A seguir, precisamos gerar um número secreto que o usuário tentará adivinhar. O
-o número secreto deve ser sempre diferente para que o jogo seja divertido de jogar
-mais de uma vez. Usaremos um número aleatório entre 1 e 100 para que o jogo
-não é muito difícil. Rust ainda não inclui funcionalidade de números aleatórios em
-sua biblioteca padrão. No entanto, a equipe Rust fornece um <a href="https://crates.io/crates/rand"><code>rand</code>
-crate</a> com essa funcionalidade.</p>
+<p>A seguir, precisamos gerar um número secreto que a pessoa usuária tentará
+adivinhar. O número secreto deve ser diferente a cada vez para que o jogo seja
+divertido de jogar mais de uma vez. Vamos usar um número aleatório entre 1 e
+100 para que o jogo não fique muito difícil. Rust ainda não inclui
+funcionalidade de números aleatórios em sua biblioteca padrão. No entanto, a
+equipe do Rust fornece uma crate chamada <a href="https://crates.io/crates/rand"><code>rand</code></a> com essa
+funcionalidade.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-a-crate-to-get-more-functionality"></a></p>
 <h3 id="aumentando-a-funcionalidade-com-uma-crate"><a class="header" href="#aumentando-a-funcionalidade-com-uma-crate">Aumentando a funcionalidade com uma crate</a></h3>
-<p>Lembre-se de que uma crate é uma coleção de arquivos de código-fonte do Rust. O projeto
-que estamos construindo é uma crate binária, que é um executável. A crate <code>rand</code>
-é uma crate de biblioteca, que contém código que se destina a ser usado em outros
-programas e não pode ser executado por conta própria.</p>
-<p>A forma como o Cargo coordena crates externas é onde ele realmente brilha. Antes de nós
-podemos escrever código que usa <code>rand</code>, precisamos modificar o arquivo <em>Cargo.toml</em> para
-inclua a crate <code>rand</code> como uma dependência. Abra esse arquivo agora e adicione o
-linha seguinte até a parte inferior, abaixo do cabeçalho da seção <code>[dependencies]</code> que
-o Cargo criou para você. Certifique-se de especificar <code>rand</code> exatamente como temos aqui, com
-este número de versão ou os exemplos de código neste tutorial podem não funcionar:</p>
+<p>Lembre-se de que uma crate é uma coleção de arquivos de código-fonte Rust. O
+projeto que estamos construindo é uma crate binária, isto é, um executável. A
+crate <code>rand</code> é uma crate de biblioteca, que contém código destinado a ser
+usado em outros programas e não pode ser executado sozinha.</p>
+<p>A forma como o Cargo coordena crates externas é onde ele realmente brilha.
+Antes de escrevermos código que use <code>rand</code>, precisamos modificar o arquivo
+<em>Cargo.toml</em> para incluir a crate <code>rand</code> como dependência. Abra esse arquivo
+agora e adicione a linha a seguir no final, abaixo do cabeçalho da seção
+<code>[dependencies]</code> que o Cargo criou para você. Certifique-se de especificar
+<code>rand</code> exatamente como está aqui, com esse número de versão, ou os exemplos de
+código deste tutorial podem não funcionar:</p>
 <!-- When updating the version of `rand` used, also update the version of
 `rand` used in these files so they all match:
 * ch07-04-bringing-paths-into-scope-with-the-use-keyword.md
@@ -1308,21 +1310,21 @@ este número de versão ou os exemplos de código neste tutorial podem não func
 <pre><code class="language-toml">[dependencies]
 rand = "0.8.5"
 </code></pre>
-<p>No arquivo <em>Cargo.toml</em>, tudo o que segue um cabeçalho faz parte dele
-seção que continua até que outra seção comece. Em <code>[dependencies]</code>, você
-diga ao Cargo de quais crates externas seu projeto depende e de quais versões
-aquelas crates que você precisa. Neste caso, especificamos a crate <code>rand</code> com o
+<p>No arquivo <em>Cargo.toml</em>, tudo o que vem depois de um cabeçalho faz parte
+daquela seção, até que outra seção comece. Em <code>[dependencies]</code>, você informa ao
+Cargo de quais crates externas o projeto depende e de quais versões dessas
+crates você precisa. Neste caso, especificamos a crate <code>rand</code> com o
 especificador de versão semântica <code>0.8.5</code>. O Cargo entende <a href="http://semver.org">Versionamento
-Semântico</a><!-- ignore --> (às vezes chamado de <em>SemVer</em>), que é um
-padrão para escrever números de versão. O especificador <code>0.8.5</code> é na verdade
-abreviação de <code>^0.8.5</code>, o que significa qualquer versão que seja pelo menos 0.8.5, mas
-abaixo de 0.9.0.</p>
-<p>Cargo considera que essas versões possuem APIs públicas compatíveis com a versão
-0.8.5, e esta especificação garante que você obterá a versão de patch mais recente
-que ainda será compilado com o código neste capítulo. Qualquer versão 0.9.0 ou
-maior não tem garantia de ter a mesma API que os exemplos a seguir
-usar.</p>
-<p>Agora, sem alterar nenhum código, vamos construir o projeto, conforme mostrado em
+Semântico</a><!-- ignore -->, às vezes chamado de <em>SemVer</em>, que é um
+padrão para escrever números de versão. O especificador <code>0.8.5</code> é, na verdade,
+uma abreviação de <code>^0.8.5</code>, o que significa qualquer versão que seja pelo menos
+0.8.5, mas abaixo de 0.9.0.</p>
+<p>O Cargo considera que essas versões têm APIs públicas compatíveis com a versão
+0.8.5, e essa especificação garante que você obterá a versão de patch mais
+recente que ainda compilará com o código deste capítulo. Não há garantia de que
+qualquer versão 0.9.0 ou superior tenha a mesma API usada nos exemplos a
+seguir.</p>
+<p>Agora, sem alterar nenhum código, vamos compilar o projeto, como mostra a
 Listagem 2-2.</p>
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-02/
@@ -1351,28 +1353,29 @@ cargo build -->
  Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
   Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.48s
 </code></pre>
-<figcaption><a href="#listing-2-2">Listing 2-2</a>: Saída de <code>cargo build</code> após adicionar o crate <code>rand</code> como dependência</figcaption>
+<figcaption><a href="#listing-2-2">Listing 2-2</a>: Saída de <code>cargo build</code> após adicionar a crate <code>rand</code> como dependência</figcaption>
 </figure>
-<p>Você poderá ver diferentes números de versão (mas todos serão compatíveis com o
-código, graças ao SemVer!) e diferentes linhas (dependendo do funcionamento
-sistema), e as linhas podem estar em uma ordem diferente.</p>
-<p>Quando incluímos uma dependência externa, o Cargo busca as versões mais recentes do
-tudo que a dependência precisa do <em>registry</em>, que é uma cópia dos dados
-de <a href="https://crates.io/">Crates.io</a>. Crates.io é onde as pessoas do ecossistema Rust
-postar seus projetos Rust de código aberto para outros usarem.</p>
-<p>Após atualizar o registro, Cargo verifica a seção <code>[dependencies]</code> e
+<p>Você pode ver números de versão diferentes, embora todos sejam compatíveis com
+o código graças ao SemVer, e linhas diferentes, dependendo do sistema
+operacional. As linhas também podem aparecer em outra ordem.</p>
+<p>Quando incluímos uma dependência externa, o Cargo busca no <em>registry</em> as
+versões mais recentes de tudo de que a dependência precisa. O registry é uma
+cópia dos dados de <a href="https://crates.io/">Crates.io</a>. O Crates.io é onde as pessoas do
+ecossistema Rust publicam seus projetos Rust de código aberto para que outras
+pessoas possam usá-los.</p>
+<p>Depois de atualizar o registry, o Cargo verifica a seção <code>[dependencies]</code> e
 baixa todas as crates listadas que ainda não foram baixadas. Nesse caso,
-embora tenhamos listado apenas <code>rand</code> como uma dependência, Cargo também pegou outras crates
-que <code>rand</code> depende para funcionar. Depois de baixar as crates, Rust compila
-eles e então compila o projeto com as dependências disponíveis.</p>
-<p>Se você executar <code>cargo build</code> imediatamente novamente sem fazer nenhuma alteração, você
-não obterá nenhuma saída além da linha <code>Finished</code>. Cargo sabe que já
-baixou e compilou as dependências e você não mudou nada
-sobre eles em seu arquivo <em>Cargo.toml</em>. Cargo também sabe que você não mudou
-nada sobre o seu código, então ele também não o recompila. Sem nada para
-fazer, ele simplesmente sai.</p>
-<p>Se você abrir o arquivo <em>src/main.rs</em>, faça uma alteração trivial, salve-o e
-build novamente, você verá apenas duas linhas de saída:</p>
+embora tenhamos listado apenas <code>rand</code> como dependência, o Cargo também obteve
+outras crates das quais <code>rand</code> depende para funcionar. Depois de baixar as
+crates, Rust as compila e, em seguida, compila o projeto com as dependências
+disponíveis.</p>
+<p>Se você executar <code>cargo build</code> imediatamente de novo, sem fazer nenhuma
+alteração, não verá nenhuma saída além da linha <code>Finished</code>. O Cargo sabe que
+já baixou e compilou as dependências e que você não mudou nada nelas no arquivo
+<em>Cargo.toml</em>. Ele também sabe que você não mudou nada no seu código, então não
+o recompila. Sem nada a fazer, ele simplesmente encerra.</p>
+<p>Se você abrir o arquivo <em>src/main.rs</em>, fizer uma alteração trivial, salvá-lo e
+compilar novamente, verá apenas duas linhas de saída:</p>
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-02/
 touch src/main.rs
@@ -1381,50 +1384,51 @@ cargo build -->
    Compiling guessing_game v0.1.0 (file:///projects/guessing_game)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.13s
 </code></pre>
-<p>Essas linhas mostram que o Cargo apenas atualiza a compilação com sua pequena alteração no
-arquivo <em>src/main.rs</em>. Suas dependências não mudaram, então o Cargo sabe que pode
-reutilizar o que já foi baixado e compilado para eles.</p>
+<p>Essas linhas mostram que o Cargo atualiza apenas o build com a pequena mudança
+feita no arquivo <em>src/main.rs</em>. Como as dependências não mudaram, o Cargo sabe
+que pode reutilizar o que já foi baixado e compilado para elas.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="ensuring-reproducible-builds-with-the-cargo-lock-file"></a></p>
-<h4 id="garantindo-construções-reproduzíveis"><a class="header" href="#garantindo-construções-reproduzíveis">Garantindo construções reproduzíveis</a></h4>
-<p>Cargo possui um mecanismo que garante que você possa reconstruir o mesmo artefato a cada
-vez que você ou qualquer outra pessoa cria seu código: o Cargo usará apenas as versões do
-as dependências que você especificou até que você indique o contrário. Por exemplo, digamos
-que na próxima semana a versão 0.8.6 da crate <code>rand</code> será lançada, e essa versão
-contém uma correção de bug importante, mas também contém uma regressão que irá
-quebrar seu código. Para lidar com isso, Rust cria o arquivo <em>Cargo.lock</em> primeiro
-vez que você executa <code>cargo build</code>, então agora temos isso no <em>jogo_de_adivinhação</em>
-diretório.</p>
-<p>Quando você constrói um projeto pela primeira vez, Cargo descobre todas as versões
-das dependências que atendem aos critérios e depois as grava no
-Arquivo <em>Cargo.lock</em>. Quando você construir seu projeto no futuro, Cargo verá
-que o arquivo <em>Cargo.lock</em> existe e usará as versões especificadas nele
-em vez de fazer todo o trabalho de descobrir as versões novamente. Isso permite que você
-ter uma construção reproduzível automaticamente. Em outras palavras, seu projeto
-permaneça em 0.8.5 até que você atualize explicitamente, graças ao arquivo <em>Cargo.lock</em>.
-Como o arquivo <em>Cargo.lock</em> é importante para compilações reproduzíveis, muitas vezes é
-verificado no controle de origem com o restante do código em seu projeto.</p>
+<h4 id="garantindo-builds-reproduzíveis"><a class="header" href="#garantindo-builds-reproduzíveis">Garantindo builds reproduzíveis</a></h4>
+<p>O Cargo tem um mecanismo que garante que você possa recriar o mesmo artefato
+toda vez que você ou qualquer outra pessoa compilar o código: ele usará apenas
+as versões das dependências que você especificou até que você diga o contrário.
+Por exemplo, imagine que, na próxima semana, a versão 0.8.6 da crate <code>rand</code>
+seja lançada, contendo uma correção de bug importante, mas também uma regressão
+que quebrará seu código. Para lidar com isso, Rust cria o arquivo
+<em>Cargo.lock</em> na primeira vez que você executa <code>cargo build</code>, então agora temos
+esse arquivo no diretório <em>guessing_game</em>.</p>
+<p>Quando você compila um projeto pela primeira vez, o Cargo descobre todas as
+versões das dependências que atendem aos critérios e depois as grava no
+arquivo <em>Cargo.lock</em>. Quando você compilar o projeto no futuro, o Cargo verá
+que o arquivo <em>Cargo.lock</em> existe e usará as versões especificadas ali, em vez
+de repetir todo o trabalho de descobrir as versões novamente. Isso permite que
+você tenha um build reproduzível automaticamente. Em outras palavras, o seu
+projeto permanecerá na versão 0.8.5 até que você atualize explicitamente,
+graças ao arquivo <em>Cargo.lock</em>. Como esse arquivo é importante para builds
+reproduzíveis, muitas vezes ele é versionado junto com o restante do código no
+projeto.</p>
 <h4 id="atualizando-uma-crate-para-obter-uma-nova-versão"><a class="header" href="#atualizando-uma-crate-para-obter-uma-nova-versão">Atualizando uma crate para obter uma nova versão</a></h4>
-<p>Quando você deseja atualizar uma crate, Cargo fornece o comando <code>update</code>,
-que irá ignorar o arquivo <em>Cargo.lock</em> e descobrir todas as versões mais recentes
-que atendem às suas especificações em <em>Cargo.toml</em>. Cargo então escreverá aqueles
-versões para o arquivo <em>Cargo.lock</em>. Caso contrário, por padrão, Cargo irá apenas procurar
-para versões superiores a 0.8.5 e inferiores a 0.9.0. Se a crate <code>rand</code> tiver
-lançou as duas novas versões 0.8.6 e 0.999.0, você veria o seguinte se
-você executou <code>cargo update</code>:</p>
+<p>Quando você <em>quiser</em> atualizar uma crate, o Cargo fornece o comando <code>update</code>,
+que ignorará o arquivo <em>Cargo.lock</em> e descobrirá todas as versões mais recentes
+que atendem às especificações do seu <em>Cargo.toml</em>. O Cargo então escreverá
+essas versões no arquivo <em>Cargo.lock</em>. Fora isso, por padrão, o Cargo procurará
+apenas versões maiores que 0.8.5 e menores que 0.9.0. Se a crate <code>rand</code>
+tivesse lançado as duas novas versões 0.8.6 e 0.999.0, você veria o seguinte
+ao executar <code>cargo update</code>:</p>
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-02/
 cargo update
 assuming there is a new 0.8.x version of rand; otherwise use another update
 as a guide to creating the hypothetical output shown here -->
-<p>Há muito mais a dizer sobre <a href="https://doc.rust-lang.org/cargo/">Cargo</a><!-- ignore --> e <a href="https://doc.rust-lang.org/cargo/reference/publishing.html">sua
-ecossistema</a><!-- ignore -->, que discutiremos no Capítulo 14, mas
-por enquanto, isso é tudo que você precisa saber. Cargo facilita muito a reutilização
-bibliotecas, então os Rustáceos são capazes de escrever projetos menores que são montados
-de vários pacotes.</p>
+<p>Há muito mais a dizer sobre <a href="https://doc.rust-lang.org/cargo/">Cargo</a><!-- ignore --> e <a href="https://doc.rust-lang.org/cargo/reference/publishing.html">seu
+ecossistema</a><!-- ignore -->, que discutiremos no Capítulo 14, mas,
+por enquanto, isso é tudo o que você precisa saber. O Cargo facilita muito a
+reutilização de bibliotecas, então os rustaceanos conseguem escrever projetos
+menores, montados a partir de vários pacotes.</p>
 <h3 id="gerando-um-número-aleatório"><a class="header" href="#gerando-um-número-aleatório">Gerando um número aleatório</a></h3>
-<p>Vamos começar a usar <code>rand</code> para gerar um número para adivinhar. O próximo passo é
-atualize <em>src/main.rs</em>, conforme mostrado na Listagem 2-3.</p>
+<p>Vamos começar a usar <code>rand</code> para gerar um número a ser adivinhado. O próximo
+passo é atualizar <em>src/main.rs</em>, como mostra a Listagem 2-3.</p>
 <figure class="listing" id="listing-2-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore">use std::io;
@@ -1450,31 +1454,33 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-2-3">Listing 2-3</a>: Adicionando código para gerar um número aleatório</figcaption>
 </figure>
-<p>Primeiro, adicionamos a linha <code>use rand::Rng;</code>. A característica <code>Rng</code> define métodos que
-geradores de números aleatórios são implementados, e essa característica deve estar no escopo para que possamos
-use esses métodos. O Capítulo 10 abordará as características em detalhes.</p>
-<p>A seguir, estamos adicionando duas linhas no meio. Na primeira linha chamamos
-<code>rand::thread_rng</code> função que nos dá o número aleatório específico
-gerador que usaremos: um que seja local para o thread atual do
-execução e é propagado pelo sistema operacional. Então, chamamos <code>gen_range</code>
-método no gerador de números aleatórios. Este método é definido pelo <code>Rng</code>
-característica que trouxemos para o escopo com a instrução <code>use rand::Rng;</code>. O
-O método <code>gen_range</code> pega uma expressão de intervalo como argumento e gera um
-número aleatório no intervalo. O tipo de expressão de intervalo que estamos usando aqui leva
-a forma <code>start..=end</code> e é inclusiva nos limites inferior e superior, então
-precisa especificar <code>1..=100</code> para solicitar um número entre 1 e 100.</p>
+<p>Primeiro, adicionamos a linha <code>use rand::Rng;</code>. A trait <code>Rng</code> define métodos
+que geradores de números aleatórios implementam, e essa trait precisa estar em
+escopo para que possamos usar esses métodos. O Capítulo 10 abordará traits em
+detalhes.</p>
+<p>A seguir, estamos adicionando duas linhas no meio. Na primeira, chamamos a
+função <code>rand::thread_rng</code>, que nos fornece o gerador de números aleatórios
+específico que vamos usar: um que é local à thread de execução atual e é
+inicializado pelo sistema operacional. Depois, chamamos o método <code>gen_range</code>
+nesse gerador de números aleatórios. Esse método é definido pela trait <code>Rng</code>
+que trouxemos para o escopo com a instrução <code>use rand::Rng;</code>. O método
+<code>gen_range</code> recebe uma expressão de intervalo como argumento e gera um número
+aleatório dentro desse intervalo. O tipo de expressão de intervalo que estamos
+usando aqui tem a forma <code>start..=end</code> e inclui os limites inferior e superior;
+por isso, precisamos especificar <code>1..=100</code> para pedir um número entre 1 e 100.</p>
 <blockquote>
-<p>Observação: você não saberá apenas quais características usar e quais métodos e funções
-chamar de uma crate, então cada crate possui documentação com instruções para
-usando-o. Outro recurso interessante do Cargo é que executar o <code>cargo doc O comando --open</code> criará a documentação fornecida por todas as suas dependências
-localmente e abra-o no seu navegador. Se você estiver interessado em outros
-funcionalidade na crate <code>rand</code>, por exemplo, execute <code>cargo doc --open</code> e
-clique em <code>rand</code> na barra lateral à esquerda.</p>
+<p>Nota: você não vai simplesmente saber quais traits usar e quais métodos e
+funções chamar de uma crate, então cada crate tem documentação com
+instruções sobre como usá-la. Outro recurso interessante do Cargo é que
+executar o comando <code>cargo doc --open</code> compila localmente a documentação
+fornecida por todas as suas dependências e a abre no navegador. Se você tiver
+interesse em outras funcionalidades da crate <code>rand</code>, por exemplo, execute
+<code>cargo doc --open</code> e clique em <code>rand</code> na barra lateral à esquerda.</p>
 </blockquote>
 <p>A segunda nova linha imprime o número secreto. Isso é útil enquanto estamos
-desenvolvendo o programa para poder testá-lo, mas vamos excluí-lo do
-versão final. Não é um grande jogo se o programa imprimir a resposta o mais rápido possível
-assim que começa!</p>
+desenvolvendo o programa para podermos testá-lo, mas vamos removê-la da versão
+final. Não existe muita graça em um jogo que imprime a resposta assim que
+começa!</p>
 <p>Tente executar o programa algumas vezes:</p>
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/listing-02-03/
@@ -1502,12 +1508,12 @@ Please input your guess.
 5
 You guessed: 5
 </code></pre>
-<p>Você deve obter números aleatórios diferentes e todos devem ser números entre
-1 e 100. Ótimo trabalho!</p>
+<p>Você deve obter números aleatórios diferentes, e todos eles devem estar entre 1
+e 100. Ótimo trabalho!</p>
 <h2 id="comparando-o-palpite-com-o-número-secreto"><a class="header" href="#comparando-o-palpite-com-o-número-secreto">Comparando o Palpite com o Número Secreto</a></h2>
-<p>Agora que temos a entrada do usuário e um número aleatório, podemos compará-los. Esse passo
-é mostrado na Listagem 2-4. Observe que este código ainda não será compilado, pois iremos
-explicar.</p>
+<p>Agora que temos a entrada da pessoa usuária e um número aleatório, podemos
+compará-los. Esse passo é mostrado na Listagem 2-4. Observe que esse código
+ainda não compilará, como explicaremos.</p>
 <figure class="listing" id="listing-2-4">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">use std::cmp::Ordering;
@@ -1539,41 +1545,43 @@ fn main() {
         Ordering::Equal =&gt; println!("You win!"),
     }
 }</code></pre>
-<figcaption><a href="#listing-2-4">Listing 2-4</a>: Tratando os possíveis valores de retorno da comparação entre dois números</figcaption>
+<figcaption><a href="#listing-2-4">Listing 2-4</a>: Tratando os possíveis valores retornados pela comparação de dois números</figcaption>
 </figure>
-<p>Primeiro, adicionamos outra instrução <code>use</code>, trazendo um tipo chamado
-<code>std::cmp::Ordering</code> no escopo da biblioteca padrão. O tipo <code>Ordering</code>
-é outro enum e possui as variantes <code>Less</code>, <code>Greater</code> e <code>Equal</code>. Estes são
-os três resultados possíveis quando você compara dois valores.</p>
-<p>Em seguida, adicionamos cinco novas linhas na parte inferior que usam o tipo <code>Ordering</code>. O
-O método <code>cmp</code> compara dois valores e pode ser chamado em qualquer coisa que possa ser
-comparado. É necessária uma referência a tudo o que você deseja comparar: aqui, é
-comparando <code>guess</code> com <code>secret_number</code>. Em seguida, ele retorna uma variante do
-<code>Ordering</code> enum que trouxemos para o escopo com a instrução <code>use</code>. Usamos um
-<a href="#a-construção-de-fluxo-de-controle-match-1"><code>match</code></a><!-- ignore --> expressão para decidir o que fazer a seguir com base em
-qual variante de <code>Ordering</code> foi retornada da chamada para <code>cmp</code> com os valores
+<p>Primeiro, adicionamos outra instrução <code>use</code>, trazendo para o escopo um tipo da
+biblioteca padrão chamado <code>std::cmp::Ordering</code>. O tipo <code>Ordering</code> é outro enum
+e tem as variantes <code>Less</code>, <code>Greater</code> e <code>Equal</code>. Esses são os três resultados
+possíveis ao comparar dois valores.</p>
+<p>Em seguida, adicionamos cinco novas linhas na parte inferior que usam o tipo
+<code>Ordering</code>. O método <code>cmp</code> compara dois valores e pode ser chamado em qualquer
+coisa que possa ser comparada. Ele recebe uma referência ao que você quer
+comparar com o valor atual; aqui, ele está comparando <code>guess</code> com
+<code>secret_number</code>. Depois, retorna uma variante do enum <code>Ordering</code> que trouxemos
+para o escopo com a instrução <code>use</code>. Usamos uma expressão
+<a href="#a-construção-de-fluxo-de-controle-match-1"><code>match</code></a><!-- ignore --> para decidir o que fazer a seguir com base em
+qual variante de <code>Ordering</code> foi retornada pela chamada a <code>cmp</code> com os valores
 em <code>guess</code> e <code>secret_number</code>.</p>
-<p>Uma expressão <code>match</code> é composta de <em>braços</em>. Um braço consiste em um <em>padrão</em> para
-corresponder e o código que deve ser executado se o valor fornecido a <code>match</code>
-se encaixa no padrão desse braço. Rust pega o valor dado a <code>match</code> e olha
-através do padrão de cada braço, por sua vez. Padrões e a construção <code>match</code> são
-recursos poderosos do Rust: eles permitem expressar uma variedade de situações em que seu código
-pode encontrar, e eles garantem que você lide com todos eles. Esses recursos serão
-abordados em detalhes no Capítulo 6 e no Capítulo 19, respectivamente.</p>
-<p>Vejamos um exemplo com a expressão <code>match</code> que usamos aqui. Diga isso
-o usuário adivinhou 50 e o número secreto gerado aleatoriamente desta vez é
-38.</p>
-<p>Quando o código compara 50 a 38, o método <code>cmp</code> retornará
-<code>Ordering::Greater</code> porque 50 é maior que 38. A expressão <code>match</code> fica
-o valor <code>Ordering::Greater</code> e começa a verificar o padrão de cada braço. Parece
-no padrão do primeiro braço, <code>Ordering::Less</code>, e vê que o valor
-<code>Ordering::Greater</code> não corresponde a <code>Ordering::Less</code>, portanto ignora o código em
-esse braço e passa para o próximo braço. O próximo padrão do braço é
+<p>Uma expressão <code>match</code> é composta por <em>braços</em>. Um braço consiste em um
+<em>padrão</em> a ser comparado e no código que deve ser executado se o valor dado a
+<code>match</code> se encaixar no padrão daquele braço. Rust pega o valor fornecido a
+<code>match</code> e verifica, em sequência, o padrão de cada braço. Padrões e a
+construção <code>match</code> são recursos poderosos do Rust: eles permitem expressar uma
+grande variedade de situações que seu código pode encontrar e garantem que
+você trate todas elas. Esses recursos serão abordados em detalhes no Capítulo
+6 e no Capítulo 19, respectivamente.</p>
+<p>Vamos percorrer um exemplo com a expressão <code>match</code> que usamos aqui. Digamos que
+a pessoa usuária tenha chutado 50 e que o número secreto gerado aleatoriamente
+desta vez seja 38.</p>
+<p>Quando o código compara 50 com 38, o método <code>cmp</code> retorna
+<code>Ordering::Greater</code>, porque 50 é maior que 38. A expressão <code>match</code> recebe o
+valor <code>Ordering::Greater</code> e começa a verificar o padrão de cada braço. Ela olha
+para o padrão do primeiro braço, <code>Ordering::Less</code>, e vê que o valor
+<code>Ordering::Greater</code> não corresponde a <code>Ordering::Less</code>, então ignora o código
+desse braço e segue para o próximo. O padrão do braço seguinte é
 <code>Ordering::Greater</code>, que <em>corresponde</em> a <code>Ordering::Greater</code>! O código
 associado a esse braço será executado e imprimirá <code>Too big!</code> na tela. A
 expressão <code>match</code> termina após a primeira correspondência bem-sucedida, então
-ela não olha para o último braço nesse cenário.</p>
-<p>Entretanto, o código na Listagem 2.4 ainda não será compilado. Vamos tentar:</p>
+ela não verifica o último braço nesse cenário.</p>
+<p>No entanto, o código da Listagem 2-4 ainda não compila. Vamos tentar:</p>
 <!--
 The error numbers in this output should be that of the code **WITHOUT** the
 anchor or snip comments
@@ -1604,19 +1612,19 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `guessing_game` (bin "guessing_game") due to 1 previous error
 </code></pre>
 <p>A essência do erro é que existem <em>tipos incompatíveis</em>. Rust tem um sistema de
-tipos estático e forte, mas também possui inferência de tipos. Quando
+tipos forte e estático, mas também possui inferência de tipos. Quando
 escrevemos <code>let mut guess = String::new()</code>, Rust conseguiu inferir que <code>guess</code>
 deveria ser uma <code>String</code>, sem exigir que escrevêssemos isso explicitamente. Já
-<code>secret_number</code> é um tipo numérico. Vários tipos numéricos do Rust podem
-conter valores entre 1 e 100: <code>i32</code>, um número de 32 bits; <code>u32</code>, um inteiro
-sem sinal de 32 bits; <code>i64</code>, um número de 64 bits; e assim por diante. A menos
-que você especifique outra coisa, o padrão do Rust é <code>i32</code>, então esse é o
-tipo de <code>secret_number</code>, a não ser que alguma informação em outro ponto faça o
+<code>secret_number</code> é um tipo numérico. Alguns dos tipos numéricos de Rust podem
+conter um valor entre 1 e 100: <code>i32</code>, um número de 32 bits; <code>u32</code>, um inteiro
+sem sinal de 32 bits; <code>i64</code>, um número de 64 bits; entre outros. A menos que
+você especifique algo diferente, Rust usa <code>i32</code> por padrão, então esse é o
+tipo de <code>secret_number</code>, a menos que alguma informação em outro ponto faça o
 compilador inferir outro tipo numérico. O erro acontece porque Rust não pode
-comparar uma string com um número.</p>
+comparar uma string com um tipo numérico.</p>
 <p>No fim das contas, queremos converter a <code>String</code> lida da entrada em um tipo
-numérico para podermos compará-la numericamente com o número secreto. Fazemos
-isso adicionando a seguinte linha ao corpo de <code>main</code>:</p>
+numérico, para podermos compará-la numericamente com o número secreto. Fazemos
+isso adicionando a linha a seguir ao corpo de <code>main</code>:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
 </span><span class="boring">use std::io;
@@ -1653,48 +1661,49 @@ isso adicionando a seguinte linha ao corpo de <code>main</code>:</p>
 <p>A linha é:</p>
 <pre><code class="language-rust ignore">let guess: u32 = guess.trim().parse().expect("Please type a number!");</code></pre>
 <p>Criamos uma variável chamada <code>guess</code>. Mas espere: o programa já não tem uma
-variável com esse nome? Tem, mas felizmente Rust nos permite sombrear o valor
-anterior de <code>guess</code> com um novo. <em>Shadowing</em> nos permite reutilizar o nome da
-variável em vez de nos obrigar a criar duas variáveis diferentes, como
+variável com esse nome? Tem, mas, felizmente, Rust nos permite sombrear o
+valor anterior de <code>guess</code> com um novo. <em>Shadowing</em> nos permite reutilizar o
+nome da variável em vez de nos obrigar a criar duas variáveis diferentes, como
 <code>guess_str</code> e <code>guess</code>, por exemplo. Veremos isso com mais detalhes no
-<a href="#shadowing">Capítulo 3</a><!-- ignore -->, mas por enquanto basta saber que esse
-recurso é muito usado quando queremos converter um valor de um tipo para outro.</p>
+<a href="#shadowing">Capítulo 3</a><!-- ignore -->, mas, por enquanto, basta saber que
+esse recurso é muito usado quando queremos converter um valor de um tipo para
+outro.</p>
 <p>Associamos essa nova variável à expressão <code>guess.trim().parse()</code>. O <code>guess</code> na
 expressão se refere à variável <code>guess</code> original, que continha a entrada como
-uma string. O método <code>trim</code> em uma instância de <code>String</code> remove qualquer espaço
-em branco no início e no fim, o que precisamos fazer antes de converter a
-string para <code>u32</code>, que só pode conter dados numéricos. O usuário precisa
+string. O método <code>trim</code> em uma instância de <code>String</code> remove qualquer espaço em
+branco no início e no fim, o que precisamos fazer antes de converter a string
+para <code>u32</code>, que só pode conter dados numéricos. A pessoa usuária precisa
 pressionar
-<kbd>enter</kbd> para satisfazer <code>read_line</code> e inserir seu palpite, o que adiciona um
-caractere de nova linha para a string. Por exemplo, se o usuário digitar <kbd>5</kbd> e
-pressiona <kbd>enter</kbd>, <code>guess</code> fica assim: <code>5\n</code>. O <code>\n</code> representa
-“nova linha.” (No Windows, pressionar <kbd>enter</kbd> resulta em um retorno de carro
-e uma nova linha, <code>\r\n</code>.) O método <code>trim</code> elimina <code>\n</code> ou <code>\r\n</code>, resultando
-em apenas <code>5</code>.</p>
-<p>O método <a href="../std/primitive.str.html#method.parse"><code>parse</code> em strings</a><!-- ignore --> converte uma string em
-outro tipo. Aqui, nós o usamos para converter uma string em um número.
-Precisamos dizer ao Rust exatamente qual tipo numérico queremos usando
-<code>let guess: u32</code>. Os dois-pontos (<code>:</code>) após <code>guess</code> dizem ao Rust que vamos
-anotar o tipo da variável. Rust possui vários tipos numéricos internos; o
-<code>u32</code> visto aqui é um inteiro sem sinal de 32 bits. É uma boa escolha padrão
-para um número positivo pequeno. Você aprenderá sobre outros tipos numéricos
-no <a href="#integer-types">Capítulo 3</a><!-- ignore -->.</p>
-<p>Além disso, a anotação <code>u32</code> neste programa de exemplo e a comparação
-com <code>secret_number</code> significa que Rust irá inferir que <code>secret_number</code> deve ser um
-<code>u32</code> também. Então, agora a comparação será entre dois valores do mesmo
+<kbd>enter</kbd> para satisfazer <code>read_line</code> e inserir seu palpite, o que
+adiciona um caractere de nova linha à string. Por exemplo, se a pessoa usuária
+digitar <kbd>5</kbd> e pressionar <kbd>enter</kbd>, <code>guess</code> ficará assim:
+<code>5\n</code>. O <code>\n</code> representa “nova linha”. No Windows, pressionar
+<kbd>enter</kbd> resulta em retorno de carro e nova linha, <code>\r\n</code>. O método
+<code>trim</code> elimina <code>\n</code> ou <code>\r\n</code>, deixando apenas <code>5</code>.</p>
+<p>O <a href="../std/primitive.str.html#method.parse">método <code>parse</code> em strings</a><!-- ignore --> converte uma string em
+outro tipo. Aqui, nós o usamos para converter uma string em número. Precisamos
+dizer ao Rust exatamente qual tipo numérico queremos usando
+<code>let guess: u32</code>. Os dois-pontos (<code>:</code>) depois de <code>guess</code> dizem ao Rust que
+vamos anotar o tipo da variável. Rust tem alguns tipos numéricos embutidos; o
+<code>u32</code> visto aqui é um inteiro sem sinal de 32 bits. Ele é uma boa escolha
+padrão para um número pequeno e positivo. Você aprenderá sobre outros tipos
+numéricos no <a href="#integer-types">Capítulo 3</a><!-- ignore -->.</p>
+<p>Além disso, a anotação <code>u32</code> neste programa de exemplo, junto com a comparação
+com <code>secret_number</code>, significa que Rust inferirá que <code>secret_number</code> também
+deve ser um <code>u32</code>. Assim, agora a comparação será entre dois valores do mesmo
 tipo!</p>
-<p>O método <code>parse</code> só funcionará em caracteres que podem ser convertidos logicamente
-em números e, portanto, pode facilmente causar erros. Se, por exemplo, a sequência
-continha <code>A👍%</code>, não haveria como converter isso em um número. Porque isso
-pode falhar, o método <code>parse</code> retorna um tipo <code>Result</code>, assim como o método <code>read_line</code>
-método faz (discutido anteriormente em <a href="#tratamento-de-falha-potencial-com-resultado">“Tratando falha potencial com
-<code>Result</code>”</a><!-- ignore -->). Trataremos
-isso <code>Result</code> da mesma maneira usando o método <code>expect</code> novamente. Se <code>parse</code>
-retorna uma variante <code>Err</code> <code>Result</code> porque não foi possível criar um número a partir do
-string, a chamada <code>expect</code> irá travar o jogo e imprimir a mensagem que lhe demos.
-Se <code>parse</code> conseguir converter a string em um número com sucesso, ele retornará o
-<code>Ok</code> variante de <code>Result</code> e <code>expect</code> retornará o número que queremos
-o valor <code>Ok</code>.</p>
+<p>O método <code>parse</code> só funcionará em caracteres que podem ser convertidos
+logicamente em número e, portanto, pode falhar facilmente. Se, por exemplo, a
+string contivesse <code>A👍%</code>, não haveria como convertê-la em número. Como isso
+pode falhar, o método <code>parse</code> retorna um valor do tipo <code>Result</code>, assim como o
+método <code>read_line</code> faz, como discutimos anteriormente em <a href="#lidando-com-falhas-potenciais-com-result">“Lidando com falhas
+potenciais com <code>Result</code>”</a><!-- ignore -->.
+Vamos tratar esse <code>Result</code> da mesma forma, usando novamente o método <code>expect</code>.
+Se <code>parse</code> retornar uma variante <code>Err</code> de <code>Result</code> porque não conseguiu criar
+um número a partir da string, a chamada a <code>expect</code> encerrará o jogo e imprimirá
+a mensagem que fornecemos. Se <code>parse</code> conseguir converter a string para número,
+ele retornará a variante <code>Ok</code> de <code>Result</code>, e <code>expect</code> retornará o número que
+queremos a partir do valor <code>Ok</code>.</p>
 <p>Vamos executar o programa agora:</p>
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/no-listing-03-convert-string-to-number/
@@ -1713,15 +1722,15 @@ Please input your guess.
 You guessed: 76
 Too big!
 </code></pre>
-<p>Legal! Mesmo com espaços antes do palpite, o programa ainda conseguiu entender
-que o usuário digitou 76. Execute o programa algumas vezes para observar o
-comportamento com diferentes tipos de entrada: adivinhe corretamente, escolha
-um número alto demais e depois um baixo demais.</p>
-<p>Temos a maior parte do jogo funcionando agora, mas o usuário só pode dar um palpite.
-Vamos mudar isso adicionando um loop!</p>
+<p>Muito bom! Mesmo com espaços antes do palpite, o programa ainda conseguiu
+entender que a pessoa usuária digitou 76. Execute o programa algumas vezes para
+observar o comportamento com diferentes tipos de entrada: acerte o número,
+escolha um número alto demais e depois um baixo demais.</p>
+<p>Temos a maior parte do jogo funcionando agora, mas a pessoa usuária só pode dar
+um palpite. Vamos mudar isso adicionando um loop!</p>
 <h2 id="permitindo-múltiplos-palpites-com-looping"><a class="header" href="#permitindo-múltiplos-palpites-com-looping">Permitindo Múltiplos Palpites com Looping</a></h2>
 <p>A palavra-chave <code>loop</code> cria um loop infinito. Vamos adicionar um loop para dar
-à pessoa jogadora mais chances de acertar o número:</p>
+mais chances de acertar o número:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
 </span><span class="boring">use std::io;
@@ -1760,16 +1769,18 @@ Vamos mudar isso adicionando um loop!</p>
         }
     }
 }</code></pre>
-<p>Como você pode ver, movemos tudo a partir do prompt de entrada do palpite para
+<p>Como você pode ver, movemos tudo a partir do prompt que pede o palpite para
 dentro de um loop. Certifique-se de recuar em mais quatro espaços as linhas
 dentro do loop e execute o programa novamente. Agora o programa pedirá outro
 palpite indefinidamente, o que introduz um novo problema: não parece haver uma
-forma de o usuário sair!</p>
-<p>O usuário sempre pode interromper o programa usando o atalho do teclado
-<kbd>ctrl</kbd>-<kbd>C</kbd>. Mas há outra maneira de escapar desse monstro insaciável, como mencionamos na discussão sobre <code>parse</code> em <a href="#comparando-o-palpite-com-o-número-secreto">“Comparando o palpite com o
-Número secreto”</a><!-- ignore -->: Se
-o usuário inserir uma resposta que não seja um número, o programa irá travar. Podemos levar
-vantagem disso para permitir que o usuário saia, conforme mostrado aqui:</p>
+forma de sair!</p>
+<p>A pessoa usuária sempre pode interromper o programa usando o atalho de teclado
+<kbd>ctrl</kbd>-<kbd>C</kbd>. Mas há outra forma de escapar desse monstro
+insaciável, como mencionamos na discussão sobre <code>parse</code> em <a href="#comparando-o-palpite-com-o-número-secreto">“Comparando o
+Palpite com o Número Secreto”</a><!-- ignore -->:
+se a pessoa usuária inserir uma resposta que não seja número, o programa vai
+encerrar. Podemos nos aproveitar disso para permitir que ela saia, como mostra
+o exemplo a seguir:</p>
 <!-- manual-regeneration
 cd listings/ch02-guessing-game-tutorial/no-listing-04-looping/
 touch src/main.rs
@@ -1804,11 +1815,12 @@ thread 'main' panicked at src/main.rs:28:47:
 Please type a number!: ParseIntError { kind: InvalidDigit }
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>Digitar <code>quit</code> encerra o jogo, mas, como você vai notar, qualquer outra entrada
-não numérica também o faz encerrar. Isso está longe do ideal; queremos que o
-jogo termine quando o número correto for adivinhado.</p>
+<p>Digitar <code>quit</code> encerra o jogo, mas, como você pode notar, qualquer outra
+entrada não numérica também o encerra. Isso está longe do ideal; queremos que o
+jogo também termine quando o número correto for adivinhado.</p>
 <h3 id="desistir-após-um-palpite-correto"><a class="header" href="#desistir-após-um-palpite-correto">Desistir após um palpite correto</a></h3>
-<p>Vamos programar o jogo para encerrar quando o usuário vencer, adicionando uma instrução <code>break</code>:</p>
+<p>Vamos programar o jogo para encerrar quando a pessoa usuária vencer,
+adicionando uma instrução <code>break</code>:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use std::cmp::Ordering;
 </span><span class="boring">use std::io;
@@ -1847,8 +1859,8 @@ jogo termine quando o número correto for adivinhado.</p>
         }
     }
 }</code></pre>
-<p>Adicionar a linha <code>break</code> após <code>You win!</code> faz o programa sair do loop quando o
-usuário acerta o número secreto. Sair do loop também significa sair do
+<p>Adicionar a linha <code>break</code> após <code>You win!</code> faz o programa sair do loop quando a
+pessoa usuária acerta o número secreto. Sair do loop também significa sair do
 programa, porque o loop é a última parte de <code>main</code>.</p>
 <h3 id="tratamento-de-entrada-inválida"><a class="header" href="#tratamento-de-entrada-inválida">Tratamento de entrada inválida</a></h3>
 <p>Para refinar ainda mais o comportamento do jogo, em vez de travar o programa quando
@@ -2039,7 +2051,7 @@ não pode alterar esse valor. Para ilustrar isso, gere um novo projeto chamado
 <em>variables</em> dentro do diretório <em>projects</em> usando <code>cargo new variables</code>.</p>
 <p>Depois, no novo diretório <em>variables</em>, abra <em>src/main.rs</em> e substitua seu
 código pelo seguinte, que ainda não compilará:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = 5;
     println!("The value of x is: {x}");
@@ -2070,7 +2082,7 @@ error: could not compile `variables` (bin "variables") due to 1 previous error
 <p>Este exemplo mostra como o compilador ajuda você a encontrar erros em seus
 programas. Erros de compilação podem ser frustrantes, mas, na verdade, eles só
 significam que seu programa ainda não está fazendo com segurança aquilo que
-você quer; eles <em>não</em> significam que você é um mau programador! Rustaceans
+você quer; eles <em>não</em> significam que você é um mau programador! Rustaceanos
 experientes também recebem erros do compilador.</p>
 <p>Você recebeu a mensagem de erro <code>cannot assign twice to immutable variable `x`</code> porque tentou atribuir um segundo valor à variável imutável <code>x</code>.</p>
 <p>É importante recebermos erros em tempo de compilação quando tentamos mudar um
@@ -2089,7 +2101,7 @@ mutáveis adicionando <code>mut</code> antes do nome da variável, como fez no <
 comunica intenção a futuras pessoas leitoras do código, indicando que outras
 partes do programa mudarão o valor dessa variável.</p>
 <p>Por exemplo, vamos mudar <em>src/main.rs</em> para o seguinte:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let mut x = 5;
     println!("The value of x is: {x}");
@@ -2151,14 +2163,14 @@ alterado se o valor hardcoded tiver de ser atualizado no futuro.</p>
 <h3 id="shadowing"><a class="header" href="#shadowing">Shadowing</a></h3>
 <p>Como você viu no tutorial do jogo de adivinhação no <a href="#comparing-the-guess-to-the-secret-number">Capítulo
 2</a><!-- ignore -->, você pode declarar
-uma nova variável com o mesmo nome de uma variável anterior. Rustaceans dizem
+uma nova variável com o mesmo nome de uma variável anterior. Rustaceanos dizem
 que a primeira variável é <em>shadowed</em> pela segunda, o que significa que a
 segunda variável é aquela que o compilador verá quando você usar aquele nome.
 Na prática, a segunda variável encobre a primeira, e qualquer uso desse nome se
 refere a ela até que ela própria seja shadowed ou até que o escopo termine.
 Podemos fazer shadowing de uma variável repetindo o mesmo nome e usando
 novamente a palavra-chave <code>let</code>, assim:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 5;
 
@@ -3384,7 +3396,7 @@ ownership.</p>
 em todo o restante da linguagem. É ele que permite ao Rust oferecer garantias
 de segurança de memória sem precisar de um garbage collector, por isso é
 importante entender como ownership funciona. Neste capítulo, falaremos sobre
-ownership e também sobre recursos relacionados: borrowing, slices e a forma
+ownership e também sobre recursos relacionados: empréstimos, slices e a forma
 como o Rust organiza dados na memória.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="o-que-é-ownership-1"><a href="#o-que-é-ownership-1" class="header">O que é Ownership?</a></h1>
@@ -5400,7 +5412,7 @@ método <code>area</code> definido no tipo <code>Rectangle</code>.</p>
 e um nome, eles podem ter parâmetros e valor de retorno, e contêm algum
 código que é executado quando o método é chamado. Diferentemente das funções,
 os métodos são definidos no contexto de uma struct, de um enum ou de um trait
-object, que veremos respectivamente no <a href="#enums-e-correspondência-de-padrões">Capítulo 6</a><!-- ignore --> e no
+object, que veremos respectivamente no <a href="#enums-e-pattern-matching">Capítulo 6</a><!-- ignore --> e no
 <a href="#usando-trait-objects-para-abstrair-comportamento-compartilhado">Capítulo 18</a><!-- ignore -->. Além disso, o primeiro parâmetro
 de um método é sempre <code>self</code>, que representa a instância da struct sobre a
 qual o método está sendo chamado.</p>
@@ -5742,15 +5754,15 @@ structs.</p>
 para o recurso de enums do Rust, adicionando mais uma ferramenta à nossa caixa
 de ferramentas.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="enums-e-correspondência-de-padrões"><a class="header" href="#enums-e-correspondência-de-padrões">Enums e correspondência de padrões</a></h1>
+<h1 id="enums-e-pattern-matching"><a class="header" href="#enums-e-pattern-matching">Enums e Pattern Matching</a></h1>
 <p>Neste capítulo, veremos enumerações, também chamadas de <em>enums</em>.
-Enums permitem definir um tipo enumerando suas possíveis variantes. Primeiro
-definiremos e usaremos um enum para mostrar como um enum pode codificar significado junto com
-dados. A seguir, exploraremos um enum particularmente útil, chamado <code>Option</code>, que
-expressa que um valor pode ser algo ou nada. Então, veremos
-como a correspondência de padrões na expressão <code>match</code> facilita a execução de diferentes
-código para diferentes valores de um enum. Por fim, abordaremos como o <code>if let</code>
-construct é outro idioma conveniente e conciso disponível para lidar com enums em
+Enums permitem definir um tipo enumerando suas possíveis variantes. Primeiro,
+vamos definir e usar um enum para mostrar como ele pode codificar significado
+junto com dados. Em seguida, exploraremos um enum particularmente útil chamado
+<code>Option</code>, que expressa que um valor pode ser alguma coisa ou nada. Depois,
+veremos como o pattern matching na expressão <code>match</code> facilita executar códigos
+diferentes para valores diferentes de um enum. Por fim, abordaremos como a
+construção <code>if let</code> é outro idiom conciso e conveniente para lidar com enums no
 seu código.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="definindo-um-enum-1"><a href="#definindo-um-enum-1" class="header">Definindo um Enum</a></h1>
@@ -6909,7 +6921,7 @@ binários.</p>
 executável. Em vez disso, eles definem funcionalidades destinadas a ser
 compartilhadas com outros projetos. Por exemplo, o crate <code>rand</code>, que usamos no
 <a href="#generating-a-random-number">Capítulo 2</a><!-- ignore -->, fornece funcionalidades para gerar números
-aleatórios. Na maior parte do tempo, quando Rustaceans dizem “crate”, eles
+aleatórios. Na maior parte do tempo, quando rustaceanos dizem “crate”, eles
 estão falando de um crate de biblioteca e usam “crate” quase como sinônimo da
 ideia geral de “biblioteca”.</p>
 <p>O <em>crate root</em> é o arquivo-fonte a partir do qual o compilador Rust começa a
@@ -7244,7 +7256,7 @@ error: could not compile `restaurant` (lib) due to 2 previous errors
 <p>As mensagens de erro dizem que o módulo <code>hosting</code> é privado. Em outras
 palavras, temos os caminhos corretos para o módulo <code>hosting</code> e para a função
 <code>add_to_waitlist</code>, mas Rust não nos deixa usá-los porque não temos acesso às
-seções privadas. Em Rust, todos os itens, como funções, métodos, structs,
+partes privadas. Em Rust, todos os itens, como funções, métodos, structs,
 enums, módulos e constantes, são privados para módulos pai por padrão. Se você
 quiser tornar um item como uma função ou struct privado, basta colocá-lo dentro
 de um módulo.</p>
@@ -8736,27 +8748,29 @@ essas situações complexas. Não deixe de consultar a documentação de método
 substituir partes de uma string por outra.</p>
 <p>Vamos mudar para algo um pouco menos complexo: hash maps!</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="armazenando-chaves-com-valores-associados-em-hash-maps"><a href="#armazenando-chaves-com-valores-associados-em-hash-maps" class="header">Armazenando Chaves com Valores Associados em Hash Maps</a></h1>
-<h2 id="armazenando-chaves-com-valores-associados-em-mapas-hash"><a class="header" href="#armazenando-chaves-com-valores-associados-em-mapas-hash">Armazenando Chaves com Valores Associados em Mapas Hash</a></h2>
-<p>A última de nossas coleções comuns é o mapa hash. O tipo <code>HashMap&lt;K, V&gt;</code>
-armazena um mapeamento de chaves do tipo <code>K</code> para valores do tipo <code>V</code> usando um <em>hashing
-function</em>, que determina como colocar essas chaves e valores na memória.
-Muitas linguagens de programação suportam esse tipo de estrutura de dados, mas muitas vezes
-use um nome diferente, como <em>hash</em>, <em>map</em>, <em>object</em>, <em>hash table</em>,
-<em>dicionário</em> ou <em>matriz associativa</em>, apenas para citar alguns.</p>
-<p>Os mapas hash são úteis quando você deseja pesquisar dados sem usar um índice, como
-você pode com vetores, mas usando uma chave que pode ser de qualquer tipo. Por exemplo,
-em um jogo, você pode acompanhar a pontuação de cada equipe em um mapa hash no qual
-cada chave é o nome de uma equipe e os valores são a pontuação de cada equipe. Dada uma equipe
-nome, você pode recuperar sua pontuação.</p>
-<p>Abordaremos a API básica de mapas hash nesta seção, mas com muito mais novidades
-estão escondidos nas funções definidas em <code>HashMap&lt;K, V&gt;</code> pela biblioteca padrão.
-Como sempre, verifique a documentação padrão da biblioteca para obter mais informações.</p>
-<h3 id="criando-um-novo-mapa-de-hash"><a class="header" href="#criando-um-novo-mapa-de-hash">Criando um novo mapa de hash</a></h3>
-<p>Uma maneira de criar um mapa hash vazio é usar <code>new</code> e adicionar elementos com
-<code>insert</code>. Na Listagem 8.20, estamos acompanhando as pontuações de duas equipes cujas
-os nomes são <em>Azul</em> e <em>Amarelo</em>. O time Azul começa com 10 pontos, e o
-O time amarelo começa com 50.</p>
+<h1 id="armazenando-chaves-com-valores-associados-em-hash-maps-1"><a href="#armazenando-chaves-com-valores-associados-em-hash-maps-1" class="header">Armazenando Chaves com Valores Associados em Hash Maps</a></h1>
+<h2 id="armazenando-chaves-com-valores-associados-em-hash-maps"><a class="header" href="#armazenando-chaves-com-valores-associados-em-hash-maps">Armazenando Chaves com Valores Associados em Hash Maps</a></h2>
+<p>A última das nossas coleções comuns é o hash map. O tipo <code>HashMap&lt;K, V&gt;</code>
+armazena um mapeamento de chaves do tipo <code>K</code> para valores do tipo <code>V</code> usando
+uma <em>hashing function</em>, que determina como essas chaves e valores são
+organizados na memória. Muitas linguagens de programação oferecem esse tipo de
+estrutura de dados, mas frequentemente com nomes diferentes, como <em>hash</em>,
+<em>map</em>, <em>object</em>, <em>hash table</em>, <em>dictionary</em> ou <em>associative array</em>, para citar
+alguns.</p>
+<p>Hash maps são úteis quando você quer procurar dados não por índice, como faz
+com vetores, mas por meio de uma chave que pode ser de qualquer tipo. Por
+exemplo, em um jogo, você pode acompanhar a pontuação de cada time em um hash
+map, em que cada chave é o nome de um time e os valores são suas respectivas
+pontuações. Dado o nome de um time, você pode recuperar sua pontuação.</p>
+<p>Nesta seção, veremos a API básica de hash maps, mas há muito mais
+funcionalidades escondidas nas funções definidas em <code>HashMap&lt;K, V&gt;</code> pela
+biblioteca padrão. Como sempre, consulte a documentação da biblioteca padrão
+para mais informações.</p>
+<h3 id="criando-um-novo-hash-map"><a class="header" href="#criando-um-novo-hash-map">Criando um Novo Hash Map</a></h3>
+<p>Uma forma de criar um hash map vazio é usar <code>new</code> e adicionar elementos com
+<code>insert</code>. Na Listagem 8-20, estamos acompanhando as pontuações de dois times,
+<em>Blue</em> e <em>Yellow</em>. O time Blue começa com 10 pontos, e o time Yellow começa
+com 50.</p>
 <figure class="listing" id="listing-8-20">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -8766,20 +8780,20 @@ O time amarelo começa com 50.</p>
     scores.insert(String::from("Blue"), 10);
     scores.insert(String::from("Yellow"), 50);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-20">Listing 8-20</a>: Creating a new hash map and inserting some keys and values</figcaption>
+<figcaption><a href="#listing-8-20">Listing 8-20</a>: Criando um novo hash map e inserindo algumas chaves e valores</figcaption>
 </figure>
-<p>Observe que precisamos primeiro <code>use</code> do <code>HashMap</code> da parte de coleções do
-a biblioteca padrão. Das nossas três coleções comuns, esta é a menos
-usado com frequência, por isso não está incluído nos recursos incluídos no escopo
-automaticamente no prelude. Os mapas hash também têm menos suporte do
-biblioteca padrão; não há macro integrada para construí-los, por exemplo.</p>
-<p>Assim como os vetores, os mapas hash armazenam seus dados na pilha. Este <code>HashMap</code> tem
-chaves do tipo <code>String</code> e valores do tipo <code>i32</code>. Assim como os vetores, os mapas hash são
-homogêneo: todas as chaves devem ter o mesmo tipo e todos os valores
-deve ser do mesmo tipo.</p>
-<h3 id="acessando-valores-em-um-mapa-hash"><a class="header" href="#acessando-valores-em-um-mapa-hash">Acessando Valores em um Mapa Hash</a></h3>
-<p>Podemos obter um valor do mapa hash fornecendo sua chave para <code>get</code>
-método, conforme mostrado na Listagem 8-21.</p>
+<p>Observe que primeiro precisamos usar <code>use</code> para trazer <code>HashMap</code> da parte de
+coleções da biblioteca padrão. Das nossas três coleções comuns, esta é a menos
+usada com frequência, então não faz parte dos itens colocados automaticamente
+em escopo pelo prelude. Hash maps também recebem menos suporte direto da
+biblioteca padrão; por exemplo, não existe uma macro embutida para construí-los.</p>
+<p>Assim como vetores, hash maps armazenam seus dados na heap. Esse <code>HashMap</code> tem
+chaves do tipo <code>String</code> e valores do tipo <code>i32</code>. Como vetores, hash maps são
+homogêneos: todas as chaves precisam ter o mesmo tipo, e todos os valores
+também precisam ter o mesmo tipo.</p>
+<h3 id="acessando-valores-em-um-hash-map"><a class="header" href="#acessando-valores-em-um-hash-map">Acessando Valores em um Hash Map</a></h3>
+<p>Podemos obter um valor de um hash map fornecendo sua chave ao método <code>get</code>,
+como mostra a Listagem 8-21.</p>
 <figure class="listing" id="listing-8-21">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -8792,16 +8806,16 @@ método, conforme mostrado na Listagem 8-21.</p>
     let team_name = String::from("Blue");
     let score = scores.get(&amp;team_name).copied().unwrap_or(0);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-21">Listing 8-21</a>: Accessing the score for the Blue team stored in the hash map</figcaption>
+<figcaption><a href="#listing-8-21">Listing 8-21</a>: Acessando a pontuação do time Blue armazenada no hash map</figcaption>
 </figure>
-<p>Aqui, <code>score</code> terá o valor associado ao time Azul, e o
-o resultado será <code>10</code>. O método <code>get</code> retorna um <code>Option&lt;&amp;V&gt;</code>; se não houver
-valor para essa chave no mapa hash, <code>get</code> retornará <code>None</code>. Este programa
-lida com <code>Option</code> chamando <code>copied</code> para obter um <code>Option&lt;i32&gt;</code> em vez de um
-<code>Option&lt;&amp;i32&gt;</code>, então <code>unwrap_or</code> para definir <code>score</code> como zero se <code>scores</code> não
-tem uma entrada para a chave.</p>
-<p>Podemos iterar cada par de valores-chave em um mapa hash de maneira semelhante a
-faça com vetores, usando um loop <code>for</code>:</p>
+<p>Aqui, <code>score</code> terá o valor associado ao time Blue, e o resultado será <code>10</code>. O
+método <code>get</code> retorna um <code>Option&lt;&amp;V&gt;</code>; se não houver valor para aquela chave no
+hash map, <code>get</code> retornará <code>None</code>. Este programa lida com o <code>Option</code> chamando
+<code>copied</code> para obter um <code>Option&lt;i32&gt;</code> em vez de um <code>Option&lt;&amp;i32&gt;</code> e, em seguida,
+<code>unwrap_or</code> para definir <code>score</code> como zero caso <code>scores</code> não tenha uma entrada
+para aquela chave.</p>
+<p>Podemos iterar sobre cada par chave-valor em um hash map de maneira parecida
+com o que fazemos com vetores, usando um loop <code>for</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
 
@@ -8814,16 +8828,17 @@ faça com vetores, usando um loop <code>for</code>:</p>
         println!("{key}: {value}");
     }
 <span class="boring">}</span></code></pre>
-<p>Este código imprimirá cada par em uma ordem arbitrária:</p>
+<p>Esse código imprimirá cada par em uma ordem arbitrária:</p>
 <pre><code class="language-text">Yellow: 50
 Blue: 10
 </code></pre>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="hash-maps-and-ownership"></a></p>
-<h3 id="gerenciando-propriedade-em-mapas-hash"><a class="header" href="#gerenciando-propriedade-em-mapas-hash">Gerenciando propriedade em mapas hash</a></h3>
-<p>Para tipos que implementam a característica <code>Copy</code>, como <code>i32</code>, os valores são copiados
-no mapa hash. Para valores próprios como <code>String</code>, os valores serão movidos e
-o mapa hash será o proprietário desses valores, conforme demonstrado na Listagem 8.22.</p>
+<h3 id="gerenciando-ownership-em-hash-maps"><a class="header" href="#gerenciando-ownership-em-hash-maps">Gerenciando Ownership em Hash Maps</a></h3>
+<p>Para tipos que implementam a trait <code>Copy</code>, como <code>i32</code>, os valores são copiados
+para dentro do hash map. Para valores próprios, como <code>String</code>, os valores são
+movidos, e o hash map passa a ser o proprietário desses valores, como mostra a
+Listagem 8-22.</p>
 <figure class="listing" id="listing-8-22">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -8836,32 +8851,33 @@ o mapa hash será o proprietário desses valores, conforme demonstrado na Listag
     // field_name and field_value are invalid at this point, try using them and
     // see what compiler error you get!
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-22">Listing 8-22</a>: Showing that keys and values are owned by the hash map once they’re inserted</figcaption>
+<figcaption><a href="#listing-8-22">Listing 8-22</a>: Mostrando que as chaves e os valores passam a ser de propriedade do hash map depois de inseridos</figcaption>
 </figure>
-<p>Não podemos usar as variáveis ​​<code>field_name</code> e <code>field_value</code> depois
-eles foram movidos para o mapa hash com a chamada para <code>insert</code>.</p>
-<p>Se inserirmos referências a valores no mapa hash, os valores não serão movidos
-no mapa hash. Os valores para os quais as referências apontam devem ser válidos por pelo menos
-pelo menos enquanto o mapa hash for válido. Falaremos mais sobre esses assuntos em
-<a href="#validating-references-with-lifetimes">“Validando Referências com
-Vidas”</a><!-- ignore --> no Capítulo 10.</p>
-<h3 id="atualizando-um-mapa-hash"><a class="header" href="#atualizando-um-mapa-hash">Atualizando um mapa hash</a></h3>
-<p>Embora o número de pares de chave e valor possa crescer, cada chave exclusiva pode
-tem apenas um valor associado a ele por vez (mas não vice-versa: para
-por exemplo, tanto a equipe Azul quanto a equipe Amarela poderiam ter o valor <code>10</code>
-armazenado no mapa hash <code>scores</code>).</p>
-<p>Quando você deseja alterar os dados em um mapa hash, você deve decidir como
-lidar com o caso quando uma chave já tem um valor atribuído. Você poderia substituir o
-valor antigo pelo novo valor, desconsiderando completamente o valor antigo. Você poderia
-mantenha o valor antigo e ignore o novo valor, apenas adicionando o novo valor se o
-key <em>não</em> já tem um valor. Ou você pode combinar o valor antigo e o
-novo valor. Vejamos como fazer cada um deles!</p>
-<h4 id="substituindo-um-valor"><a class="header" href="#substituindo-um-valor">Substituindo um valor</a></h4>
-<p>Se inserirmos uma chave e um valor em um mapa hash e depois inserirmos a mesma chave
-com um valor diferente, o valor associado a essa chave será substituído.
-Mesmo que o código na Listagem 8-23 chame <code>insert</code> duas vezes, o mapa hash
-contêm apenas um par de valores-chave porque estamos inserindo o valor para o Azul
-chave da equipe em ambas as vezes.</p>
+<p>Não podemos mais usar as variáveis <code>field_name</code> e <code>field_value</code> depois que elas
+forem movidas para dentro do hash map pela chamada a <code>insert</code>.</p>
+<p>Se inserirmos referências a valores no hash map, os valores em si não serão
+movidos para dentro dele. Os valores apontados por essas referências precisam
+continuar válidos por pelo menos tanto tempo quanto o hash map for válido.
+Falaremos mais sobre essas questões em <a href="#validando-referências-com-lifetimes-1">“Validando Referências com
+Lifetimes”</a><!-- ignore --> no Capítulo
+10.</p>
+<h3 id="atualizando-um-hash-map"><a class="header" href="#atualizando-um-hash-map">Atualizando um Hash Map</a></h3>
+<p>Embora o número de pares chave-valor possa crescer, cada chave única só pode
+ter um valor associado por vez, embora o inverso não seja verdadeiro. Por
+exemplo, tanto o time Blue quanto o time Yellow podem ter o valor <code>10</code>
+armazenado no hash map <code>scores</code>.</p>
+<p>Quando você quer alterar os dados em um hash map, precisa decidir como tratar o
+caso em que uma chave já possui um valor associado. Você pode substituir o
+valor antigo pelo novo, ignorando completamente o valor anterior. Pode manter o
+valor antigo e ignorar o novo, adicionando o novo valor apenas se a chave
+<em>ainda não</em> tiver um valor. Ou pode combinar o valor antigo com o novo. Vamos
+ver como fazer cada uma dessas coisas!</p>
+<h4 id="sobrescrevendo-um-valor"><a class="header" href="#sobrescrevendo-um-valor">Sobrescrevendo um Valor</a></h4>
+<p>Se inserirmos uma chave e um valor em um hash map e depois inserirmos essa
+mesma chave com um valor diferente, o valor associado a ela será substituído.
+Mesmo que o código da Listagem 8-23 chame <code>insert</code> duas vezes, o hash map
+conterá apenas um par chave-valor, porque estamos inserindo valor para a chave
+do time Blue nas duas vezes.</p>
 <figure class="listing" id="listing-8-23">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -8873,23 +8889,23 @@ chave da equipe em ambas as vezes.</p>
 
     println!("{scores:?}");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-23">Listing 8-23</a>: Replacing a value stored with a particular key</figcaption>
+<figcaption><a href="#listing-8-23">Listing 8-23</a>: Substituindo o valor armazenado em uma determinada chave</figcaption>
 </figure>
-<p>Este código imprimirá <code>{"Blue": 25}</code>. O valor original de <code>10</code> foi
+<p>Esse código imprimirá <code>{"Blue": 25}</code>. O valor original, <code>10</code>, foi
 sobrescrito.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="only-inserting-a-value-if-the-key-has-no-value"></a></p>
-<h4 id="adicionando-uma-chave-e-um-valor-somente-se-uma-chave-não-estiver-presente"><a class="header" href="#adicionando-uma-chave-e-um-valor-somente-se-uma-chave-não-estiver-presente">Adicionando uma chave e um valor somente se uma chave não estiver presente</a></h4>
-<p>É comum verificar se uma determinada chave já existe no mapa hash
-com um valor e, em seguida, executar as seguintes ações: Se a chave existir em
-no mapa hash, o valor existente deve permanecer como está; se a chave
-não existe, insira-o e um valor para ele.</p>
-<p>Os mapas hash têm uma API especial para isso chamada <code>entry</code> que pega a chave que você
-deseja verificar como parâmetro. O valor de retorno do método <code>entry</code> é um enum
-chamado <code>Entry</code> que representa um valor que pode ou não existir. Digamos
-queremos verificar se a chave do time Amarelo tem um valor associado
-com isso. Caso contrário, queremos inserir o valor <code>50</code>, e o mesmo para o
-Equipe azul. Usando a API <code>entry</code>, o código se parece com a Listagem 8.24.</p>
+<h4 id="adicionando-uma-chave-e-um-valor-somente-se-a-chave-ainda-não-estiver-presente"><a class="header" href="#adicionando-uma-chave-e-um-valor-somente-se-a-chave-ainda-não-estiver-presente">Adicionando uma Chave e um Valor Somente se a Chave Ainda Não Estiver Presente</a></h4>
+<p>É comum verificar se uma determinada chave já existe no hash map com algum
+valor e então tomar as seguintes ações: se a chave já existir, o valor atual
+deve permanecer como está; se a chave não existir, inserimos a chave e um valor
+para ela.</p>
+<p>Hash maps têm uma API especial para isso chamada <code>entry</code>, que recebe como
+parâmetro a chave que você quer verificar. O valor retornado pelo método
+<code>entry</code> é um enum chamado <code>Entry</code>, que representa um valor que pode ou não
+existir. Digamos que queremos verificar se a chave do time Yellow tem um valor
+associado. Se não tiver, queremos inserir o valor <code>50</code>, e o mesmo vale para o
+time Blue. Usando a API <code>entry</code>, o código fica como na Listagem 8-24.</p>
 <figure class="listing" id="listing-8-24">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -8902,25 +8918,25 @@ Equipe azul. Usando a API <code>entry</code>, o código se parece com a Listagem
 
     println!("{scores:?}");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-24">Listing 8-24</a>: Using the <code>entry</code> method to only insert if the key does not already have a value</figcaption>
+<figcaption><a href="#listing-8-24">Listing 8-24</a>: Usando o método <code>entry</code> para inserir apenas se a chave ainda não tiver um valor</figcaption>
 </figure>
-<p>O método <code>or_insert</code> em <code>Entry</code> é definido para retornar uma referência mutável para
-o valor da chave <code>Entry</code> correspondente, se essa chave existir, e se não, ela
-insere o parâmetro como o novo valor para esta chave e retorna um mutável
-referência ao novo valor. Esta técnica é muito mais limpa do que escrever o
-lógica e, além disso, funciona melhor com o verificador de empréstimo.</p>
-<p>A execução do código na Listagem 8.24 imprimirá <code>{"Yellow": 50, "Blue": 10}</code>. O
-a primeira chamada para <code>entry</code> irá inserir a chave para o time Amarelo com o valor
-<code>50</code> porque o time Amarelo ainda não tem valor. A segunda chamada para
-<code>entry</code> não irá alterar o mapa hash, pois a equipe Azul já possui o
-valor <code>10</code>.</p>
-<h4 id="atualizando-um-valor-com-base-no-valor-antigo"><a class="header" href="#atualizando-um-valor-com-base-no-valor-antigo">Atualizando um valor com base no valor antigo</a></h4>
-<p>Outro caso de uso comum para mapas hash é procurar o valor de uma chave e então
-atualize-o com base no valor antigo. Por exemplo, a Listagem 8-25 mostra o código que
-conta quantas vezes cada palavra aparece em algum texto. Usamos um mapa hash com
-as palavras como chaves e incrementar o valor para controlar quantas vezes
-vi essa palavra. Se for a primeira vez que vemos uma palavra, primeiro inseriremos
-o valor <code>0</code>.</p>
+<p>O método <code>or_insert</code> em <code>Entry</code> foi definido para retornar uma referência
+mutável ao valor da chave correspondente caso essa chave exista; se não
+existir, ele insere o parâmetro como novo valor dessa chave e retorna uma
+referência mutável a esse novo valor. Essa técnica é bem mais limpa do que
+escrever toda a lógica manualmente e, além disso, funciona melhor com o borrow
+checker.</p>
+<p>Executar o código da Listagem 8-24 imprimirá <code>{"Yellow": 50, "Blue": 10}</code>. A
+primeira chamada a <code>entry</code> vai inserir a chave do time Yellow com o valor <code>50</code>,
+porque o time Yellow ainda não tem um valor. A segunda chamada a <code>entry</code> não
+vai alterar o hash map, porque o time Blue já tem o valor <code>10</code>.</p>
+<h4 id="atualizando-um-valor-com-base-no-valor-antigo"><a class="header" href="#atualizando-um-valor-com-base-no-valor-antigo">Atualizando um Valor com Base no Valor Antigo</a></h4>
+<p>Outro caso de uso comum para hash maps é procurar o valor de uma chave e, em
+seguida, atualizá-lo com base no valor anterior. Por exemplo, a Listagem 8-25
+mostra um código que conta quantas vezes cada palavra aparece em um texto.
+Usamos um hash map com as palavras como chaves e incrementamos o valor para
+acompanhar quantas vezes vimos cada palavra. Se for a primeira vez que vemos
+uma palavra, primeiro inserimos o valor <code>0</code>.</p>
 <figure class="listing" id="listing-8-25">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::collections::HashMap;
@@ -8936,54 +8952,56 @@ o valor <code>0</code>.</p>
 
     println!("{map:?}");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-25">Listing 8-25</a>: Counting occurrences of words using a hash map that stores words and counts</figcaption>
+<figcaption><a href="#listing-8-25">Listing 8-25</a>: Contando ocorrências de palavras usando um hash map que armazena palavras e contagens</figcaption>
 </figure>
-<p>Este código imprimirá <code>{"world": 2, "hello": 1, "wonderful": 1}</code>. Você pode ver
-os mesmos pares de valores-chave impressos em uma ordem diferente: Lembre-se de <a href="#accessing-values-in-a-hash-map">“Acessando
-Valores em um mapa hash”</a><!-- ignore --> que itera sobre um mapa hash
-acontece em uma ordem arbitrária.</p>
-<p>O método <code>split_whitespace</code> retorna um iterador sobre subfatias, separadas por
-espaço em branco, do valor em <code>text</code>. O método <code>or_insert</code> retorna um mutável
-referência (<code>&amp;mut V</code>) ao valor da chave especificada. Aqui, nós armazenamos isso
-referência mutável na variável <code>count</code>, portanto, para atribuir a esse valor,
-devemos primeiro desreferenciar <code>count</code> usando o asterisco (<code>*</code>). O mutável
-referência sai do escopo no final do loop <code>for</code>, então todos esses
-as mudanças são seguras e permitidas pelas regras de empréstimo.</p>
-<h3 id="funções-de-hash"><a class="header" href="#funções-de-hash">Funções de hash</a></h3>
-<p>Por padrão, <code>HashMap</code> usa uma função hash chamada <em>SipHash</em> que pode fornecer
-resistência a ataques de negação de serviço (DoS) envolvendo hash
-tabelas<sup class="footnote-reference" id="fr-siphash-1"><a href="#footnote-siphash">1</a></sup><!-- ignore -->. Este não é o algoritmo de hash mais rápido
-disponível, mas a compensação por melhor segurança que vem com a queda na
-o desempenho vale a pena. Se você criar o perfil do seu código e descobrir que o padrão
-a função hash é muito lenta para seus propósitos, você pode mudar para outra função
-especificando um hasher diferente. Um <em>hasher</em> é um tipo que implementa o
-<code>BuildHasher</code> característica. Falaremos sobre características e como implementá-las em
-<a href="#definindo-comportamento-compartilhado-com-traits">Capítulo 10</a><!-- ignore -->. Você não precisa necessariamente implementar
-seu próprio hasher do zero; <a href="https://crates.io/">crates.io</a><!-- ignore -->
-tem bibliotecas compartilhadas por outros usuários do Rust que fornecem hashers implementando muitos
-algoritmos de hash comuns.</p>
+<p>Esse código imprimirá <code>{"world": 2, "hello": 1, "wonderful": 1}</code>. Você pode
+ver os mesmos pares chave-valor impressos em outra ordem. Lembre-se, pela
+seção <a href="#acessando-valores-em-um-hash-map">“Acessando Valores em um Hash Map”</a><!-- ignore -->, que iterar
+sobre um hash map acontece em ordem arbitrária.</p>
+<p>O método <code>split_whitespace</code> retorna um iterador sobre subfatias do valor em
+<code>text</code>, separadas por espaço em branco. O método <code>or_insert</code> retorna uma
+referência mutável (<code>&amp;mut V</code>) ao valor da chave especificada. Aqui, armazenamos
+essa referência mutável na variável <code>count</code>, então, para atribuir um valor a
+ela, primeiro precisamos desreferenciar <code>count</code> usando o asterisco (<code>*</code>). A
+referência mutável sai de escopo no fim do loop <code>for</code>, então todas essas
+mudanças são seguras e permitidas pelas regras de borrowing.</p>
+<h3 id="funções-de-hash"><a class="header" href="#funções-de-hash">Funções de Hash</a></h3>
+<p>Por padrão, <code>HashMap</code> usa uma função de hash chamada <em>SipHash</em>, que pode
+oferecer resistência a ataques de negação de serviço (DoS) envolvendo tabelas
+hash<sup class="footnote-reference" id="fr-siphash-1"><a href="#footnote-siphash">1</a></sup><!-- ignore -->. Esse não é o algoritmo de hash mais rápido
+disponível, mas o trade-off por maior segurança, mesmo com a queda de
+desempenho, vale a pena. Se você fizer profiling do seu código e descobrir que
+a função de hash padrão é lenta demais para o seu caso, pode trocar por outra,
+especificando um hasher diferente. Um <em>hasher</em> é um tipo que implementa a trait
+<code>BuildHasher</code>. Falaremos sobre traits e sobre como implementá-las no <a href="#definindo-comportamento-compartilhado-com-traits">Capítulo
+10</a><!-- ignore -->. Você não precisa necessariamente implementar seu
+próprio hasher do zero; <a href="https://crates.io/">crates.io</a><!-- ignore --> tem
+bibliotecas compartilhadas por outros usuários de Rust que fornecem hashers com
+vários algoritmos de hash comuns.</p>
 <h2 id="resumo-7"><a class="header" href="#resumo-7">Resumo</a></h2>
-<p>Vetores, strings e mapas hash fornecerão uma grande quantidade de funcionalidades
-necessário em programas quando você precisa armazenar, acessar e modificar dados. Aqui estão
-alguns exercícios que você agora deve estar preparado para resolver:</p>
+<p>Vetores, strings e hash maps oferecem grande parte da funcionalidade necessária
+em programas quando você precisa armazenar, acessar e modificar dados. Aqui
+estão alguns exercícios para os quais você já deve estar preparado:</p>
 <ol>
-<li>Dada uma lista de inteiros, use um vetor e retorne a mediana (quando classificado,
-o valor na posição intermediária) e moda (o valor que ocorre mais
-muitas vezes; um mapa hash será útil aqui) da lista.</li>
-<li>Converta strings para Pig Latin. A primeira consoante de cada palavra é movida para
-o final da palavra e <em>ay</em> são adicionados, então <em>first</em> se torna <em>irst-fay</em>. Palavras
-que começam com uma vogal têm <em>hay</em> adicionado ao final (<em>apple</em> se torna
-<em>maçã-feno</em>). Tenha em mente os detalhes sobre a codificação UTF-8!</li>
-<li>Usando um mapa hash e vetores, crie uma interface de texto para permitir que um usuário adicione
-nomes de funcionários de um departamento de uma empresa; por exemplo, “Adicionar Sally a
-Engenharia” ou “Adicionar Amir às Vendas”. Em seguida, deixe o usuário recuperar uma lista de
-todas as pessoas de um departamento ou todas as pessoas da empresa por departamento, classificadas
-alfabeticamente.</li>
+<li>Dada uma lista de inteiros, use um vetor e retorne a mediana, isto é, o
+valor na posição do meio após ordenar, e a moda, o valor que ocorre com mais
+frequência. Um hash map será útil aqui.</li>
+<li>Converta strings para Pig Latin. A primeira consoante de cada palavra vai
+para o final da palavra, e adicionamos <em>ay</em>; assim, <em>first</em> vira
+<em>irst-fay</em>. Palavras que começam com vogal recebem <em>hay</em> no final, então
+<em>apple</em> vira <em>apple-hay</em>. Tenha em mente os detalhes da codificação UTF-8!</li>
+<li>Usando um hash map e vetores, crie uma interface de texto para permitir que
+a pessoa usuária adicione nomes de funcionários a um departamento de uma
+empresa; por exemplo, “Add Sally to Engineering” ou “Add Amir to Sales”.
+Depois, permita que a pessoa usuária recupere uma lista de todas as pessoas
+de um departamento ou de todas as pessoas da empresa agrupadas por
+departamento, em ordem alfabética.</li>
 </ol>
-<p>A documentação da API da biblioteca padrão descreve métodos que vetores, strings,
-e mapas hash que serão úteis para esses exercícios!</p>
-<p>Estamos entrando em programas mais complexos nos quais as operações podem falhar, por isso é
-um momento perfeito para discutir o tratamento de erros. Faremos isso a seguir!</p>
+<p>A documentação da API da biblioteca padrão descreve métodos de vetores,
+strings e hash maps que serão úteis para esses exercícios!</p>
+<p>Estamos entrando em programas mais complexos, nos quais operações podem falhar,
+então este é um momento perfeito para discutir tratamento de erros. É o que
+veremos a seguir!</p>
 <hr>
 <ol class="footnote-definition">
 <li id="footnote-siphash">
@@ -8991,53 +9009,53 @@ um momento perfeito para discutir o tratamento de erros. Faremos isso a seguir!<
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="tratamento-de-erros"><a class="header" href="#tratamento-de-erros">Tratamento de erros</a></h1>
-<p>Erros são uma realidade no software, então Rust tem vários recursos para
-lidar com situações em que algo dá errado. Em muitos casos, Rust requer
-você reconheça a possibilidade de um erro e tome alguma ação antes de seu
-o código será compilado. Este requisito torna seu programa mais robusto, garantindo
-que você descobrirá erros e os tratará adequadamente antes de implantar seu
-código para produção!</p>
-<p>Rust agrupa os erros em duas categorias principais: recuperáveis ​​e irrecuperáveis
-erros. Para um <em>erro recuperável</em>, como um erro de <em>arquivo não encontrado</em>, nós mais
-provavelmente deseja apenas relatar o problema ao usuário e tentar novamente a operação.
-<em>Erros irrecuperáveis</em> são sempre sintomas de bugs, como tentar acessar um
-localização além do final de uma matriz e, portanto, queremos interromper imediatamente o
-programa.</p>
-<p>A maioria das linguagens não distingue entre esses dois tipos de erros e lida com
-ambos da mesma forma, utilizando mecanismos como exceções. Ferrugem não tem
-exceções. Em vez disso, tem o tipo <code>Result&lt;T, E&gt;</code> para erros recuperáveis ​​e
-a macro <code>panic!</code> que interrompe a execução quando o programa encontra um
-erro irrecuperável. Este capítulo cobre ligar para <code>panic!</code> primeiro e depois falar
-sobre como retornar valores <code>Result&lt;T, E&gt;</code>. Além disso, exploraremos
-considerações ao decidir se deve tentar se recuperar de um erro ou parar
+<h1 id="tratamento-de-erros"><a class="header" href="#tratamento-de-erros">Tratamento de Erros</a></h1>
+<p>Erros são um fato da vida no software, então Rust oferece vários recursos para
+lidar com situações em que algo dá errado. Em muitos casos, Rust exige que
+você reconheça a possibilidade de erro e tome alguma ação antes que seu código
+compile. Esse requisito torna o programa mais robusto, garantindo que você
+descubra e trate os erros adequadamente antes de colocá-lo em produção!</p>
+<p>Rust agrupa os erros em duas grandes categorias: erros recuperáveis e
+irrecuperáveis. Para um <em>erro recuperável</em>, como <em>arquivo não encontrado</em>, o
+mais provável é que queiramos apenas informar o problema à pessoa usuária e
+tentar novamente a operação. Já <em>erros irrecuperáveis</em> são sempre sintomas de
+bugs, como tentar acessar uma posição além do fim de um array, então queremos
+interromper imediatamente o programa.</p>
+<p>A maioria das linguagens não distingue entre esses dois tipos de erro e trata
+ambos da mesma forma, usando mecanismos como exceções. Rust não tem exceções.
+Em vez disso, ele tem o tipo <code>Result&lt;T, E&gt;</code> para erros recuperáveis e a macro
+<code>panic!</code>, que interrompe a execução quando o programa encontra um erro
+irrecuperável. Neste capítulo, veremos primeiro chamadas a <code>panic!</code> e depois
+falaremos sobre retornar valores <code>Result&lt;T, E&gt;</code>. Além disso, exploraremos
+critérios para decidir se é melhor tentar se recuperar de um erro ou encerrar a
 execução.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="erros-irrecuperáveis-com-panic-1"><a href="#erros-irrecuperáveis-com-panic-1" class="header">Erros Irrecuperáveis com panic!</a></h1>
-<h2 id="erros-irrecuperáveis-com-panic"><a class="header" href="#erros-irrecuperáveis-com-panic">Erros irrecuperáveis ​​com <code>panic!</code></a></h2>
-<p>Às vezes, coisas ruins acontecem no seu código e não há nada que você possa fazer a respeito.
-isto. Nestes casos, Rust possui a macro <code>panic!</code>. Existem duas maneiras de causar um
-pânico na prática: executando uma ação que causa pânico em nosso código (como
-acessando um array após o final) ou chamando explicitamente a macro <code>panic!</code>.
-Em ambos os casos, causamos pânico em nosso programa. Por padrão, esses pânicos irão
-imprima uma mensagem de falha, relaxe, limpe a pilha e saia. Através de um
-variável de ambiente, você também pode fazer com que Rust exiba a pilha de chamadas quando um
-o pânico ocorre para tornar mais fácil rastrear a origem do pânico.</p>
+<h2 id="erros-irrecuperáveis-com-panic"><a class="header" href="#erros-irrecuperáveis-com-panic">Erros Irrecuperáveis com <code>panic!</code></a></h2>
+<p>Às vezes, coisas ruins acontecem no seu código, e não há nada que você possa
+fazer a respeito. Nesses casos, Rust oferece a macro <code>panic!</code>. Na prática,
+existem duas formas de causar um panic: executando uma ação que faça o código
+entrar em panic, como acessar um array além do fim, ou chamando explicitamente
+a macro <code>panic!</code>. Em ambos os casos, provocamos um panic no programa. Por
+padrão, esses panics exibem uma mensagem de falha, fazem <em>unwind</em>, limpam a
+stack e encerram o programa. Por meio de uma variável de ambiente, você também
+pode fazer Rust exibir a call stack quando ocorre um panic, para facilitar a
+localização da origem do problema.</p>
 <section class="note" aria-role="note">
-<h3 id="desenrolar-a-pilha-ou-abortar-em-resposta-a-um-pânico"><a class="header" href="#desenrolar-a-pilha-ou-abortar-em-resposta-a-um-pânico">Desenrolar a pilha ou abortar em resposta a um pânico</a></h3>
-<p>Por padrão, quando ocorre um pânico, o programa começa a <em>desenrolar</em>, o que significa
-Rust volta para a pilha e limpa os dados de cada função que ele
-encontros. No entanto, voltar e limpar dá muito trabalho. Ferrugem
-portanto, permite que você escolha a alternativa de <em>abortar</em> imediatamente,
-que encerra o programa sem limpar.</p>
-<p>A memória que o programa estava usando precisará ser limpa pelo
-sistema operacional. Se no seu projeto você precisar tornar o binário resultante como
-menor possível, você pode passar do relaxamento para o aborto em caso de pânico,
-adicionando <code>panic = 'abort'</code> às seções <code>[profile]</code> apropriadas em seu
-Arquivo <em>Cargo.toml</em>. Por exemplo, se você quiser abortar em caso de pânico no modo de liberação,
-adicione isto:</p>
-<pre><code class="language-toml">[perfil.lançamento]
-pânico = 'abortar'
+<h3 id="fazendo-unwind-da-stack-ou-abortando-em-resposta-a-um-panic"><a class="header" href="#fazendo-unwind-da-stack-ou-abortando-em-resposta-a-um-panic">Fazendo Unwind da Stack ou Abortando em Resposta a um Panic</a></h3>
+<p>Por padrão, quando ocorre um panic, o programa começa a fazer <em>unwind</em>, o que
+significa que Rust percorre a stack de volta e limpa os dados de cada função
+encontrada. No entanto, percorrer a stack e limpar tudo dá trabalho. Por
+isso, Rust permite que você escolha a alternativa de <em>abortar</em> imediatamente,
+o que encerra o programa sem fazer limpeza.</p>
+<p>A memória que o programa estava usando precisará então ser liberada pelo
+sistema operacional. Se, no seu projeto, você precisar tornar o binário
+resultante o menor possível, pode trocar de unwind para abort ao ocorrer um
+panic adicionando <code>panic = 'abort'</code> às seções <code>[profile]</code> apropriadas do
+arquivo <em>Cargo.toml</em>. Por exemplo, se você quiser abortar ao ocorrer um panic
+no modo release, adicione isto:</p>
+<pre><code class="language-toml">[profile.release]
+panic = 'abort'
 </code></pre>
 </section>
 <p>Vamos tentar chamar <code>panic!</code> em um programa simples:</p>
@@ -9057,23 +9075,25 @@ thread 'main' panicked at src/main.rs:2:5:
 crash and burn
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>A chamada para <code>panic!</code> causa a mensagem de erro contida nas duas últimas linhas.
-A primeira linha mostra nossa mensagem de pânico e o local em nosso código-fonte onde
-o pânico ocorreu: <em>src/main.rs:2:5</em> indica que é a segunda linha,
-quinto caractere do nosso arquivo <em>src/main.rs</em>.</p>
-<p>Neste caso, a linha indicada faz parte do nosso código, e se formos até lá
-linha, vemos a chamada de macro <code>panic!</code>. Em outros casos, a chamada <code>panic!</code> pode
-estar no código que nosso código chama, e o nome do arquivo e o número da linha relatados por
-a mensagem de erro será o código de outra pessoa onde a macro <code>panic!</code> está
-chamado, não a linha do nosso código que eventualmente levou à chamada <code>panic!</code>.</p>
+<p>A chamada a <code>panic!</code> causa a mensagem de erro contida nas duas últimas linhas.
+A primeira linha mostra nossa mensagem de panic e o local do código-fonte em
+que ele ocorreu: <em>src/main.rs:2:5</em> indica a segunda linha e o quinto caractere
+do nosso arquivo <em>src/main.rs</em>.</p>
+<p>Neste caso, a linha indicada faz parte do nosso código e, se formos até ela,
+veremos a chamada à macro <code>panic!</code>. Em outros casos, a chamada a <code>panic!</code> pode
+estar no código que o nosso código chamou, e o nome do arquivo e o número da
+linha informados pela mensagem de erro serão do código de outra pessoa onde a
+macro <code>panic!</code> foi chamada, e não da linha do nosso código que acabou levando
+até essa chamada.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-a-panic-backtrace"></a></p>
-<p>Podemos usar o backtrace das funções de onde veio a chamada <code>panic!</code> para descobrir
-a parte do nosso código que está causando o problema. Para entender como usar
-um backtrace <code>panic!</code>, vamos dar uma olhada em outro exemplo e ver como é quando
-uma chamada <code>panic!</code> vem de uma biblioteca por causa de um bug em nosso código, em vez de
-do nosso código chamando a macro diretamente. A Listagem 9-1 tem algum código que
-tenta acessar um índice em um vetor além do intervalo de índices válidos.</p>
+<p>Podemos usar o backtrace das funções de onde veio a chamada <code>panic!</code> para
+descobrir qual parte do nosso código está causando o problema. Para entender
+como usar um backtrace de <code>panic!</code>, vamos analisar outro exemplo e ver como é
+quando uma chamada <code>panic!</code> vem de uma biblioteca por causa de um bug no nosso
+código, em vez de vir diretamente de uma chamada nossa à macro. A Listagem 9-1
+tem um código que tenta acessar um índice de um vetor além do intervalo de
+índices válidos.</p>
 <figure class="listing" id="listing-9-1">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust should_panic panics edition2024">fn main() {
@@ -9081,23 +9101,23 @@ tenta acessar um índice em um vetor além do intervalo de índices válidos.</p
 
     v[99];
 }</code></pre>
-<figcaption><a href="#listing-9-1">Listing 9-1</a>: Attempting to access an element beyond the end of a vector, which will cause a call to <code>panic!</code></figcaption>
+<figcaption><a href="#listing-9-1">Listing 9-1</a>: Tentando acessar um elemento além do fim de um vetor, o que causará uma chamada a <code>panic!</code></figcaption>
 </figure>
-<p>Aqui, estamos tentando acessar o 100º elemento do nosso vetor (que está em
-índice 99 porque a indexação começa em zero), mas o vetor tem apenas três
-elementos. Nesta situação, Rust entrará em pânico. Usar <code>[]</code> deve retornar
-um elemento, mas se você passar um índice inválido, não há nenhum elemento que Rust
-poderia retornar aqui isso seria correto.</p>
-<p>Em C, tentar ler além do final de uma estrutura de dados é indefinido
-comportamento. Você pode obter o que quer que esteja no local da memória que
-correspondem a esse elemento na estrutura de dados, mesmo que a memória
-não pertence a essa estrutura. Isso é chamado de <em>buffer overread</em> e pode
-levar a vulnerabilidades de segurança se um invasor for capaz de manipular o índice
-de forma a ler dados que não deveriam ser permitidos e que são armazenados após
-a estrutura de dados.</p>
-<p>Para proteger seu programa contra esse tipo de vulnerabilidade, se você tentar ler um
-elemento em um índice que não existe, Rust irá parar a execução e se recusará a
-continuar. Vamos tentar e ver:</p>
+<p>Aqui, estamos tentando acessar o centésimo elemento do nosso vetor, que está no
+índice 99, porque a indexação começa em zero, mas o vetor tem apenas três
+elementos. Nessa situação, Rust entra em panic. Usar <code>[]</code> deveria retornar um
+elemento, mas, se você passar um índice inválido, não existe nenhum elemento
+que Rust pudesse retornar aqui de forma correta.</p>
+<p>Em C, tentar ler além do fim de uma estrutura de dados é um comportamento
+indefinido. Você pode acabar obtendo qualquer coisa que esteja naquela posição
+de memória correspondente ao elemento na estrutura, mesmo que a memória não
+pertença a ela. Isso é chamado de <em>buffer overread</em> e pode levar a
+vulnerabilidades de segurança se uma pessoa atacante conseguir manipular o
+índice de maneira a ler dados que não deveria ter permissão para acessar e que
+estejam armazenados depois da estrutura de dados.</p>
+<p>Para proteger seu programa contra esse tipo de vulnerabilidade, se você tentar
+ler um elemento em um índice inexistente, Rust vai interromper a execução e se
+recusar a continuar. Vamos tentar para ver:</p>
 <pre><code class="language-console">$ cargo run
    Compiling panic v0.1.0 (file:///projects/panic)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.27s
@@ -9107,19 +9127,20 @@ thread 'main' panicked at src/main.rs:4:6:
 index out of bounds: the len is 3 but the index is 99
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>Este erro aponta para a linha 4 do nosso <em>main.rs</em> onde tentamos acessar o índice
-99 do vetor em <code>v</code>.</p>
-<p>A linha <code>note:</code> nos diz que podemos definir o ambiente <code>RUST_BACKTRACE</code>
-variável para obter um rastreamento exato do que aconteceu para causar o erro. UM
-<em>backtrace</em> é uma lista de todas as funções que foram chamadas para chegar a este
-apontar. Backtraces em Rust funcionam como em outras linguagens: a chave para
-ler o backtrace é começar do topo e ler até ver os arquivos que você
-escreveu. Esse é o local onde o problema se originou. As linhas acima desse ponto
-são códigos que seu código chamou; as linhas abaixo são o código que chamou seu
-código. Essas linhas antes e depois podem incluir o código Rust principal, padrão
-código da biblioteca ou crates que você está usando. Vamos tentar obter um backtrace
-definindo a variável de ambiente <code>RUST_BACKTRACE</code> para qualquer valor, exceto <code>0</code>.
-A Listagem 9-2 mostra um resultado semelhante ao que você verá.</p>
+<p>Esse erro aponta para a linha 4 do nosso <em>main.rs</em>, onde tentamos acessar o
+índice 99 do vetor <code>v</code>.</p>
+<p>A linha <code>note:</code> nos diz que podemos definir a variável de ambiente
+<code>RUST_BACKTRACE</code> para obter um backtrace exato do que aconteceu para causar o
+erro. Um <em>backtrace</em> é uma lista de todas as funções chamadas até chegar a esse
+ponto. Backtraces em Rust funcionam como em outras linguagens: a chave para
+lê-los é começar do topo e continuar até encontrar arquivos que você escreveu.
+Esse é o ponto onde o problema se originou. As linhas acima desse ponto são
+códigos que seu código chamou; as linhas abaixo são códigos que chamaram o seu
+código. Essas linhas antes e depois podem incluir código interno do Rust,
+código da biblioteca padrão ou crates que você está usando. Vamos tentar obter
+um backtrace definindo a variável de ambiente <code>RUST_BACKTRACE</code> para qualquer
+valor diferente de <code>0</code>. A Listagem 9-2 mostra uma saída parecida com a que você
+verá.</p>
 <!-- manual-regeneration
 cd listings/ch09-error-handling/listing-09-01
 RUST_BACKTRACE=1 cargo run
@@ -9149,24 +9170,25 @@ stack backtrace:
              at file:///home/.rustup/toolchains/1.85/lib/rustlib/src/rust/library/core/src/ops/function.rs:250:5
 note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
 </code></pre>
-<figcaption><a href="#listing-9-2">Listing 9-2</a>: The backtrace generated by a call to <code>panic!</code> displayed when the environment variable <code>RUST_BACKTRACE</code> is set</figcaption>
+<figcaption><a href="#listing-9-2">Listing 9-2</a>: O backtrace gerado por uma chamada a <code>panic!</code>, exibido quando a variável de ambiente <code>RUST_BACKTRACE</code> está definida</figcaption>
 </figure>
-<p>Isso é muita produção! A saída exata que você vê pode ser diferente dependendo
-em seu sistema operacional e versão Rust. Para obter backtraces com este
-informações, os símbolos de depuração devem estar habilitados. Os símbolos de depuração são habilitados por
-padrão ao usar <code>cargo build</code> ou <code>cargo run</code> sem o sinalizador <code>--release</code>,
-como temos aqui.</p>
-<p>Na saída da Listagem 9-2, a linha 6 do backtrace aponta para a linha em nosso
-projeto que está causando o problema: linha 4 de <em>src/main.rs</em>. Se não quisermos
-nosso programa entre em pânico, devemos começar nossa investigação no local apontado
-na primeira linha mencionando um arquivo que escrevemos. Na Listagem 9-1, onde
-escreveu deliberadamente um código que causaria pânico, a maneira de consertar o pânico é não
-solicitar um elemento além do intervalo dos índices vetoriais. Quando seu código
-pânico no futuro, você precisará descobrir qual ação o código está executando
-com quais valores causarão pânico e o que o código deve fazer.</p>
-<p>Voltaremos a <code>panic!</code> e quando devemos ou não usar <code>panic!</code> para
-lidar com condições de erro no <a href="#to-panic-or-not-to-panic">“Para <code>panic!</code> ou Não para
-<code>panic!</code>”</a><!-- ignore --> seção mais adiante neste
+<p>É bastante saída! A saída exata pode ser diferente dependendo do seu sistema
+operacional e da versão do Rust. Para obter backtraces com essas informações,
+os símbolos de depuração precisam estar habilitados. Eles ficam habilitados por
+padrão ao usar <code>cargo build</code> ou <code>cargo run</code> sem a flag <code>--release</code>, como
+estamos fazendo aqui.</p>
+<p>Na saída da Listagem 9-2, a linha 6 do backtrace aponta para a linha do nosso
+projeto que está causando o problema: a linha 4 de <em>src/main.rs</em>. Se não
+quisermos que o programa entre em panic, devemos começar a investigação no
+local indicado pela primeira linha que menciona um arquivo escrito por nós. Na
+Listagem 9-1, em que escrevemos deliberadamente um código que causaria panic, a
+forma de corrigir o problema é não solicitar um elemento além do intervalo de
+índices do vetor. Quando seu código entrar em panic no futuro, você vai
+precisar descobrir que ação ele está realizando, com quais valores, para causar
+o panic, e o que ele deveria fazer em vez disso.</p>
+<p>Voltaremos a <code>panic!</code> e a quando devemos ou não usá-lo para lidar com
+condições de erro na seção <a href="#usar-ou-não-usar-panic">“Para <code>panic!</code> ou não para
+<code>panic!</code>”</a><!-- ignore --> mais adiante neste
 capítulo. A seguir, veremos como se recuperar de um erro usando <code>Result</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="erros-recuperáveis-com-result-1"><a href="#erros-recuperáveis-com-result-1" class="header">Erros Recuperáveis com Result</a></h1>
@@ -9737,47 +9759,48 @@ cada caso.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="usar-ou-não-usar-panic"><a href="#usar-ou-não-usar-panic" class="header">Usar ou Não Usar panic!</a></h1>
 <h2 id="para-panic-ou-não-para-panic"><a class="header" href="#para-panic-ou-não-para-panic">Para <code>panic!</code> ou não para <code>panic!</code></a></h2>
-<p>Então, como você decide quando deve ligar para <code>panic!</code> e quando deve retornar
-<code>Result</code>? Quando o código entra em pânico, não há como se recuperar. Você poderia ligar para <code>panic!</code>
-para qualquer situação de erro, haja ou não uma forma possível de recuperação, mas
-então você está tomando a decisão de que uma situação é irrecuperável em nome de
-o código de chamada. Quando você escolhe retornar um valor <code>Result</code>, você fornece o
-opções de código de chamada. O código de chamada pode optar por tentar a recuperação em um
-maneira apropriada para sua situação, ou pode decidir que um <code>Err</code>
-valor neste caso é irrecuperável, então ele pode chamar <code>panic!</code> e transformar seu
-erro recuperável em um erro irrecuperável. Portanto, retornar <code>Result</code> é um
-boa escolha padrão quando você está definindo uma função que pode falhar.</p>
-<p>Em situações como exemplos, código de protótipo e testes, é mais
-apropriado escrever código que entre em pânico em vez de retornar <code>Result</code>. Vamos
-explore o porquê e depois discuta situações em que o compilador não consegue dizer isso
-o fracasso é impossível, mas você, como humano, pode. O capítulo terminará com
-algumas diretrizes gerais sobre como decidir se deve entrar em pânico no código da biblioteca.</p>
-<h3 id="exemplos-código-de-protótipo-e-testes"><a class="header" href="#exemplos-código-de-protótipo-e-testes">Exemplos, código de protótipo e testes</a></h3>
-<p>Quando você está escrevendo um exemplo para ilustrar algum conceito, incluindo também
-um código robusto de tratamento de erros pode tornar o exemplo menos claro. Nos exemplos, é
-entendi que uma chamada para um método como <code>unwrap</code> que poderia entrar em pânico é entendida como um
-espaço reservado para a maneira como você deseja que seu aplicativo lide com erros, o que pode
-diferem com base no que o resto do seu código está fazendo.</p>
+<p>Então, como decidir quando você deve chamar <code>panic!</code> e quando deve retornar
+<code>Result</code>? Quando o código entra em panic, não há como se recuperar. Você até
+poderia chamar <code>panic!</code> para qualquer situação de erro, exista ou não uma forma
+possível de recuperação, mas aí estaria tomando a decisão de que uma situação é
+irrecuperável em nome do código chamador. Quando você escolhe retornar um valor
+<code>Result</code>, oferece opções ao código chamador. O código chamador pode optar por
+tentar se recuperar de uma maneira adequada ao seu contexto ou decidir que um
+valor <code>Err</code>, naquele caso, é irrecuperável e então chamar <code>panic!</code>,
+transformando o erro recuperável em irrecuperável. Por isso, retornar <code>Result</code>
+costuma ser a melhor escolha padrão ao definir uma função que pode falhar.</p>
+<p>Em situações como exemplos, código de protótipo e testes, é mais apropriado
+escrever código que entra em panic em vez de retornar <code>Result</code>. Vamos explorar
+o porquê e, depois, discutir situações em que o compilador não consegue saber
+que uma falha é impossível, mas você, como humano, consegue. O capítulo termina
+com algumas diretrizes gerais sobre como decidir se deve entrar em panic em
+código de biblioteca.</p>
+<h3 id="exemplos-código-de-protótipo-e-testes"><a class="header" href="#exemplos-código-de-protótipo-e-testes">Exemplos, Código de Protótipo e Testes</a></h3>
+<p>Quando você está escrevendo um exemplo para ilustrar algum conceito, incluir
+também um código robusto de tratamento de erros pode tornar o exemplo menos
+claro. Em exemplos, entende-se que uma chamada a um método como <code>unwrap</code>, que
+pode entrar em panic, serve como marcador do modo como sua aplicação deverá
+tratar erros, o que pode variar de acordo com o restante do código.</p>
 <p>Da mesma forma, os métodos <code>unwrap</code> e <code>expect</code> são muito úteis quando você está
-prototipagem e você ainda não está pronto para decidir como lidar com erros. Eles vão embora
-limpe marcadores em seu código para quando você estiver pronto para tornar seu programa mais
-robusto.</p>
-<p>Se uma chamada de método falhar em um teste, você desejará que todo o teste falhe, mesmo que
-esse método não é a funcionalidade em teste. Porque <code>panic!</code> é como um teste
-está marcado como uma falha, chamar <code>unwrap</code> ou <code>expect</code> é exatamente o que deveria
-acontecer.</p>
+prototipando e ainda não está pronto para decidir como tratar erros. Eles
+deixam marcadores claros no código para o momento em que você estiver pronto
+para tornar o programa mais robusto.</p>
+<p>Se uma chamada de método falhar em um teste, você vai querer que o teste inteiro
+falhe, mesmo que aquele método não seja a funcionalidade que está sendo
+testada. Como <code>panic!</code> é a forma de um teste ser marcado como falho, chamar
+<code>unwrap</code> ou <code>expect</code> é exatamente o comportamento desejado.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="cases-in-which-you-have-more-information-than-the-compiler"></a></p>
-<h3 id="quando-você-tem-mais-informações-que-o-compilador"><a class="header" href="#quando-você-tem-mais-informações-que-o-compilador">Quando você tem mais informações que o compilador</a></h3>
-<p>Também seria apropriado chamar <code>expect</code> quando você tiver alguma outra lógica
-isso garante que <code>Result</code> terá um valor <code>Ok</code>, mas a lógica não é
-algo que o compilador entende. Você ainda terá um valor <code>Result</code> que você
-precisa lidar: Qualquer operação que você esteja chamando ainda tem a possibilidade de
-falhando em geral, mesmo que seja logicamente impossível em seu particular
-situação. Se você puder garantir, inspecionando manualmente o código, que nunca
-tiver uma variante <code>Err</code>, é perfeitamente aceitável chamar <code>expect</code> e documentar
-a razão pela qual você acha que nunca terá uma variante <code>Err</code> no texto do argumento.
-Aqui está um exemplo:</p>
+<h3 id="quando-você-tem-mais-informações-que-o-compilador"><a class="header" href="#quando-você-tem-mais-informações-que-o-compilador">Quando Você Tem Mais Informações que o Compilador</a></h3>
+<p>Também pode ser apropriado chamar <code>expect</code> quando você tiver alguma outra lógica
+que garanta que o <code>Result</code> terá um valor <code>Ok</code>, mas essa lógica não seja algo
+que o compilador consiga entender. Você ainda terá um valor <code>Result</code> que
+precisa tratar: a operação que você está chamando ainda tem a possibilidade de
+falhar em termos gerais, mesmo que isso seja logicamente impossível no seu caso
+específico. Se você puder garantir, inspecionando o código manualmente, que
+nunca terá uma variante <code>Err</code>, é perfeitamente aceitável chamar <code>expect</code> e
+documentar, no texto do argumento, por que você acredita que nunca haverá uma
+variante <code>Err</code>. Veja um exemplo:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    use std::net::IpAddr;
 
@@ -9785,89 +9808,93 @@ Aqui está um exemplo:</p>
         .parse()
         .expect("Hardcoded IP address should be valid");
 <span class="boring">}</span></code></pre>
-<p>Estamos criando uma instância <code>IpAddr</code> analisando uma string codificada. Podemos ver
-que <code>127.0.0.1</code> é um endereço IP válido, então é aceitável usar <code>expect</code>
-aqui. No entanto, ter uma string válida e codificada não altera o tipo de retorno
-do método <code>parse</code>: ainda obtemos um valor <code>Result</code> e o compilador irá
-ainda nos faça lidar com <code>Result</code> como se a variante <code>Err</code> fosse uma possibilidade
-porque o compilador não é inteligente o suficiente para ver que esta string é sempre um
-endereço IP válido. Se a string do endereço IP veio de um usuário em vez de ser
-codificado no programa e, portanto, <em>tinha</em> uma possibilidade de falha,
-definitivamente gostaríamos de lidar com <code>Result</code> de uma forma mais robusta.
-Mencionar a suposição de que este endereço IP está codificado nos levará a
-altere <code>expect</code> para um melhor código de tratamento de erros se, no futuro, precisarmos obter
-o endereço IP de alguma outra fonte.</p>
-<h3 id="diretrizes-para-tratamento-de-erros"><a class="header" href="#diretrizes-para-tratamento-de-erros">Diretrizes para tratamento de erros</a></h3>
-<p>É aconselhável deixar seu código em pânico quando for possível que ele possa
-acabar em um estado ruim. Neste contexto, um <em>estado ruim</em> é quando alguma suposição,
-garantia, contrato ou invariante foi quebrado, como quando valores inválidos,
-valores contraditórios ou valores ausentes são passados ​​para o seu código - mais um ou
-mais do seguinte:</p>
+<p>Estamos criando uma instância de <code>IpAddr</code> fazendo o parse de uma string fixa no
+código. Podemos ver que <code>127.0.0.1</code> é um endereço IP válido, então é
+aceitável usar <code>expect</code> aqui. No entanto, ter uma string válida e hardcoded não
+altera o tipo de retorno do método <code>parse</code>: continuamos recebendo um valor
+<code>Result</code>, e o compilador continua exigindo que o tratemos como se a variante
+<code>Err</code> fosse uma possibilidade, porque ele não é inteligente o bastante para
+perceber que essa string é sempre um endereço IP válido. Se a string do
+endereço IP viesse de uma pessoa usuária em vez de estar hardcoded no programa
+e, portanto, <em>pudesse</em> falhar, com certeza quereríamos tratar o <code>Result</code> de
+forma mais robusta. Mencionar a suposição de que esse endereço IP está fixo no
+código nos lembrará de substituir <code>expect</code> por um tratamento de erro melhor se,
+no futuro, precisarmos obter o endereço IP de outra fonte.</p>
+<h3 id="diretrizes-para-tratamento-de-erros"><a class="header" href="#diretrizes-para-tratamento-de-erros">Diretrizes para Tratamento de Erros</a></h3>
+<p>É recomendável que seu código entre em panic quando houver a possibilidade de
+ele acabar em um estado ruim. Nesse contexto, um <em>estado ruim</em> é quando alguma
+suposição, garantia, contrato ou invariante foi quebrado, como quando valores
+inválidos, contraditórios ou ausentes são passados para o seu código, somado a
+uma ou mais das condições a seguir:</p>
 <ul>
-<li>O mau estado é algo inesperado, em oposição a algo que
-provavelmente acontecerá ocasionalmente, como um usuário inserindo dados de forma errada
-formatar.</li>
-<li>Seu código após este ponto precisa confiar em não estar neste estado ruim,
-em vez de verificar o problema em cada etapa.</li>
-<li>Não há uma boa maneira de codificar essas informações nos tipos que você usa. Bem
-trabalharemos com um exemplo do que queremos dizer em <a href="#encoding-states-and-behavior-as-types">“Encoding States and Behavior as
-Tipos”</a><!-- ignore --> no Capítulo 18.</li>
+<li>O estado ruim é algo inesperado, em oposição a algo que provavelmente
+acontecerá de vez em quando, como uma pessoa usuária digitando dados no
+formato errado.</li>
+<li>O seu código, depois desse ponto, precisa confiar no fato de <em>não</em> estar
+nesse estado ruim, em vez de checar o problema a cada etapa.</li>
+<li>Não existe uma boa forma de codificar essa informação nos tipos que você usa.
+Veremos um exemplo do que isso significa em <a href="#encoding-states-and-behavior-as-types">“Encoding States and Behavior as
+Types”</a><!-- ignore --> no Capítulo 18.</li>
 </ul>
-<p>Se alguém chamar seu código e passar valores que não fazem sentido, é
-é melhor retornar um erro, se possível, para que o usuário da biblioteca possa decidir
-o que eles querem fazer nesse caso. Contudo, nos casos em que a continuação possa ser
-inseguro ou prejudicial, a melhor escolha pode ser ligar para <code>panic!</code> e alertar o
-pessoa que usa sua biblioteca para o bug em seu código para que possa corrigi-lo
-durante o desenvolvimento. Da mesma forma, <code>panic!</code> geralmente é apropriado se você estiver ligando
-código externo que está fora de seu controle e retorna um estado inválido que você
-não tem como consertar.</p>
+<p>Se alguém chamar seu código e passar valores que não fazem sentido, o melhor é
+retornar um erro, se possível, para que a pessoa usuária da biblioteca possa
+decidir o que deseja fazer naquele caso. No entanto, quando continuar possa ser
+inseguro ou prejudicial, a melhor escolha pode ser chamar <code>panic!</code> e alertar
+quem estiver usando sua biblioteca de que há um bug no código chamador, para
+que ele possa ser corrigido durante o desenvolvimento. Do mesmo modo, <code>panic!</code>
+costuma ser apropriado quando você chama código externo, fora do seu controle,
+e ele retorna um estado inválido que você não tem como corrigir.</p>
 <p>No entanto, quando a falha é esperada, é mais apropriado retornar um <code>Result</code>
-do que fazer uma chamada <code>panic!</code>. Os exemplos incluem um analisador sendo malformado
-dados ou uma solicitação HTTP retornando um status que indica que você atingiu uma taxa
-limite. Nestes casos, retornar <code>Result</code> indica que a falha é um
-possibilidade esperada de que o código de chamada deva decidir como lidar.</p>
-<p>Quando seu código executa uma operação que pode colocar um usuário em risco se for
-chamado usando valores inválidos, seu código deve primeiro verificar se os valores são válidos
-e entre em pânico se os valores não forem válidos. Isso ocorre principalmente por razões de segurança:
-A tentativa de operar com dados inválidos pode expor seu código a vulnerabilidades.
-Esta é a principal razão pela qual a biblioteca padrão chamará <code>panic!</code> se você tentar
-um acesso à memória fora dos limites: Tentando acessar a memória que não pertence a
-a estrutura de dados atual é um problema de segurança comum. As funções geralmente têm
-<em>contratos</em>: Seu comportamento só é garantido se os insumos atenderem
-requisitos. Entrar em pânico quando o contrato é violado faz sentido porque um
-violação de contrato sempre indica um bug do lado do chamador e não é um tipo de
-erro que você deseja que o código de chamada manipule explicitamente. Na verdade, há
-nenhuma maneira razoável de chamar o código para recuperação; a chamada que os <em>programadores</em> precisam
-para corrigir o código. Contratos para uma função, especialmente quando uma violação ocorrerá
-causar pânico, deve ser explicado na documentação da API da função.</p>
-<p>No entanto, ter muitas verificações de erros em todas as suas funções seria detalhado
-e irritante. Felizmente, você pode usar o sistema de tipos do Rust (e, portanto, o tipo
-verificação feita pelo compilador) para fazer muitas das verificações para você. Se o seu
-função tem um tipo específico como parâmetro, você pode prosseguir com o seu código
-lógica sabendo que o compilador já garantiu que você tem um código válido
-valor. Por exemplo, se você tiver um tipo em vez de <code>Option</code>, seu programa
-espera ter <em>algo</em> em vez de <em>nada</em>. Seu código então não tem
-para lidar com dois casos para as variantes <code>Some</code> e <code>None</code>: terá apenas um
-caso para definitivamente ter um valor. Código tentando passar nada para o seu
-a função nem mesmo compila, então sua função não precisa verificar isso
-caso em tempo de execução. Outro exemplo é usar um tipo inteiro sem sinal, como
-<code>u32</code>, o que garante que o parâmetro nunca seja negativo.</p>
+do que chamar <code>panic!</code>. Exemplos disso incluem um parser recebendo dados mal
+formados ou uma requisição HTTP retornando um status que indique que você
+atingiu um limite de taxa. Nesses casos, retornar <code>Result</code> indica que a falha
+é uma possibilidade esperada e que o código chamador precisa decidir como
+tratá-la.</p>
+<p>Quando seu código executa uma operação que pode colocar uma pessoa usuária em
+risco se for chamada com valores inválidos, ele deve primeiro verificar se os
+valores são válidos e entrar em panic se não forem. Isso acontece
+principalmente por razões de segurança: tentar operar com dados inválidos pode
+expor o código a vulnerabilidades. Essa é a principal razão pela qual a
+biblioteca padrão chama <code>panic!</code> se você tentar acessar memória fora dos
+limites: tentar acessar memória que não pertence à estrutura de dados atual é
+um problema de segurança comum. Funções frequentemente têm <em>contratos</em>: seu
+comportamento só é garantido se as entradas atenderem a determinados
+requisitos. Entrar em panic quando o contrato é violado faz sentido porque uma
+violação de contrato sempre indica um bug do lado do chamador, e não é um tipo
+de erro que você queira que o código chamador tenha de tratar explicitamente.
+Na prática, não existe uma forma razoável de o código chamador se recuperar; os
+<em>programadores</em> que o escrevem é que precisam corrigir o código. Contratos de
+uma função, especialmente quando sua violação causar um panic, devem ser
+explicados na documentação da API dessa função.</p>
+<p>No entanto, ter muitas verificações de erro em todas as funções seria verboso e
+cansativo. Felizmente, você pode usar o sistema de tipos do Rust, e portanto a
+verificação de tipos feita pelo compilador, para que muitas dessas checagens
+sejam feitas por você. Se a sua função recebe um tipo específico como
+parâmetro, você pode seguir com a lógica do código sabendo que o compilador já
+garantiu a validade desse valor. Por exemplo, se você tem um tipo em vez de um
+<code>Option</code>, o programa espera ter <em>alguma coisa</em> em vez de <em>nada</em>. Assim, o seu
+código não precisa tratar dois casos, <code>Some</code> e <code>None</code>: ele só terá o caso em
+que há definitivamente um valor. Código que tente passar “nada” para a sua
+função simplesmente nem compilará, então a sua função não precisa verificar
+esse caso em tempo de execução. Outro exemplo é usar um tipo inteiro sem sinal,
+como <code>u32</code>, o que garante que o parâmetro nunca seja negativo.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="creating-custom-types-for-validation"></a></p>
-<h3 id="tipos-personalizados-para-validação"><a class="header" href="#tipos-personalizados-para-validação">Tipos personalizados para validação</a></h3>
-<p>Vamos aproveitar a ideia de usar o sistema de tipos do Rust para garantir que tenhamos um valor válido
-valorize um passo adiante e veja como criar um tipo personalizado para validação.
-Lembre-se do jogo de adivinhação do Capítulo 2, no qual nosso código pedia ao usuário que adivinhasse
-um número entre 1 e 100. Nunca validamos se a estimativa do usuário era
-entre esses números antes de compará-los com nosso número secreto; nós apenas
-validou que o palpite era positivo. Neste caso, as consequências não foram
-muito terrível: nossa saída de “Muito alto” ou “Muito baixo” ainda estaria correta. Mas isso
-seria um aprimoramento útil para orientar o usuário em direção a suposições válidas e ter
-comportamento diferente quando o usuário adivinha um número que está fora do intervalo versus
-quando o usuário digita, por exemplo, letras.</p>
-<p>Uma maneira de fazer isso seria analisar a estimativa como <code>i32</code> em vez de apenas como
-<code>u32</code> para permitir números potencialmente negativos e, em seguida, adicione uma verificação para o
-número estando dentro do intervalo, assim:</p>
+<h3 id="tipos-personalizados-para-validação"><a class="header" href="#tipos-personalizados-para-validação">Tipos Personalizados para Validação</a></h3>
+<p>Vamos levar um passo adiante a ideia de usar o sistema de tipos do Rust para
+garantir que temos um valor válido e ver como criar um tipo personalizado para
+validação. Lembre-se do jogo de adivinhação do Capítulo 2, no qual nosso código
+pedia que a pessoa usuária adivinhasse um número entre 1 e 100. Nunca
+validamos se o palpite da pessoa usuária estava entre esses números antes de
+compará-lo com o número secreto; apenas validamos que o palpite era positivo.
+Nesse caso, as consequências não eram tão graves: a saída “Muito alto” ou
+“Muito baixo” ainda estaria correta. Mas seria uma melhoria útil orientar a
+pessoa usuária para palpites válidos e ter um comportamento diferente quando o
+palpite estiver fora do intervalo, em vez de quando a pessoa digitar, por
+exemplo, letras.</p>
+<p>Uma maneira de fazer isso seria converter o palpite para <code>i32</code> em vez de apenas
+<code>u32</code>, para permitir números potencialmente negativos, e então adicionar uma
+checagem para ver se o número está no intervalo, assim:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
@@ -9912,20 +9939,20 @@ número estando dentro do intervalo, assim:</p>
 </span>    }
 <span class="boring">}</span></code></pre>
 </figure>
-<p>A expressão <code>if</code> verifica se nosso valor está fora do intervalo e informa ao usuário
-sobre o problema e chama <code>continue</code> para iniciar a próxima iteração do loop
-e peça outro palpite. Após a expressão <code>if</code>, podemos prosseguir com o
-comparações entre <code>guess</code> e o número secreto sabendo que <code>guess</code> é
-entre 1 e 100.</p>
-<p>Contudo, esta não é uma solução ideal: se fosse absolutamente crítico que o
-o programa operava apenas com valores entre 1 e 100 e tinha muitas funções
-com este requisito, ter uma verificação como esta em todas as funções seria
-tedioso (e pode afetar o desempenho).</p>
-<p>Em vez disso, podemos criar um novo tipo em um módulo dedicado e colocar as validações
-em uma função para criar uma instância do tipo em vez de repetir o
-validações em todos os lugares. Dessa forma, é seguro para as funções usarem o novo tipo
-em suas assinaturas e usam com confiança os valores que recebem. Listagem 9-13
-mostra uma maneira de definir um tipo <code>Guess</code> que criará apenas uma instância de
+<p>A expressão <code>if</code> verifica se o valor está fora do intervalo, informa a pessoa
+usuária sobre o problema e chama <code>continue</code> para iniciar a próxima iteração do
+loop e pedir outro palpite. Depois da expressão <code>if</code>, podemos seguir com as
+comparações entre <code>guess</code> e o número secreto sabendo que <code>guess</code> está entre 1
+e 100.</p>
+<p>No entanto, essa não é uma solução ideal: se fosse absolutamente crítico que o
+programa operasse apenas com valores entre 1 e 100 e tivesse muitas funções com
+esse requisito, repetir uma checagem como essa em todas elas seria tedioso, e
+talvez até afetasse o desempenho.</p>
+<p>Em vez disso, podemos criar um novo tipo em um módulo dedicado e colocar as
+validações em uma função que cria uma instância desse tipo, em vez de repetir
+as validações em todo lugar. Dessa forma, as funções podem usar com segurança o
+novo tipo em suas assinaturas e confiar nos valores que recebem. A Listagem
+9-13 mostra uma forma de definir um tipo <code>Guess</code> que só cria uma instância de
 <code>Guess</code> se a função <code>new</code> receber um valor entre 1 e 100.</p>
 <figure class="listing" id="listing-9-13">
 <span class="file-name">Filename: src/guessing_game.rs</span>
@@ -9949,51 +9976,51 @@ impl Guess {
     }
 }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-9-13">Listing 9-13</a>: A <code>Guess</code> type that will only continue with values between 1 and 100</figcaption>
+<figcaption><a href="#listing-9-13">Listing 9-13</a>: Um tipo <code>Guess</code> que só continuará com valores entre 1 e 100</figcaption>
 </figure>
-<p>Observe que este código em <em>src/guessing_game.rs</em> depende da adição de um módulo
-declaração <code>mod guessing_game;</code> em <em>src/lib.rs</em> que não mostramos aqui.
-Dentro do arquivo deste novo módulo, definimos uma estrutura chamada <code>Guess</code> que possui um
-campo chamado <code>value</code> que contém <code>i32</code>. É aqui que o número estará
-armazenado.</p>
-<p>Então, implementamos uma função associada chamada <code>new</code> em <code>Guess</code> que cria
-instâncias de valores <code>Guess</code>. A função <code>new</code> é definida para ter um
-parâmetro chamado <code>value</code> do tipo <code>i32</code> e para retornar um <code>Guess</code>. O código no
-o corpo da função <code>new</code> testa <code>value</code> para garantir que está entre 1 e 100.
-Se <code>value</code> não passar neste teste, fazemos uma chamada <code>panic!</code>, que alertará
-o programador que está escrevendo o código de chamada que tem um bug que precisa
-corrigir, porque criar um <code>Guess</code> com um <code>value</code> fora deste intervalo seria
-violar o contrato no qual <code>Guess::new</code> está confiando. As condições em que
-<code>Guess::new</code> pode entrar em pânico deve ser discutido em sua API voltada ao público
-documentação; abordaremos convenções de documentação indicando a possibilidade
-de um <code>panic!</code> na documentação da API que você cria no Capítulo 14. Se
-<code>value</code> passa no teste, criamos um novo <code>Guess</code> com seu campo <code>value</code> definido
-para o parâmetro <code>value</code> e retorne <code>Guess</code>.</p>
-<p>A seguir, implementamos um método chamado <code>value</code> que pega emprestado <code>self</code>, não possui nenhum
-outros parâmetros e retorna um <code>i32</code>. Este tipo de método às vezes é chamado
-um <em>getter</em> porque seu objetivo é obter alguns dados de seus campos e retornar
-isto. Este método público é necessário porque o campo <code>value</code> do <code>Guess</code>
-struct é privado. É importante que o campo <code>value</code> seja privado para que
-código usando a estrutura <code>Guess</code> não tem permissão para definir <code>value</code> diretamente: Código
-fora do módulo <code>guessing_game</code> <em>deve</em> usar a função <code>Guess::new</code> para
-crie uma instância de <code>Guess</code>, garantindo assim que não há como
-<code>Guess</code> para ter um <code>value</code> que não foi verificado pelas condições do
-<code>Guess::new</code> função.</p>
-<p>Uma função que possui um parâmetro ou retorna apenas números entre 1 e 100 poderia
-em seguida, declare em sua assinatura que recebe ou retorna um <code>Guess</code> em vez de um
-<code>i32</code> e não precisaria fazer nenhuma verificação adicional em seu corpo.</p>
+<p>Observe que esse código em <em>src/guessing_game.rs</em> depende da adição de uma
+declaração de módulo <code>mod guessing_game;</code> em <em>src/lib.rs</em>, que não mostramos
+aqui. Dentro do arquivo desse novo módulo, definimos uma struct chamada
+<code>Guess</code>, que tem um campo chamado <code>value</code> contendo um <code>i32</code>. É ali que o número
+ficará armazenado.</p>
+<p>Em seguida, implementamos em <code>Guess</code> uma função associada chamada <code>new</code>, que
+cria instâncias de valores <code>Guess</code>. A função <code>new</code> recebe um parâmetro chamado
+<code>value</code>, do tipo <code>i32</code>, e retorna um <code>Guess</code>. O código dentro de <code>new</code> testa
+<code>value</code> para garantir que ele está entre 1 e 100. Se <code>value</code> não passar nesse
+teste, fazemos uma chamada a <code>panic!</code>, o que alertará a pessoa programadora que
+está escrevendo o código chamador de que existe um bug a corrigir, porque criar
+um <code>Guess</code> com um <code>value</code> fora desse intervalo violaria o contrato do qual
+<code>Guess::new</code> depende. As condições em que <code>Guess::new</code> pode entrar em panic
+devem ser discutidas na documentação pública de sua API; veremos convenções de
+documentação que indicam a possibilidade de <code>panic!</code> na documentação de API que
+você escrever no Capítulo 14. Se <code>value</code> passar no teste, criamos um novo
+<code>Guess</code> com seu campo <code>value</code> definido com base no parâmetro <code>value</code> e
+retornamos esse <code>Guess</code>.</p>
+<p>A seguir, implementamos um método chamado <code>value</code>, que toma emprestado <code>self</code>,
+não recebe outros parâmetros e retorna um <code>i32</code>. Esse tipo de método às vezes é
+chamado de <em>getter</em>, porque seu propósito é obter algum dado dos campos e
+retorná-lo. Esse método público é necessário porque o campo <code>value</code> da struct
+<code>Guess</code> é privado. É importante que <code>value</code> seja privado para que o código que
+usa a struct <code>Guess</code> não possa defini-lo diretamente: código fora do módulo
+<code>guessing_game</code> <em>deve</em> usar a função <code>Guess::new</code> para criar uma instância de
+<code>Guess</code>, garantindo assim que não exista maneira de um <code>Guess</code> ter um <code>value</code>
+que não tenha sido validado pelas condições da função <code>Guess::new</code>.</p>
+<p>Uma função que receba um parâmetro ou retorne apenas números entre 1 e 100 pode
+então declarar em sua assinatura que recebe ou retorna um <code>Guess</code> em vez de um
+<code>i32</code>, sem precisar fazer qualquer checagem adicional no corpo.</p>
 <h2 id="resumo-8"><a class="header" href="#resumo-8">Resumo</a></h2>
-<p>Os recursos de tratamento de erros do Rust foram projetados para ajudá-lo a escrever um código mais robusto.
-A macro <code>panic!</code> sinaliza que seu programa está em um estado que não pode ser controlado e
-permite que você diga ao processo para parar em vez de tentar prosseguir com dados inválidos ou
-valores incorretos. O <code>Result</code> enum usa o sistema de tipos do Rust para indicar que
-as operações podem falhar de uma forma que seu código possa se recuperar. Você pode usar
-<code>Result</code> para informar ao código que chama seu código que ele precisa para lidar com potenciais
-sucesso ou fracasso também. Usando <code>panic!</code> e <code>Result</code> no apropriado
-situações tornarão seu código mais confiável diante de problemas inevitáveis.</p>
-<p>Agora que você viu maneiras úteis de a biblioteca padrão usar genéricos com
-os enums <code>Option</code> e <code>Result</code>, falaremos sobre como os genéricos funcionam e como você
-pode usá-los em seu código.</p>
+<p>Os recursos de tratamento de erros do Rust foram projetados para ajudar você a
+escrever código mais robusto. A macro <code>panic!</code> sinaliza que o programa está em
+um estado com o qual não consegue lidar e permite que você mande o processo
+parar, em vez de tentar continuar com dados inválidos ou incorretos. O enum
+<code>Result</code> usa o sistema de tipos do Rust para indicar que certas operações podem
+falhar de um modo do qual o seu código pode se recuperar. Você pode usar
+<code>Result</code> para dizer ao código que chama o seu que ele também precisa lidar com
+a possibilidade de sucesso ou falha. Usar <code>panic!</code> e <code>Result</code> nas situações
+apropriadas tornará seu código mais confiável diante dos problemas inevitáveis.</p>
+<p>Agora que você viu maneiras úteis pelas quais a biblioteca padrão usa genéricos
+com os enums <code>Option</code> e <code>Result</code>, vamos falar sobre como genéricos funcionam e
+como você pode usá-los no seu próprio código.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="tipos-genéricos-traits-e-lifetimes"><a class="header" href="#tipos-genéricos-traits-e-lifetimes">Tipos Genéricos, Traits e Lifetimes</a></h1>
 <p>Toda linguagem de programação tem ferramentas para lidar de forma eficaz com a

@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8eadf77c.js";
+            window.path_to_searchindex_js = "searchindex-162de759.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -195,7 +195,7 @@ não pode alterar esse valor. Para ilustrar isso, gere um novo projeto chamado
 <em>variables</em> dentro do diretório <em>projects</em> usando <code>cargo new variables</code>.</p>
 <p>Depois, no novo diretório <em>variables</em>, abra <em>src/main.rs</em> e substitua seu
 código pelo seguinte, que ainda não compilará:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = 5;
     println!("The value of x is: {x}");
@@ -226,7 +226,7 @@ error: could not compile `variables` (bin "variables") due to 1 previous error
 <p>Este exemplo mostra como o compilador ajuda você a encontrar erros em seus
 programas. Erros de compilação podem ser frustrantes, mas, na verdade, eles só
 significam que seu programa ainda não está fazendo com segurança aquilo que
-você quer; eles <em>não</em> significam que você é um mau programador! Rustaceans
+você quer; eles <em>não</em> significam que você é um mau programador! Rustaceanos
 experientes também recebem erros do compilador.</p>
 <p>Você recebeu a mensagem de erro <code>cannot assign twice to immutable variable `x`</code> porque tentou atribuir um segundo valor à variável imutável <code>x</code>.</p>
 <p>É importante recebermos erros em tempo de compilação quando tentamos mudar um
@@ -245,7 +245,7 @@ mutáveis adicionando <code>mut</code> antes do nome da variável, como fez no <
 comunica intenção a futuras pessoas leitoras do código, indicando que outras
 partes do programa mudarão o valor dessa variável.</p>
 <p>Por exemplo, vamos mudar <em>src/main.rs</em> para o seguinte:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let mut x = 5;
     println!("The value of x is: {x}");
@@ -307,14 +307,14 @@ alterado se o valor hardcoded tiver de ser atualizado no futuro.</p>
 <h3 id="shadowing"><a class="header" href="#shadowing">Shadowing</a></h3>
 <p>Como você viu no tutorial do jogo de adivinhação no <a href="ch02-00-guessing-game-tutorial.html#comparing-the-guess-to-the-secret-number">Capítulo
 2</a><!-- ignore -->, você pode declarar
-uma nova variável com o mesmo nome de uma variável anterior. Rustaceans dizem
+uma nova variável com o mesmo nome de uma variável anterior. Rustaceanos dizem
 que a primeira variável é <em>shadowed</em> pela segunda, o que significa que a
 segunda variável é aquela que o compilador verá quando você usar aquele nome.
 Na prática, a segunda variável encobre a primeira, e qualquer uso desse nome se
 refere a ela até que ela própria seja shadowed ou até que o escopo termine.
 Podemos fazer shadowing de uma variável repetindo o mesmo nome e usando
 novamente a palavra-chave <code>let</code>, assim:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 5;
 
