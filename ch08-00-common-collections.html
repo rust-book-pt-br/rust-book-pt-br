@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a3947041.js";
+            window.path_to_searchindex_js = "searchindex-fb4bc72d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -181,27 +181,29 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="coleções-comuns"><a class="header" href="#coleções-comuns">Coleções Comuns</a></h1>
-<p>A biblioteca padrão do Rust inclui uma série de estruturas de dados muito úteis chamadas
-<em>coleções</em>. A maioria dos outros tipos de dados representa um valor específico, mas
-coleções podem conter vários valores. Ao contrário do array e tupla integrados
-tipos, os dados para os quais essas coleções apontam são armazenados no heap, que
-significa que a quantidade de dados não precisa ser conhecida em tempo de compilação e pode crescer
-ou encolher à medida que o programa é executado. Cada tipo de coleção tem diferentes
-capacidades e custos, e escolher um apropriado para o seu atual
-situação é uma habilidade que você desenvolverá com o tempo. Neste capítulo, discutiremos
-três coleções que são usadas com frequência em programas Rust:</p>
+                        <h1 id="coleções-comuns"><a class="header" href="#coleções-comuns">Coleções comuns</a></h1>
+<p>A biblioteca padrão de Rust inclui várias estruturas de dados muito úteis
+chamadas <em>coleções</em>. A maioria dos outros tipos de dados representa um valor
+específico, mas coleções podem conter vários valores. Diferentemente dos tipos
+internos array e tupla, os dados para os quais essas coleções apontam são
+armazenados no heap, o que significa que a quantidade de dados não precisa ser
+conhecida em tempo de compilação e pode crescer ou encolher à medida que o
+programa é executado. Cada tipo de coleção tem capacidades e custos diferentes,
+e escolher a coleção adequada para cada situação é uma habilidade que você vai
+desenvolver com o tempo. Neste capítulo, discutiremos três coleções muito
+usadas em programas Rust:</p>
 <ul>
-<li>Um <em>vetor</em> permite armazenar um número variável de valores próximos uns dos outros.</li>
-<li>Uma <em>string</em> é uma coleção de caracteres. Mencionamos o tipo <code>String</code>
-anteriormente, mas neste capítulo falaremos sobre isso em profundidade.</li>
-<li>Um <em>hash map</em> permite associar um valor a uma chave específica. É um
-implementação específica da estrutura de dados mais geral chamada <em>mapa</em>.</li>
+<li>Um <em>vetor</em> permite armazenar uma quantidade variável de valores lado a lado.</li>
+<li>Uma <em>string</em> é uma coleção de caracteres. Já mencionamos o tipo <code>String</code>,
+mas neste capítulo vamos estudá-lo com mais profundidade.</li>
+<li>Um <em>hash map</em> permite associar um valor a uma chave específica. Ele é uma
+implementação particular de uma estrutura de dados mais geral chamada
+<em>mapa</em>.</li>
 </ul>
-<p>Para aprender sobre os outros tipos de coleções fornecidas pela biblioteca padrão,
-veja <a href="../std/collections/index.html">a documentação</a>.</p>
-<p>Discutiremos como criar e atualizar vetores, strings e mapas hash, também
-como o que torna cada um especial.</p>
+<p>Para conhecer os outros tipos de coleção oferecidos pela biblioteca padrão, veja
+<a href="../std/collections/index.html">a documentação</a>.</p>
+<p>Vamos discutir como criar e atualizar vetores, strings e hash maps, além do que
+torna cada um deles especial.</p>
 
                     </main>
 

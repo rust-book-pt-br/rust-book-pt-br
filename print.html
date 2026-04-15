@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a3947041.js";
+            window.path_to_searchindex_js = "searchindex-fb4bc72d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -5681,7 +5681,7 @@ para o tipo que aparece após a palavra-chave <code>impl</code>, que neste caso 
 <p>Para chamar essa função associada, usamos a sintaxe <code>::</code> com o nome da struct;
 <code>let sq = Rectangle::square(3);</code> é um exemplo. Essa função fica no namespace da
 struct: a sintaxe <code>::</code> é usada tanto para funções associadas quanto para
-namespaces criados por módulos. Vamos falar sobre módulos no <a href="#controlando-escopo-e-privacidade-com-módulos">Capítulo
+namespaces criados por módulos. Vamos falar sobre módulos no <a href="#controlando-escopo-e-privacidade-com-módulos-1">Capítulo
 7</a><!-- ignore -->.</p>
 <h3 id="vários-blocos-impl"><a class="header" href="#vários-blocos-impl">Vários Blocos <code>impl</code></a></h3>
 <p>Cada struct pode ter vários blocos <code>impl</code>. Por exemplo, a Listagem 5-15 é
@@ -6912,7 +6912,7 @@ estão falando de um crate de biblioteca e usam “crate” quase como sinônimo
 ideia geral de “biblioteca”.</p>
 <p>O <em>crate root</em> é o arquivo-fonte a partir do qual o compilador Rust começa a
 análise e monta a árvore de módulos do crate. Vamos explorar módulos com mais
-profundidade em <a href="#controlando-escopo-e-privacidade-com-módulos">“Definindo Módulos para Controlar Escopo e
+profundidade em <a href="#controlando-escopo-e-privacidade-com-módulos-1">“Definindo Módulos para Controlar Escopo e
 Privacidade”</a><!-- ignore -->.</p>
 <p>Um <em>pacote</em> é um conjunto de um ou mais crates que oferece um grupo de
 funcionalidades. Um pacote contém um arquivo <em>Cargo.toml</em> que descreve como
@@ -6952,54 +6952,66 @@ de biblioteca, ambos com o mesmo nome do pacote. Um pacote também pode ter
 vários crates binários colocando arquivos no diretório <em>src/bin</em>: cada arquivo
 nesse diretório será um crate binário separado.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="controlando-escopo-e-privacidade-com-módulos"><a href="#controlando-escopo-e-privacidade-com-módulos" class="header">Controlando Escopo e Privacidade com Módulos</a></h1>
+<h1 id="controlando-escopo-e-privacidade-com-módulos-1"><a href="#controlando-escopo-e-privacidade-com-módulos-1" class="header">Controlando Escopo e Privacidade com Módulos</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="defining-modules-to-control-scope-and-privacy"></a></p>
-<h2 id="controle-o-escopo-e-a-privacidade-com-módulos"><a class="header" href="#controle-o-escopo-e-a-privacidade-com-módulos">Controle o escopo e a privacidade com módulos</a></h2>
-<p>Nesta seção, falaremos sobre módulos e outras partes do sistema de módulos,
-nomeadamente <em>paths</em>, que permitem nomear itens; a palavra-chave <code>use</code> que traz um
-caminho para o escopo; e a palavra-chave <code>pub</code> para tornar os itens públicos. Também discutiremos
-a palavra-chave <code>as</code>, pacotes externos e o operador glob.</p>
-<h3 id="folha-de-referências-dos-módulos"><a class="header" href="#folha-de-referências-dos-módulos">Folha de referências dos módulos</a></h3>
-<p>Antes de entrarmos nos detalhes dos módulos e caminhos, fornecemos aqui uma rápida
-referência sobre como módulos, caminhos, a palavra-chave <code>use</code> e a palavra-chave <code>pub</code> funcionam
-no compilador e como a maioria dos desenvolvedores organiza seu código. Nós iremos
-através de exemplos de cada uma dessas regras ao longo deste capítulo, mas esta é uma
-ótimo lugar para consultar como um lembrete de como os módulos funcionam.</p>
+<h2 id="controlando-escopo-e-privacidade-com-módulos"><a class="header" href="#controlando-escopo-e-privacidade-com-módulos">Controlando escopo e privacidade com módulos</a></h2>
+<p>Nesta seção, vamos falar sobre módulos e outras partes do sistema de módulos:
+<em>paths</em>, que permitem nomear itens; a palavra-chave <code>use</code>, que traz um caminho
+para o escopo; e a palavra-chave <code>pub</code>, que torna itens públicos. Também vamos
+discutir a palavra-chave <code>as</code>, pacotes externos e o operador glob.</p>
+<h3 id="folha-de-referência-de-módulos"><a class="header" href="#folha-de-referência-de-módulos">Folha de referência de módulos</a></h3>
+<p>Antes de entrarmos nos detalhes de módulos e caminhos, aqui está uma referência
+rápida de como módulos, caminhos, a palavra-chave <code>use</code> e a palavra-chave
+<code>pub</code> funcionam no compilador, e de como a maior parte das pessoas organiza o
+código. Ao longo deste capítulo veremos exemplos de cada uma dessas regras, mas
+esta é uma ótima seção para consultar quando você quiser relembrar como módulos
+funcionam.</p>
 <ul>
-<li><strong>Comece pela raiz da crate</strong>: Ao compilar uma crate, o compilador primeiro
-procura no arquivo raiz da crate (geralmente <em>src/lib.rs</em> para uma crate de biblioteca e
-<em>src/main.rs</em> para uma crate binária) para o código ser compilado.</li>
-<li><strong>Declarando módulos</strong>: No arquivo raiz da crate, você pode declarar novos módulos;
-digamos que você declare um módulo “jardim” com <code>mod garden;</code>. O compilador irá parecer
-para o código do módulo nestes locais:</li>
-<li>Inline, entre chaves que substituem o ponto e vírgula após <code>mod jardim</code></li>
+<li><strong>Comece pela raiz da crate</strong>: ao compilar uma crate, o compilador primeiro
+procura código para compilar no arquivo raiz da crate, que geralmente é
+<em>src/lib.rs</em> para uma crate de biblioteca e <em>src/main.rs</em> para uma crate
+binária.</li>
+<li><strong>Declarando módulos</strong>: no arquivo raiz da crate, você pode declarar novos
+módulos. Digamos que você declare um módulo <code>garden</code> com <code>mod garden;</code>. O
+compilador procurará o código desse módulo nestes lugares:
+<ul>
+<li>Inline, entre chaves que substituem o ponto e vírgula após <code>mod garden</code></li>
 <li>No arquivo <em>src/garden.rs</em></li>
 <li>No arquivo <em>src/garden/mod.rs</em></li>
-<li><strong>Declarando submódulos</strong>: Em qualquer arquivo que não seja a raiz da crate, você pode
-declarar submódulos. Por exemplo, você pode declarar <code>mod vegetables;</code> em
-<em>src/garden.rs</em>. O compilador procurará o código do submódulo dentro do
-diretório nomeado para o módulo pai nestes locais:</li>
-<li>Inline, seguindo diretamente <code>mod vegetables</code>, entre colchetes
-do ponto e vírgula</li>
+</ul>
+</li>
+<li><strong>Declarando submódulos</strong>: em qualquer arquivo que não seja a raiz da crate,
+você pode declarar submódulos. Por exemplo, você poderia declarar
+<code>mod vegetables;</code> em <em>src/garden.rs</em>. O compilador procurará o código do
+submódulo dentro do diretório nomeado em função do módulo pai, nestes
+lugares:
+<ul>
+<li>Inline, logo após <code>mod vegetables</code>, entre chaves no lugar do ponto e
+vírgula</li>
 <li>No arquivo <em>src/garden/vegetables.rs</em></li>
 <li>No arquivo <em>src/garden/vegetables/mod.rs</em></li>
-<li><strong>Caminhos para código em módulos</strong>: quando um módulo fizer parte da sua crate, você poderá
-consulte o código nesse módulo de qualquer outro lugar na mesma crate, desde que
-conforme as regras de privacidade permitem, usando o caminho para o código. Por exemplo, um
-O tipo <code>Asparagus</code> no módulo de hortaliças seria encontrado em
-<code>crate::garden::vegetables::Asparagus</code>.</li>
-<li><strong>Privado x público</strong>: o código dentro de um módulo é privado de seu pai
-módulos por padrão. Para tornar um módulo público, declare-o com <code>pub mod</code>
-em vez de <code>mod</code>. Para tornar públicos os itens de um módulo público também, use
-<code>pub</code> antes de suas declarações.</li>
-<li><strong>A palavra-chave <code>use</code></strong>: Dentro de um escopo, a palavra-chave <code>use</code> cria atalhos para
-itens para reduzir a repetição de caminhos longos. Em qualquer escopo que possa se referir a
-<code>crate::garden::vegetables::Asparagus</code>, você pode criar um atalho com <code>use crate::garden::vegetables::Asparagus;</code>, e a partir daí você só precisa
-escreva <code>Asparagus</code> para fazer uso desse tipo no escopo.</li>
 </ul>
-<p>Aqui, criamos uma crate binária chamada <code>backyard</code> que ilustra essas regras.
-O diretório da crate, também chamado <em>backyard</em>, contém esses arquivos e
+</li>
+<li><strong>Caminhos para código em módulos</strong>: depois que um módulo passa a fazer parte
+da crate, você pode se referir ao código dele de qualquer outro lugar dessa
+mesma crate, desde que as regras de privacidade permitam, usando o caminho
+até esse código. Por exemplo, um tipo <code>Asparagus</code> no módulo
+<code>garden::vegetables</code> seria encontrado em
+<code>crate::garden::vegetables::Asparagus</code>.</li>
+<li><strong>Privado versus público</strong>: por padrão, o código dentro de um módulo é
+privado para seus módulos pai. Para tornar um módulo público, declare-o com
+<code>pub mod</code> em vez de <code>mod</code>. Para tornar públicos também os itens contidos em
+um módulo público, use <code>pub</code> antes de suas declarações.</li>
+<li><strong>A palavra-chave <code>use</code></strong>: dentro de um escopo, a palavra-chave <code>use</code> cria
+atalhos para itens, reduzindo a repetição de caminhos longos. Em qualquer
+escopo que possa se referir a <code>crate::garden::vegetables::Asparagus</code>, você
+pode criar um atalho com <code>use crate::garden::vegetables::Asparagus;</code>, e a
+partir daí só precisa escrever <code>Asparagus</code> para usar esse tipo naquele
+escopo.</li>
+</ul>
+<p>Aqui, criamos uma crate binária chamada <code>backyard</code> que ilustra essas regras. O
+diretório da crate, também chamado <em>backyard</em>, contém estes arquivos e
 diretórios:</p>
 <pre><code class="language-text">backyard
 ├── Cargo.lock
@@ -7010,7 +7022,7 @@ diretórios:</p>
     ├── garden.rs
     └── main.rs
 </code></pre>
-<p>O arquivo raiz da crate neste caso é <em>src/main.rs</em> e contém:</p>
+<p>O arquivo raiz da crate, neste caso, é <em>src/main.rs</em>, e ele contém:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust noplayground ignore">use crate::garden::vegetables::Asparagus;
@@ -7022,38 +7034,39 @@ fn main() {
     println!("I'm growing {plant:?}!");
 }</code></pre>
 </figure>
-<p>A linha <code>pub mod garden;</code> diz ao compilador para incluir o código que encontrar
+<p>A linha <code>pub mod garden;</code> diz ao compilador para incluir o código encontrado em
 <em>src/garden.rs</em>, que é:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/garden.rs</span>
 <pre><code class="language-rust noplayground ignore">pub mod vegetables;</code></pre>
 </figure>
-<p>Aqui, <code>pub mod vegetables;</code> significa que o código em <em>src/garden/vegetables.rs</em> é
-incluído também. Esse código é:</p>
+<p>Aqui, <code>pub mod vegetables;</code> também significa que o código em
+<em>src/garden/vegetables.rs</em> será incluído. Esse código é:</p>
 <pre><code class="language-rust noplayground ignore">#[derive(Debug)]
 pub struct Asparagus {}</code></pre>
-<p>Agora vamos entrar em detalhes dessas regras e demonstrá-las em ação!</p>
+<p>Agora vamos entrar nos detalhes dessas regras e vê-las em ação!</p>
 <h3 id="agrupando-código-relacionado-em-módulos"><a class="header" href="#agrupando-código-relacionado-em-módulos">Agrupando código relacionado em módulos</a></h3>
-<p><em>Módulos</em> nos permitem organizar o código em uma crate para facilitar a leitura e a reutilização.
-Os módulos também nos permitem controlar a <em>privacidade</em> dos itens porque o código dentro de um
-o módulo é privado por padrão. Itens privados são detalhes de implementação interna
-não disponível para uso externo. Podemos optar por fazer módulos e os itens
-dentro deles públicos, o que os expõe para permitir que código externo use e dependa
-neles.</p>
-<p>Como exemplo, vamos escrever uma crate de biblioteca que forneça a funcionalidade de um
-restaurante. Definiremos as assinaturas das funções, mas deixaremos seus corpos
-vazio se concentrar na organização do código e não na
-implementação de um restaurante.</p>
-<p>Na indústria de restaurantes, algumas partes de um restaurante são chamadas de frente
-de casa e outros como fundos de casa. <em>Frente da casa</em> é onde estão os clientes;
-isso abrange onde os anfitriões acomodam os clientes, os servidores recebem pedidos e
-pagamento, e os bartenders preparam bebidas. <em>Nos fundos da casa</em> é onde os chefs e
-cozinheiros trabalham na cozinha, máquinas de lavar louça limpam e gerentes fazem tarefas administrativas
-trabalhar.</p>
-<p>Para estruturar nossa crate dessa forma, podemos organizar suas funções em grupos aninhados.
-módulos. Crie uma nova biblioteca chamada <code>restaurant</code> executando <code>cargo new restaurante --lib</code>. Em seguida, insira o código da Listagem 7-1 em <em>src/lib.rs</em> para
-definir alguns módulos e assinaturas de funções; esse código é a frente da casa
-seção.</p>
+<p><em>Módulos</em> nos permitem organizar o código dentro de uma crate para facilitar a
+leitura e a reutilização. Eles também nos permitem controlar a <em>privacidade</em>
+dos itens, porque o código dentro de um módulo é privado por padrão. Itens
+privados são detalhes internos de implementação, não disponíveis para uso
+externo. Podemos optar por tornar públicos os módulos e os itens dentro deles,
+o que os expõe para que código externo possa usá-los e depender deles.</p>
+<p>Como exemplo, vamos escrever uma crate de biblioteca que forneça a
+funcionalidade de um restaurante. Vamos definir as assinaturas das funções, mas
+deixaremos seus corpos vazios para nos concentrarmos na organização do código,
+e não na implementação de um restaurante.</p>
+<p>Na indústria de restaurantes, algumas partes de um restaurante são chamadas de
+<em>front of house</em> e outras de <em>back of house</em>. <em>Front of house</em> é onde ficam os
+clientes; isso inclui onde as pessoas da recepção acomodam os clientes, onde
+os atendentes recebem pedidos e pagamentos e onde bartenders preparam bebidas.
+<em>Back of house</em> é onde chefs e cozinheiros trabalham na cozinha, onde a equipe
+lava a louça e onde gerentes fazem trabalho administrativo.</p>
+<p>Para estruturar nossa crate dessa forma, podemos organizar suas funções em
+módulos aninhados. Crie uma nova biblioteca chamada <code>restaurant</code> executando
+<code>cargo new restaurant --lib</code>. Em seguida, insira o código da Listagem 7-1 em
+<em>src/lib.rs</em> para definir alguns módulos e assinaturas de função; esse código
+representa a seção de <em>front of house</em>.</p>
 <figure class="listing" id="listing-7-1">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">mod front_of_house {
@@ -7071,24 +7084,25 @@ seção.</p>
         fn take_payment() {}
     }
 }</code></pre>
-<figcaption><a href="#listing-7-1">Listing 7-1</a>: A <code>front_of_house</code> module containing other modules that then contain functions</figcaption>
+<figcaption><a href="#listing-7-1">Listing 7-1</a>: Um módulo <code>front_of_house</code> contendo outros módulos que, por sua vez, contêm funções</figcaption>
 </figure>
-<p>Definimos um módulo com a palavra-chave <code>mod</code> seguida do nome do módulo
-(neste caso, <code>front_of_house</code>). O corpo do módulo então vai para dentro do cacheado
-colchetes. Dentro dos módulos podemos colocar outros módulos, como neste caso com o
-módulos <code>hosting</code> e <code>serving</code>. Os módulos também podem conter definições para outros
-itens, como structs, enums, constantes, traits, e como na Listagem 7-1,
-funções.</p>
-<p>Ao usar módulos, podemos agrupar definições relacionadas e nomear o porquê
-eles estão relacionados. Os programadores que usam este código podem navegar no código com base no
-grupos em vez de ter que ler todas as definições, tornando mais fácil
-para encontrar as definições relevantes para eles. Programadores adicionando novas funcionalidades
-a este código saberia onde colocar o código para manter o programa organizado.</p>
-<p>Anteriormente, mencionamos que <em>src/main.rs</em> e <em>src/lib.rs</em> são chamados de <em>crate
-raízes</em>. A razão para o seu nome é que o conteúdo de qualquer um destes dois
-os arquivos formam um módulo chamado <code>crate</code> na raiz da estrutura do módulo da crate,
+<p>Definimos um módulo com a palavra-chave <code>mod</code>, seguida do nome do módulo, neste
+caso <code>front_of_house</code>. O corpo do módulo vai entre chaves. Dentro de módulos,
+podemos colocar outros módulos, como <code>hosting</code> e <code>serving</code> neste exemplo.
+Módulos também podem conter definições de outros itens, como structs, enums,
+constantes, traits e, como na Listagem 7-1, funções.</p>
+<p>Ao usar módulos, podemos agrupar definições relacionadas e dar nome ao motivo
+de essa relação existir. Pessoas que usam esse código podem navegar por ele com
+base nesses agrupamentos, em vez de ter de ler todas as definições, o que
+facilita encontrar os trechos relevantes. Pessoas adicionando novas
+funcionalidades a esse código também saberiam onde colocar o código para manter
+o programa organizado.</p>
+<p>Antes, mencionamos que <em>src/main.rs</em> e <em>src/lib.rs</em> são chamados de <em>raízes de
+crate</em>. A razão desse nome é que o conteúdo de qualquer um desses dois arquivos
+forma um módulo chamado <code>crate</code>, na raiz da estrutura de módulos da crate,
 conhecida como <em>árvore de módulos</em>.</p>
-<p>A Listagem 7-2 mostra a árvore de módulos para a estrutura da Listagem 7-1.</p>
+<p>A Listagem 7-2 mostra a árvore de módulos da estrutura definida na Listagem
+7-1.</p>
 <figure class="listing" id="listing-7-2">
 <pre><code class="language-text">crate
  └── front_of_house
@@ -7100,45 +7114,49 @@ conhecida como <em>árvore de módulos</em>.</p>
          ├── serve_order
          └── take_payment
 </code></pre>
-<figcaption><a href="#listing-7-2">Listing 7-2</a>: The module tree for the code in Listing 7-1</figcaption>
+<figcaption><a href="#listing-7-2">Listing 7-2</a>: A árvore de módulos do código da Listagem 7-1</figcaption>
 </figure>
-<p>Esta árvore mostra como alguns módulos se aninham dentro de outros módulos; por exemplo,
-<code>hosting</code> aninha-se dentro de <code>front_of_house</code>. A árvore também mostra que alguns módulos
-são <em>irmãos</em>, o que significa que estão definidos no mesmo módulo; <code>hosting</code> e
-<code>serving</code> são irmãos definidos em <code>front_of_house</code>. Se o módulo A for
-contido dentro do módulo B, dizemos que o módulo A é <em>filho</em> do módulo B e
-que o módulo B é o <em>pai</em> do módulo A. Observe que toda a árvore do módulo
-está enraizado no módulo implícito denominado <code>crate</code>.</p>
-<p>A árvore de módulos pode lembrá-lo da árvore de diretórios do sistema de arquivos em seu
-computador; esta é uma comparação muito adequada! Assim como os diretórios em um sistema de arquivos,
-você usa módulos para organizar seu código. E assim como os arquivos em um diretório, nós
-precisamos de uma maneira de encontrar nossos módulos.</p>
+<p>Essa árvore mostra como alguns módulos se aninham dentro de outros; por
+exemplo, <code>hosting</code> está aninhado dentro de <code>front_of_house</code>. A árvore também
+mostra que alguns módulos são <em>irmãos</em>, ou seja, são definidos dentro do mesmo
+módulo; <code>hosting</code> e <code>serving</code> são irmãos definidos dentro de
+<code>front_of_house</code>. Se o módulo A estiver contido dentro do módulo B, dizemos que
+o módulo A é <em>filho</em> do módulo B e que o módulo B é o <em>pai</em> do módulo A.
+Observe que toda a árvore de módulos está enraizada sob o módulo implícito
+chamado <code>crate</code>.</p>
+<p>A árvore de módulos pode lembrar a árvore de diretórios do sistema de arquivos
+do seu computador, e essa comparação é muito apropriada! Assim como usamos
+diretórios para organizar arquivos, usamos módulos para organizar código. E,
+assim como arquivos em um diretório, precisamos de um jeito de encontrar nossos
+módulos.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="caminhos-para-referenciar-um-item-na-árvore-de-módulos"><a href="#caminhos-para-referenciar-um-item-na-árvore-de-módulos" class="header">Caminhos para Referenciar um Item na Árvore de Módulos</a></h1>
-<h2 id="caminhos-para-referência-a-um-item-na-árvore-de-módulos"><a class="header" href="#caminhos-para-referência-a-um-item-na-árvore-de-módulos">Caminhos para referência a um item na árvore de módulos</a></h2>
-<p>Para mostrar ao Rust onde encontrar um item em uma árvore de módulos, usamos um caminho no mesmo
-maneira como usamos um caminho ao navegar em um sistema de arquivos. Para chamar uma função, precisamos
-conheça seu caminho.</p>
+<h2 id="caminhos-para-se-referir-a-um-item-na-árvore-de-módulos"><a class="header" href="#caminhos-para-se-referir-a-um-item-na-árvore-de-módulos">Caminhos para se referir a um item na árvore de módulos</a></h2>
+<p>Para mostrar ao Rust onde encontrar um item em uma árvore de módulos, usamos um
+caminho da mesma forma que usamos um caminho ao navegar em um sistema de
+arquivos. Para chamar uma função, precisamos conhecer seu caminho.</p>
 <p>Um caminho pode assumir duas formas:</p>
 <ul>
-<li>Um <em>caminho absoluto</em> é o caminho completo começando na raiz da crate; para código
-de uma crate externa, o caminho absoluto começa com o nome da crate e, para
-código da crate atual, ele começa com o literal <code>crate</code>.</li>
-<li>Um <em>caminho relativo</em> começa no módulo atual e usa <code>self</code>, <code>super</code> ou
-um identificador no módulo atual.</li>
+<li>Um <em>caminho absoluto</em> é o caminho completo começando na raiz da crate. Para
+código vindo de uma crate externa, o caminho absoluto começa com o nome da
+crate. Para código da crate atual, começa com o literal <code>crate</code>.</li>
+<li>Um <em>caminho relativo</em> começa no módulo atual e usa <code>self</code>, <code>super</code> ou um
+identificador presente no módulo atual.</li>
 </ul>
-<p>Os caminhos absolutos e relativos são seguidos por um ou mais identificadores
-separados por dois pontos duplos (<code>::</code>).</p>
-<p>Voltando à Listagem 7-1, digamos que queremos chamar a função <code>add_to_waitlist</code>.
-Isso é o mesmo que perguntar: Qual é o caminho da função <code>add_to_waitlist</code>?
-A Listagem 7-3 contém a Listagem 7-1 com alguns dos módulos e funções removidos.</p>
-<p>Mostraremos duas maneiras de chamar a função <code>add_to_waitlist</code> a partir de uma nova função,
-<code>eat_at_restaurant</code>, definido na raiz da crate. Esses caminhos estão corretos, mas
-ainda há outro problema que impedirá a compilação deste exemplo
-como está. Explicaremos o porquê daqui a pouco.</p>
-<p>A função <code>eat_at_restaurant</code> faz parte da API pública da nossa biblioteca, então
-nós o marcamos com a palavra-chave <code>pub</code>. Na seção <a href="#exposing-paths-with-the-pub-keyword">“Expondo caminhos com <code>pub</code>
-Seção Palavra-chave ”</a><!-- ignore -->, entraremos em mais detalhes sobre <code>pub</code>.</p>
+<p>Tanto caminhos absolutos quanto relativos são seguidos por um ou mais
+identificadores separados por dois pontos duplos (<code>::</code>).</p>
+<p>Voltando à Listagem 7-1, digamos que queremos chamar a função
+<code>add_to_waitlist</code>. Isso equivale a perguntar: qual é o caminho até a função
+<code>add_to_waitlist</code>? A Listagem 7-3 contém a Listagem 7-1 com alguns módulos e
+funções removidos.</p>
+<p>Mostraremos duas formas de chamar a função <code>add_to_waitlist</code> a partir de uma
+nova função, <code>eat_at_restaurant</code>, definida na raiz da crate. Esses caminhos
+estão corretos, mas ainda existe outro problema que impedirá a compilação desse
+exemplo como está. Daqui a pouco explicaremos o motivo.</p>
+<p>A função <code>eat_at_restaurant</code> faz parte da API pública da nossa crate de
+biblioteca, então nós a marcamos com a palavra-chave <code>pub</code>. Na seção
+<a href="#exposing-paths-with-the-pub-keyword">“Expondo caminhos com a palavra-chave <code>pub</code>”</a><!-- ignore -->, veremos
+<code>pub</code> com mais detalhes.</p>
 <figure class="listing" id="listing-7-3">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">mod front_of_house {
@@ -7154,36 +7172,37 @@ pub fn eat_at_restaurant() {
     // Relative path
     front_of_house::hosting::add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-3">Listing 7-3</a>: Calling the <code>add_to_waitlist</code> function using absolute and relative paths</figcaption>
+<figcaption><a href="#listing-7-3">Listing 7-3</a>: Chamando a função <code>add_to_waitlist</code> usando caminhos absolutos e relativos</figcaption>
 </figure>
 <p>A primeira vez que chamamos a função <code>add_to_waitlist</code> em <code>eat_at_restaurant</code>,
-usamos um caminho absoluto. A função <code>add_to_waitlist</code> é definida da mesma forma
-crate como <code>eat_at_restaurant</code>, o que significa que podemos usar a palavra-chave <code>crate</code> para
-iniciar um caminho absoluto. Em seguida, incluímos cada um dos módulos sucessivos até que
-siga para <code>add_to_waitlist</code>. Você pode imaginar um sistema de arquivos com o mesmo
-estrutura: especificaríamos o caminho <code>/front_of_house/hosting/add_to_waitlist</code> para
-execute o programa <code>add_to_waitlist</code>; usando o nome <code>crate</code> para começar do
-crate root é como usar <code>/</code> para iniciar a partir da raiz do sistema de arquivos em seu shell.</p>
-<p>Na segunda vez que chamamos <code>add_to_waitlist</code> em <code>eat_at_restaurant</code>, usamos um
+usamos um caminho absoluto. A função <code>add_to_waitlist</code> está definida na mesma
+crate que <code>eat_at_restaurant</code>, o que significa que podemos usar a palavra-chave
+<code>crate</code> para começar um caminho absoluto. Em seguida, incluímos cada módulo
+sucessivo até chegar a <code>add_to_waitlist</code>. Você pode imaginar um sistema de
+arquivos com a mesma estrutura: especificaríamos o caminho
+<code>/front_of_house/hosting/add_to_waitlist</code> para executar o programa
+<code>add_to_waitlist</code>; usar o nome <code>crate</code> para começar da raiz da crate é como
+usar <code>/</code> para começar da raiz do sistema de arquivos no shell.</p>
+<p>A segunda vez que chamamos <code>add_to_waitlist</code> em <code>eat_at_restaurant</code>, usamos um
 caminho relativo. O caminho começa com <code>front_of_house</code>, o nome do módulo
-definido no mesmo nível da árvore de módulos que <code>eat_at_restaurant</code>. Aqui o
-equivalente do sistema de arquivos estaria usando o caminho
-<code>front_of_house/hosting/add_to_waitlist</code>. Começar com um nome de módulo significa
-que o caminho é relativo.</p>
-<p>Escolher usar um caminho relativo ou absoluto é uma decisão que você tomará
-com base no seu projeto e depende se você tem maior probabilidade de mudar
-código de definição de item separadamente ou em conjunto com o código que usa o
-item. Por exemplo, se movemos o módulo <code>front_of_house</code> e o
-<code>eat_at_restaurant</code> em um módulo chamado <code>customer_experience</code>, teríamos
-precisa atualizar o caminho absoluto para <code>add_to_waitlist</code>, mas o caminho relativo
-ainda seria válido. No entanto, se movermos a função <code>eat_at_restaurant</code>
-separadamente em um módulo chamado <code>dining</code>, o caminho absoluto para o
-A chamada <code>add_to_waitlist</code> permaneceria a mesma, mas o caminho relativo precisaria
-ser atualizado. Nossa preferência em geral é especificar caminhos absolutos porque é
-é mais provável que desejemos mover definições de código e chamadas de item independentemente de
-uns aos outros.</p>
-<p>Vamos tentar compilar a Listagem 7.3 e descobrir por que ela ainda não foi compilada! O
-os erros que obtemos são mostrados na Listagem 7-4.</p>
+definido no mesmo nível da árvore de módulos que <code>eat_at_restaurant</code>. O
+equivalente no sistema de arquivos seria usar o caminho
+<code>front_of_house/hosting/add_to_waitlist</code>. Começar com o nome de um módulo
+significa que o caminho é relativo.</p>
+<p>Escolher entre usar um caminho relativo ou absoluto é uma decisão que você vai
+tomar com base no seu projeto. Essa escolha depende de ser mais provável que
+você mova o código que define o item separadamente ou junto com o código que o
+utiliza. Por exemplo, se movêssemos o módulo <code>front_of_house</code> e a função
+<code>eat_at_restaurant</code> para dentro de um módulo chamado <code>customer_experience</code>,
+teríamos que atualizar o caminho absoluto para <code>add_to_waitlist</code>, mas o caminho
+relativo continuaria válido. Porém, se movêssemos a função
+<code>eat_at_restaurant</code> separadamente para um módulo chamado <code>dining</code>, o caminho
+absoluto para <code>add_to_waitlist</code> permaneceria o mesmo, mas o caminho relativo
+precisaria ser atualizado. Nossa preferência, em geral, é especificar caminhos
+absolutos porque é mais provável que queiramos mover definições de código e
+chamadas de item independentemente umas das outras.</p>
+<p>Vamos tentar compilar a Listagem 7-3 e descobrir por que ela ainda não compila!
+Os erros que recebemos são mostrados na Listagem 7-4.</p>
 <figure class="listing" id="listing-7-4">
 <pre><code class="language-console">$ cargo build
    Compiling restaurant v0.1.0 (file:///projects/restaurant)
@@ -7218,31 +7237,33 @@ note: the module `hosting` is defined here
 For more information about this error, try `rustc --explain E0603`.
 error: could not compile `restaurant` (lib) due to 2 previous errors
 </code></pre>
-<figcaption><a href="#listing-7-4">Listing 7-4</a>: Compiler errors from building the code in Listing 7-3</figcaption>
+<figcaption><a href="#listing-7-4">Listing 7-4</a>: Erros do compilador ao tentar compilar o código da Listagem 7-3</figcaption>
 </figure>
-<p>As mensagens de erro dizem que o módulo <code>hosting</code> é privado. Em outras palavras, nós
-tenha os caminhos corretos para o módulo <code>hosting</code> e o <code>add_to_waitlist</code>
-função, mas Rust não nos permite usá-los porque não tem acesso ao
-seções privadas. No Rust, todos os itens (funções, métodos, estruturas, enums,
-módulos e constantes) são privados dos módulos pai por padrão. Se você quiser
-para tornar um item como uma função ou estrutura privada, você o coloca em um módulo.</p>
-<p>Os itens em um módulo pai não podem usar os itens privados dentro dos módulos filhos, mas
-itens em módulos filhos podem usar os itens em seus módulos ancestrais. Isso é
-porque os módulos filhos encapsulam e ocultam seus detalhes de implementação, mas o filho
-os módulos podem ver o contexto em que estão definidos. Para continuar com o nosso
-metáfora, pense nas regras de privacidade como sendo o back office de uma
-restaurante: o que acontece lá é privado para os clientes do restaurante, mas
-os gerentes de escritório podem ver e fazer tudo no restaurante que operam.</p>
-<p>Rust optou por fazer com que o sistema de módulos funcionasse dessa maneira, para que ocultasse o interior
-detalhes de implementação é o padrão. Dessa forma, você sabe quais partes do
-código interno você pode alterar sem quebrar o código externo. No entanto, Rust faz
-oferece a opção de expor as partes internas do código dos módulos filhos aos externos
-módulos ancestrais usando a palavra-chave <code>pub</code> para tornar um item público.</p>
+<p>As mensagens de erro dizem que o módulo <code>hosting</code> é privado. Em outras
+palavras, temos os caminhos corretos para o módulo <code>hosting</code> e para a função
+<code>add_to_waitlist</code>, mas Rust não nos deixa usá-los porque não temos acesso às
+seções privadas. Em Rust, todos os itens, como funções, métodos, structs,
+enums, módulos e constantes, são privados para módulos pai por padrão. Se você
+quiser tornar um item como uma função ou struct privado, basta colocá-lo dentro
+de um módulo.</p>
+<p>Itens em um módulo pai não podem usar itens privados dentro de módulos filhos,
+mas itens em módulos filhos podem usar itens em seus módulos ancestrais. Isso
+acontece porque módulos filhos encapsulam e escondem seus detalhes de
+implementação, mas ainda conseguem ver o contexto em que foram definidos. Para
+continuar com a nossa metáfora, pense nas regras de privacidade como se fossem
+o escritório interno de um restaurante: o que acontece lá é privado para os
+clientes, mas a gerência pode ver e fazer tudo no restaurante que administra.</p>
+<p>Rust escolheu fazer o sistema de módulos funcionar desse jeito para que esconder
+detalhes internos de implementação seja o comportamento padrão. Assim, você
+sabe quais partes do código interno pode alterar sem quebrar o código externo.
+Ainda assim, Rust oferece a opção de expor partes internas do código de módulos
+filhos a módulos ancestrais externos usando a palavra-chave <code>pub</code> para tornar
+um item público.</p>
 <h3 id="expondo-caminhos-com-a-palavra-chave-pub"><a class="header" href="#expondo-caminhos-com-a-palavra-chave-pub">Expondo caminhos com a palavra-chave <code>pub</code></a></h3>
-<p>Vamos voltar ao erro na Listagem 7-4 que nos disse que o módulo <code>hosting</code> é
-privado. Queremos que a função <code>eat_at_restaurant</code> no módulo pai tenha
-acesso à função <code>add_to_waitlist</code> no módulo filho, então marcamos o
-<code>hosting</code> com a palavra-chave <code>pub</code>, conforme mostrado na Listagem 7-5.</p>
+<p>Vamos voltar ao erro da Listagem 7-4 que nos dizia que o módulo <code>hosting</code> é
+privado. Queremos que a função <code>eat_at_restaurant</code>, no módulo pai, tenha acesso
+à função <code>add_to_waitlist</code>, no módulo filho, então marcamos o módulo <code>hosting</code>
+com a palavra-chave <code>pub</code>, como mostra a Listagem 7-5.</p>
 <figure class="listing" id="listing-7-5">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">mod front_of_house {
@@ -7259,10 +7280,10 @@ acesso à função <code>add_to_waitlist</code> no módulo filho, então marcamo
 </span><span class="boring">    // Relative path
 </span><span class="boring">    front_of_house::hosting::add_to_waitlist();
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-7-5">Listing 7-5</a>: Declaring the <code>hosting</code> module as <code>pub</code> to use it from <code>eat_at_restaurant</code></figcaption>
+<figcaption><a href="#listing-7-5">Listing 7-5</a>: Declarando o módulo <code>hosting</code> como <code>pub</code> para usá-lo a partir de <code>eat_at_restaurant</code></figcaption>
 </figure>
-<p>Infelizmente, o código na Listagem 7-5 ainda resulta em erros do compilador, como
-mostrado na Listagem 7-6.</p>
+<p>Infelizmente, o código da Listagem 7-5 ainda resulta em erros do compilador,
+como mostra a Listagem 7-6.</p>
 <figure class="listing" id="listing-7-6">
 <pre><code class="language-console">$ cargo build
    Compiling restaurant v0.1.0 (file:///projects/restaurant)
@@ -7293,21 +7314,21 @@ note: the function `add_to_waitlist` is defined here
 For more information about this error, try `rustc --explain E0603`.
 error: could not compile `restaurant` (lib) due to 2 previous errors
 </code></pre>
-<figcaption><a href="#listing-7-6">Listing 7-6</a>: Compiler errors from building the code in Listing 7-5</figcaption>
+<figcaption><a href="#listing-7-6">Listing 7-6</a>: Erros do compilador ao tentar compilar o código da Listagem 7-5</figcaption>
 </figure>
-<p>O que aconteceu? Adicionar a palavra-chave <code>pub</code> na frente de <code>mod hosting</code> faz com que
-módulo público. Com esta mudança, se pudermos acessar <code>front_of_house</code>, podemos
-acesse <code>hosting</code>. Mas o <em>conteúdo</em> de <code>hosting</code> ainda é privado; fazendo o
-O módulo public não torna seu conteúdo público. A palavra-chave <code>pub</code> em um módulo
-apenas permite que o código em seus módulos ancestrais se refira a ele, e não acesse seu código interno.
-Como os módulos são contêineres, não há muito que possamos fazer apenas criando os
-módulo público; precisamos ir mais longe e optar por fazer um ou mais dos
-itens dentro do módulo public também.</p>
-<p>Os erros na Listagem 7-6 dizem que a função <code>add_to_waitlist</code> é privada.
-As regras de privacidade se aplicam a estruturas, enumerações, funções e métodos, bem como
+<p>O que aconteceu? Adicionar a palavra-chave <code>pub</code> antes de <code>mod hosting</code> torna
+o módulo público. Com essa mudança, se conseguirmos acessar <code>front_of_house</code>,
+conseguiremos acessar <code>hosting</code>. Mas o <em>conteúdo</em> de <code>hosting</code> continua privado;
+tornar o módulo público não torna automaticamente seu conteúdo público. A
+palavra-chave <code>pub</code> em um módulo só permite que código em seus módulos
+ancestrais se refira a ele, e não que acesse seu código interno. Como módulos
+são contêineres, não há muito o que fazer tornando apenas o módulo público;
+precisamos ir além e escolher tornar público um ou mais itens dentro dele.</p>
+<p>Os erros da Listagem 7-6 dizem que a função <code>add_to_waitlist</code> é privada. As
+regras de privacidade se aplicam a structs, enums, funções e métodos, além de
 módulos.</p>
-<p>Vamos também tornar pública a função <code>add_to_waitlist</code> adicionando <code>pub</code>
-palavra-chave antes de sua definição, como na Listagem 7-7.</p>
+<p>Vamos também tornar pública a função <code>add_to_waitlist</code>, adicionando a palavra-
+chave <code>pub</code> antes de sua definição, como na Listagem 7-7.</p>
 <figure class="listing" id="listing-7-7">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness">mod front_of_house {
@@ -7324,65 +7345,67 @@ palavra-chave antes de sua definição, como na Listagem 7-7.</p>
 </span><span class="boring">    // Relative path
 </span><span class="boring">    front_of_house::hosting::add_to_waitlist();
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-7-7">Listing 7-7</a>: Adding the <code>pub</code> keyword to <code>mod hosting</code> and <code>fn add_to_waitlist</code> lets us call the function from <code>eat_at_restaurant</code>.</figcaption>
+<figcaption><a href="#listing-7-7">Listing 7-7</a>: Adicionar a palavra-chave <code>pub</code> a <code>mod hosting</code> e <code>fn add_to_waitlist</code> nos permite chamar a função a partir de <code>eat_at_restaurant</code></figcaption>
 </figure>
-<p>Agora o código será compilado! Para ver por que adicionar a palavra-chave <code>pub</code> nos permite usar
-esses caminhos em <code>eat_at_restaurant</code> com respeito às regras de privacidade, vamos
-observe os caminhos absolutos e relativos.</p>
-<p>No caminho absoluto, começamos com <code>crate</code>, a raiz do módulo da nossa crate
-árvore. O módulo <code>front_of_house</code> é definido na raiz da crate. Enquanto
-<code>front_of_house</code> não é público, porque a função <code>eat_at_restaurant</code> é
-definido no mesmo módulo que <code>front_of_house</code> (ou seja, <code>eat_at_restaurant</code>
-e <code>front_of_house</code> são irmãos), podemos nos referir a <code>front_of_house</code> de
-<code>eat_at_restaurant</code>. O próximo é o módulo <code>hosting</code> marcado com <code>pub</code>. Pudermos
-acesse o módulo pai de <code>hosting</code>, para que possamos acessar <code>hosting</code>. Finalmente, o
-A função <code>add_to_waitlist</code> está marcada com <code>pub</code> e podemos acessar seu pai
-módulo, então esta chamada de função funciona!</p>
-<p>No caminho relativo, a lógica é a mesma do caminho absoluto, exceto pelo
-primeiro passo: em vez de começar na raiz da crate, o caminho começa
-<code>front_of_house</code>. O módulo <code>front_of_house</code> é definido dentro do mesmo módulo
-como <code>eat_at_restaurant</code>, então o caminho relativo começando no módulo no qual
-<code>eat_at_restaurant</code> é trabalho definido. Então, porque <code>hosting</code> e
-<code>add_to_waitlist</code> estão marcados com <code>pub</code>, o resto do caminho funciona, e este
-a chamada de função é válida!</p>
-<p>Se você planeja compartilhar sua crate de biblioteca para que outros projetos possam usar sua
-código, sua API pública é o seu contrato com os usuários da sua crate que determina
-como eles podem interagir com seu código. Existem muitas considerações em torno
-gerenciar alterações em sua API pública para facilitar a dependência das pessoas
-sua crate. Estas considerações estão além do escopo deste livro; se você estiver
-interessado neste tópico, consulte <a href="https://rust-lang.github.io/api-guidelines/">as Diretrizes da API Rust</a>.</p>
+<p>Agora o código compilará! Para entender por que adicionar a palavra-chave <code>pub</code>
+nos permite usar esses caminhos em <code>eat_at_restaurant</code> em conformidade com as
+regras de privacidade, vamos observar os caminhos absoluto e relativo.</p>
+<p>No caminho absoluto, começamos com <code>crate</code>, a raiz da árvore de módulos da
+nossa crate. O módulo <code>front_of_house</code> está definido na raiz da crate. Embora
+<code>front_of_house</code> não seja público, como a função <code>eat_at_restaurant</code> está
+definida no mesmo módulo que <code>front_of_house</code>, ou seja, <code>eat_at_restaurant</code> e
+<code>front_of_house</code> são irmãos, podemos nos referir a <code>front_of_house</code> a partir de
+<code>eat_at_restaurant</code>. Em seguida vem o módulo <code>hosting</code>, marcado com <code>pub</code>.
+Podemos acessar o módulo pai de <code>hosting</code>, então podemos acessar <code>hosting</code>. Por
+fim, a função <code>add_to_waitlist</code> está marcada com <code>pub</code>, e podemos acessar seu
+módulo pai, então essa chamada de função funciona.</p>
+<p>No caminho relativo, a lógica é a mesma do caminho absoluto, com exceção do
+primeiro passo: em vez de começar na raiz da crate, o caminho começa em
+<code>front_of_house</code>. O módulo <code>front_of_house</code> está definido dentro do mesmo
+módulo que <code>eat_at_restaurant</code>, então o caminho relativo que começa no módulo
+em que <code>eat_at_restaurant</code> está definida funciona. Depois, como <code>hosting</code> e
+<code>add_to_waitlist</code> estão marcados com <code>pub</code>, o restante do caminho também
+funciona, e essa chamada é válida.</p>
+<p>Se você pretende compartilhar sua crate de biblioteca para que outros projetos
+possam usar seu código, sua API pública é o contrato com as pessoas que usam a
+crate, e esse contrato determina como elas podem interagir com o seu código.
+Existem muitas considerações envolvidas em gerenciar mudanças na API pública
+para tornar mais fácil depender da sua crate. Essas considerações fogem do
+escopo deste livro; se esse assunto lhe interessar, consulte <a href="https://rust-lang.github.io/api-guidelines/">as Rust API
+Guidelines</a>.</p>
 <section class="note" aria-role="note">
-<h4 id="melhores-práticas-para-pacotes-com-binário-e-biblioteca"><a class="header" href="#melhores-práticas-para-pacotes-com-binário-e-biblioteca">Melhores práticas para pacotes com binário e biblioteca</a></h4>
-<p>Mencionamos que um pacote pode conter uma crate binária <em>src/main.rs</em>
-root, bem como uma raiz da crate da biblioteca <em>src/lib.rs</em>, e ambas as crates terão
-o nome do pacote por padrão. Normalmente, pacotes com esse padrão de
-contendo uma biblioteca e uma crate binária terá código suficiente no
-crate binária para iniciar um executável que chama o código definido na biblioteca
-crate. Isso permite que outros projetos se beneficiem do máximo de funcionalidades que o
-pacote fornece porque o código da crate da biblioteca pode ser compartilhado.</p>
-<p>A árvore do módulo deve ser definida em <em>src/lib.rs</em>. Então, quaisquer itens públicos podem
-ser usado na crate binária iniciando os caminhos com o nome do pacote.
-A crate binária se torna um usuário da crate da biblioteca, assim como um completamente
-A crate externa usaria a crate da biblioteca: ela só pode usar a API pública.
-Isso ajuda você a projetar uma boa API; você não é apenas o autor, mas também
-também cliente!</p>
-<p>No <a href="#um-projeto-de-es-construindo-um-programa-de-linha-de-comando">Capítulo 12</a><!-- ignore -->, demonstraremos esta organização
-pratique com um programa de linha de comando que conterá uma crate binária
-e uma crate de biblioteca.</p>
+<h4 id="boas-práticas-para-pacotes-com-binário-e-biblioteca"><a class="header" href="#boas-práticas-para-pacotes-com-binário-e-biblioteca">Boas práticas para pacotes com binário e biblioteca</a></h4>
+<p>Mencionamos que um pacote pode conter tanto uma crate binária com raiz em
+<em>src/main.rs</em> quanto uma crate de biblioteca com raiz em <em>src/lib.rs</em>, e por
+padrão ambas terão o nome do pacote. Em geral, pacotes com esse padrão de
+conter uma crate de biblioteca e uma crate binária deixam apenas o código
+suficiente na crate binária para iniciar um executável que chame código
+definido na crate de biblioteca. Isso permite que outros projetos aproveitem
+a maior parte da funcionalidade fornecida pelo pacote, porque o código da
+crate de biblioteca pode ser compartilhado.</p>
+<p>A árvore de módulos deve ser definida em <em>src/lib.rs</em>. Depois, qualquer item
+público pode ser usado na crate binária começando o caminho pelo nome do
+pacote. A crate binária se torna usuária da crate de biblioteca exatamente
+como aconteceria com uma crate externa qualquer: ela só pode usar a API
+pública. Isso ajuda você a projetar uma boa API, porque você não é só o autor
+dela, mas também seu cliente!</p>
+<p>No <a href="#um-projeto-de-es-construindo-um-programa-de-linha-de-comando">Capítulo 12</a><!-- ignore -->, demonstraremos essa prática de
+organização com um programa de linha de comando que conterá tanto uma crate
+binária quanto uma crate de biblioteca.</p>
 </section>
 <h3 id="iniciando-caminhos-relativos-com-super"><a class="header" href="#iniciando-caminhos-relativos-com-super">Iniciando caminhos relativos com <code>super</code></a></h3>
-<p>Podemos construir caminhos relativos que começam no módulo pai, em vez de
-o módulo atual ou a raiz da crate, usando <code>super</code> no início do
-caminho. É como iniciar um caminho de sistema de arquivos com a sintaxe <code>..</code> que significa
-para ir para o diretório pai. Usar <code>super</code> nos permite fazer referência a um item
-que sabemos que está no módulo pai, o que pode tornar a reorganização do módulo
-árvore mais fácil quando o módulo está intimamente relacionado ao pai, mas o pai
-pode ser movido para outro lugar na árvore de módulos algum dia.</p>
-<p>Considere o código da Listagem 7.8 que modela a situação em que um chef
-corrige um pedido incorreto e o leva pessoalmente ao cliente. O
-função <code>fix_incorrect_order</code> definida no módulo <code>back_of_house</code> chama o
-função <code>deliver_order</code> definida no módulo pai especificando o caminho para
-<code>deliver_order</code>, começando com <code>super</code>.</p>
+<p>Podemos construir caminhos relativos que começam no módulo pai, em vez do
+módulo atual ou da raiz da crate, usando <code>super</code> no início do caminho. Isso é
+como começar um caminho de sistema de arquivos com a sintaxe <code>..</code>, que
+significa ir para o diretório pai. Usar <code>super</code> nos permite referenciar um item
+que sabemos estar no módulo pai, o que pode facilitar a reorganização da árvore
+de módulos quando um módulo está intimamente relacionado ao pai, mas esse pai
+pode ser movido futuramente para outra posição na árvore.</p>
+<p>Considere o código da Listagem 7-8, que modela a situação em que um chef
+corrige um pedido incorreto e o leva pessoalmente ao cliente. A função
+<code>fix_incorrect_order</code>, definida no módulo <code>back_of_house</code>, chama a função
+<code>deliver_order</code>, definida no módulo pai, especificando o caminho para
+<code>deliver_order</code> começando com <code>super</code>.</p>
 <figure class="listing" id="listing-7-8">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness">fn deliver_order() {}
@@ -7395,27 +7418,28 @@ mod back_of_house {
 
     fn cook_order() {}
 }</code></pre>
-<figcaption><a href="#listing-7-8">Listing 7-8</a>: Calling a function using a relative path starting with <code>super</code></figcaption>
+<figcaption><a href="#listing-7-8">Listing 7-8</a>: Chamando uma função usando um caminho relativo que começa com <code>super</code></figcaption>
 </figure>
 <p>A função <code>fix_incorrect_order</code> está no módulo <code>back_of_house</code>, então podemos
-use <code>super</code> para ir para o módulo pai de <code>back_of_house</code>, que neste caso
-é <code>crate</code>, a raiz. A partir daí, procuramos <code>deliver_order</code> e o encontramos.
-Sucesso! Achamos que o módulo <code>back_of_house</code> e a função <code>deliver_order</code>
-provavelmente permanecerão no mesmo relacionamento um com o outro e se mudarão
-juntos caso decidamos reorganizar a árvore de módulos da crate. Portanto, nós
-usei <code>super</code> para que tenhamos menos lugares para atualizar o código no futuro se
-este código é movido para um módulo diferente.</p>
-<h3 id="tornando-estruturas-e-enums-públicas"><a class="header" href="#tornando-estruturas-e-enums-públicas">Tornando Estruturas e Enums Públicas</a></h3>
-<p>Também podemos usar <code>pub</code> para designar estruturas e enums como públicas, mas há uma
-alguns detalhes extras sobre o uso de <code>pub</code> com estruturas e enumerações. Se usarmos <code>pub</code>
-antes de uma definição de struct, tornamos a struct pública, mas os campos da struct
-ainda será privado. Podemos tornar cada campo público ou não caso a caso
-base. Na Listagem 7-9, definimos uma estrutura pública <code>back_of_house::Breakfast</code>
-com um campo público <code>toast</code>, mas um campo privado <code>seasonal_fruit</code>. Este modelo
-é o caso de um restaurante onde o cliente pode escolher o tipo de pão que
-acompanha a refeição, mas o chef decide quais frutas acompanham a refeição com base
-sobre o que está na temporada e em estoque. A fruta disponível muda rapidamente, então
-os clientes não podem escolher as frutas ou mesmo ver quais frutas receberão.</p>
+usar <code>super</code> para subir ao módulo pai de <code>back_of_house</code>, que neste caso é
+<code>crate</code>, a raiz. A partir daí, procuramos <code>deliver_order</code> e a encontramos.
+Sucesso! Achamos provável que o módulo <code>back_of_house</code> e a função
+<code>deliver_order</code> permaneçam na mesma relação entre si e sejam movidos juntos se
+um dia decidirmos reorganizar a árvore de módulos da crate. Por isso, usamos
+<code>super</code>, assim teremos menos lugares para atualizar no futuro caso esse código
+seja movido para outro módulo.</p>
+<h3 id="tornando-structs-e-enums-públicos"><a class="header" href="#tornando-structs-e-enums-públicos">Tornando structs e enums públicos</a></h3>
+<p>Também podemos usar <code>pub</code> para designar structs e enums como públicos, mas há
+alguns detalhes extras no uso de <code>pub</code> com structs e enums. Se usarmos <code>pub</code>
+antes de uma definição de struct, tornamos a struct pública, mas seus campos
+continuarão privados. Podemos tornar cada campo público ou não caso a caso. Na
+Listagem 7-9, definimos uma struct pública <code>back_of_house::Breakfast</code> com um
+campo público <code>toast</code>, mas um campo privado <code>seasonal_fruit</code>. Isso modela o
+caso de um restaurante em que o cliente pode escolher o tipo de pão que
+acompanha a refeição, mas o chef decide qual fruta virá junto com base no que
+está na estação e disponível em estoque. As frutas disponíveis mudam
+rapidamente, então clientes não podem escolher a fruta nem sequer ver qual
+receberão.</p>
 <figure class="listing" id="listing-7-9">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">mod back_of_house {
@@ -7445,21 +7469,22 @@ pub fn eat_at_restaurant() {
     // to see or modify the seasonal fruit that comes with the meal.
     // meal.seasonal_fruit = String::from("blueberries");
 }</code></pre>
-<figcaption><a href="#listing-7-9">Listing 7-9</a>: A struct with some public fields and some private fields</figcaption>
+<figcaption><a href="#listing-7-9">Listing 7-9</a>: Uma struct com alguns campos públicos e outros privados</figcaption>
 </figure>
-<p>Como o campo <code>toast</code> na estrutura <code>back_of_house::Breakfast</code> é público,
-em <code>eat_at_restaurant</code> podemos escrever e ler o campo <code>toast</code> usando ponto
-notação. Observe que não podemos usar o campo <code>seasonal_fruit</code> em
-<code>eat_at_restaurant</code>, porque <code>seasonal_fruit</code> é privado. Tente descomentar o
-linha modificando o valor do campo <code>seasonal_fruit</code> para ver qual erro você obteve!</p>
-<p>Além disso, observe que, como <code>back_of_house::Breakfast</code> possui um campo privado, o
-struct precisa fornecer uma função pública associada que construa um
-instância de <code>Breakfast</code> (nós a chamamos de <code>summer</code> aqui). Se <code>Breakfast</code> não
-tiver tal função, não poderíamos criar uma instância de <code>Breakfast</code> em
-<code>eat_at_restaurant</code>, porque não foi possível definir o valor do private
-Campo <code>seasonal_fruit</code> em <code>eat_at_restaurant</code>.</p>
-<p>Por outro lado, se tornarmos um enum público, todas as suas variantes serão públicas. Nós
-só precisa do <code>pub</code> antes da palavra-chave <code>enum</code>, conforme mostrado na Listagem 7.10.</p>
+<p>Como o campo <code>toast</code> da struct <code>back_of_house::Breakfast</code> é público, em
+<code>eat_at_restaurant</code> podemos escrever e ler o campo <code>toast</code> usando a notação com
+ponto. Observe que não podemos usar o campo <code>seasonal_fruit</code> em
+<code>eat_at_restaurant</code>, porque <code>seasonal_fruit</code> é privado. Tente descomentar a
+linha que modifica <code>seasonal_fruit</code> para ver qual erro você recebe!</p>
+<p>Além disso, note que, como <code>back_of_house::Breakfast</code> tem um campo privado, a
+struct precisa fornecer uma função associada pública que construa uma instância
+de <code>Breakfast</code>, que chamamos aqui de <code>summer</code>. Se <code>Breakfast</code> não tivesse essa
+função, não poderíamos criar uma instância de <code>Breakfast</code> em
+<code>eat_at_restaurant</code>, porque não conseguiríamos definir o valor do campo privado
+<code>seasonal_fruit</code>.</p>
+<p>Em contraste, se tornarmos um enum público, todas as suas variantes passam a
+ser públicas. Só precisamos colocar <code>pub</code> antes da palavra-chave <code>enum</code>, como
+na Listagem 7-10.</p>
 <figure class="listing" id="listing-7-10">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">mod back_of_house {
@@ -7473,30 +7498,34 @@ pub fn eat_at_restaurant() {
     let order1 = back_of_house::Appetizer::Soup;
     let order2 = back_of_house::Appetizer::Salad;
 }</code></pre>
-<figcaption><a href="#listing-7-10">Listing 7-10</a>: Designating an enum as public makes all its variants public.</figcaption>
+<figcaption><a href="#listing-7-10">Listing 7-10</a>: Tornar um enum público faz com que todas as suas variantes também sejam públicas</figcaption>
 </figure>
-<p>Como tornamos o enum <code>Appetizer</code> público, podemos usar <code>Soup</code> e <code>Salad</code>
-variantes em <code>eat_at_restaurant</code>.</p>
-<p>Enums não são muito úteis, a menos que suas variantes sejam públicas; seria irritante
-ter que anotar todas as variantes de enum com <code>pub</code> em todos os casos, então o padrão
-para variantes enum deve ser público. As estruturas são frequentemente úteis sem a sua
-os campos são públicos, então os campos struct seguem a regra geral de tudo
-sendo privado por padrão, a menos que seja anotado com <code>pub</code>.</p>
-<p>Há mais uma situação envolvendo <code>pub</code> que não abordamos, e é
-nosso último recurso do sistema de módulo: a palavra-chave <code>use</code>. Cobriremos <code>use</code> sozinho
-primeiro, e depois mostraremos como combinar <code>pub</code> e <code>use</code>.</p>
+<p>Como tornamos o enum <code>Appetizer</code> público, podemos usar as variantes <code>Soup</code> e
+<code>Salad</code> em <code>eat_at_restaurant</code>.</p>
+<p>Enums não são muito úteis se suas variantes não forem públicas; seria irritante
+ter de anotar todas as variantes de enum com <code>pub</code> em todos os casos, então o
+comportamento padrão das variantes de enum é serem públicas. Structs
+frequentemente continuam úteis mesmo sem campos públicos, então campos de
+struct seguem a regra geral de tudo ser privado por padrão, a menos que seja
+explicitamente anotado com <code>pub</code>.</p>
+<p>Há mais uma situação envolvendo <code>pub</code> que ainda não cobrimos, e ela está ligada
+ao último recurso do sistema de módulos que veremos: a palavra-chave <code>use</code>.
+Primeiro vamos tratar de <code>use</code> por si só, e depois mostraremos como combinar
+<code>pub</code> e <code>use</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use-1"><a href="#trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use-1" class="header">Trazendo Caminhos para o Escopo com a Palavra-chave use</a></h1>
 <h2 id="trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use"><a class="header" href="#trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use">Trazendo caminhos para o escopo com a palavra-chave <code>use</code></a></h2>
-<p>Ter que escrever os caminhos para chamar funções pode parecer inconveniente e
-repetitivo. Na Listagem 7-7, se escolhemos o caminho absoluto ou relativo para
-a função <code>add_to_waitlist</code>, toda vez que queríamos chamar <code>add_to_waitlist</code>
-tivemos que especificar <code>front_of_house</code> e <code>hosting</code> também. Felizmente, há um
-maneira de simplificar esse processo: podemos criar um atalho para um caminho com o <code>use</code>
-palavra-chave uma vez e, em seguida, use o nome mais curto em qualquer outro lugar do escopo.</p>
+<p>Ter de escrever os caminhos completos para chamar funções pode parecer
+inconveniente e repetitivo. Na Listagem 7-7, independentemente de escolhermos o
+caminho absoluto ou relativo para a função <code>add_to_waitlist</code>, toda vez que
+queríamos chamar <code>add_to_waitlist</code> precisávamos especificar também
+<code>front_of_house</code> e <code>hosting</code>. Felizmente, há uma forma de simplificar esse
+processo: podemos criar um atalho para um caminho com a palavra-chave <code>use</code> uma
+única vez e então usar o nome mais curto em qualquer outro lugar daquele
+escopo.</p>
 <p>Na Listagem 7-11, trazemos o módulo <code>crate::front_of_house::hosting</code> para o
-escopo da função <code>eat_at_restaurant</code> para que só tenhamos que especificar
-<code>hosting::add_to_waitlist</code> para chamar a função <code>add_to_waitlist</code> em
+escopo da função <code>eat_at_restaurant</code>, de modo que só precisamos especificar
+<code>hosting::add_to_waitlist</code> para chamar a função <code>add_to_waitlist</code> dentro de
 <code>eat_at_restaurant</code>.</p>
 <figure class="listing" id="listing-7-11">
 <span class="file-name">Filename: src/lib.rs</span>
@@ -7513,15 +7542,16 @@ pub fn eat_at_restaurant() {
 }</code></pre>
 <figcaption><a href="#listing-7-11">Listing 7-11</a>: Trazendo um módulo para o escopo com <code>use</code></figcaption>
 </figure>
-<p>Adicionar <code>use</code> e um caminho em um escopo é semelhante a criar um link simbólico em
-o sistema de arquivos. Adicionando <code>use crate::front_of_house::hosting</code> na crate
-root, <code>hosting</code> agora é um nome válido nesse escopo, assim como se <code>hosting</code>
-módulo foi definido na raiz da crate. Caminhos trazidos para o escopo com <code>use</code>
-verifique também a privacidade, como qualquer outro caminho.</p>
-<p>Observe que <code>use</code> cria apenas o atalho para o escopo específico no qual o
-<code>use</code> ocorre. A Listagem 7-12 move a função <code>eat_at_restaurant</code> para uma nova
-módulo filho chamado <code>customer</code>, que é então um escopo diferente do <code>use</code>
-instrução, então o corpo da função não será compilado.</p>
+<p>Adicionar <code>use</code> e um caminho dentro de um escopo é semelhante a criar um link
+simbólico no sistema de arquivos. Ao adicionar
+<code>use crate::front_of_house::hosting</code> na raiz da crate, <code>hosting</code> passa a ser um
+nome válido naquele escopo, como se o módulo <code>hosting</code> tivesse sido definido na
+raiz da crate. Caminhos trazidos para o escopo com <code>use</code> também respeitam as
+regras de privacidade, como quaisquer outros caminhos.</p>
+<p>Observe que <code>use</code> cria o atalho apenas para o escopo específico em que aparece.
+A Listagem 7-12 move a função <code>eat_at_restaurant</code> para um novo módulo filho
+chamado <code>customer</code>, que então se torna um escopo diferente daquele da
+instrução <code>use</code>, e por isso o corpo da função não compilará.</p>
 <figure class="listing" id="listing-7-12">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness does_not_compile ignore">mod front_of_house {
@@ -7537,10 +7567,10 @@ mod customer {
         hosting::add_to_waitlist();
     }
 }</code></pre>
-<figcaption><a href="#listing-7-12">Listing 7-12</a>: Uma instrução <code>use</code> se aplica apenas ao escopo em que foi declarada</figcaption>
+<figcaption><a href="#listing-7-12">Listing 7-12</a>: Uma instrução <code>use</code> se aplica apenas ao escopo em que ela foi declarada</figcaption>
 </figure>
-<p>O erro do compilador mostra que o atalho não se aplica mais ao
-<code>customer</code> módulo:</p>
+<p>O erro do compilador mostra que o atalho já não se aplica dentro do módulo
+<code>customer</code>:</p>
 <pre><code class="language-console">$ cargo build
    Compiling restaurant v0.1.0 (file:///projects/restaurant)
 error[E0433]: failed to resolve: use of unresolved module or unlinked crate `hosting`
@@ -7567,14 +7597,16 @@ For more information about this error, try `rustc --explain E0433`.
 warning: `restaurant` (lib) generated 1 warning
 error: could not compile `restaurant` (lib) due to 1 previous error; 1 warning emitted
 </code></pre>
-<p>Observe que também há um aviso de que <code>use</code> não é mais usado em seu escopo! Para
-para corrigir esse problema, mova <code>use</code> dentro do módulo <code>customer</code> também ou faça referência
-o atalho no módulo pai com <code>super::hosting</code> dentro do filho
-<code>customer</code> módulo.</p>
-<h3 id="criando-caminhos-idiomáticos-use"><a class="header" href="#criando-caminhos-idiomáticos-use">Criando caminhos idiomáticos <code>use</code></a></h3>
-<p>Na Listagem 7.11, você deve estar se perguntando por que especificamos <code>use crate::front_of_house::hosting</code> and then called <code>hosting::add_to_waitlist</code> em
-<code>eat_at_restaurant</code>, em vez de especificar o caminho <code>use</code> até
-a função <code>add_to_waitlist</code> para obter o mesmo resultado, como na Listagem 7-13.</p>
+<p>Observe também que há um aviso de que <code>use</code> não está mais sendo usada em seu
+escopo! Para corrigir esse problema, mova a <code>use</code> para dentro do módulo
+<code>customer</code> também, ou então faça referência ao atalho presente no módulo pai
+com <code>super::hosting</code> dentro do módulo filho <code>customer</code>.</p>
+<h3 id="criando-caminhos-use-idiomáticos"><a class="header" href="#criando-caminhos-use-idiomáticos">Criando caminhos <code>use</code> idiomáticos</a></h3>
+<p>Na Listagem 7-11, você talvez tenha se perguntado por que especificamos
+<code>use crate::front_of_house::hosting</code> e então chamamos
+<code>hosting::add_to_waitlist</code> em <code>eat_at_restaurant</code>, em vez de especificar o
+caminho de <code>use</code> até a função <code>add_to_waitlist</code> para obter o mesmo resultado,
+como na Listagem 7-13.</p>
 <figure class="listing" id="listing-7-13">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground test_harness">mod front_of_house {
@@ -7588,19 +7620,19 @@ use crate::front_of_house::hosting::add_to_waitlist;
 pub fn eat_at_restaurant() {
     add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-13">Listing 7-13</a>: Trazendo a função <code>add_to_waitlist</code> para o escopo com <code>use</code>, de forma pouco idiomática</figcaption>
+<figcaption><a href="#listing-7-13">Listing 7-13</a>: Trazendo a função <code>add_to_waitlist</code> para o escopo com <code>use</code>, de uma maneira pouco idiomática</figcaption>
 </figure>
-<p>Embora a Listagem 7-11 e a Listagem 7-13 realizem a mesma tarefa, a Listagem
-7-11 é a maneira idiomática de colocar uma função no escopo com <code>use</code>. Trazendo
-o módulo pai da função no escopo com <code>use</code> significa que temos que especificar o
-módulo pai ao chamar a função. Especificando o módulo pai quando
-chamar a função deixa claro que a função não está definida localmente
-enquanto ainda minimiza a repetição do caminho completo. O código na Listagem 7-13 é
-não está claro onde <code>add_to_waitlist</code> está definido.</p>
-<p>Por outro lado, ao trazer structs, enums e outros itens com <code>use</code>,
-é idiomático especificar o caminho completo. A Listagem 7-14 mostra a maneira idiomática
-para trazer a estrutura <code>HashMap</code> da biblioteca padrão para o escopo de um binário
-crate.</p>
+<p>Embora a Listagem 7-11 e a Listagem 7-13 façam a mesma coisa, a Listagem 7-11
+é a forma idiomática de trazer uma função para o escopo com <code>use</code>. Trazer o
+módulo pai da função para o escopo com <code>use</code> significa que precisamos
+especificar o módulo pai ao chamar a função. Especificar esse módulo pai ao
+chamar a função deixa claro que ela não foi definida localmente, enquanto ainda
+minimiza a repetição do caminho completo. O código da Listagem 7-13 torna menos
+claro onde <code>add_to_waitlist</code> está definida.</p>
+<p>Por outro lado, ao trazer structs, enums e outros itens para o escopo com
+<code>use</code>, o idiomático é especificar o caminho completo. A Listagem 7-14 mostra a
+forma idiomática de trazer a struct <code>HashMap</code> da biblioteca padrão para o
+escopo de uma crate binária.</p>
 <figure class="listing" id="listing-7-14">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">use std::collections::HashMap;
@@ -7611,12 +7643,13 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-7-14">Listing 7-14</a>: Trazendo <code>HashMap</code> para o escopo de forma idiomática</figcaption>
 </figure>
-<p>Não há nenhuma razão forte por trás dessa expressão: é apenas a convenção que
-surgiu, e as pessoas se acostumaram a ler e escrever código Rust dessa maneira.</p>
-<p>A exceção a esta expressão é se trouxermos dois itens com o mesmo nome
-no escopo com instruções <code>use</code>, porque Rust não permite isso. Listagem 7-15
-mostra como trazer para o escopo dois tipos <code>Result</code> que têm o mesmo nome, mas
-diferentes módulos pai e como se referir a eles.</p>
+<p>Não há um motivo técnico forte por trás desse idiomatismo: é simplesmente a
+convenção que surgiu, e as pessoas se acostumaram a ler e escrever código Rust
+dessa maneira.</p>
+<p>A exceção a esse idiomatismo aparece quando trazemos para o escopo dois itens
+com o mesmo nome por meio de instruções <code>use</code>, porque Rust não permite isso. A
+Listagem 7-15 mostra como trazer para o escopo dois tipos <code>Result</code> que têm o
+mesmo nome, mas módulos-pai diferentes, e como se referir a eles.</p>
 <figure class="listing" id="listing-7-15">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::fmt;
@@ -7633,15 +7666,16 @@ fn function2() -&gt; io::Result&lt;()&gt; {
 </span>}</code></pre>
 <figcaption><a href="#listing-7-15">Listing 7-15</a>: Trazer dois tipos com o mesmo nome para o mesmo escopo exige usar seus módulos-pai</figcaption>
 </figure>
-<p>Como você pode ver, o uso dos módulos pai distingue os dois tipos <code>Result</code>.
-Se, em vez disso, especificássemos <code>use std::fmt::Result</code> e <code>use std::io::Result</code>, teríamos
-temos dois tipos <code>Result</code> no mesmo escopo, e Rust não saberia qual deles
-quis dizer quando usamos <code>Result</code>.</p>
+<p>Como você pode ver, usar os módulos-pai distingue os dois tipos <code>Result</code>. Se,
+em vez disso, tivéssemos especificado <code>use std::fmt::Result</code> e
+<code>use std::io::Result</code>, teríamos dois tipos <code>Result</code> no mesmo escopo, e Rust não
+saberia a qual deles estamos nos referindo ao usar <code>Result</code>.</p>
 <h3 id="fornecendo-novos-nomes-com-a-palavra-chave-as"><a class="header" href="#fornecendo-novos-nomes-com-a-palavra-chave-as">Fornecendo novos nomes com a palavra-chave <code>as</code></a></h3>
-<p>Existe outra solução para o problema de trazer dois tipos com o mesmo nome
-no mesmo escopo com <code>use</code>: Após o caminho, podemos especificar <code>as</code> e um novo
-nome local, ou <em>alias</em>, para o tipo. A Listagem 7.16 mostra outra maneira de escrever
-o código na Listagem 7.15 renomeando um dos dois tipos <code>Result</code> usando <code>as</code>.</p>
+<p>Existe outra solução para o problema de trazer para o mesmo escopo dois tipos
+com o mesmo nome usando <code>use</code>: depois do caminho, podemos especificar <code>as</code> e um
+novo nome local, ou <em>alias</em>, para o tipo. A Listagem 7-16 mostra outra maneira
+de escrever o código da Listagem 7-15, renomeando um dos dois tipos <code>Result</code>
+com <code>as</code>.</p>
 <figure class="listing" id="listing-7-16">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::fmt::Result;
@@ -7656,19 +7690,19 @@ fn function2() -&gt; IoResult&lt;()&gt; {
     // --snip--
 <span class="boring">    Ok(())
 </span>}</code></pre>
-<figcaption><a href="#listing-7-16">Listing 7-16</a>: Renomeando um tipo ao trazê-lo para o escopo com a palavra-chave <code>as</code></figcaption>
+<figcaption><a href="#listing-7-16">Listing 7-16</a>: Renomeando um tipo quando ele é trazido para o escopo com a palavra-chave <code>as</code></figcaption>
 </figure>
-<p>Na segunda instrução <code>use</code>, escolhemos o novo nome <code>IoResult</code> para o
-<code>std::io::Result</code> tipo, que não entrará em conflito com o <code>Result</code> de <code>std::fmt</code>
-que também trouxemos para o escopo. Listagem 7-15 e Listagem 7-16 são
-considerado idiomático, então a escolha é sua!</p>
+<p>Na segunda instrução <code>use</code>, escolhemos o novo nome <code>IoResult</code> para o tipo
+<code>std::io::Result</code>, que não entrará em conflito com o <code>Result</code> de <code>std::fmt</code> que
+também trouxemos para o escopo. Tanto a Listagem 7-15 quanto a Listagem 7-16
+são consideradas idiomáticas, então a escolha fica a seu critério!</p>
 <h3 id="reexportando-nomes-com-pub-use"><a class="header" href="#reexportando-nomes-com-pub-use">Reexportando nomes com <code>pub use</code></a></h3>
-<p>Quando colocamos um nome no escopo com a palavra-chave <code>use</code>, o nome é privado para
-o escopo para o qual o importamos. Para habilitar código fora desse escopo para referência
-a esse nome como se tivesse sido definido nesse escopo, podemos combinar <code>pub</code> e
-<code>use</code>. Essa técnica é chamada de <em>reexportação</em> porque estamos trazendo um item
-no escopo, mas também disponibilizando esse item para que outros possam trazer para seus
-escopo.</p>
+<p>Quando trazemos um nome para o escopo com a palavra-chave <code>use</code>, esse nome fica
+privado ao escopo para o qual o importamos. Para permitir que código fora desse
+escopo se refira a esse nome como se ele tivesse sido definido ali, podemos
+combinar <code>pub</code> e <code>use</code>. Essa técnica é chamada de <em>reexportação</em>, porque
+estamos trazendo um item para o escopo, mas também tornando esse item
+disponível para que outras pessoas o tragam para seus próprios escopos.</p>
 <p>A Listagem 7-17 mostra o código da Listagem 7-11 com <code>use</code> no módulo raiz
 alterado para <code>pub use</code>.</p>
 <figure class="listing" id="listing-7-17">
@@ -7684,26 +7718,28 @@ pub use crate::front_of_house::hosting;
 pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-17">Listing 7-17</a>: Disponibilizando um nome para qualquer código por meio de um novo escopo com <code>pub use</code></figcaption>
+<figcaption><a href="#listing-7-17">Listing 7-17</a>: Disponibilizando um nome para qualquer código usar a partir de um novo escopo com <code>pub use</code></figcaption>
 </figure>
-<p>Antes dessa mudança, o código externo teria que chamar o <code>add_to_waitlist</code>
-função usando o caminho
-<code>restaurant::front_of_house::hosting::add_to_waitlist()</code>, o que também teria
-exigia que o módulo <code>front_of_house</code> fosse marcado como <code>pub</code>. Agora que este <code>pub use</code> has re-exported the <code>hosting</code> módulo do módulo raiz, código externo
-pode usar o caminho <code>restaurant::hosting::add_to_waitlist()</code>.</p>
-<p>A reexportação é útil quando a estrutura interna do seu código é diferente
-de como os programadores que chamam seu código pensariam sobre o domínio. Para
-Por exemplo, nesta metáfora do restaurante, as pessoas que dirigem o restaurante pensam
-sobre “frente da casa” e “fundos da casa”. Mas os clientes que visitam um restaurante
-provavelmente não pensará nas partes do restaurante nesses termos. Com <code>pub use</code>, podemos escrever nosso código com uma estrutura, mas expor uma estrutura diferente.
-Isso torna nossa biblioteca bem organizada para programadores que trabalham na biblioteca
-e programadores ligando para a biblioteca. Veremos outro exemplo de <code>pub use</code>
-e como isso afeta a documentação da sua crate em <a href="#exporting-a-convenient-public-api">“Exportando um Público Conveniente
-API”</a><!-- ignore --> no Capítulo 14.</p>
+<p>Antes dessa mudança, código externo teria de chamar a função
+<code>add_to_waitlist</code> usando o caminho
+<code>restaurant::front_of_house::hosting::add_to_waitlist()</code>, o que também exigiria
+que o módulo <code>front_of_house</code> fosse marcado como <code>pub</code>. Agora que esse <code>pub use</code>
+reexportou o módulo <code>hosting</code> a partir do módulo raiz, código externo pode usar
+o caminho <code>restaurant::hosting::add_to_waitlist()</code>.</p>
+<p>A reexportação é útil quando a estrutura interna do seu código difere da forma
+como pessoas chamando o seu código pensam no domínio do problema. Por exemplo,
+nesta metáfora do restaurante, as pessoas que trabalham no restaurante pensam
+em termos como “front of house” e “back of house”. Mas clientes visitando um
+restaurante provavelmente não pensariam nas partes do restaurante dessa forma.
+Com <code>pub use</code>, podemos escrever nosso código com uma estrutura e expor outra
+estrutura. Isso faz com que a biblioteca fique bem organizada tanto para quem
+trabalha nela quanto para quem a utiliza. Veremos outro exemplo de <code>pub use</code> e
+como isso afeta a documentação da crate em <a href="#exporting-a-convenient-public-api">“Exportando uma API pública
+conveniente”</a><!-- ignore -->, no Capítulo 14.</p>
 <h3 id="usando-pacotes-externos"><a class="header" href="#usando-pacotes-externos">Usando pacotes externos</a></h3>
-<p>No Capítulo 2, programamos um projeto de jogo de adivinhação que utilizou um
-pacote chamado <code>rand</code> para obter números aleatórios. Para usar <code>rand</code> em nosso projeto, nós
-adicionei esta linha a <em>Cargo.toml</em>:</p>
+<p>No Capítulo 2, programamos um projeto de jogo de adivinhação que usava um
+pacote externo chamado <code>rand</code> para obter números aleatórios. Para usar <code>rand</code>
+no nosso projeto, adicionamos esta linha a <em>Cargo.toml</em>:</p>
 <!-- When updating the version of `rand` used, also update the version of
 `rand` used in these files so they all match:
 * ch02-00-guessing-game-tutorial.md
@@ -7714,14 +7750,15 @@ adicionei esta linha a <em>Cargo.toml</em>:</p>
 <pre><code class="language-toml">rand = "0.8.5"
 </code></pre>
 </figure>
-<p>Adicionar <code>rand</code> como uma dependência em <em>Cargo.toml</em> diz ao Cargo para baixar o
-<code>rand</code> pacote e quaisquer dependências de <a href="https://crates.io/">crates.io</a> e
-disponibilizar <code>rand</code> para nosso projeto.</p>
-<p>Então, para trazer as definições de <code>rand</code> para o escopo do nosso pacote, adicionamos um
-<code>use</code> linha começando com o nome da crate, <code>rand</code>, e listou os itens que
-queria trazer para o escopo. Lembre-se disso em <a href="#generating-a-random-number">“Gerando um Random
-Número”</a><!-- ignore --> no Capítulo 2, trouxemos o traço <code>Rng</code> para
-escopo e chamou a função <code>rand::thread_rng</code>:</p>
+<p>Adicionar <code>rand</code> como dependência em <em>Cargo.toml</em> informa ao Cargo para baixar
+o pacote <code>rand</code> e quaisquer dependências dele a partir de
+<a href="https://crates.io/">crates.io</a>, além de disponibilizar <code>rand</code> ao nosso
+projeto.</p>
+<p>Depois, para trazer definições de <code>rand</code> para o escopo do nosso pacote,
+adicionamos uma linha <code>use</code> começando com o nome da crate, <code>rand</code>, e listamos
+os itens que queríamos trazer para o escopo. Lembre-se de que, em
+<a href="#generating-a-random-number">“Gerando um número aleatório”</a><!-- ignore --> no Capítulo 2, trouxemos a
+trait <code>Rng</code> para o escopo e chamamos a função <code>rand::thread_rng</code>:</p>
 <pre><code class="language-rust ignore"><span class="boring">use std::io;
 </span><span class="boring">
 </span>use rand::Rng;
@@ -7744,27 +7781,27 @@ fn main() {
 </span><span class="boring">    println!("You guessed: {guess}");
 </span>}</code></pre>
 <p>Membros da comunidade Rust disponibilizaram muitos pacotes em
-<a href="https://crates.io/">crates.io</a> e colocar qualquer um deles em seu pacote
-envolve as mesmas etapas: listá-los no arquivo <em>Cargo.toml</em> do seu pacote e
-usando <code>use</code> para trazer itens de suas crates para o escopo.</p>
+<a href="https://crates.io/">crates.io</a>, e trazer qualquer um deles para o seu pacote
+envolve esses mesmos passos: listá-lo no arquivo <em>Cargo.toml</em> do pacote e usar
+<code>use</code> para trazer itens de suas crates para o escopo.</p>
 <p>Observe que a biblioteca padrão <code>std</code> também é uma crate externa ao nosso
-pacote. Como a biblioteca padrão vem com a linguagem Rust, nós
-não é necessário alterar <em>Cargo.toml</em> para incluir <code>std</code>. Mas precisamos nos referir a
-use <code>use</code> para trazer itens de lá para o escopo do nosso pacote. Por exemplo,
-com <code>HashMap</code> usaríamos esta linha:</p>
+pacote. Como a biblioteca padrão acompanha a linguagem Rust, não precisamos
+alterar <em>Cargo.toml</em> para incluir <code>std</code>. Mas precisamos nos referir a ela com
+<code>use</code> para trazer itens de lá para o escopo do nosso pacote. Por exemplo, com
+<code>HashMap</code> usaríamos esta linha:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::collections::HashMap;
 <span class="boring">}</span></code></pre>
-<p>Este é um caminho absoluto começando com <code>std</code>, o nome da biblioteca padrão
-crate.</p>
+<p>Este é um caminho absoluto começando com <code>std</code>, o nome da crate da biblioteca
+padrão.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-nested-paths-to-clean-up-large-use-lists"></a></p>
-<h3 id="usando-caminhos-aninhados-para-limpar-listas-use"><a class="header" href="#usando-caminhos-aninhados-para-limpar-listas-use">Usando caminhos aninhados para limpar listas <code>use</code></a></h3>
-<p>Se estivermos usando vários itens definidos na mesma crate ou no mesmo módulo, listar
-cada item em sua própria linha pode ocupar muito espaço vertical em nossos arquivos. Para
-por exemplo, essas duas declarações <code>use</code> que tivemos no jogo de adivinhação da Listagem 2-4
-traga itens de <code>std</code> para o escopo:</p>
+<h3 id="usando-caminhos-aninhados-para-limpar-listas-de-use"><a class="header" href="#usando-caminhos-aninhados-para-limpar-listas-de-use">Usando caminhos aninhados para limpar listas de <code>use</code></a></h3>
+<p>Se estivermos usando vários itens definidos na mesma crate ou no mesmo módulo,
+listar cada item em sua própria linha pode ocupar bastante espaço vertical em
+nossos arquivos. Por exemplo, estas duas instruções <code>use</code> que tínhamos no jogo
+de adivinhação da Listagem 2-4 trazem itens de <code>std</code> para o escopo:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
@@ -7797,10 +7834,10 @@ use std::io;
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
 </figure>
-<p>Em vez disso, podemos usar caminhos aninhados para trazer os mesmos itens para o escopo em um
-linha. Fazemos isso especificando a parte comum do caminho, seguida por dois
-dois pontos e, em seguida, colchetes em torno de uma lista das partes dos caminhos que
-diferem, conforme mostrado na Listagem 7-18.</p>
+<p>Em vez disso, podemos usar caminhos aninhados para trazer os mesmos itens para
+o escopo em uma única linha. Fazemos isso especificando a parte comum do
+caminho, seguida por dois pontos duplos, e depois chaves em torno de uma lista
+das partes do caminho que diferem, como mostra a Listagem 7-18.</p>
 <figure class="listing" id="listing-7-18">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use rand::Rng;
@@ -7833,68 +7870,69 @@ use std::{cmp::Ordering, io};
 </span><span class="boring">        Ordering::Equal =&gt; println!("You win!"),
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-7-18">Listing 7-18</a>: Especificando um caminho aninhado para trazer múltiplos itens com o mesmo prefixo para o escopo</figcaption>
+<figcaption><a href="#listing-7-18">Listing 7-18</a>: Especificando um caminho aninhado para trazer para o escopo vários itens com o mesmo prefixo</figcaption>
 </figure>
-<p>Em programas maiores, trazer para o escopo muitos itens da mesma crate ou
-módulo usando caminhos aninhados pode reduzir o número de instruções <code>use</code> separadas
-preciso muito!</p>
-<p>Podemos usar um caminho aninhado em qualquer nível de um caminho, o que é útil ao combinar
-duas instruções <code>use</code> que compartilham um subcaminho. Por exemplo, a Listagem 7-19 mostra dois
-Declarações <code>use</code>: uma que traz <code>std::io</code> para o escopo e outra que traz
-<code>std::io::Write</code> no escopo.</p>
+<p>Em programas maiores, trazer muitos itens da mesma crate ou do mesmo módulo
+para o escopo usando caminhos aninhados pode reduzir bastante a quantidade de
+instruções <code>use</code> separadas necessárias!</p>
+<p>Podemos usar um caminho aninhado em qualquer nível de um caminho, o que é útil
+ao combinar duas instruções <code>use</code> que compartilham um subcaminho. Por exemplo,
+a Listagem 7-19 mostra duas instruções <code>use</code>: uma que traz <code>std::io</code> para o
+escopo e outra que traz <code>std::io::Write</code> para o escopo.</p>
 <figure class="listing" id="listing-7-19">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::io;
 use std::io::Write;</code></pre>
-<figcaption><a href="#listing-7-19">Listing 7-19</a>: Duas instruções <code>use</code> em que uma é subcaminho da outra</figcaption>
+<figcaption><a href="#listing-7-19">Listing 7-19</a>: Duas instruções <code>use</code> em que uma é um subcaminho da outra</figcaption>
 </figure>
-<p>A parte comum desses dois caminhos é <code>std::io</code>, e esse é o primeiro caminho completo
-caminho. Para mesclar esses dois caminhos em uma instrução <code>use</code>, podemos usar <code>self</code> em
-o caminho aninhado, conforme mostrado na Listagem 7-20.</p>
+<p>A parte comum desses dois caminhos é <code>std::io</code>, e esse é o primeiro caminho
+inteiro. Para mesclar esses dois caminhos em uma só instrução <code>use</code>, podemos
+usar <code>self</code> no caminho aninhado, como mostra a Listagem 7-20.</p>
 <figure class="listing" id="listing-7-20">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">use std::io::{self, Write};</code></pre>
 <figcaption><a href="#listing-7-20">Listing 7-20</a>: Combinando os caminhos da Listagem 7-19 em uma única instrução <code>use</code></figcaption>
 </figure>
-<p>Esta linha traz <code>std::io</code> e <code>std::io::Write</code> ao escopo.</p>
+<p>Essa linha traz <code>std::io</code> e <code>std::io::Write</code> para o escopo.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="the-glob-operator"></a></p>
-<h3 id="importando-itens-com-o-operador-glob"><a class="header" href="#importando-itens-com-o-operador-glob">Importando Itens com o Operador Glob</a></h3>
-<p>Se quisermos trazer <em>todos</em> os itens públicos definidos em um caminho para o escopo, podemos
-especifique esse caminho seguido pelo operador glob <code>*</code>:</p>
+<h3 id="importando-itens-com-o-operador-glob"><a class="header" href="#importando-itens-com-o-operador-glob">Importando itens com o operador glob</a></h3>
+<p>Se quisermos trazer para o escopo <em>todos</em> os itens públicos definidos em um
+caminho, podemos especificar esse caminho seguido pelo operador glob <code>*</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::collections::*;
 <span class="boring">}</span></code></pre>
-<p>Esta instrução <code>use</code> traz todos os itens públicos definidos em <code>std::collections</code> para
-o escopo atual. Tenha cuidado ao usar o operador glob! Glob pode fazer isso
-mais difícil saber quais nomes estão no escopo e onde um nome é usado em seu programa
-foi definido. Além disso, se a dependência alterar suas definições, o que
-você também importou alterações, o que pode levar a erros do compilador quando você
-atualize a dependência se a dependência adicionar uma definição com o mesmo nome
-como uma definição sua no mesmo escopo, por exemplo.</p>
-<p>O operador glob é frequentemente usado em testes para colocar tudo em teste em
-o módulo <code>tests</code>; falaremos sobre isso em <a href="#how-to-write-tests">“Como escrever
-Testes”</a><!-- ignore --> no Capítulo 11. O operador glob também é
-às vezes usado como parte do padrão prelude: Consulte <a href="../std/prelude/index.html#other-preludes">a biblioteca padrão
-documentação</a><!-- ignore --> para mais
+<p>Essa instrução <code>use</code> traz todos os itens públicos definidos em
+<code>std::collections</code> para o escopo atual. Tenha cuidado ao usar o operador glob!
+Ele pode dificultar descobrir quais nomes estão no escopo e onde um nome usado
+no programa foi definido. Além disso, se a dependência mudar suas definições,
+aquilo que foi importado também muda, o que pode levar a erros de compilação ao
+atualizar a dependência, por exemplo se ela adicionar uma definição com o mesmo
+nome de uma definição sua no mesmo escopo.</p>
+<p>O operador glob é frequentemente usado em testes para trazer tudo que está
+sendo testado para dentro do módulo <code>tests</code>; falaremos disso em <a href="#how-to-write-tests">“Como escrever
+testes”</a><!-- ignore --> no Capítulo 11. O operador glob também é
+às vezes usado como parte do padrão prelude; veja <a href="../std/prelude/index.html#other-preludes">a documentação da biblioteca
+padrão</a><!-- ignore --> para mais
 informações sobre esse padrão.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="separando-módulos-em-arquivos-diferentes-1"><a href="#separando-módulos-em-arquivos-diferentes-1" class="header">Separando Módulos em Arquivos Diferentes</a></h1>
-<h2 id="separando-módulos-em-arquivos-diferentes"><a class="header" href="#separando-módulos-em-arquivos-diferentes">Separando Módulos em Arquivos Diferentes</a></h2>
-<p>Até agora, todos os exemplos neste capítulo definiram vários módulos em um arquivo.
-Quando os módulos ficam grandes, você pode querer mover suas definições para um local separado.
-arquivo para tornar o código mais fácil de navegar.</p>
-<p>Por exemplo, vamos começar com o código da Listagem 7.17 que tinha vários
-módulos de restaurante. Extrairemos módulos em arquivos em vez de ter todos os
-módulos definidos no arquivo raiz da crate. Neste caso, o arquivo raiz da crate é
-<em>src/lib.rs</em>, mas este procedimento também funciona com crates binárias cuja raiz da crate
-arquivo é <em>src/main.rs</em>.</p>
-<p>Primeiro, extrairemos o módulo <code>front_of_house</code> para seu próprio arquivo. Remova o
-código entre chaves para o módulo <code>front_of_house</code>, deixando apenas
-a declaração <code>mod front_of_house;</code>, para que <em>src/lib.rs</em> contenha o código
-mostrado na Listagem 7-21. Observe que isso não será compilado até que criemos o
-<em>src/front_of_house.rs</em> na Listagem 7-22.</p>
+<h2 id="separando-módulos-em-arquivos-diferentes"><a class="header" href="#separando-módulos-em-arquivos-diferentes">Separando módulos em arquivos diferentes</a></h2>
+<p>Até agora, todos os exemplos deste capítulo definiam vários módulos em um único
+arquivo. Quando os módulos ficam grandes, talvez você queira mover suas
+definições para arquivos separados, para que o código fique mais fácil de
+navegar.</p>
+<p>Por exemplo, vamos partir do código da Listagem 7-17, que tinha vários módulos
+relacionados ao restaurante. Vamos extrair módulos para arquivos em vez de
+manter todos eles definidos no arquivo raiz da crate. Neste caso, o arquivo
+raiz da crate é <em>src/lib.rs</em>, mas esse procedimento também funciona com crates
+binárias cujo arquivo raiz é <em>src/main.rs</em>.</p>
+<p>Primeiro, vamos extrair o módulo <code>front_of_house</code> para seu próprio arquivo.
+Remova o código de dentro das chaves do módulo <code>front_of_house</code>, deixando
+apenas a declaração <code>mod front_of_house;</code>, para que <em>src/lib.rs</em> contenha o
+código mostrado na Listagem 7-21. Observe que isso ainda não compilará até
+criarmos o arquivo <em>src/front_of_house.rs</em> mostrado na Listagem 7-22.</p>
 <figure class="listing" id="listing-7-21">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">mod front_of_house;
@@ -7904,155 +7942,165 @@ pub use crate::front_of_house::hosting;
 pub fn eat_at_restaurant() {
     hosting::add_to_waitlist();
 }</code></pre>
-<figcaption><a href="#listing-7-21">Listing 7-21</a>: Declaring the <code>front_of_house</code> module whose body will be in <em>src/front_of_house.rs</em></figcaption>
+<figcaption><a href="#listing-7-21">Listing 7-21</a>: Declarando o módulo <code>front_of_house</code>, cujo corpo ficará em <em>src/front_of_house.rs</em></figcaption>
 </figure>
-<p>Em seguida, coloque o código que estava entre chaves em um novo arquivo chamado
-<em>src/front_of_house.rs</em>, conforme mostrado na Listagem 7-22. O compilador sabe olhar
-neste arquivo porque se deparou com a declaração do módulo na raiz da crate
-com o nome <code>front_of_house</code>.</p>
+<p>Em seguida, coloque o código que estava entre as chaves em um novo arquivo
+chamado <em>src/front_of_house.rs</em>, como mostra a Listagem 7-22. O compilador sabe
+que deve procurar nesse arquivo porque encontrou, na raiz da crate, a
+declaração de módulo com o nome <code>front_of_house</code>.</p>
 <figure class="listing" id="listing-7-22">
 <span class="file-name">Filename: src/front_of_house.rs</span>
 <pre><code class="language-rust ignore">pub mod hosting {
     pub fn add_to_waitlist() {}
 }</code></pre>
-<figcaption><a href="#listing-7-22">Listing 7-22</a>: Definitions inside the <code>front_of_house</code> module in <em>src/front_of_house.rs</em></figcaption>
+<figcaption><a href="#listing-7-22">Listing 7-22</a>: Definições dentro do módulo <code>front_of_house</code> em <em>src/front_of_house.rs</em></figcaption>
 </figure>
-<p>Observe que você só precisa carregar um arquivo usando uma declaração <code>mod</code> <em>uma vez</em> em seu
-árvore de módulos. Uma vez que o compilador saiba que o arquivo faz parte do projeto (e saiba
-onde na árvore do módulo o código reside por causa de onde você colocou o <code>mod</code>
-instrução), outros arquivos em seu projeto devem se referir ao código do arquivo carregado
-usando um caminho para onde foi declarado, conforme abordado em <a href="#caminhos-para-referenciar-um-item-na-árvore-de-módulos">“Caminhos para referência
-para um item na seção Árvore de Módulos”</a><!-- ignore -->. Em outras palavras,
-<code>mod</code> <em>não</em> é uma operação de “inclusão” que você pode ter visto em outros
-linguagens de programação.</p>
-<p>A seguir, extrairemos o módulo <code>hosting</code> para seu próprio arquivo. O processo é um pouco
-diferente porque <code>hosting</code> é um módulo filho de <code>front_of_house</code>, não do
-módulo raiz. Colocaremos o arquivo <code>hosting</code> em um novo diretório que será
-nomeado por seus ancestrais na árvore do módulo, neste caso <em>src/front_of_house</em>.</p>
-<p>Para começar a mover <code>hosting</code>, alteramos <em>src/front_of_house.rs</em> para conter apenas
-a declaração do módulo <code>hosting</code>:</p>
+<p>Observe que você só precisa carregar um arquivo com uma declaração <code>mod</code> <em>uma
+vez</em> na árvore de módulos. Depois que o compilador sabe que o arquivo faz parte
+do projeto, e sabe em que ponto da árvore de módulos aquele código se encontra
+por causa do lugar onde você colocou a instrução <code>mod</code>, os outros arquivos do
+projeto devem se referir ao código carregado usando um caminho até o ponto onde
+ele foi declarado, como vimos na seção <a href="#caminhos-para-referenciar-um-item-na-árvore-de-módulos">“Caminhos para se referir a um item na
+árvore de módulos”</a><!-- ignore -->. Em outras palavras, <code>mod</code> <em>não</em> é
+uma operação de “include”, como você pode ter visto em outras linguagens de
+programação.</p>
+<p>Em seguida, vamos extrair o módulo <code>hosting</code> para seu próprio arquivo. O
+processo é um pouco diferente porque <code>hosting</code> é um módulo filho de
+<code>front_of_house</code>, e não do módulo raiz. Vamos colocar o arquivo de <code>hosting</code> em
+um novo diretório nomeado de acordo com seus ancestrais na árvore de módulos;
+neste caso, <em>src/front_of_house</em>.</p>
+<p>Para começar a mover <code>hosting</code>, alteramos <em>src/front_of_house.rs</em> para conter
+apenas a declaração do módulo <code>hosting</code>:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/front_of_house.rs</span>
 <pre><code class="language-rust ignore">pub mod hosting;</code></pre>
 </figure>
-<p>Em seguida, criamos um diretório <em>src/front_of_house</em> e um arquivo <em>hosting.rs</em> para
-contém as definições feitas no módulo <code>hosting</code>:</p>
+<p>Depois, criamos o diretório <em>src/front_of_house</em> e um arquivo <em>hosting.rs</em> para
+conter as definições feitas no módulo <code>hosting</code>:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/front_of_house/hosting.rs</span>
 <pre><code class="language-rust ignore">pub fn add_to_waitlist() {}</code></pre>
 </figure>
-<p>Se, em vez disso, colocarmos <em>hosting.rs</em> no diretório <em>src</em>, o compilador
-espere que o código <em>hosting.rs</em> esteja em um módulo <code>hosting</code> declarado na crate
-root e não declarado como filho do módulo <code>front_of_house</code>. O
-regras do compilador para quais arquivos verificar o código de quais módulos significam o
-diretórios e arquivos correspondem melhor à árvore do módulo.</p>
+<p>Se, em vez disso, colocássemos <em>hosting.rs</em> no diretório <em>src</em>, o compilador
+esperaria que o código de <em>hosting.rs</em> estivesse em um módulo <code>hosting</code>
+declarado na raiz da crate, e não como filho do módulo <code>front_of_house</code>. As
+regras do compilador sobre quais arquivos verificar para o código de quais
+módulos fazem com que diretórios e arquivos correspondam de maneira mais
+próxima à árvore de módulos.</p>
 <section class="note" aria-role="note">
-<h3 id="caminhos-de-arquivo-alternativos"><a class="header" href="#caminhos-de-arquivo-alternativos">Caminhos de arquivo alternativos</a></h3>
-<p>Até agora, cobrimos os caminhos de arquivo mais idiomáticos que o compilador Rust usa,
-mas Rust também oferece suporte a um estilo mais antigo de caminho de arquivo. Para um módulo chamado
-<code>front_of_house</code> declarado na raiz da crate, o compilador procurará o
-código do módulo em:</p>
+<h3 id="caminhos-alternativos-de-arquivo"><a class="header" href="#caminhos-alternativos-de-arquivo">Caminhos alternativos de arquivo</a></h3>
+<p>Até agora, cobrimos os caminhos de arquivo mais idiomáticos que o compilador
+Rust usa, mas Rust também oferece suporte a um estilo mais antigo de caminho
+de arquivo. Para um módulo chamado <code>front_of_house</code> declarado na raiz da
+crate, o compilador procurará o código do módulo em:</p>
 <ul>
 <li><em>src/front_of_house.rs</em> (o que cobrimos)</li>
-<li><em>src/front_of_house/mod.rs</em> (estilo antigo, caminho ainda suportado)</li>
+<li><em>src/front_of_house/mod.rs</em> (estilo mais antigo, ainda suportado)</li>
 </ul>
-<p>Para um módulo chamado <code>hosting</code> que é um submódulo de <code>front_of_house</code>, o
-o compilador procurará o código do módulo em:</p>
+<p>Para um módulo chamado <code>hosting</code>, que é um submódulo de <code>front_of_house</code>, o
+compilador procurará o código do módulo em:</p>
 <ul>
 <li><em>src/front_of_house/hosting.rs</em> (o que cobrimos)</li>
-<li><em>src/front_of_house/hosting/mod.rs</em> (estilo antigo, caminho ainda suportado)</li>
+<li><em>src/front_of_house/hosting/mod.rs</em> (estilo mais antigo, ainda suportado)</li>
 </ul>
-<p>Se você usar os dois estilos para o mesmo módulo, receberá um erro do compilador.
-Usar uma mistura de ambos os estilos para módulos diferentes no mesmo projeto é
-permitido, mas pode ser confuso para as pessoas que navegam no seu projeto.</p>
-<p>A principal desvantagem do estilo que usa arquivos chamados <em>mod.rs</em> é que seu
-projeto pode acabar com muitos arquivos chamados <em>mod.rs</em>, o que pode ficar confuso
-quando você os abre em seu editor ao mesmo tempo.</p>
+<p>Se você usar os dois estilos para o mesmo módulo, receberá um erro do
+compilador. Misturar os dois estilos para módulos diferentes dentro do mesmo
+projeto é permitido, mas pode ser confuso para quem estiver navegando pelo
+código.</p>
+<p>A principal desvantagem do estilo que usa arquivos chamados <em>mod.rs</em> é que o
+projeto pode acabar com muitos arquivos de mesmo nome, o que pode se tornar
+confuso quando vários deles estão abertos no editor ao mesmo tempo.</p>
 </section>
-<p>Movemos o código de cada módulo para um arquivo separado e a árvore do módulo permanece
-o mesmo. As chamadas de função em <code>eat_at_restaurant</code> funcionarão sem qualquer
-modificação, mesmo que as definições residam em arquivos diferentes. Esse
-técnica permite mover módulos para novos arquivos à medida que aumentam de tamanho.</p>
-<p>Observe que a instrução <code>pub use crate::front_of_house::hosting</code> em
-<em>src/lib.rs</em> também não mudou, nem <code>use</code> tem qualquer impacto em quais arquivos
-são compilados como parte da crate. A palavra-chave <code>mod</code> declara módulos e Rust
-procura em um arquivo com o mesmo nome do módulo o código que entra
+<p>Movemos o código de cada módulo para um arquivo separado, e a árvore de
+módulos permanece a mesma. As chamadas de função em <code>eat_at_restaurant</code>
+continuarão funcionando sem nenhuma modificação, mesmo que as definições agora
+estejam em arquivos diferentes. Essa técnica permite mover módulos para novos
+arquivos à medida que eles crescem.</p>
+<p>Observe que a instrução <code>pub use crate::front_of_house::hosting</code> em <em>src/lib.rs</em>
+também não mudou, e <code>use</code> tampouco tem qualquer impacto sobre quais arquivos
+são compilados como parte da crate. A palavra-chave <code>mod</code> declara módulos, e o
+Rust procura em um arquivo com o mesmo nome do módulo o código que deve ir para
 esse módulo.</p>
 <h2 id="resumo-6"><a class="header" href="#resumo-6">Resumo</a></h2>
-<p>Rust permite dividir um pacote em várias crates e uma crate em módulos para que
-que você pode consultar itens definidos em um módulo de outro módulo. Você pode
-faça isso especificando caminhos absolutos ou relativos. Esses caminhos podem ser trazidos
-no escopo com uma instrução <code>use</code> para que você possa usar um caminho mais curto para
-múltiplos usos do item nesse escopo. O código do módulo é privado por padrão, mas
-você pode tornar as definições públicas adicionando a palavra-chave <code>pub</code>.</p>
-<p>No próximo capítulo, veremos algumas estruturas de coleta de dados no
-biblioteca padrão que você pode usar em seu código bem organizado.</p>
+<p>Rust permite dividir um pacote em várias crates e uma crate em módulos, para
+que você possa se referir a itens definidos em um módulo a partir de outro.
+Você pode fazer isso especificando caminhos absolutos ou relativos. Esses
+caminhos podem ser trazidos para o escopo com uma instrução <code>use</code>, para que
+você possa usar um caminho mais curto em múltiplos usos do item naquele
+escopo. O código de módulo é privado por padrão, mas você pode tornar
+definições públicas adicionando a palavra-chave <code>pub</code>.</p>
+<p>No próximo capítulo, veremos algumas estruturas de dados de coleção da
+biblioteca padrão que você poderá usar no seu código bem organizado.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="coleções-comuns"><a class="header" href="#coleções-comuns">Coleções Comuns</a></h1>
-<p>A biblioteca padrão do Rust inclui uma série de estruturas de dados muito úteis chamadas
-<em>coleções</em>. A maioria dos outros tipos de dados representa um valor específico, mas
-coleções podem conter vários valores. Ao contrário do array e tupla integrados
-tipos, os dados para os quais essas coleções apontam são armazenados no heap, que
-significa que a quantidade de dados não precisa ser conhecida em tempo de compilação e pode crescer
-ou encolher à medida que o programa é executado. Cada tipo de coleção tem diferentes
-capacidades e custos, e escolher um apropriado para o seu atual
-situação é uma habilidade que você desenvolverá com o tempo. Neste capítulo, discutiremos
-três coleções que são usadas com frequência em programas Rust:</p>
+<h1 id="coleções-comuns"><a class="header" href="#coleções-comuns">Coleções comuns</a></h1>
+<p>A biblioteca padrão de Rust inclui várias estruturas de dados muito úteis
+chamadas <em>coleções</em>. A maioria dos outros tipos de dados representa um valor
+específico, mas coleções podem conter vários valores. Diferentemente dos tipos
+internos array e tupla, os dados para os quais essas coleções apontam são
+armazenados no heap, o que significa que a quantidade de dados não precisa ser
+conhecida em tempo de compilação e pode crescer ou encolher à medida que o
+programa é executado. Cada tipo de coleção tem capacidades e custos diferentes,
+e escolher a coleção adequada para cada situação é uma habilidade que você vai
+desenvolver com o tempo. Neste capítulo, discutiremos três coleções muito
+usadas em programas Rust:</p>
 <ul>
-<li>Um <em>vetor</em> permite armazenar um número variável de valores próximos uns dos outros.</li>
-<li>Uma <em>string</em> é uma coleção de caracteres. Mencionamos o tipo <code>String</code>
-anteriormente, mas neste capítulo falaremos sobre isso em profundidade.</li>
-<li>Um <em>hash map</em> permite associar um valor a uma chave específica. É um
-implementação específica da estrutura de dados mais geral chamada <em>mapa</em>.</li>
+<li>Um <em>vetor</em> permite armazenar uma quantidade variável de valores lado a lado.</li>
+<li>Uma <em>string</em> é uma coleção de caracteres. Já mencionamos o tipo <code>String</code>,
+mas neste capítulo vamos estudá-lo com mais profundidade.</li>
+<li>Um <em>hash map</em> permite associar um valor a uma chave específica. Ele é uma
+implementação particular de uma estrutura de dados mais geral chamada
+<em>mapa</em>.</li>
 </ul>
-<p>Para aprender sobre os outros tipos de coleções fornecidas pela biblioteca padrão,
-veja <a href="../std/collections/index.html">a documentação</a>.</p>
-<p>Discutiremos como criar e atualizar vetores, strings e mapas hash, também
-como o que torna cada um especial.</p>
+<p>Para conhecer os outros tipos de coleção oferecidos pela biblioteca padrão, veja
+<a href="../std/collections/index.html">a documentação</a>.</p>
+<p>Vamos discutir como criar e atualizar vetores, strings e hash maps, além do que
+torna cada um deles especial.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="armazenando-listas-de-valores-com-vetores-1"><a href="#armazenando-listas-de-valores-com-vetores-1" class="header">Armazenando Listas de Valores com Vetores</a></h1>
 <h2 id="armazenando-listas-de-valores-com-vetores"><a class="header" href="#armazenando-listas-de-valores-com-vetores">Armazenando listas de valores com vetores</a></h2>
 <p>O primeiro tipo de coleção que veremos é <code>Vec&lt;T&gt;</code>, também conhecido como vetor.
-Os vetores permitem armazenar mais de um valor em uma única estrutura de dados que
-coloca todos os valores um ao lado do outro na memória. Vetores só podem armazenar valores
-do mesmo tipo. Eles são úteis quando você tem uma lista de itens, como o
-linhas de texto em um arquivo ou os preços dos itens em um carrinho de compras.</p>
+Vetores permitem armazenar mais de um valor em uma única estrutura de dados que
+coloca todos esses valores lado a lado na memória. Vetores só podem armazenar
+valores do mesmo tipo. Eles são úteis quando você tem uma lista de itens, como
+as linhas de texto de um arquivo ou os preços dos itens em um carrinho de
+compras.</p>
 <h3 id="criando-um-novo-vetor"><a class="header" href="#criando-um-novo-vetor">Criando um novo vetor</a></h3>
-<p>Para criar um novo vetor vazio, chamamos a função <code>Vec::new</code>, conforme mostrado em
+<p>Para criar um novo vetor vazio, chamamos a função <code>Vec::new</code>, como mostra a
 Listagem 8-1.</p>
 <figure class="listing" id="listing-8-1">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v: Vec&lt;i32&gt; = Vec::new();
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-1">Listing 8-1</a>: Creating a new, empty vector to hold values of type <code>i32</code></figcaption>
+<figcaption><a href="#listing-8-1">Listing 8-1</a>: Criando um novo vetor vazio para armazenar valores do tipo <code>i32</code></figcaption>
 </figure>
-<p>Observe que adicionamos uma anotação de tipo aqui. Porque não estamos inserindo nenhum
-valores neste vetor, Rust não sabe que tipo de elementos pretendemos
-loja. Este é um ponto importante. Os vetores são implementados usando genéricos;
-abordaremos como usar genéricos com seus próprios tipos no Capítulo 10. Por enquanto,
-saiba que o tipo <code>Vec&lt;T&gt;</code> fornecido pela biblioteca padrão pode conter qualquer tipo.
-Quando criamos um vetor para conter um tipo específico, podemos especificar o tipo dentro
-colchetes angulares. Na Listagem 8-1, dissemos a Rust que <code>Vec&lt;T&gt;</code> em <code>v</code> irá
-contém elementos do tipo <code>i32</code>.</p>
-<p>Mais frequentemente, você criará um <code>Vec&lt;T&gt;</code> com valores iniciais e Rust irá inferir
-o tipo de valor que você deseja armazenar, então raramente você precisa fazer esse tipo
-anotação. Rust fornece convenientemente a macro <code>vec!</code>, que criará um
-novo vetor que contém os valores que você atribui. A Listagem 8-2 cria um novo
-<code>Vec&lt;i32&gt;</code> que contém os valores <code>1</code>, <code>2</code> e <code>3</code>. O tipo inteiro é <code>i32</code>
-porque esse é o tipo inteiro padrão, conforme discutimos na seção <a href="#data-types">“Data
-Tipos”</a><!-- ignore --> seção do Capítulo 3.</p>
+<p>Observe que adicionamos aqui uma anotação de tipo. Como ainda não estamos
+inserindo nenhum valor nesse vetor, Rust não sabe que tipo de elemento
+pretendemos armazenar. Esse é um ponto importante. Vetores são implementados
+usando genéricos; veremos como usar genéricos com seus próprios tipos no
+Capítulo 10. Por enquanto, basta saber que o tipo <code>Vec&lt;T&gt;</code> fornecido pela
+biblioteca padrão pode armazenar qualquer tipo. Quando criamos um vetor para
+guardar um tipo específico, podemos especificar esse tipo entre colchetes
+angulares. Na Listagem 8-1, dissemos a Rust que o <code>Vec&lt;T&gt;</code> em <code>v</code> conterá
+elementos do tipo <code>i32</code>.</p>
+<p>Mais frequentemente, você criará um <code>Vec&lt;T&gt;</code> com valores iniciais, e Rust
+inferirá o tipo do valor que você quer armazenar, então raramente precisará
+fazer essa anotação. Rust convenientemente fornece a macro <code>vec!</code>, que cria um
+novo vetor contendo os valores que você fornecer. A Listagem 8-2 cria um novo
+<code>Vec&lt;i32&gt;</code> com os valores <code>1</code>, <code>2</code> e <code>3</code>. O tipo inteiro é <code>i32</code> porque esse é
+o tipo inteiro padrão, como discutimos na seção <a href="#data-types">“Tipos de
+dados”</a><!-- ignore --> do Capítulo 3.</p>
 <figure class="listing" id="listing-8-2">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v = vec![1, 2, 3];
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-2">Listing 8-2</a>: Creating a new vector containing values</figcaption>
+<figcaption><a href="#listing-8-2">Listing 8-2</a>: Criando um novo vetor contendo valores</figcaption>
 </figure>
-<p>Como fornecemos valores iniciais <code>i32</code>, Rust pode inferir que o tipo de <code>v</code>
-é <code>Vec&lt;i32&gt;</code> e a anotação de tipo não é necessária. A seguir, veremos como
-para modificar um vetor.</p>
+<p>Como fornecemos valores iniciais do tipo <code>i32</code>, Rust pode inferir que o tipo de
+<code>v</code> é <code>Vec&lt;i32&gt;</code>, e a anotação de tipo deixa de ser necessária. A seguir,
+veremos como modificar um vetor.</p>
 <h3 id="atualizando-um-vetor"><a class="header" href="#atualizando-um-vetor">Atualizando um vetor</a></h3>
-<p>Para criar um vetor e depois adicionar elementos a ele, podemos usar o método <code>push</code>,
-conforme mostrado na Listagem 8-3.</p>
+<p>Para criar um vetor e depois adicionar elementos a ele, podemos usar o método
+<code>push</code>, como mostra a Listagem 8-3.</p>
 <figure class="listing" id="listing-8-3">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut v = Vec::new();
@@ -8062,18 +8110,18 @@ conforme mostrado na Listagem 8-3.</p>
     v.push(7);
     v.push(8);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-3">Listing 8-3</a>: Using the <code>push</code> method to add values to a vector</figcaption>
+<figcaption><a href="#listing-8-3">Listing 8-3</a>: Usando o método <code>push</code> para adicionar valores a um vetor</figcaption>
 </figure>
-<p>Como acontece com qualquer variável, se quisermos alterar seu valor, precisamos
-torne-o mutável usando a palavra-chave <code>mut</code>, conforme discutido no Capítulo 3. Os números
-colocamos dentro são todos do tipo <code>i32</code>, e Rust infere isso a partir dos dados, então
-não precisamos da anotação <code>Vec&lt;i32&gt;</code>.</p>
-<h3 id="lendo-elementos-de-vetores"><a class="header" href="#lendo-elementos-de-vetores">Lendo Elementos de Vetores</a></h3>
-<p>Existem duas maneiras de referenciar um valor armazenado em um vetor: via indexação ou por
-usando o método <code>get</code>. Nos exemplos a seguir, anotamos os tipos de
-os valores retornados dessas funções para maior clareza.</p>
-<p>A Listagem 8-4 mostra os dois métodos de acesso a um valor em um vetor, com indexação
-sintaxe e o método <code>get</code>.</p>
+<p>Como acontece com qualquer variável, se quisermos poder alterar seu valor,
+precisamos torná-la mutável usando a palavra-chave <code>mut</code>, como discutimos no
+Capítulo 3. Os números que colocamos dentro são todos do tipo <code>i32</code>, e Rust
+infere isso a partir dos dados, então não precisamos da anotação <code>Vec&lt;i32&gt;</code>.</p>
+<h3 id="lendo-elementos-de-vetores"><a class="header" href="#lendo-elementos-de-vetores">Lendo elementos de vetores</a></h3>
+<p>Há duas formas de referenciar um valor armazenado em um vetor: por indexação ou
+usando o método <code>get</code>. Nos exemplos a seguir, anotamos os tipos dos valores
+retornados por essas funções para dar mais clareza.</p>
+<p>A Listagem 8-4 mostra os dois jeitos de acessar um valor em um vetor: com a
+sintaxe de indexação e com o método <code>get</code>.</p>
 <figure class="listing" id="listing-8-4">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v = vec![1, 2, 3, 4, 5];
@@ -8087,18 +8135,18 @@ sintaxe e o método <code>get</code>.</p>
         None =&gt; println!("There is no third element."),
     }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-4">Listing 8-4</a>: Using indexing syntax and using the <code>get</code> method to access an item in a vector</figcaption>
+<figcaption><a href="#listing-8-4">Listing 8-4</a>: Usando a sintaxe de indexação e o método <code>get</code> para acessar um item de um vetor</figcaption>
 </figure>
-<p>Observe alguns detalhes aqui. Usamos o valor do índice <code>2</code> para obter o terceiro elemento
-porque os vetores são indexados por número, começando em zero. Usando <code>&amp;</code> e <code>[]</code>
-nos dá uma referência ao elemento no valor do índice. Quando usamos o <code>get</code>
-método com o índice passado como argumento, obtemos um <code>Option&lt;&amp;T&gt;</code> que podemos
-use com <code>match</code>.</p>
-<p>Rust fornece essas duas maneiras de referenciar um elemento para que você possa escolher como
-o programa se comporta quando você tenta usar um valor de índice fora do intervalo de
-elementos existentes. Como exemplo, vamos ver o que acontece quando temos um vetor
-de cinco elementos e então tentamos acessar um elemento no índice 100 com cada
-técnica, conforme mostrado na Listagem 8-5.</p>
+<p>Observe alguns detalhes aqui. Usamos o índice <code>2</code> para obter o terceiro
+elemento porque vetores são indexados por números começando em zero. Usar <code>&amp;</code>
+e <code>[]</code> nos dá uma referência ao elemento naquele índice. Quando usamos o
+método <code>get</code> com o índice passado como argumento, recebemos um <code>Option&lt;&amp;T&gt;</code>,
+que podemos usar com <code>match</code>.</p>
+<p>Rust oferece essas duas maneiras de referenciar um elemento para que você possa
+escolher como o programa deve se comportar quando tentar usar um índice fora do
+intervalo de elementos existentes. Como exemplo, vamos ver o que acontece
+quando temos um vetor com cinco elementos e então tentamos acessar o elemento
+no índice 100 com cada uma dessas técnicas, como mostra a Listagem 8-5.</p>
 <figure class="listing" id="listing-8-5">
 <pre class="playground"><code class="language-rust should_panic panics edition2024"><span class="boring">fn main() {
 </span>    let v = vec![1, 2, 3, 4, 5];
@@ -8106,30 +8154,29 @@ técnica, conforme mostrado na Listagem 8-5.</p>
     let does_not_exist = &amp;v[100];
     let does_not_exist = v.get(100);
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-5">Listing 8-5</a>: Attempting to access the element at index 100 in a vector containing five elements</figcaption>
+<figcaption><a href="#listing-8-5">Listing 8-5</a>: Tentando acessar o elemento no índice 100 em um vetor que contém cinco elementos</figcaption>
 </figure>
-<p>Quando executamos este código, o primeiro método <code>[]</code> fará com que o programa entre em pânico
-porque faz referência a um elemento inexistente. Este método é melhor usado quando você
-deseja que seu programa trave se houver uma tentativa de acessar um elemento além do
-final do vetor.</p>
-<p>Quando o método <code>get</code> recebe um índice que está fora do vetor, ele retorna
-<code>None</code> sem entrar em pânico. Você usaria este método se acessasse um elemento
-além do alcance do vetor pode acontecer ocasionalmente sob condições normais
-circunstâncias. Seu código terá então lógica para lidar com qualquer um
-<code>Some(&amp;element)</code> ou <code>None</code>, conforme discutido no Capítulo 6. Por exemplo, o índice
-pode vir de uma pessoa digitando um número. Se eles acidentalmente entrarem em um
-número que é muito grande e o programa obtém um valor <code>None</code>, você pode dizer ao
-usuário quantos itens estão no vetor atual e dê a eles outra chance de
-insira um valor válido. Isso seria mais fácil de usar do que travar o programa
-devido a um erro de digitação!</p>
-<p>Quando o programa tem uma referência válida, o verificador de empréstimo impõe a
-regras de propriedade e empréstimo (abordadas no Capítulo 4) para garantir que este
-referência e quaisquer outras referências ao conteúdo do vetor permanecem válidas.
-Lembre-se da regra que afirma que você não pode ter referências mutáveis ​​e imutáveis ​​em
-o mesmo escopo. Essa regra se aplica na Listagem 8-6, onde mantemos uma imutável
-referência ao primeiro elemento em um vetor e tente adicionar um elemento ao
-fim. Este programa não funcionará se também tentarmos nos referir a esse elemento posteriormente
-a função.</p>
+<p>Quando executamos esse código, o primeiro método, com <code>[]</code>, fará o programa
+entrar em pânico porque ele referencia um elemento inexistente. Esse método é
+mais apropriado quando você quer que o programa falhe caso haja uma tentativa
+de acessar um elemento além do fim do vetor.</p>
+<p>Quando o método <code>get</code> recebe um índice fora do intervalo do vetor, ele retorna
+<code>None</code> sem entrar em pânico. Você usaria esse método se acessar um elemento
+fora dos limites do vetor puder acontecer ocasionalmente em circunstâncias
+normais. Nesse caso, seu código terá a lógica para lidar com <code>Some(&amp;element)</code>
+ou <code>None</code>, como discutimos no Capítulo 6. Por exemplo, o índice pode vir de
+uma pessoa digitando um número. Se ela acidentalmente informar um número grande
+demais e o programa receber <code>None</code>, você pode dizer à pessoa quantos itens há
+no vetor atual e dar outra chance de informar um valor válido. Isso seria mais
+amigável do que derrubar o programa por causa de um erro de digitação!</p>
+<p>Quando o programa possui uma referência válida, o borrow checker aplica as
+regras de ownership e borrowing, abordadas no Capítulo 4, para garantir que
+essa referência e quaisquer outras referências ao conteúdo do vetor permaneçam
+válidas. Lembre-se da regra que diz que você não pode ter referências mutáveis
+e imutáveis ao mesmo tempo no mesmo escopo. Essa regra se aplica à Listagem
+8-6, em que mantemos uma referência imutável ao primeiro elemento de um vetor e
+tentamos adicionar um elemento ao final. Esse programa não funcionará se também
+tentarmos usar esse elemento mais tarde na função.</p>
 <figure class="listing" id="listing-8-6">
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let mut v = vec![1, 2, 3, 4, 5];
@@ -8140,9 +8187,9 @@ a função.</p>
 
     println!("The first element is: {first}");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-6">Listing 8-6</a>: Attempting to add an element to a vector while holding a reference to an item</figcaption>
+<figcaption><a href="#listing-8-6">Listing 8-6</a>: Tentando adicionar um elemento a um vetor enquanto se mantém uma referência a um item</figcaption>
 </figure>
-<p>Compilar este código resultará neste erro:</p>
+<p>Compilar esse código resultará neste erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
 error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable
@@ -8160,24 +8207,24 @@ error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immuta
 For more information about this error, try `rustc --explain E0502`.
 error: could not compile `collections` (bin "collections") due to 1 previous error
 </code></pre>
-<p>O código na Listagem 8-6 pode parecer que deveria funcionar: Por que uma referência deveria
-ao primeiro elemento se preocupa com as mudanças no final do vetor? Este erro é
-devido à forma como os vetores funcionam: porque os vetores colocam os valores próximos uns dos outros
-na memória, adicionar um novo elemento no final do vetor pode exigir
-alocando nova memória e copiando os elementos antigos para o novo espaço, se houver
-não há espaço suficiente para colocar todos os elementos próximos uns dos outros onde o vetor
-está atualmente armazenado. Nesse caso, a referência ao primeiro elemento seria
-apontando para memória desalocada. As regras de empréstimo impedem que os programas
-acabando nessa situação.</p>
+<p>O código da Listagem 8-6 pode parecer que deveria funcionar: por que uma
+referência ao primeiro elemento se importaria com mudanças no final do vetor?
+Esse erro existe por causa de como vetores funcionam: como vetores colocam os
+valores lado a lado na memória, adicionar um novo elemento ao final do vetor
+pode exigir alocar uma nova região de memória e copiar os elementos antigos
+para esse novo espaço, caso não haja espaço suficiente para manter todos os
+elementos juntos onde o vetor está armazenado atualmente. Nesse caso, a
+referência ao primeiro elemento apontaria para memória já desalocada. As regras
+de borrowing impedem que programas acabem nessa situação.</p>
 <blockquote>
-<p>Nota: Para obter mais detalhes sobre a implementação do tipo <code>Vec&lt;T&gt;</code>, consulte <a href="../nomicon/vec/vec.html">“O
-Rustonomicon”</a>.</p>
+<p>Nota: para mais detalhes sobre a implementação do tipo <code>Vec&lt;T&gt;</code>, veja
+<a href="../nomicon/vec/vec.html">“The Rustonomicon”</a>.</p>
 </blockquote>
-<h3 id="iterando-sobre-os-valores-em-um-vetor"><a class="header" href="#iterando-sobre-os-valores-em-um-vetor">Iterando sobre os valores em um vetor</a></h3>
-<p>Para acessar cada elemento em um vetor, iteraríamos por todos os
-elementos em vez de usar índices para acessar um de cada vez. A Listagem 8-7 mostra como
-usar um loop <code>for</code> para obter referências imutáveis ​​para cada elemento em um vetor de
-<code>i32</code> valores e imprima-os.</p>
+<h3 id="iterando-sobre-os-valores-de-um-vetor"><a class="header" href="#iterando-sobre-os-valores-de-um-vetor">Iterando sobre os valores de um vetor</a></h3>
+<p>Para acessar cada elemento de um vetor em sequência, iteramos por todos os
+elementos, em vez de usar índices para acessar um de cada vez. A Listagem 8-7
+mostra como usar um laço <code>for</code> para obter referências imutáveis a cada elemento
+de um vetor de valores <code>i32</code> e imprimi-los.</p>
 <figure class="listing" id="listing-8-7">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let v = vec![100, 32, 57];
@@ -8185,11 +8232,11 @@ usar um loop <code>for</code> para obter referências imutáveis ​​para cada
         println!("{i}");
     }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-7">Listing 8-7</a>: Printing each element in a vector by iterating over the elements using a <code>for</code> loop</figcaption>
+<figcaption><a href="#listing-8-7">Listing 8-7</a>: Imprimindo cada elemento de um vetor ao iterar pelos elementos com um laço <code>for</code></figcaption>
 </figure>
-<p>Também podemos iterar sobre referências mutáveis ​​para cada elemento em um vetor mutável
-para fazer alterações em todos os elementos. O loop <code>for</code> na Listagem 8-8
-adicionará <code>50</code> a cada elemento.</p>
+<p>Também podemos iterar sobre referências mutáveis a cada elemento de um vetor
+mutável para alterar todos os elementos. O laço <code>for</code> da Listagem 8-8 adiciona
+<code>50</code> a cada elemento.</p>
 <figure class="listing" id="listing-8-8">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut v = vec![100, 32, 57];
@@ -8197,30 +8244,31 @@ adicionará <code>50</code> a cada elemento.</p>
         *i += 50;
     }
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-8">Listing 8-8</a>: Iterating over mutable references to elements in a vector</figcaption>
+<figcaption><a href="#listing-8-8">Listing 8-8</a>: Iterando sobre referências mutáveis aos elementos de um vetor</figcaption>
 </figure>
-<p>Para alterar o valor ao qual a referência mutável se refere, temos que usar o comando
-Operador de desreferência <code>*</code> para chegar ao valor em <code>i</code> antes de podermos usar <code>+=</code>
-operador. Falaremos mais sobre o operador de desreferência na seção <a href="#following-the-pointer-to-the-value-with-the-dereference-operator">“Seguindo o
-Referência à seção Valor”</a><!-- ignore --> do Capítulo 15.</p>
-<p>Iterar sobre um vetor, seja imutável ou mutável, é seguro devido ao
-emprestar as regras do verificador. Se tentarmos inserir ou remover itens no <code>for</code>
-corpos de loop na Listagem 8-7 e na Listagem 8-8, obteríamos um erro do compilador
-semelhante ao que obtivemos com o código da Listagem 8-6. A referência ao
-vetor que o loop <code>for</code> contém impede a modificação simultânea do
-vetor inteiro.</p>
-<h3 id="usando-um-enum-para-armazenar-vários-tipos"><a class="header" href="#usando-um-enum-para-armazenar-vários-tipos">Usando um Enum para armazenar vários tipos</a></h3>
-<p>Os vetores só podem armazenar valores do mesmo tipo. Isso pode ser
-inconveniente; definitivamente existem casos de uso para a necessidade de armazenar uma lista de
-itens de diferentes tipos. Felizmente, as variantes de um enum são definidas
-sob o mesmo tipo enum, então quando precisamos de um tipo para representar elementos de
-tipos diferentes, podemos definir e usar um enum!</p>
-<p>Por exemplo, digamos que queremos obter valores de uma linha em uma planilha na qual
-algumas das colunas da linha contêm números inteiros, alguns números de ponto flutuante,
-e algumas cordas. Podemos definir um enum cujas variantes conterão os diferentes
-tipos de valor, e todas as variantes enum serão consideradas do mesmo tipo: que
-do enum. Então, podemos criar um vetor para armazenar esse enum e, em última análise,
-mantenha diferentes tipos. Demonstramos isso na Listagem 8-9.</p>
+<p>Para alterar o valor ao qual a referência mutável aponta, precisamos usar o
+operador de desreferência <code>*</code> para chegar ao valor em <code>i</code> antes de podermos
+usar o operador <code>+=</code>. Falaremos mais sobre o operador de desreferência na
+seção <a href="#following-the-pointer-to-the-value-with-the-dereference-operator">“Seguindo o ponteiro até o valor com o operador de
+desreferência”</a><!-- ignore --> do Capítulo 15.</p>
+<p>Iterar sobre um vetor, de forma imutável ou mutável, é seguro por causa das
+regras do borrow checker. Se tentássemos inserir ou remover itens dentro dos
+corpos dos laços <code>for</code> das Listagens 8-7 e 8-8, receberíamos um erro do
+compilador semelhante ao que vimos no código da Listagem 8-6. A referência ao
+vetor que o laço <code>for</code> mantém impede a modificação simultânea do vetor inteiro.</p>
+<h3 id="usando-um-enum-para-armazenar-vários-tipos"><a class="header" href="#usando-um-enum-para-armazenar-vários-tipos">Usando um enum para armazenar vários tipos</a></h3>
+<p>Vetores só podem armazenar valores do mesmo tipo. Isso pode ser inconveniente:
+há, sem dúvida, casos de uso em que precisamos armazenar uma lista de itens de
+tipos diferentes. Felizmente, as variantes de um enum são definidas sob o mesmo
+tipo enum, então, quando precisamos que um único tipo represente elementos de
+tipos diferentes, podemos definir e usar um enum.</p>
+<p>Por exemplo, digamos que queremos obter valores de uma linha em uma planilha, e
+algumas colunas dessa linha contêm inteiros, algumas contêm números de ponto
+flutuante e outras contêm strings. Podemos definir um enum cujas variantes
+armazenem esses diferentes tipos de valor, e todas as variantes do enum serão
+consideradas do mesmo tipo: o tipo do próprio enum. Então, podemos criar um
+vetor para armazenar esse enum e, no fim das contas, guardar tipos diferentes.
+Fizemos essa demonstração na Listagem 8-9.</p>
 <figure class="listing" id="listing-8-9">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    enum SpreadsheetCell {
@@ -8235,27 +8283,28 @@ mantenha diferentes tipos. Demonstramos isso na Listagem 8-9.</p>
         SpreadsheetCell::Float(10.12),
     ];
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-9">Listing 8-9</a>: Defining an enum to store values of different types in one vector</figcaption>
+<figcaption><a href="#listing-8-9">Listing 8-9</a>: Definindo um enum para armazenar valores de tipos diferentes em um mesmo vetor</figcaption>
 </figure>
-<p>Rust precisa saber quais tipos estarão no vetor em tempo de compilação para que
-sabe exatamente quanta memória no heap será necessária para armazenar cada elemento.
-Também devemos ser explícitos sobre quais tipos são permitidos neste vetor. Se
-o Rust permitisse que um vetor armazenasse qualquer tipo, haveria a chance de
-um ou mais desses tipos causarem erros nas operações executadas sobre os
-elementos do vetor. Usar um enum junto com uma expressão <code>match</code> significa que
-o Rust garantirá, em tempo de compilação, que todos os casos possíveis sejam
-tratados, como discutimos no Capítulo 6.</p>
-<p>Se você não conhece o conjunto exaustivo de tipos que um programa receberá em
-tempo de execução para armazenar em um vetor, a técnica com enum não vai
-funcionar. Em vez disso, você pode usar um trait object, assunto que
-abordaremos no Capítulo 18.</p>
-<p>Agora que discutimos algumas das formas mais comuns de usar vetores, certifique-se
-para revisar <a href="../std/vec/struct.Vec.html">a documentação da API</a><!-- ignore --> para todos os muitos
-métodos úteis definidos em <code>Vec&lt;T&gt;</code> pela biblioteca padrão. Por exemplo, em
-além de <code>push</code>, um método <code>pop</code> remove e retorna o último elemento.</p>
-<h3 id="eliminar-um-vetor-elimina-seus-elementos"><a class="header" href="#eliminar-um-vetor-elimina-seus-elementos">Eliminar um vetor elimina seus elementos</a></h3>
-<p>Como qualquer outro <code>struct</code>, um vetor é liberado quando sai do escopo, como
-anotado na Listagem 8-10.</p>
+<p>Rust precisa saber, em tempo de compilação, quais tipos estarão no vetor para
+que saiba exatamente quanta memória no heap será necessária para armazenar cada
+elemento. Também precisamos ser explícitos sobre quais tipos são permitidos
+nesse vetor. Se Rust permitisse que um vetor armazenasse qualquer tipo, haveria
+a possibilidade de que um ou mais desses tipos causassem erros nas operações
+realizadas sobre os elementos do vetor. Usar um enum com uma expressão <code>match</code>
+significa que Rust garantirá em tempo de compilação que todos os casos
+possíveis serão tratados, como discutimos no Capítulo 6.</p>
+<p>Se você não conhece, em tempo de compilação, o conjunto completo de tipos que
+um programa pode receber em tempo de execução para armazenar em um vetor, a
+técnica com enum não funcionará. Nesse caso, você pode usar um trait object,
+assunto que veremos no Capítulo 18.</p>
+<p>Agora que discutimos algumas das formas mais comuns de usar vetores, não deixe
+de revisar <a href="../std/vec/struct.Vec.html">a documentação da API</a><!-- ignore --> para conhecer os
+muitos métodos úteis definidos para <code>Vec&lt;T&gt;</code> na biblioteca padrão. Por exemplo,
+além de <code>push</code>, existe também um método <code>pop</code>, que remove e retorna o último
+elemento.</p>
+<h3 id="descartar-um-vetor-descarta-seus-elementos"><a class="header" href="#descartar-um-vetor-descarta-seus-elementos">Descartar um vetor descarta seus elementos</a></h3>
+<p>Como qualquer outro <code>struct</code>, um vetor é liberado quando sai de escopo, como
+indicado na Listagem 8-10.</p>
 <figure class="listing" id="listing-8-10">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    {
@@ -8264,63 +8313,63 @@ anotado na Listagem 8-10.</p>
         // do stuff with v
     } // &lt;- v goes out of scope and is freed here
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-10">Listing 8-10</a>: Showing where the vector and its elements are dropped</figcaption>
+<figcaption><a href="#listing-8-10">Listing 8-10</a>: Mostrando onde o vetor e seus elementos são descartados</figcaption>
 </figure>
-<p>Quando o vetor é eliminado, todo o seu conteúdo também é eliminado, o que significa que o
-inteiros que ele contém serão limpos. O verificador de empréstimo garante que qualquer
-referências ao conteúdo de um vetor são usadas apenas enquanto o próprio vetor é
-válido.</p>
+<p>Quando o vetor é descartado, todo o seu conteúdo também é descartado, o que
+significa que os inteiros que ele contém serão limpos. O borrow checker garante
+que quaisquer referências ao conteúdo de um vetor só sejam usadas enquanto o
+próprio vetor for válido.</p>
 <p>Vamos passar para o próximo tipo de coleção: <code>String</code>!</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="armazenando-texto-codificado-em-utf-8-com-strings-1"><a href="#armazenando-texto-codificado-em-utf-8-com-strings-1" class="header">Armazenando Texto Codificado em UTF-8 com Strings</a></h1>
 <h2 id="armazenando-texto-codificado-em-utf-8-com-strings"><a class="header" href="#armazenando-texto-codificado-em-utf-8-com-strings">Armazenando texto codificado em UTF-8 com strings</a></h2>
-<p>Falamos sobre strings no Capítulo 4, mas vamos examiná-las com mais profundidade agora.
-Novos Rustáceos geralmente ficam presos em cordas por uma combinação de três
-razões: a propensão do Rust em expor possíveis erros, sendo as strings uma forma mais
-estrutura de dados complicada que muitos programadores atribuem a eles, e
-UTF-8. Esses fatores se combinam de uma forma que pode parecer difícil quando você está
-vindo de outras linguagens de programação.</p>
-<p>Discutimos strings no contexto de coleções porque strings são
-implementado como uma coleção de bytes, além de alguns métodos para fornecer informações úteis
-funcionalidade quando esses bytes são interpretados como texto. Nesta seção, vamos
-fale sobre as operações em <code>String</code> que todo tipo de coleção possui, como
-criação, atualização e leitura. Também discutiremos as maneiras pelas quais <code>String</code>
-é diferente das outras coleções, ou seja, como a indexação em <code>String</code> é
-complicado pelas diferenças entre como as pessoas e os computadores interpretam
-<code>String</code> dados.</p>
+<p>Falamos sobre strings no Capítulo 4, mas agora vamos examiná-las com mais
+profundidade. Pessoas novas em Rust frequentemente travam em strings por uma
+combinação de três razões: a tendência de Rust a expor erros possíveis, o fato
+de strings serem uma estrutura de dados mais complexa do que muita gente
+imagina e o UTF-8. Esses fatores se combinam de um jeito que pode parecer
+difícil para quem vem de outras linguagens de programação.</p>
+<p>Discutimos strings no contexto de coleções porque strings são implementadas como
+uma coleção de bytes, junto com alguns métodos que fornecem funcionalidades
+úteis quando esses bytes são interpretados como texto. Nesta seção, falaremos
+sobre as operações em <code>String</code> que todo tipo de coleção possui, como criar,
+atualizar e ler. Também discutiremos as maneiras pelas quais <code>String</code> difere
+das outras coleções, especialmente como a indexação em <code>String</code> é complicada
+pelas diferenças entre a forma como pessoas e computadores interpretam dados de
+<code>String</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="what-is-a-string"></a></p>
-<h3 id="definindo-strings"><a class="header" href="#definindo-strings">Definindo Strings</a></h3>
-<p>Primeiro definiremos o que queremos dizer com o termo <em>string</em>. Rust tem apenas uma string
-digite a linguagem principal, que é a fatia de string <code>str</code> que geralmente é vista
-em sua forma emprestada, <code>&amp;str</code>. No Capítulo 4, falamos sobre fatias de string,
-que são referências a alguns dados de string codificados em UTF-8 armazenados em outro lugar. Corda
-literais, por exemplo, são armazenados no binário do programa e, portanto,
-fatias de corda.</p>
-<p>O tipo <code>String</code>, que é fornecido pela biblioteca padrão do Rust em vez de
-codificado na linguagem principal, é um ambiente expansível, mutável, de propriedade e codificado em UTF-8.
-tipo de string. Quando Rustáceos se referem a “cordas” em Rust, eles podem ser
-referindo-se aos tipos <code>String</code> ou string slice <code>&amp;str</code>, não apenas a um
-desses tipos. Embora esta seção seja principalmente sobre <code>String</code>, ambos os tipos são
-muito usado na biblioteca padrão do Rust, e <code>String</code> e fatias de string
-são codificados em UTF-8.</p>
+<h3 id="definindo-strings"><a class="header" href="#definindo-strings">Definindo strings</a></h3>
+<p>Primeiro, vamos definir o que queremos dizer com o termo <em>string</em>. Rust tem
+apenas um tipo de string no núcleo da linguagem, que é o string slice <code>str</code>,
+geralmente visto em sua forma emprestada, <code>&amp;str</code>. No Capítulo 4, falamos sobre
+string slices, que são referências a dados de string codificados em UTF-8
+armazenados em algum outro lugar. Literais de string, por exemplo, ficam
+armazenados no binário do programa e, portanto, são string slices.</p>
+<p>O tipo <code>String</code>, fornecido pela biblioteca padrão de Rust em vez de fazer parte
+do núcleo da linguagem, é um tipo de string expansível, mutável, com ownership
+e codificado em UTF-8. Quando pessoas da comunidade Rust se referem a
+“strings” em Rust, podem estar falando tanto do tipo <code>String</code> quanto do tipo
+string slice <code>&amp;str</code>, e não apenas de um deles. Embora esta seção trate
+principalmente de <code>String</code>, os dois tipos são bastante usados na biblioteca
+padrão de Rust, e tanto <code>String</code> quanto string slices são codificados em UTF-8.</p>
 <h3 id="criando-uma-nova-string"><a class="header" href="#criando-uma-nova-string">Criando uma nova string</a></h3>
-<p>Muitas das mesmas operações disponíveis com <code>Vec&lt;T&gt;</code> estão disponíveis com <code>String</code>
-também porque <code>String</code> é na verdade implementado como um wrapper em torno de um vetor
-de bytes com algumas garantias, restrições e recursos extras. Um exemplo
-de uma função que funciona da mesma maneira com <code>Vec&lt;T&gt;</code> e <code>String</code> é o <code>new</code>
-função para criar uma instância, mostrada na Listagem 8-11.</p>
+<p>Muitas das mesmas operações disponíveis para <code>Vec&lt;T&gt;</code> também estão disponíveis
+para <code>String</code>, porque <code>String</code> é implementada como um invólucro em torno de um
+vetor de bytes com algumas garantias, restrições e capacidades extras. Um
+exemplo de função que funciona da mesma forma em <code>Vec&lt;T&gt;</code> e em <code>String</code> é a
+função <code>new</code>, usada para criar uma instância, como mostra a Listagem 8-11.</p>
 <figure class="listing" id="listing-8-11">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::new();
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-11">Listing 8-11</a>: Creating a new, empty <code>String</code></figcaption>
+<figcaption><a href="#listing-8-11">Listing 8-11</a>: Criando uma <code>String</code> nova e vazia</figcaption>
 </figure>
-<p>Esta linha cria uma nova string vazia chamada <code>s</code>, na qual podemos carregar
-dados. Muitas vezes, teremos alguns dados iniciais com os quais queremos iniciar o
-corda. Para isso utilizamos o método <code>to_string</code>, que está disponível em qualquer tipo
-que implementa o traço <code>Display</code>, como fazem os literais de string. Listagem de 8 a 12 programas
-dois exemplos.</p>
+<p>Essa linha cria uma nova string vazia chamada <code>s</code>, na qual depois podemos
+colocar dados. Muitas vezes, no entanto, já teremos alguns dados iniciais com
+os quais queremos começar a string. Para isso, usamos o método <code>to_string</code>,
+disponível em qualquer tipo que implemente a trait <code>Display</code>, como é o caso dos
+literais de string. A Listagem 8-12 mostra dois exemplos.</p>
 <figure class="listing" id="listing-8-12">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let data = "initial contents";
@@ -8330,25 +8379,25 @@ dois exemplos.</p>
     // The method also works on a literal directly:
     let s = "initial contents".to_string();
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-12">Listing 8-12</a>: Using the <code>to_string</code> method to create a <code>String</code> from a string literal</figcaption>
+<figcaption><a href="#listing-8-12">Listing 8-12</a>: Usando o método <code>to_string</code> para criar uma <code>String</code> a partir de um literal de string</figcaption>
 </figure>
-<p>Este código cria uma string contendo <code>initial contents</code>.</p>
-<p>Também podemos usar a função <code>String::from</code> para criar um <code>String</code> a partir de uma string
-literal. O código na Listagem 8-13 é equivalente ao código na Listagem 8-12
-que usa <code>to_string</code>.</p>
+<p>Esse código cria uma string contendo <code>initial contents</code>.</p>
+<p>Também podemos usar a função <code>String::from</code> para criar uma <code>String</code> a partir de
+um literal de string. O código da Listagem 8-13 é equivalente ao código da
+Listagem 8-12 que usa <code>to_string</code>.</p>
 <figure class="listing" id="listing-8-13">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s = String::from("initial contents");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-13">Listing 8-13</a>: Using the <code>String::from</code> function to create a <code>String</code> from a string literal</figcaption>
+<figcaption><a href="#listing-8-13">Listing 8-13</a>: Usando a função <code>String::from</code> para criar uma <code>String</code> a partir de um literal de string</figcaption>
 </figure>
-<p>Como as strings são usadas para muitas coisas, podemos usar muitos tipos genéricos diferentes.
-APIs para strings, nos fornecendo muitas opções. Alguns deles podem parecer
-redundantes, mas todos têm o seu lugar! Neste caso, <code>String::from</code> e
-<code>to_string</code> faça a mesma coisa, então qual você escolhe é uma questão de estilo e
-legibilidade.</p>
-<p>Lembre-se de que as strings são codificadas em UTF-8, portanto, podemos incluir qualquer string codificada corretamente.
-dados neles, conforme mostrado na Listagem 8-14.</p>
+<p>Como strings são usadas para muitas coisas, podemos usar muitas APIs genéricas
+diferentes para elas, o que nos dá bastante opção. Algumas podem parecer
+redundantes, mas todas têm seu lugar! Neste caso, <code>String::from</code> e
+<code>to_string</code> fazem a mesma coisa, então escolher entre uma e outra é uma questão
+de estilo e legibilidade.</p>
+<p>Lembre-se de que strings são codificadas em UTF-8, então podemos incluir nelas
+quaisquer dados corretamente codificados, como mostra a Listagem 8-14.</p>
 <figure class="listing" id="listing-8-14">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let hello = String::from("السلام عليكم");
@@ -8363,29 +8412,30 @@ dados neles, conforme mostrado na Listagem 8-14.</p>
     let hello = String::from("Здравствуйте");
     let hello = String::from("Hola");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-14">Listing 8-14</a>: Storing greetings in different languages in strings</figcaption>
+<figcaption><a href="#listing-8-14">Listing 8-14</a>: Armazenando saudações em diferentes idiomas em strings</figcaption>
 </figure>
-<p>Todos esses são valores <code>String</code> válidos.</p>
-<h3 id="atualizando-uma-string"><a class="header" href="#atualizando-uma-string">Atualizando uma String</a></h3>
-<p>Um <code>String</code> pode aumentar de tamanho e seu conteúdo pode mudar, assim como o conteúdo
-de um <code>Vec&lt;T&gt;</code>, se você inserir mais dados nele. Além disso, você pode convenientemente
-use o operador <code>+</code> ou a macro <code>format!</code> para concatenar valores <code>String</code>.</p>
+<p>Todos esses são valores válidos de <code>String</code>.</p>
+<h3 id="atualizando-uma-string"><a class="header" href="#atualizando-uma-string">Atualizando uma string</a></h3>
+<p>Uma <code>String</code> pode crescer de tamanho e seu conteúdo pode mudar, assim como o
+conteúdo de um <code>Vec&lt;T&gt;</code> muda se você empurrar mais dados para dentro dele. Além
+disso, também podemos usar convenientemente o operador <code>+</code> ou a macro
+<code>format!</code> para concatenar valores de <code>String</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="appending-to-a-string-with-push_str-and-push"></a></p>
 <h4 id="anexando-com-push_str-ou-push"><a class="header" href="#anexando-com-push_str-ou-push">Anexando com <code>push_str</code> ou <code>push</code></a></h4>
-<p>Podemos aumentar um <code>String</code> usando o método <code>push_str</code> para anexar uma fatia de string,
-conforme mostrado na Listagem 8-15.</p>
+<p>Podemos fazer uma <code>String</code> crescer usando o método <code>push_str</code> para anexar um
+string slice, como mostra a Listagem 8-15.</p>
 <figure class="listing" id="listing-8-15">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::from("foo");
     s.push_str("bar");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-15">Listing 8-15</a>: Appending a string slice to a <code>String</code> using the <code>push_str</code> method</figcaption>
+<figcaption><a href="#listing-8-15">Listing 8-15</a>: Anexando um string slice a uma <code>String</code> usando o método <code>push_str</code></figcaption>
 </figure>
-<p>Após essas duas linhas, <code>s</code> conterá <code>foobar</code>. O método <code>push_str</code> leva um
-fatia de string porque não queremos necessariamente nos apropriar do
-parâmetro. Por exemplo, no código da Listagem 8.16, queremos poder usar
-<code>s2</code> após anexar seu conteúdo a <code>s1</code>.</p>
+<p>Depois dessas duas linhas, <code>s</code> conterá <code>foobar</code>. O método <code>push_str</code> recebe um
+string slice porque não queremos necessariamente tomar ownership do parâmetro.
+Por exemplo, no código da Listagem 8-16, queremos continuar podendo usar <code>s2</code>
+mesmo depois de anexar seu conteúdo a <code>s1</code>.</p>
 <figure class="listing" id="listing-8-16">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s1 = String::from("foo");
@@ -8393,67 +8443,67 @@ parâmetro. Por exemplo, no código da Listagem 8.16, queremos poder usar
     s1.push_str(s2);
     println!("s2 is {s2}");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-16">Listing 8-16</a>: Using a string slice after appending its contents to a <code>String</code></figcaption>
+<figcaption><a href="#listing-8-16">Listing 8-16</a>: Usando um string slice depois de anexar seu conteúdo a uma <code>String</code></figcaption>
 </figure>
-<p>Se o método <code>push_str</code> se apropriasse de <code>s2</code>, não poderíamos imprimir
-seu valor na última linha. No entanto, este código funciona como esperávamos!</p>
-<p>O método <code>push</code> pega um único caractere como parâmetro e o adiciona ao
-<code>String</code>. A Listagem 8-17 adiciona a letra <em>l</em> a <code>String</code> usando o <code>push</code>
-método.</p>
+<p>Se o método <code>push_str</code> tomasse ownership de <code>s2</code>, não poderíamos imprimir seu
+valor na última linha. No entanto, esse código funciona exatamente como
+esperávamos!</p>
+<p>O método <code>push</code> recebe um único caractere como parâmetro e o adiciona à
+<code>String</code>. A Listagem 8-17 adiciona a letra <em>l</em> a uma <code>String</code> usando o método
+<code>push</code>.</p>
 <figure class="listing" id="listing-8-17">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::from("lo");
     s.push('l');
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-17">Listing 8-17</a>: Adding one character to a <code>String</code> value using <code>push</code></figcaption>
+<figcaption><a href="#listing-8-17">Listing 8-17</a>: Adicionando um único caractere a uma <code>String</code> com <code>push</code></figcaption>
 </figure>
 <p>Como resultado, <code>s</code> conterá <code>lol</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="concatenation-with-the--operator-or-the-format-macro"></a></p>
 <h4 id="concatenando-com--ou-format"><a class="header" href="#concatenando-com--ou-format">Concatenando com <code>+</code> ou <code>format!</code></a></h4>
-<p>Freqüentemente, você desejará combinar duas strings existentes. Uma maneira de fazer isso é usar
-o operador <code>+</code>, conforme mostrado na Listagem 8-18.</p>
+<p>Frequentemente você vai querer combinar duas strings existentes. Uma forma de
+fazer isso é usar o operador <code>+</code>, como mostra a Listagem 8-18.</p>
 <figure class="listing" id="listing-8-18">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("Hello, ");
     let s2 = String::from("world!");
     let s3 = s1 + &amp;s2; // note s1 has been moved here and can no longer be used
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-18">Listing 8-18</a>: Using the <code>+</code> operator to combine two <code>String</code> values into a new <code>String</code> value</figcaption>
+<figcaption><a href="#listing-8-18">Listing 8-18</a>: Usando o operador <code>+</code> para combinar dois valores <code>String</code> em um novo valor <code>String</code></figcaption>
 </figure>
-<p>A string <code>s3</code> conterá <code>Hello, world!</code>. A razão pela qual <code>s1</code> não é mais
-válido após a adição, e a razão pela qual usamos uma referência para <code>s2</code>, tem a ver
-com a assinatura do método que é chamado quando usamos o operador <code>+</code>.
-O operador <code>+</code> usa o método <code>add</code>, cuja assinatura se parece com
-esse:</p>
+<p>A string <code>s3</code> conterá <code>Hello, world!</code>. O motivo pelo qual <code>s1</code> deixa de ser
+válida após a adição, e o motivo pelo qual usamos uma referência para <code>s2</code>, têm
+a ver com a assinatura do método chamado quando usamos o operador <code>+</code>. O
+operador <code>+</code> usa o método <code>add</code>, cuja assinatura se parece com isto:</p>
 <pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {</code></pre>
-<p>Na biblioteca padrão, você verá <code>add</code> definido usando genéricos e associados
-tipos. Aqui, substituímos por tipos concretos, que é o que acontece quando
-chame esse método com valores <code>String</code>. Discutiremos genéricos no Capítulo 10.
-Esta assinatura nos dá as pistas que precisamos para entender o complicado
-bits do operador <code>+</code>.</p>
-<p>Primeiro, <code>s2</code> tem <code>&amp;</code>, o que significa que estamos adicionando uma referência do segundo
-string para a primeira string. Isso ocorre por causa do parâmetro <code>s</code> no <code>add</code>
-função: Só podemos adicionar uma fatia de string a <code>String</code>; não podemos adicionar dois
-<code>String</code> valores juntos. Mas espere – o tipo de <code>&amp;s2</code> é <code>&amp;String</code>, não <code>&amp;str</code>,
-conforme especificado no segundo parâmetro para <code>add</code>. Então, por que a Listagem 8-18
-compilar?</p>
-<p>A razão pela qual podemos usar <code>&amp;s2</code> na chamada para <code>add</code> é que o compilador
-pode forçar o argumento <code>&amp;String</code> em <code>&amp;str</code>. Quando chamamos o método <code>add</code>,
-Rust usa uma coerção deref, que aqui transforma <code>&amp;s2</code> em <code>&amp;s2[..]</code>. Bem
-discuta a coerção deref com mais profundidade no Capítulo 15. Porque <code>add</code> não leva
-propriedade do parâmetro <code>s</code>, <code>s2</code> ainda será um <code>String</code> válido depois disso
-operação.</p>
-<p>Em segundo lugar, podemos ver na assinatura que <code>add</code> assume a propriedade de <code>self</code>
-porque <code>self</code> <em>não</em> tem <code>&amp;</code>. Isso significa que <code>s1</code> na Listagem 8-18 será
-movido para a chamada <code>add</code> e não será mais válido depois disso. Então, embora
-<code>let s3 = s1 + &amp;s2;</code> parece que copiará as duas strings e criará uma nova,
-esta declaração na verdade é propriedade de <code>s1</code>, anexa uma cópia do conteúdo
-de <code>s2</code> e, em seguida, retorna a propriedade do resultado. Em outras palavras, parece
-como se estivesse fazendo muitas cópias, mas não está; a implementação é mais
+<p>Na biblioteca padrão, você verá <code>add</code> definido usando genéricos e tipos
+associados. Aqui, substituímos isso por tipos concretos, que é o que acontece
+quando chamamos esse método com valores <code>String</code>. Veremos genéricos no Capítulo
+10. Essa assinatura já nos dá as pistas necessárias para entender as partes
+mais complicadas do operador <code>+</code>.</p>
+<p>Primeiro, <code>s2</code> tem um <code>&amp;</code>, o que significa que estamos adicionando uma
+referência da segunda string à primeira string. Isso acontece por causa do
+parâmetro <code>s</code> na função <code>add</code>: só podemos adicionar um string slice a uma
+<code>String</code>; não podemos somar diretamente dois valores <code>String</code>. Mas espere: o
+tipo de <code>&amp;s2</code> é <code>&amp;String</code>, não <code>&amp;str</code>, como especificado no segundo parâmetro
+de <code>add</code>. Então por que a Listagem 8-18 compila?</p>
+<p>A razão pela qual conseguimos usar <code>&amp;s2</code> na chamada a <code>add</code> é que o compilador
+pode coagir o argumento <code>&amp;String</code> para <code>&amp;str</code>. Quando chamamos o método <code>add</code>,
+Rust usa uma coerção de deref, que aqui transforma <code>&amp;s2</code> em <code>&amp;s2[..]</code>.
+Falaremos sobre coerção de deref com mais profundidade no Capítulo 15. Como
+<code>add</code> não toma ownership do parâmetro <code>s</code>, <code>s2</code> continuará sendo uma <code>String</code>
+válida depois dessa operação.</p>
+<p>Em segundo lugar, podemos ver na assinatura que <code>add</code> toma ownership de <code>self</code>
+porque <code>self</code> <em>não</em> tem <code>&amp;</code>. Isso significa que <code>s1</code>, na Listagem 8-18, será
+movida para a chamada de <code>add</code> e não será mais válida depois disso. Então,
+embora <code>let s3 = s1 + &amp;s2;</code> pareça que vai copiar as duas strings e criar uma
+nova, essa instrução, na verdade, toma ownership de <code>s1</code>, anexa uma cópia do
+conteúdo de <code>s2</code> e então devolve ownership do resultado. Em outras palavras,
+parece que está fazendo muitas cópias, mas não está; a implementação é mais
 eficiente do que copiar.</p>
-<p>Se precisarmos concatenar múltiplas strings, o comportamento do operador <code>+</code>
-fica pesado:</p>
+<p>Se precisarmos concatenar várias strings, o comportamento do operador <code>+</code> fica
+difícil de lidar:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("tic");
     let s2 = String::from("tac");
@@ -8461,9 +8511,9 @@ fica pesado:</p>
 
     let s = s1 + "-" + &amp;s2 + "-" + &amp;s3;
 <span class="boring">}</span></code></pre>
-<p>Neste ponto, <code>s</code> será <code>tic-tac-toe</code>. Com todos os <code>+</code> e <code>"</code>
-personagens, é difícil ver o que está acontecendo. Para combinar strings em
-maneiras mais complicadas, podemos usar a macro <code>format!</code>:</p>
+<p>Nesse ponto, <code>s</code> será <code>tic-tac-toe</code>. Com todos os caracteres <code>+</code> e <code>"</code>, fica
+difícil enxergar o que está acontecendo. Para combinar strings de formas mais
+complicadas, podemos usar a macro <code>format!</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("tic");
     let s2 = String::from("tac");
@@ -8471,24 +8521,24 @@ maneiras mais complicadas, podemos usar a macro <code>format!</code>:</p>
 
     let s = format!("{s1}-{s2}-{s3}");
 <span class="boring">}</span></code></pre>
-<p>Este código também define <code>s</code> como <code>tic-tac-toe</code>. A macro <code>format!</code> funciona como
-<code>println!</code>, mas em vez de imprimir a saída na tela, ele retorna um
-<code>String</code> com o conteúdo. A versão do código usando <code>format!</code> é muito
-mais fácil de ler, e o código gerado pela macro <code>format!</code> usa referências
-para que esta chamada não se aproprie de nenhum de seus parâmetros.</p>
-<h3 id="indexação-em-strings"><a class="header" href="#indexação-em-strings">Indexação em Strings</a></h3>
-<p>Em muitas outras linguagens de programação, acessar caracteres individuais em um
-string referenciando-os por índice é uma operação válida e comum. No entanto,
-se você tentar acessar partes de <code>String</code> usando sintaxe de indexação em Rust, você
-obter um erro. Considere o código inválido na Listagem 8-19.</p>
+<p>Esse código também define <code>s</code> como <code>tic-tac-toe</code>. A macro <code>format!</code> funciona
+como <code>println!</code>, mas, em vez de imprimir a saída na tela, ela retorna uma
+<code>String</code> com o conteúdo. A versão do código que usa <code>format!</code> é bem mais fácil
+de ler, e o código gerado por <code>format!</code> usa referências, de modo que essa
+chamada não toma ownership de nenhum de seus parâmetros.</p>
+<h3 id="indexando-strings"><a class="header" href="#indexando-strings">Indexando strings</a></h3>
+<p>Em muitas outras linguagens de programação, acessar caracteres individuais de
+uma string por índice é uma operação válida e comum. No entanto, se você tentar
+acessar partes de uma <code>String</code> com sintaxe de indexação em Rust, receberá um
+erro. Considere o código inválido da Listagem 8-19.</p>
 <figure class="listing" id="listing-8-19">
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let s1 = String::from("hi");
     let h = s1[0];
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-19">Listing 8-19</a>: Attempting to use indexing syntax with a <code>String</code></figcaption>
+<figcaption><a href="#listing-8-19">Listing 8-19</a>: Tentando usar sintaxe de indexação com uma <code>String</code></figcaption>
 </figure>
-<p>Este código resultará no seguinte erro:</p>
+<p>Esse código produzirá o seguinte erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
 error[E0277]: the type `str` cannot be indexed by `{integer}`
@@ -8508,11 +8558,13 @@ error[E0277]: the type `str` cannot be indexed by `{integer}`
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `collections` (bin "collections") due to 1 previous error
 </code></pre>
-<p>O erro conta a história: Strings Rust não suportam indexação. Mas por que não? Para
-Para responder a essa pergunta, precisamos discutir como Rust armazena strings na memória.</p>
-<h4 id="representação-interna"><a class="header" href="#representação-interna">Representação Interna</a></h4>
-<p>Um <code>String</code> é um wrapper sobre um <code>Vec&lt;u8&gt;</code>. Vejamos alguns dos nossos
-strings de exemplo UTF-8 codificadas da Listagem 8-14. Primeiro, este:</p>
+<p>A mensagem de erro conta a história: strings em Rust não dão suporte a
+indexação. Mas por que não? Para responder a essa pergunta, precisamos
+discutir como Rust armazena strings na memória.</p>
+<h4 id="representação-interna"><a class="header" href="#representação-interna">Representação interna</a></h4>
+<p>Uma <code>String</code> é um invólucro sobre um <code>Vec&lt;u8&gt;</code>. Vamos olhar novamente para
+algumas das strings de exemplo codificadas corretamente em UTF-8 da Listagem
+8-14. Primeiro, esta aqui:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span><span class="boring">    let hello = String::from("السلام عليكم");
 </span><span class="boring">    let hello = String::from("Dobrý den");
@@ -8526,10 +8578,10 @@ strings de exemplo UTF-8 codificadas da Listagem 8-14. Primeiro, este:</p>
 </span><span class="boring">    let hello = String::from("Здравствуйте");
 </span>    let hello = String::from("Hola");
 <span class="boring">}</span></code></pre>
-<p>Neste caso, <code>len</code> será <code>4</code>, o que significa o vetor que armazena a string
-<code>"Hola"</code> tem 4 bytes de comprimento. Cada uma dessas letras ocupa 1 byte quando codificada em
-UTF-8. A linha a seguir, entretanto, pode surpreendê-lo (observe que esta string
-começa com a letra cirílica maiúscula <em>Ze</em>, não com o número 3):</p>
+<p>Nesse caso, <code>len</code> será <code>4</code>, o que significa que o vetor que armazena a string
+<code>"Hola"</code> tem 4 bytes de comprimento. Cada uma dessas letras ocupa 1 byte quando
+codificada em UTF-8. Já a linha a seguir pode surpreender você; observe que
+essa string começa com a letra cirílica maiúscula <em>Ze</em>, e não com o número 3:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span><span class="boring">    let hello = String::from("السلام عليكم");
 </span><span class="boring">    let hello = String::from("Dobrý den");
@@ -8543,74 +8595,78 @@ começa com a letra cirílica maiúscula <em>Ze</em>, não com o número 3):</p>
 </span>    let hello = String::from("Здравствуйте");
 <span class="boring">    let hello = String::from("Hola");
 </span><span class="boring">}</span></code></pre>
-<p>Se lhe perguntassem qual é o comprimento da corda, você poderia dizer 12. Na verdade, Rust’s
-a resposta é 24: Esse é o número de bytes necessários para codificar “Здравствуйте” em
-UTF-8, porque cada valor escalar Unicode nessa string ocupa 2 bytes de
-armazenar. Portanto, um índice nos bytes da string nem sempre estará correlacionado
-para um valor escalar Unicode válido. Para demonstrar, considere este Rust inválido
-código:</p>
+<p>Se alguém perguntasse o comprimento dessa string, você talvez dissesse 12. Na
+verdade, a resposta de Rust é 24: esse é o número de bytes necessários para
+codificar “Здравствуйте” em UTF-8, porque cada valor escalar Unicode nessa
+string ocupa 2 bytes de armazenamento. Portanto, um índice nos bytes da string
+nem sempre corresponderá a um valor escalar Unicode válido. Para demonstrar,
+considere este código Rust inválido:</p>
 <pre><code class="language-rust ignore does_not_compile">let hello = "Здравствуйте";
 let answer = &amp;hello[0];</code></pre>
-<p>Você já sabe que <code>answer</code> não será <code>З</code>, a primeira letra. Quando codificado
-em UTF-8, o primeiro byte de <code>З</code> é <code>208</code> e o segundo é <code>151</code>, então seria
-parece que <code>answer</code> deveria de fato ser <code>208</code>, mas <code>208</code> não é um caractere válido
-por conta própria. Retornar <code>208</code> provavelmente não é o que um usuário desejaria se perguntasse
-para a primeira letra desta string; no entanto, esses são os únicos dados que Rust
-tem índice de bytes 0. Os usuários geralmente não querem que o valor do byte seja retornado, mesmo
-se a string contiver apenas letras latinas: Se <code>&amp;"hi"[0]</code> fosse um código válido que
-retornasse o valor do byte, retornaria <code>104</code>, não <code>h</code>.</p>
-<p>A resposta, então, é evitar retornar um valor inesperado e causar
-bugs que podem não ser descobertos imediatamente, Rust não compila este código
-e evita mal-entendidos no início do processo de desenvolvimento.</p>
+<p>Você já sabe que <code>answer</code> não será <code>З</code>, a primeira letra. Quando codificado em
+UTF-8, o primeiro byte de <code>З</code> é <code>208</code> e o segundo é <code>151</code>, então poderia
+parecer que <code>answer</code> deveria ser <code>208</code>, mas <code>208</code> não é um caractere válido por
+si só. Retornar <code>208</code> provavelmente não é o que uma pessoa desejaria se
+pedisse a primeira letra dessa string; no entanto, esse é o único dado que Rust
+tem no índice de byte 0. Em geral, quem usa o programa não quer receber o
+valor do byte, mesmo quando a string contém apenas letras latinas: se
+<code>&amp;"hi"[0]</code> fosse um código válido que retornasse o valor do byte, ele
+retornaria <code>104</code>, e não <code>h</code>.</p>
+<p>A resposta, então, é que, para evitar retornar um valor inesperado e causar
+bugs que talvez não fossem descobertos imediatamente, Rust simplesmente não
+compila esse código, evitando mal-entendidos logo no início do processo de
+desenvolvimento.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="bytes-and-scalar-values-and-grapheme-clusters-oh-my"></a></p>
 <h4 id="bytes-valores-escalares-e-clusters-de-grafemas"><a class="header" href="#bytes-valores-escalares-e-clusters-de-grafemas">Bytes, valores escalares e clusters de grafemas</a></h4>
-<p>Outro ponto sobre o UTF-8 é que na verdade existem três maneiras relevantes de
-observe as strings da perspectiva de Rust: como bytes, valores escalares e grafema
-clusters (a coisa mais próxima do que chamaríamos de <em>letras</em>).</p>
-<p>Se olharmos para a palavra Hindi “नमस्ते” escrita na escrita Devanagari, é
-armazenado como um vetor de valores <code>u8</code> semelhante a este:</p>
+<p>Outro ponto sobre UTF-8 é que existem, na verdade, três formas relevantes de
+olhar para strings do ponto de vista de Rust: como bytes, como valores
+escalares e como clusters de grafemas, que são a coisa mais próxima do que
+chamaríamos de <em>letras</em>.</p>
+<p>Se olharmos para a palavra hindi “नमस्ते”, escrita na escrita devanágari, ela é
+armazenada como um vetor de valores <code>u8</code> que se parece com isto:</p>
 <pre><code class="language-text">[224, 164, 168, 224, 164, 174, 224, 164, 184, 224, 165, 141, 224, 164, 164,
 224, 165, 135]
 </code></pre>
-<p>São 18 bytes e é como os computadores armazenam esses dados. Se olharmos
-eles como valores escalares Unicode, que são o tipo <code>char</code> de Rust, aqueles
-bytes ficam assim:</p>
+<p>Isso representa 18 bytes e é a forma como os computadores armazenam esses
+dados em última instância. Se olharmos para esses dados como valores escalares
+Unicode, que é o que o tipo <code>char</code> de Rust representa, esses bytes ficam assim:</p>
 <pre><code class="language-text">['न', 'म', 'स', '्', 'त', 'े']
 </code></pre>
-<p>Existem seis valores <code>char</code> aqui, mas o quarto e o sexto não são letras:
-Eles são diacríticos que não fazem sentido por si só. Finalmente, se olharmos
-agrupando-os como aglomerados de grafemas, obteríamos o que uma pessoa chamaria de quatro letras
-que compõem a palavra Hindi:</p>
+<p>Temos aqui seis valores <code>char</code>, mas o quarto e o sexto não são letras: são
+marcas diacríticas que não fazem sentido sozinhas. Por fim, se olharmos para
+isso como clusters de grafemas, obteremos o que uma pessoa consideraria as
+quatro letras que formam a palavra hindi:</p>
 <pre><code class="language-text">["न", "म", "स्", "ते"]
 </code></pre>
-<p>Rust fornece diferentes maneiras de interpretar os dados brutos de string que os computadores
-armazenar para que cada programa possa escolher a interpretação que necessita, não importa
-em que linguagem humana os dados estão.</p>
-<p>Uma última razão pela qual Rust não nos permite indexar em <code>String</code> para obter um
-caráter é que se espera que as operações de indexação sempre levem tempo constante
-(O(1)). Mas não é possível garantir esse desempenho com um <code>String</code>,
-porque Rust teria que percorrer o conteúdo do início ao fim
-índice para determinar quantos caracteres válidos havia.</p>
-<h3 id="cortando-cordas"><a class="header" href="#cortando-cordas">Cortando cordas</a></h3>
-<p>A indexação em uma string costuma ser uma má ideia porque não está claro qual é o objetivo.
-O tipo de retorno da operação de indexação de string deve ser: um valor de byte, um
-caractere, um cluster de grafema ou uma fatia de string. Se você realmente precisa usar
-índices para criar fatias de string, portanto, Rust pede que você seja mais específico.</p>
+<p>Rust oferece formas diferentes de interpretar os dados brutos de string que os
+computadores armazenam, para que cada programa possa escolher a interpretação
+de que precisa, independentemente da linguagem humana em que os dados estejam.</p>
+<p>Um último motivo pelo qual Rust não nos permite indexar uma <code>String</code> para obter
+um caractere é que se espera que operações de indexação sempre levem tempo
+constante, O(1). Mas não é possível garantir esse desempenho com uma <code>String</code>,
+porque Rust teria de percorrer o conteúdo desde o começo até o índice para
+determinar quantos caracteres válidos existem ali.</p>
+<h3 id="fatiando-strings"><a class="header" href="#fatiando-strings">Fatiando strings</a></h3>
+<p>Indexar uma string costuma ser uma má ideia porque não está claro qual deveria
+ser o tipo de retorno da operação de indexação: um valor de byte, um
+caractere, um cluster de grafemas ou um string slice. Por isso, se você
+realmente precisa usar índices para criar string slices, Rust exige que você
+seja mais específico.</p>
 <p>Em vez de indexar usando <code>[]</code> com um único número, você pode usar <code>[]</code> com um
-range para criar uma fatia de string contendo bytes específicos:</p>
+intervalo para criar um string slice contendo bytes específicos:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello = "Здравствуйте";
 
 let s = &amp;hello[0..4];
 <span class="boring">}</span></code></pre>
-<p>Aqui, <code>s</code> será um <code>&amp;str</code> que contém os primeiros 4 bytes da string.
-Anteriormente, mencionamos que cada um desses caracteres tinha 2 bytes, o que significa
+<p>Aqui, <code>s</code> será um <code>&amp;str</code> que contém os primeiros 4 bytes da string. Antes,
+mencionamos que cada um desses caracteres tinha 2 bytes, o que significa que
 <code>s</code> será <code>Зд</code>.</p>
-<p>Se tentássemos cortar apenas parte dos bytes de um caractere com algo como
-<code>&amp;hello[0..1]</code>, Rust entraria em pânico em tempo de execução da mesma forma que se um inválido
-index foram acessados ​​em um vetor:</p>
+<p>Se tentássemos fatiar apenas parte dos bytes de um caractere com algo como
+<code>&amp;hello[0..1]</code>, Rust entraria em pânico em tempo de execução, da mesma forma
+que faz quando acessamos um índice inválido em um vetor:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s
@@ -8620,62 +8676,63 @@ thread 'main' panicked at src/main.rs:4:19:
 byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>Você deve ter cuidado ao criar fatias de string com intervalos, porque fazer
-então pode travar seu programa.</p>
+<p>Você deve tomar cuidado ao criar string slices com intervalos, porque isso pode
+fazer seu programa travar.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="methods-for-iterating-over-strings"></a></p>
-<h3 id="iterando-sobre-strings"><a class="header" href="#iterando-sobre-strings">Iterando sobre Strings</a></h3>
-<p>A melhor maneira de operar com pedaços de cordas é ser explícito sobre se
-você quer caracteres ou bytes. Para valores escalares Unicode individuais, use o
-<code>chars</code> método. Chamar <code>chars</code> em “Зд” separa e retorna dois valores de
-digite <code>char</code> e você pode iterar sobre o resultado para acessar cada elemento:</p>
+<h3 id="iterando-sobre-strings"><a class="header" href="#iterando-sobre-strings">Iterando sobre strings</a></h3>
+<p>A melhor maneira de operar sobre partes de strings é ser explícito sobre se
+você quer caracteres ou bytes. Para valores escalares Unicode individuais, use
+o método <code>chars</code>. Chamar <code>chars</code> sobre “Зд” separa e retorna dois valores do
+tipo <code>char</code>, e você pode iterar sobre o resultado para acessar cada elemento:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for c in "Зд".chars() {
     println!("{c}");
 }
 <span class="boring">}</span></code></pre>
-<p>Este código imprimirá o seguinte:</p>
+<p>Esse código imprimirá o seguinte:</p>
 <pre><code class="language-text">З
 д
 </code></pre>
-<p>Alternativamente, o método <code>bytes</code> retorna cada byte bruto, que pode ser
-apropriado para o seu domínio:</p>
+<p>Como alternativa, o método <code>bytes</code> retorna cada byte bruto, o que pode ser o
+mais apropriado para o seu domínio:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for b in "Зд".bytes() {
     println!("{b}");
 }
 <span class="boring">}</span></code></pre>
-<p>Este código imprimirá os 4 bytes que compõem esta string:</p>
+<p>Esse código imprimirá os 4 bytes que compõem essa string:</p>
 <pre><code class="language-text">208
 151
 208
 180
 </code></pre>
-<p>Mas lembre-se de que os valores escalares Unicode válidos podem ser compostos de mais
-de 1 byte.</p>
-<p>Obter clusters de grafemas a partir de strings, como acontece com o script Devanagari, é
-complexo, portanto esta funcionalidade não é fornecida pela biblioteca padrão. Caixas
-estão disponíveis em <a href="https://crates.io/">crates.io</a><!-- ignore --> se este for o
-funcionalidade que você precisa.</p>
+<p>Mas lembre-se sempre de que valores escalares Unicode válidos podem ser
+compostos de mais de 1 byte.</p>
+<p>Obter clusters de grafemas a partir de strings, como acontece com a escrita
+devanágari, é algo complexo, então essa funcionalidade não é fornecida pela
+biblioteca padrão. Há crates disponíveis em
+<a href="https://crates.io/">crates.io</a><!-- ignore --> caso isso seja a funcionalidade
+de que você precisa.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="strings-are-not-so-simple"></a></p>
 <h3 id="lidando-com-as-complexidades-das-strings"><a class="header" href="#lidando-com-as-complexidades-das-strings">Lidando com as complexidades das strings</a></h3>
-<p>Para resumir, as strings são complicadas. Diferentes linguagens de programação fazem
-diferentes escolhas sobre como apresentar essa complexidade ao programador. Ferrugem
-optou por tornar o tratamento correto dos dados <code>String</code> o comportamento padrão
-para todos os programas Rust, o que significa que os programadores precisam pensar mais
-lidar com dados UTF-8 antecipadamente. Esta compensação expõe mais a complexidade do
-strings do que é aparente em outras linguagens de programação, mas impede que você
-de ter que lidar com erros envolvendo caracteres não-ASCII posteriormente em seu
-ciclo de vida do desenvolvimento.</p>
-<p>A boa notícia é que a biblioteca padrão oferece muitas funcionalidades construídas
-fora dos tipos <code>String</code> e <code>&amp;str</code> para ajudar a lidar com essas situações complexas
-corretamente. Certifique-se de verificar a documentação para métodos úteis como
-<code>contains</code> para pesquisar em uma string e <code>replace</code> para substituir partes de uma
-string com outra string.</p>
-<p>Vamos mudar para algo um pouco menos complexo: mapas hash!</p>
+<p>Resumindo, strings são complicadas. Diferentes linguagens de programação fazem
+escolhas diferentes sobre como apresentar essa complexidade para quem programa.
+Rust escolheu tornar o tratamento correto de dados <code>String</code> o comportamento
+padrão de todos os programas Rust, o que significa que programadores precisam
+pensar mais cedo sobre como lidar com dados UTF-8. Essa troca expõe mais da
+complexidade das strings do que fica aparente em outras linguagens, mas evita
+que você tenha de lidar, mais tarde no ciclo de desenvolvimento, com erros
+envolvendo caracteres não ASCII.</p>
+<p>A boa notícia é que a biblioteca padrão oferece bastante funcionalidade
+construída sobre os tipos <code>String</code> e <code>&amp;str</code> para ajudar a tratar corretamente
+essas situações complexas. Não deixe de consultar a documentação de métodos
+úteis como <code>contains</code>, para procurar em uma string, e <code>replace</code>, para
+substituir partes de uma string por outra.</p>
+<p>Vamos mudar para algo um pouco menos complexo: hash maps!</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="armazenando-chaves-com-valores-associados-em-hash-maps"><a href="#armazenando-chaves-com-valores-associados-em-hash-maps" class="header">Armazenando Chaves com Valores Associados em Hash Maps</a></h1>
 <h2 id="armazenando-chaves-com-valores-associados-em-mapas-hash"><a class="header" href="#armazenando-chaves-com-valores-associados-em-mapas-hash">Armazenando Chaves com Valores Associados em Mapas Hash</a></h2>

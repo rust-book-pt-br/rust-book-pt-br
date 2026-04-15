@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a3947041.js";
+            window.path_to_searchindex_js = "searchindex-fb4bc72d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -182,53 +182,53 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="armazenando-texto-codificado-em-utf-8-com-strings"><a class="header" href="#armazenando-texto-codificado-em-utf-8-com-strings">Armazenando texto codificado em UTF-8 com strings</a></h2>
-<p>Falamos sobre strings no Capítulo 4, mas vamos examiná-las com mais profundidade agora.
-Novos Rustáceos geralmente ficam presos em cordas por uma combinação de três
-razões: a propensão do Rust em expor possíveis erros, sendo as strings uma forma mais
-estrutura de dados complicada que muitos programadores atribuem a eles, e
-UTF-8. Esses fatores se combinam de uma forma que pode parecer difícil quando você está
-vindo de outras linguagens de programação.</p>
-<p>Discutimos strings no contexto de coleções porque strings são
-implementado como uma coleção de bytes, além de alguns métodos para fornecer informações úteis
-funcionalidade quando esses bytes são interpretados como texto. Nesta seção, vamos
-fale sobre as operações em <code>String</code> que todo tipo de coleção possui, como
-criação, atualização e leitura. Também discutiremos as maneiras pelas quais <code>String</code>
-é diferente das outras coleções, ou seja, como a indexação em <code>String</code> é
-complicado pelas diferenças entre como as pessoas e os computadores interpretam
-<code>String</code> dados.</p>
+<p>Falamos sobre strings no Capítulo 4, mas agora vamos examiná-las com mais
+profundidade. Pessoas novas em Rust frequentemente travam em strings por uma
+combinação de três razões: a tendência de Rust a expor erros possíveis, o fato
+de strings serem uma estrutura de dados mais complexa do que muita gente
+imagina e o UTF-8. Esses fatores se combinam de um jeito que pode parecer
+difícil para quem vem de outras linguagens de programação.</p>
+<p>Discutimos strings no contexto de coleções porque strings são implementadas como
+uma coleção de bytes, junto com alguns métodos que fornecem funcionalidades
+úteis quando esses bytes são interpretados como texto. Nesta seção, falaremos
+sobre as operações em <code>String</code> que todo tipo de coleção possui, como criar,
+atualizar e ler. Também discutiremos as maneiras pelas quais <code>String</code> difere
+das outras coleções, especialmente como a indexação em <code>String</code> é complicada
+pelas diferenças entre a forma como pessoas e computadores interpretam dados de
+<code>String</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="what-is-a-string"></a></p>
-<h3 id="definindo-strings"><a class="header" href="#definindo-strings">Definindo Strings</a></h3>
-<p>Primeiro definiremos o que queremos dizer com o termo <em>string</em>. Rust tem apenas uma string
-digite a linguagem principal, que é a fatia de string <code>str</code> que geralmente é vista
-em sua forma emprestada, <code>&amp;str</code>. No Capítulo 4, falamos sobre fatias de string,
-que são referências a alguns dados de string codificados em UTF-8 armazenados em outro lugar. Corda
-literais, por exemplo, são armazenados no binário do programa e, portanto,
-fatias de corda.</p>
-<p>O tipo <code>String</code>, que é fornecido pela biblioteca padrão do Rust em vez de
-codificado na linguagem principal, é um ambiente expansível, mutável, de propriedade e codificado em UTF-8.
-tipo de string. Quando Rustáceos se referem a “cordas” em Rust, eles podem ser
-referindo-se aos tipos <code>String</code> ou string slice <code>&amp;str</code>, não apenas a um
-desses tipos. Embora esta seção seja principalmente sobre <code>String</code>, ambos os tipos são
-muito usado na biblioteca padrão do Rust, e <code>String</code> e fatias de string
-são codificados em UTF-8.</p>
+<h3 id="definindo-strings"><a class="header" href="#definindo-strings">Definindo strings</a></h3>
+<p>Primeiro, vamos definir o que queremos dizer com o termo <em>string</em>. Rust tem
+apenas um tipo de string no núcleo da linguagem, que é o string slice <code>str</code>,
+geralmente visto em sua forma emprestada, <code>&amp;str</code>. No Capítulo 4, falamos sobre
+string slices, que são referências a dados de string codificados em UTF-8
+armazenados em algum outro lugar. Literais de string, por exemplo, ficam
+armazenados no binário do programa e, portanto, são string slices.</p>
+<p>O tipo <code>String</code>, fornecido pela biblioteca padrão de Rust em vez de fazer parte
+do núcleo da linguagem, é um tipo de string expansível, mutável, com ownership
+e codificado em UTF-8. Quando pessoas da comunidade Rust se referem a
+“strings” em Rust, podem estar falando tanto do tipo <code>String</code> quanto do tipo
+string slice <code>&amp;str</code>, e não apenas de um deles. Embora esta seção trate
+principalmente de <code>String</code>, os dois tipos são bastante usados na biblioteca
+padrão de Rust, e tanto <code>String</code> quanto string slices são codificados em UTF-8.</p>
 <h3 id="criando-uma-nova-string"><a class="header" href="#criando-uma-nova-string">Criando uma nova string</a></h3>
-<p>Muitas das mesmas operações disponíveis com <code>Vec&lt;T&gt;</code> estão disponíveis com <code>String</code>
-também porque <code>String</code> é na verdade implementado como um wrapper em torno de um vetor
-de bytes com algumas garantias, restrições e recursos extras. Um exemplo
-de uma função que funciona da mesma maneira com <code>Vec&lt;T&gt;</code> e <code>String</code> é o <code>new</code>
-função para criar uma instância, mostrada na Listagem 8-11.</p>
+<p>Muitas das mesmas operações disponíveis para <code>Vec&lt;T&gt;</code> também estão disponíveis
+para <code>String</code>, porque <code>String</code> é implementada como um invólucro em torno de um
+vetor de bytes com algumas garantias, restrições e capacidades extras. Um
+exemplo de função que funciona da mesma forma em <code>Vec&lt;T&gt;</code> e em <code>String</code> é a
+função <code>new</code>, usada para criar uma instância, como mostra a Listagem 8-11.</p>
 <figure class="listing" id="listing-8-11">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::new();
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-11">Listing 8-11</a>: Creating a new, empty <code>String</code></figcaption>
+<figcaption><a href="#listing-8-11">Listing 8-11</a>: Criando uma <code>String</code> nova e vazia</figcaption>
 </figure>
-<p>Esta linha cria uma nova string vazia chamada <code>s</code>, na qual podemos carregar
-dados. Muitas vezes, teremos alguns dados iniciais com os quais queremos iniciar o
-corda. Para isso utilizamos o método <code>to_string</code>, que está disponível em qualquer tipo
-que implementa o traço <code>Display</code>, como fazem os literais de string. Listagem de 8 a 12 programas
-dois exemplos.</p>
+<p>Essa linha cria uma nova string vazia chamada <code>s</code>, na qual depois podemos
+colocar dados. Muitas vezes, no entanto, já teremos alguns dados iniciais com
+os quais queremos começar a string. Para isso, usamos o método <code>to_string</code>,
+disponível em qualquer tipo que implemente a trait <code>Display</code>, como é o caso dos
+literais de string. A Listagem 8-12 mostra dois exemplos.</p>
 <figure class="listing" id="listing-8-12">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let data = "initial contents";
@@ -238,25 +238,25 @@ dois exemplos.</p>
     // The method also works on a literal directly:
     let s = "initial contents".to_string();
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-12">Listing 8-12</a>: Using the <code>to_string</code> method to create a <code>String</code> from a string literal</figcaption>
+<figcaption><a href="#listing-8-12">Listing 8-12</a>: Usando o método <code>to_string</code> para criar uma <code>String</code> a partir de um literal de string</figcaption>
 </figure>
-<p>Este código cria uma string contendo <code>initial contents</code>.</p>
-<p>Também podemos usar a função <code>String::from</code> para criar um <code>String</code> a partir de uma string
-literal. O código na Listagem 8-13 é equivalente ao código na Listagem 8-12
-que usa <code>to_string</code>.</p>
+<p>Esse código cria uma string contendo <code>initial contents</code>.</p>
+<p>Também podemos usar a função <code>String::from</code> para criar uma <code>String</code> a partir de
+um literal de string. O código da Listagem 8-13 é equivalente ao código da
+Listagem 8-12 que usa <code>to_string</code>.</p>
 <figure class="listing" id="listing-8-13">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s = String::from("initial contents");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-13">Listing 8-13</a>: Using the <code>String::from</code> function to create a <code>String</code> from a string literal</figcaption>
+<figcaption><a href="#listing-8-13">Listing 8-13</a>: Usando a função <code>String::from</code> para criar uma <code>String</code> a partir de um literal de string</figcaption>
 </figure>
-<p>Como as strings são usadas para muitas coisas, podemos usar muitos tipos genéricos diferentes.
-APIs para strings, nos fornecendo muitas opções. Alguns deles podem parecer
-redundantes, mas todos têm o seu lugar! Neste caso, <code>String::from</code> e
-<code>to_string</code> faça a mesma coisa, então qual você escolhe é uma questão de estilo e
-legibilidade.</p>
-<p>Lembre-se de que as strings são codificadas em UTF-8, portanto, podemos incluir qualquer string codificada corretamente.
-dados neles, conforme mostrado na Listagem 8-14.</p>
+<p>Como strings são usadas para muitas coisas, podemos usar muitas APIs genéricas
+diferentes para elas, o que nos dá bastante opção. Algumas podem parecer
+redundantes, mas todas têm seu lugar! Neste caso, <code>String::from</code> e
+<code>to_string</code> fazem a mesma coisa, então escolher entre uma e outra é uma questão
+de estilo e legibilidade.</p>
+<p>Lembre-se de que strings são codificadas em UTF-8, então podemos incluir nelas
+quaisquer dados corretamente codificados, como mostra a Listagem 8-14.</p>
 <figure class="listing" id="listing-8-14">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let hello = String::from("السلام عليكم");
@@ -271,29 +271,30 @@ dados neles, conforme mostrado na Listagem 8-14.</p>
     let hello = String::from("Здравствуйте");
     let hello = String::from("Hola");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-14">Listing 8-14</a>: Storing greetings in different languages in strings</figcaption>
+<figcaption><a href="#listing-8-14">Listing 8-14</a>: Armazenando saudações em diferentes idiomas em strings</figcaption>
 </figure>
-<p>Todos esses são valores <code>String</code> válidos.</p>
-<h3 id="atualizando-uma-string"><a class="header" href="#atualizando-uma-string">Atualizando uma String</a></h3>
-<p>Um <code>String</code> pode aumentar de tamanho e seu conteúdo pode mudar, assim como o conteúdo
-de um <code>Vec&lt;T&gt;</code>, se você inserir mais dados nele. Além disso, você pode convenientemente
-use o operador <code>+</code> ou a macro <code>format!</code> para concatenar valores <code>String</code>.</p>
+<p>Todos esses são valores válidos de <code>String</code>.</p>
+<h3 id="atualizando-uma-string"><a class="header" href="#atualizando-uma-string">Atualizando uma string</a></h3>
+<p>Uma <code>String</code> pode crescer de tamanho e seu conteúdo pode mudar, assim como o
+conteúdo de um <code>Vec&lt;T&gt;</code> muda se você empurrar mais dados para dentro dele. Além
+disso, também podemos usar convenientemente o operador <code>+</code> ou a macro
+<code>format!</code> para concatenar valores de <code>String</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="appending-to-a-string-with-push_str-and-push"></a></p>
 <h4 id="anexando-com-push_str-ou-push"><a class="header" href="#anexando-com-push_str-ou-push">Anexando com <code>push_str</code> ou <code>push</code></a></h4>
-<p>Podemos aumentar um <code>String</code> usando o método <code>push_str</code> para anexar uma fatia de string,
-conforme mostrado na Listagem 8-15.</p>
+<p>Podemos fazer uma <code>String</code> crescer usando o método <code>push_str</code> para anexar um
+string slice, como mostra a Listagem 8-15.</p>
 <figure class="listing" id="listing-8-15">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::from("foo");
     s.push_str("bar");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-15">Listing 8-15</a>: Appending a string slice to a <code>String</code> using the <code>push_str</code> method</figcaption>
+<figcaption><a href="#listing-8-15">Listing 8-15</a>: Anexando um string slice a uma <code>String</code> usando o método <code>push_str</code></figcaption>
 </figure>
-<p>Após essas duas linhas, <code>s</code> conterá <code>foobar</code>. O método <code>push_str</code> leva um
-fatia de string porque não queremos necessariamente nos apropriar do
-parâmetro. Por exemplo, no código da Listagem 8.16, queremos poder usar
-<code>s2</code> após anexar seu conteúdo a <code>s1</code>.</p>
+<p>Depois dessas duas linhas, <code>s</code> conterá <code>foobar</code>. O método <code>push_str</code> recebe um
+string slice porque não queremos necessariamente tomar ownership do parâmetro.
+Por exemplo, no código da Listagem 8-16, queremos continuar podendo usar <code>s2</code>
+mesmo depois de anexar seu conteúdo a <code>s1</code>.</p>
 <figure class="listing" id="listing-8-16">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s1 = String::from("foo");
@@ -301,67 +302,67 @@ parâmetro. Por exemplo, no código da Listagem 8.16, queremos poder usar
     s1.push_str(s2);
     println!("s2 is {s2}");
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-16">Listing 8-16</a>: Using a string slice after appending its contents to a <code>String</code></figcaption>
+<figcaption><a href="#listing-8-16">Listing 8-16</a>: Usando um string slice depois de anexar seu conteúdo a uma <code>String</code></figcaption>
 </figure>
-<p>Se o método <code>push_str</code> se apropriasse de <code>s2</code>, não poderíamos imprimir
-seu valor na última linha. No entanto, este código funciona como esperávamos!</p>
-<p>O método <code>push</code> pega um único caractere como parâmetro e o adiciona ao
-<code>String</code>. A Listagem 8-17 adiciona a letra <em>l</em> a <code>String</code> usando o <code>push</code>
-método.</p>
+<p>Se o método <code>push_str</code> tomasse ownership de <code>s2</code>, não poderíamos imprimir seu
+valor na última linha. No entanto, esse código funciona exatamente como
+esperávamos!</p>
+<p>O método <code>push</code> recebe um único caractere como parâmetro e o adiciona à
+<code>String</code>. A Listagem 8-17 adiciona a letra <em>l</em> a uma <code>String</code> usando o método
+<code>push</code>.</p>
 <figure class="listing" id="listing-8-17">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let mut s = String::from("lo");
     s.push('l');
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-17">Listing 8-17</a>: Adding one character to a <code>String</code> value using <code>push</code></figcaption>
+<figcaption><a href="#listing-8-17">Listing 8-17</a>: Adicionando um único caractere a uma <code>String</code> com <code>push</code></figcaption>
 </figure>
 <p>Como resultado, <code>s</code> conterá <code>lol</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="concatenation-with-the--operator-or-the-format-macro"></a></p>
 <h4 id="concatenando-com--ou-format"><a class="header" href="#concatenando-com--ou-format">Concatenando com <code>+</code> ou <code>format!</code></a></h4>
-<p>Freqüentemente, você desejará combinar duas strings existentes. Uma maneira de fazer isso é usar
-o operador <code>+</code>, conforme mostrado na Listagem 8-18.</p>
+<p>Frequentemente você vai querer combinar duas strings existentes. Uma forma de
+fazer isso é usar o operador <code>+</code>, como mostra a Listagem 8-18.</p>
 <figure class="listing" id="listing-8-18">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("Hello, ");
     let s2 = String::from("world!");
     let s3 = s1 + &amp;s2; // note s1 has been moved here and can no longer be used
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-18">Listing 8-18</a>: Using the <code>+</code> operator to combine two <code>String</code> values into a new <code>String</code> value</figcaption>
+<figcaption><a href="#listing-8-18">Listing 8-18</a>: Usando o operador <code>+</code> para combinar dois valores <code>String</code> em um novo valor <code>String</code></figcaption>
 </figure>
-<p>A string <code>s3</code> conterá <code>Hello, world!</code>. A razão pela qual <code>s1</code> não é mais
-válido após a adição, e a razão pela qual usamos uma referência para <code>s2</code>, tem a ver
-com a assinatura do método que é chamado quando usamos o operador <code>+</code>.
-O operador <code>+</code> usa o método <code>add</code>, cuja assinatura se parece com
-esse:</p>
+<p>A string <code>s3</code> conterá <code>Hello, world!</code>. O motivo pelo qual <code>s1</code> deixa de ser
+válida após a adição, e o motivo pelo qual usamos uma referência para <code>s2</code>, têm
+a ver com a assinatura do método chamado quando usamos o operador <code>+</code>. O
+operador <code>+</code> usa o método <code>add</code>, cuja assinatura se parece com isto:</p>
 <pre><code class="language-rust ignore">fn add(self, s: &amp;str) -&gt; String {</code></pre>
-<p>Na biblioteca padrão, você verá <code>add</code> definido usando genéricos e associados
-tipos. Aqui, substituímos por tipos concretos, que é o que acontece quando
-chame esse método com valores <code>String</code>. Discutiremos genéricos no Capítulo 10.
-Esta assinatura nos dá as pistas que precisamos para entender o complicado
-bits do operador <code>+</code>.</p>
-<p>Primeiro, <code>s2</code> tem <code>&amp;</code>, o que significa que estamos adicionando uma referência do segundo
-string para a primeira string. Isso ocorre por causa do parâmetro <code>s</code> no <code>add</code>
-função: Só podemos adicionar uma fatia de string a <code>String</code>; não podemos adicionar dois
-<code>String</code> valores juntos. Mas espere – o tipo de <code>&amp;s2</code> é <code>&amp;String</code>, não <code>&amp;str</code>,
-conforme especificado no segundo parâmetro para <code>add</code>. Então, por que a Listagem 8-18
-compilar?</p>
-<p>A razão pela qual podemos usar <code>&amp;s2</code> na chamada para <code>add</code> é que o compilador
-pode forçar o argumento <code>&amp;String</code> em <code>&amp;str</code>. Quando chamamos o método <code>add</code>,
-Rust usa uma coerção deref, que aqui transforma <code>&amp;s2</code> em <code>&amp;s2[..]</code>. Bem
-discuta a coerção deref com mais profundidade no Capítulo 15. Porque <code>add</code> não leva
-propriedade do parâmetro <code>s</code>, <code>s2</code> ainda será um <code>String</code> válido depois disso
-operação.</p>
-<p>Em segundo lugar, podemos ver na assinatura que <code>add</code> assume a propriedade de <code>self</code>
-porque <code>self</code> <em>não</em> tem <code>&amp;</code>. Isso significa que <code>s1</code> na Listagem 8-18 será
-movido para a chamada <code>add</code> e não será mais válido depois disso. Então, embora
-<code>let s3 = s1 + &amp;s2;</code> parece que copiará as duas strings e criará uma nova,
-esta declaração na verdade é propriedade de <code>s1</code>, anexa uma cópia do conteúdo
-de <code>s2</code> e, em seguida, retorna a propriedade do resultado. Em outras palavras, parece
-como se estivesse fazendo muitas cópias, mas não está; a implementação é mais
+<p>Na biblioteca padrão, você verá <code>add</code> definido usando genéricos e tipos
+associados. Aqui, substituímos isso por tipos concretos, que é o que acontece
+quando chamamos esse método com valores <code>String</code>. Veremos genéricos no Capítulo
+10. Essa assinatura já nos dá as pistas necessárias para entender as partes
+mais complicadas do operador <code>+</code>.</p>
+<p>Primeiro, <code>s2</code> tem um <code>&amp;</code>, o que significa que estamos adicionando uma
+referência da segunda string à primeira string. Isso acontece por causa do
+parâmetro <code>s</code> na função <code>add</code>: só podemos adicionar um string slice a uma
+<code>String</code>; não podemos somar diretamente dois valores <code>String</code>. Mas espere: o
+tipo de <code>&amp;s2</code> é <code>&amp;String</code>, não <code>&amp;str</code>, como especificado no segundo parâmetro
+de <code>add</code>. Então por que a Listagem 8-18 compila?</p>
+<p>A razão pela qual conseguimos usar <code>&amp;s2</code> na chamada a <code>add</code> é que o compilador
+pode coagir o argumento <code>&amp;String</code> para <code>&amp;str</code>. Quando chamamos o método <code>add</code>,
+Rust usa uma coerção de deref, que aqui transforma <code>&amp;s2</code> em <code>&amp;s2[..]</code>.
+Falaremos sobre coerção de deref com mais profundidade no Capítulo 15. Como
+<code>add</code> não toma ownership do parâmetro <code>s</code>, <code>s2</code> continuará sendo uma <code>String</code>
+válida depois dessa operação.</p>
+<p>Em segundo lugar, podemos ver na assinatura que <code>add</code> toma ownership de <code>self</code>
+porque <code>self</code> <em>não</em> tem <code>&amp;</code>. Isso significa que <code>s1</code>, na Listagem 8-18, será
+movida para a chamada de <code>add</code> e não será mais válida depois disso. Então,
+embora <code>let s3 = s1 + &amp;s2;</code> pareça que vai copiar as duas strings e criar uma
+nova, essa instrução, na verdade, toma ownership de <code>s1</code>, anexa uma cópia do
+conteúdo de <code>s2</code> e então devolve ownership do resultado. Em outras palavras,
+parece que está fazendo muitas cópias, mas não está; a implementação é mais
 eficiente do que copiar.</p>
-<p>Se precisarmos concatenar múltiplas strings, o comportamento do operador <code>+</code>
-fica pesado:</p>
+<p>Se precisarmos concatenar várias strings, o comportamento do operador <code>+</code> fica
+difícil de lidar:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("tic");
     let s2 = String::from("tac");
@@ -369,9 +370,9 @@ fica pesado:</p>
 
     let s = s1 + "-" + &amp;s2 + "-" + &amp;s3;
 <span class="boring">}</span></code></pre>
-<p>Neste ponto, <code>s</code> será <code>tic-tac-toe</code>. Com todos os <code>+</code> e <code>"</code>
-personagens, é difícil ver o que está acontecendo. Para combinar strings em
-maneiras mais complicadas, podemos usar a macro <code>format!</code>:</p>
+<p>Nesse ponto, <code>s</code> será <code>tic-tac-toe</code>. Com todos os caracteres <code>+</code> e <code>"</code>, fica
+difícil enxergar o que está acontecendo. Para combinar strings de formas mais
+complicadas, podemos usar a macro <code>format!</code>:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span>    let s1 = String::from("tic");
     let s2 = String::from("tac");
@@ -379,24 +380,24 @@ maneiras mais complicadas, podemos usar a macro <code>format!</code>:</p>
 
     let s = format!("{s1}-{s2}-{s3}");
 <span class="boring">}</span></code></pre>
-<p>Este código também define <code>s</code> como <code>tic-tac-toe</code>. A macro <code>format!</code> funciona como
-<code>println!</code>, mas em vez de imprimir a saída na tela, ele retorna um
-<code>String</code> com o conteúdo. A versão do código usando <code>format!</code> é muito
-mais fácil de ler, e o código gerado pela macro <code>format!</code> usa referências
-para que esta chamada não se aproprie de nenhum de seus parâmetros.</p>
-<h3 id="indexação-em-strings"><a class="header" href="#indexação-em-strings">Indexação em Strings</a></h3>
-<p>Em muitas outras linguagens de programação, acessar caracteres individuais em um
-string referenciando-os por índice é uma operação válida e comum. No entanto,
-se você tentar acessar partes de <code>String</code> usando sintaxe de indexação em Rust, você
-obter um erro. Considere o código inválido na Listagem 8-19.</p>
+<p>Esse código também define <code>s</code> como <code>tic-tac-toe</code>. A macro <code>format!</code> funciona
+como <code>println!</code>, mas, em vez de imprimir a saída na tela, ela retorna uma
+<code>String</code> com o conteúdo. A versão do código que usa <code>format!</code> é bem mais fácil
+de ler, e o código gerado por <code>format!</code> usa referências, de modo que essa
+chamada não toma ownership de nenhum de seus parâmetros.</p>
+<h3 id="indexando-strings"><a class="header" href="#indexando-strings">Indexando strings</a></h3>
+<p>Em muitas outras linguagens de programação, acessar caracteres individuais de
+uma string por índice é uma operação válida e comum. No entanto, se você tentar
+acessar partes de uma <code>String</code> com sintaxe de indexação em Rust, receberá um
+erro. Considere o código inválido da Listagem 8-19.</p>
 <figure class="listing" id="listing-8-19">
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
 </span>    let s1 = String::from("hi");
     let h = s1[0];
 <span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-8-19">Listing 8-19</a>: Attempting to use indexing syntax with a <code>String</code></figcaption>
+<figcaption><a href="#listing-8-19">Listing 8-19</a>: Tentando usar sintaxe de indexação com uma <code>String</code></figcaption>
 </figure>
-<p>Este código resultará no seguinte erro:</p>
+<p>Esse código produzirá o seguinte erro:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
 error[E0277]: the type `str` cannot be indexed by `{integer}`
@@ -416,11 +417,13 @@ error[E0277]: the type `str` cannot be indexed by `{integer}`
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `collections` (bin "collections") due to 1 previous error
 </code></pre>
-<p>O erro conta a história: Strings Rust não suportam indexação. Mas por que não? Para
-Para responder a essa pergunta, precisamos discutir como Rust armazena strings na memória.</p>
-<h4 id="representação-interna"><a class="header" href="#representação-interna">Representação Interna</a></h4>
-<p>Um <code>String</code> é um wrapper sobre um <code>Vec&lt;u8&gt;</code>. Vejamos alguns dos nossos
-strings de exemplo UTF-8 codificadas da Listagem 8-14. Primeiro, este:</p>
+<p>A mensagem de erro conta a história: strings em Rust não dão suporte a
+indexação. Mas por que não? Para responder a essa pergunta, precisamos
+discutir como Rust armazena strings na memória.</p>
+<h4 id="representação-interna"><a class="header" href="#representação-interna">Representação interna</a></h4>
+<p>Uma <code>String</code> é um invólucro sobre um <code>Vec&lt;u8&gt;</code>. Vamos olhar novamente para
+algumas das strings de exemplo codificadas corretamente em UTF-8 da Listagem
+8-14. Primeiro, esta aqui:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span><span class="boring">    let hello = String::from("السلام عليكم");
 </span><span class="boring">    let hello = String::from("Dobrý den");
@@ -434,10 +437,10 @@ strings de exemplo UTF-8 codificadas da Listagem 8-14. Primeiro, este:</p>
 </span><span class="boring">    let hello = String::from("Здравствуйте");
 </span>    let hello = String::from("Hola");
 <span class="boring">}</span></code></pre>
-<p>Neste caso, <code>len</code> será <code>4</code>, o que significa o vetor que armazena a string
-<code>"Hola"</code> tem 4 bytes de comprimento. Cada uma dessas letras ocupa 1 byte quando codificada em
-UTF-8. A linha a seguir, entretanto, pode surpreendê-lo (observe que esta string
-começa com a letra cirílica maiúscula <em>Ze</em>, não com o número 3):</p>
+<p>Nesse caso, <code>len</code> será <code>4</code>, o que significa que o vetor que armazena a string
+<code>"Hola"</code> tem 4 bytes de comprimento. Cada uma dessas letras ocupa 1 byte quando
+codificada em UTF-8. Já a linha a seguir pode surpreender você; observe que
+essa string começa com a letra cirílica maiúscula <em>Ze</em>, e não com o número 3:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn main() {
 </span><span class="boring">    let hello = String::from("السلام عليكم");
 </span><span class="boring">    let hello = String::from("Dobrý den");
@@ -451,74 +454,78 @@ começa com a letra cirílica maiúscula <em>Ze</em>, não com o número 3):</p>
 </span>    let hello = String::from("Здравствуйте");
 <span class="boring">    let hello = String::from("Hola");
 </span><span class="boring">}</span></code></pre>
-<p>Se lhe perguntassem qual é o comprimento da corda, você poderia dizer 12. Na verdade, Rust’s
-a resposta é 24: Esse é o número de bytes necessários para codificar “Здравствуйте” em
-UTF-8, porque cada valor escalar Unicode nessa string ocupa 2 bytes de
-armazenar. Portanto, um índice nos bytes da string nem sempre estará correlacionado
-para um valor escalar Unicode válido. Para demonstrar, considere este Rust inválido
-código:</p>
+<p>Se alguém perguntasse o comprimento dessa string, você talvez dissesse 12. Na
+verdade, a resposta de Rust é 24: esse é o número de bytes necessários para
+codificar “Здравствуйте” em UTF-8, porque cada valor escalar Unicode nessa
+string ocupa 2 bytes de armazenamento. Portanto, um índice nos bytes da string
+nem sempre corresponderá a um valor escalar Unicode válido. Para demonstrar,
+considere este código Rust inválido:</p>
 <pre><code class="language-rust ignore does_not_compile">let hello = "Здравствуйте";
 let answer = &amp;hello[0];</code></pre>
-<p>Você já sabe que <code>answer</code> não será <code>З</code>, a primeira letra. Quando codificado
-em UTF-8, o primeiro byte de <code>З</code> é <code>208</code> e o segundo é <code>151</code>, então seria
-parece que <code>answer</code> deveria de fato ser <code>208</code>, mas <code>208</code> não é um caractere válido
-por conta própria. Retornar <code>208</code> provavelmente não é o que um usuário desejaria se perguntasse
-para a primeira letra desta string; no entanto, esses são os únicos dados que Rust
-tem índice de bytes 0. Os usuários geralmente não querem que o valor do byte seja retornado, mesmo
-se a string contiver apenas letras latinas: Se <code>&amp;"hi"[0]</code> fosse um código válido que
-retornasse o valor do byte, retornaria <code>104</code>, não <code>h</code>.</p>
-<p>A resposta, então, é evitar retornar um valor inesperado e causar
-bugs que podem não ser descobertos imediatamente, Rust não compila este código
-e evita mal-entendidos no início do processo de desenvolvimento.</p>
+<p>Você já sabe que <code>answer</code> não será <code>З</code>, a primeira letra. Quando codificado em
+UTF-8, o primeiro byte de <code>З</code> é <code>208</code> e o segundo é <code>151</code>, então poderia
+parecer que <code>answer</code> deveria ser <code>208</code>, mas <code>208</code> não é um caractere válido por
+si só. Retornar <code>208</code> provavelmente não é o que uma pessoa desejaria se
+pedisse a primeira letra dessa string; no entanto, esse é o único dado que Rust
+tem no índice de byte 0. Em geral, quem usa o programa não quer receber o
+valor do byte, mesmo quando a string contém apenas letras latinas: se
+<code>&amp;"hi"[0]</code> fosse um código válido que retornasse o valor do byte, ele
+retornaria <code>104</code>, e não <code>h</code>.</p>
+<p>A resposta, então, é que, para evitar retornar um valor inesperado e causar
+bugs que talvez não fossem descobertos imediatamente, Rust simplesmente não
+compila esse código, evitando mal-entendidos logo no início do processo de
+desenvolvimento.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="bytes-and-scalar-values-and-grapheme-clusters-oh-my"></a></p>
 <h4 id="bytes-valores-escalares-e-clusters-de-grafemas"><a class="header" href="#bytes-valores-escalares-e-clusters-de-grafemas">Bytes, valores escalares e clusters de grafemas</a></h4>
-<p>Outro ponto sobre o UTF-8 é que na verdade existem três maneiras relevantes de
-observe as strings da perspectiva de Rust: como bytes, valores escalares e grafema
-clusters (a coisa mais próxima do que chamaríamos de <em>letras</em>).</p>
-<p>Se olharmos para a palavra Hindi “नमस्ते” escrita na escrita Devanagari, é
-armazenado como um vetor de valores <code>u8</code> semelhante a este:</p>
+<p>Outro ponto sobre UTF-8 é que existem, na verdade, três formas relevantes de
+olhar para strings do ponto de vista de Rust: como bytes, como valores
+escalares e como clusters de grafemas, que são a coisa mais próxima do que
+chamaríamos de <em>letras</em>.</p>
+<p>Se olharmos para a palavra hindi “नमस्ते”, escrita na escrita devanágari, ela é
+armazenada como um vetor de valores <code>u8</code> que se parece com isto:</p>
 <pre><code class="language-text">[224, 164, 168, 224, 164, 174, 224, 164, 184, 224, 165, 141, 224, 164, 164,
 224, 165, 135]
 </code></pre>
-<p>São 18 bytes e é como os computadores armazenam esses dados. Se olharmos
-eles como valores escalares Unicode, que são o tipo <code>char</code> de Rust, aqueles
-bytes ficam assim:</p>
+<p>Isso representa 18 bytes e é a forma como os computadores armazenam esses
+dados em última instância. Se olharmos para esses dados como valores escalares
+Unicode, que é o que o tipo <code>char</code> de Rust representa, esses bytes ficam assim:</p>
 <pre><code class="language-text">['न', 'म', 'स', '्', 'त', 'े']
 </code></pre>
-<p>Existem seis valores <code>char</code> aqui, mas o quarto e o sexto não são letras:
-Eles são diacríticos que não fazem sentido por si só. Finalmente, se olharmos
-agrupando-os como aglomerados de grafemas, obteríamos o que uma pessoa chamaria de quatro letras
-que compõem a palavra Hindi:</p>
+<p>Temos aqui seis valores <code>char</code>, mas o quarto e o sexto não são letras: são
+marcas diacríticas que não fazem sentido sozinhas. Por fim, se olharmos para
+isso como clusters de grafemas, obteremos o que uma pessoa consideraria as
+quatro letras que formam a palavra hindi:</p>
 <pre><code class="language-text">["न", "म", "स्", "ते"]
 </code></pre>
-<p>Rust fornece diferentes maneiras de interpretar os dados brutos de string que os computadores
-armazenar para que cada programa possa escolher a interpretação que necessita, não importa
-em que linguagem humana os dados estão.</p>
-<p>Uma última razão pela qual Rust não nos permite indexar em <code>String</code> para obter um
-caráter é que se espera que as operações de indexação sempre levem tempo constante
-(O(1)). Mas não é possível garantir esse desempenho com um <code>String</code>,
-porque Rust teria que percorrer o conteúdo do início ao fim
-índice para determinar quantos caracteres válidos havia.</p>
-<h3 id="cortando-cordas"><a class="header" href="#cortando-cordas">Cortando cordas</a></h3>
-<p>A indexação em uma string costuma ser uma má ideia porque não está claro qual é o objetivo.
-O tipo de retorno da operação de indexação de string deve ser: um valor de byte, um
-caractere, um cluster de grafema ou uma fatia de string. Se você realmente precisa usar
-índices para criar fatias de string, portanto, Rust pede que você seja mais específico.</p>
+<p>Rust oferece formas diferentes de interpretar os dados brutos de string que os
+computadores armazenam, para que cada programa possa escolher a interpretação
+de que precisa, independentemente da linguagem humana em que os dados estejam.</p>
+<p>Um último motivo pelo qual Rust não nos permite indexar uma <code>String</code> para obter
+um caractere é que se espera que operações de indexação sempre levem tempo
+constante, O(1). Mas não é possível garantir esse desempenho com uma <code>String</code>,
+porque Rust teria de percorrer o conteúdo desde o começo até o índice para
+determinar quantos caracteres válidos existem ali.</p>
+<h3 id="fatiando-strings"><a class="header" href="#fatiando-strings">Fatiando strings</a></h3>
+<p>Indexar uma string costuma ser uma má ideia porque não está claro qual deveria
+ser o tipo de retorno da operação de indexação: um valor de byte, um
+caractere, um cluster de grafemas ou um string slice. Por isso, se você
+realmente precisa usar índices para criar string slices, Rust exige que você
+seja mais específico.</p>
 <p>Em vez de indexar usando <code>[]</code> com um único número, você pode usar <code>[]</code> com um
-range para criar uma fatia de string contendo bytes específicos:</p>
+intervalo para criar um string slice contendo bytes específicos:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let hello = "Здравствуйте";
 
 let s = &amp;hello[0..4];
 <span class="boring">}</span></code></pre>
-<p>Aqui, <code>s</code> será um <code>&amp;str</code> que contém os primeiros 4 bytes da string.
-Anteriormente, mencionamos que cada um desses caracteres tinha 2 bytes, o que significa
+<p>Aqui, <code>s</code> será um <code>&amp;str</code> que contém os primeiros 4 bytes da string. Antes,
+mencionamos que cada um desses caracteres tinha 2 bytes, o que significa que
 <code>s</code> será <code>Зд</code>.</p>
-<p>Se tentássemos cortar apenas parte dos bytes de um caractere com algo como
-<code>&amp;hello[0..1]</code>, Rust entraria em pânico em tempo de execução da mesma forma que se um inválido
-index foram acessados ​​em um vetor:</p>
+<p>Se tentássemos fatiar apenas parte dos bytes de um caractere com algo como
+<code>&amp;hello[0..1]</code>, Rust entraria em pânico em tempo de execução, da mesma forma
+que faz quando acessamos um índice inválido em um vetor:</p>
 <pre><code class="language-console">$ cargo run
    Compiling collections v0.1.0 (file:///projects/collections)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s
@@ -528,62 +535,63 @@ thread 'main' panicked at src/main.rs:4:19:
 byte index 1 is not a char boundary; it is inside 'З' (bytes 0..2) of `Здравствуйте`
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 </code></pre>
-<p>Você deve ter cuidado ao criar fatias de string com intervalos, porque fazer
-então pode travar seu programa.</p>
+<p>Você deve tomar cuidado ao criar string slices com intervalos, porque isso pode
+fazer seu programa travar.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="methods-for-iterating-over-strings"></a></p>
-<h3 id="iterando-sobre-strings"><a class="header" href="#iterando-sobre-strings">Iterando sobre Strings</a></h3>
-<p>A melhor maneira de operar com pedaços de cordas é ser explícito sobre se
-você quer caracteres ou bytes. Para valores escalares Unicode individuais, use o
-<code>chars</code> método. Chamar <code>chars</code> em “Зд” separa e retorna dois valores de
-digite <code>char</code> e você pode iterar sobre o resultado para acessar cada elemento:</p>
+<h3 id="iterando-sobre-strings"><a class="header" href="#iterando-sobre-strings">Iterando sobre strings</a></h3>
+<p>A melhor maneira de operar sobre partes de strings é ser explícito sobre se
+você quer caracteres ou bytes. Para valores escalares Unicode individuais, use
+o método <code>chars</code>. Chamar <code>chars</code> sobre “Зд” separa e retorna dois valores do
+tipo <code>char</code>, e você pode iterar sobre o resultado para acessar cada elemento:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for c in "Зд".chars() {
     println!("{c}");
 }
 <span class="boring">}</span></code></pre>
-<p>Este código imprimirá o seguinte:</p>
+<p>Esse código imprimirá o seguinte:</p>
 <pre><code class="language-text">З
 д
 </code></pre>
-<p>Alternativamente, o método <code>bytes</code> retorna cada byte bruto, que pode ser
-apropriado para o seu domínio:</p>
+<p>Como alternativa, o método <code>bytes</code> retorna cada byte bruto, o que pode ser o
+mais apropriado para o seu domínio:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>for b in "Зд".bytes() {
     println!("{b}");
 }
 <span class="boring">}</span></code></pre>
-<p>Este código imprimirá os 4 bytes que compõem esta string:</p>
+<p>Esse código imprimirá os 4 bytes que compõem essa string:</p>
 <pre><code class="language-text">208
 151
 208
 180
 </code></pre>
-<p>Mas lembre-se de que os valores escalares Unicode válidos podem ser compostos de mais
-de 1 byte.</p>
-<p>Obter clusters de grafemas a partir de strings, como acontece com o script Devanagari, é
-complexo, portanto esta funcionalidade não é fornecida pela biblioteca padrão. Caixas
-estão disponíveis em <a href="https://crates.io/">crates.io</a><!-- ignore --> se este for o
-funcionalidade que você precisa.</p>
+<p>Mas lembre-se sempre de que valores escalares Unicode válidos podem ser
+compostos de mais de 1 byte.</p>
+<p>Obter clusters de grafemas a partir de strings, como acontece com a escrita
+devanágari, é algo complexo, então essa funcionalidade não é fornecida pela
+biblioteca padrão. Há crates disponíveis em
+<a href="https://crates.io/">crates.io</a><!-- ignore --> caso isso seja a funcionalidade
+de que você precisa.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="strings-are-not-so-simple"></a></p>
 <h3 id="lidando-com-as-complexidades-das-strings"><a class="header" href="#lidando-com-as-complexidades-das-strings">Lidando com as complexidades das strings</a></h3>
-<p>Para resumir, as strings são complicadas. Diferentes linguagens de programação fazem
-diferentes escolhas sobre como apresentar essa complexidade ao programador. Ferrugem
-optou por tornar o tratamento correto dos dados <code>String</code> o comportamento padrão
-para todos os programas Rust, o que significa que os programadores precisam pensar mais
-lidar com dados UTF-8 antecipadamente. Esta compensação expõe mais a complexidade do
-strings do que é aparente em outras linguagens de programação, mas impede que você
-de ter que lidar com erros envolvendo caracteres não-ASCII posteriormente em seu
-ciclo de vida do desenvolvimento.</p>
-<p>A boa notícia é que a biblioteca padrão oferece muitas funcionalidades construídas
-fora dos tipos <code>String</code> e <code>&amp;str</code> para ajudar a lidar com essas situações complexas
-corretamente. Certifique-se de verificar a documentação para métodos úteis como
-<code>contains</code> para pesquisar em uma string e <code>replace</code> para substituir partes de uma
-string com outra string.</p>
-<p>Vamos mudar para algo um pouco menos complexo: mapas hash!</p>
+<p>Resumindo, strings são complicadas. Diferentes linguagens de programação fazem
+escolhas diferentes sobre como apresentar essa complexidade para quem programa.
+Rust escolheu tornar o tratamento correto de dados <code>String</code> o comportamento
+padrão de todos os programas Rust, o que significa que programadores precisam
+pensar mais cedo sobre como lidar com dados UTF-8. Essa troca expõe mais da
+complexidade das strings do que fica aparente em outras linguagens, mas evita
+que você tenha de lidar, mais tarde no ciclo de desenvolvimento, com erros
+envolvendo caracteres não ASCII.</p>
+<p>A boa notícia é que a biblioteca padrão oferece bastante funcionalidade
+construída sobre os tipos <code>String</code> e <code>&amp;str</code> para ajudar a tratar corretamente
+essas situações complexas. Não deixe de consultar a documentação de métodos
+úteis como <code>contains</code>, para procurar em uma string, e <code>replace</code>, para
+substituir partes de uma string por outra.</p>
+<p>Vamos mudar para algo um pouco menos complexo: hash maps!</p>
 
                     </main>
 
