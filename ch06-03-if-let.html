@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fb4bc72d.js";
+            window.path_to_searchindex_js = "searchindex-dcb56b39.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -184,7 +184,7 @@
                         <h2 id="fluxo-de-controle-conciso-com-if-let-e-letelse"><a class="header" href="#fluxo-de-controle-conciso-com-if-let-e-letelse">Fluxo de Controle Conciso com <code>if let</code> e <code>let...else</code></a></h2>
 <p>A sintaxe <code>if let</code> permite combinar <code>if</code> e <code>let</code> em uma forma menos verbosa de
 tratar valores que correspondem a um padrão, ignorando os demais. Considere o
-programa da Listagem 6-6, que faz <code>match</code> sobre um valor <code>Option&lt;u8&gt;</code> na
+programa da Listagem 6-6, que usa <code>match</code> com um valor <code>Option&lt;u8&gt;</code> na
 variável <code>config_max</code>, mas só quer executar código se o valor for a variante
 <code>Some</code>.</p>
 <figure class="listing" id="listing-6-6">
@@ -325,9 +325,8 @@ de quão antigo era o estado no quarter, poderíamos introduzir um método em
 </span><span class="boring">        println!("{desc}");
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p>Então poderíamos usar <code>if let</code> para fazer <code>match</code> sobre o tipo da moeda,
-introduzindo uma variável <code>state</code> dentro do corpo da condição, como na
-Listagem 6-7.</p>
+<p>Então poderíamos usar <code>if let</code> para verificar o tipo da moeda, introduzindo
+uma variável <code>state</code> dentro do corpo da condição, como na Listagem 6-7.</p>
 <figure class="listing" id="listing-6-7">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)] // so we can inspect the state in a minute
 </span><span class="boring">enum UsState {
@@ -375,8 +374,8 @@ Listagem 6-7.</p>
 <p>Isso resolve o problema, mas empurra o trabalho para dentro do corpo da
 instrução <code>if let</code>; se o trabalho a ser feito for mais complicado, pode ficar
 difícil acompanhar exatamente como os ramos de nível superior se relacionam.
-Também poderíamos aproveitar o fato de que expressões produzem um valor para ou
-produzir <code>state</code> a partir do <code>if let</code> ou retornar mais cedo, como na Listagem
+Também poderíamos aproveitar o fato de que expressões produzem valores para
+obter <code>state</code> a partir do <code>if let</code> ou retornar mais cedo, como na Listagem
 6-8. Você também poderia fazer algo parecido com <code>match</code>.</p>
 <figure class="listing" id="listing-6-8">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)] // so we can inspect the state in a minute

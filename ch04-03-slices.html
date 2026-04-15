@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fb4bc72d.js";
+            window.path_to_searchindex_js = "searchindex-dcb56b39.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -196,8 +196,8 @@ apenas ASCII; uma discussão mais completa sobre tratamento de UTF-8 aparece
 na seção <a href="ch08-02-strings.html#storing-utf-8-encoded-text-with-strings">“Armazenando Texto Codificado em UTF-8 com
 Strings”</a><!-- ignore --> do Capítulo 8.</p>
 </blockquote>
-<p>Vamos passar por como escreveríamos a assinatura dessa função sem usar slices,
-para entender o problema que slices resolvem:</p>
+<p>Vamos ver como escreveríamos a assinatura dessa função sem usar slices, para
+entender o problema que eles resolvem:</p>
 <pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; ?</code></pre>
 <p>A função <code>first_word</code> recebe um parâmetro do tipo <code>&amp;String</code>. Não precisamos de
 ownership, então isso está ótimo. Em Rust idiomático, funções não assumem
@@ -224,8 +224,8 @@ tentar isso, como mostrado na Listagem 4-7.</p>
 <figcaption><a href="#listing-4-7">Listing 4-7</a>: A função <code>first_word</code> que retorna um índice de byte dentro do parâmetro <code>String</code></figcaption>
 </figure>
 <p>Como precisamos percorrer a <code>String</code> elemento por elemento e verificar se um
-valor é um espaço, vamos converter nossa <code>String</code> em um array de bytes usando o
-método <code>as_bytes</code>.</p>
+byte corresponde a um espaço, vamos converter nossa <code>String</code> em um array de
+bytes usando o método <code>as_bytes</code>.</p>
 <pre><code class="language-rust ignore"><span class="boring">fn first_word(s: &amp;String) -&gt; usize {
 </span>    let bytes = s.as_bytes();
 <span class="boring">
@@ -317,7 +317,7 @@ função <code>first_word</code> da Listagem 4-7.</p>
 <p>Esse programa compila sem erro algum e também continuaria compilando se
 usássemos <code>word</code> depois da chamada a <code>s.clear()</code>. Como <code>word</code> não está ligado
 ao estado de <code>s</code>, ele ainda contém o valor <code>5</code>. Poderíamos usar esse valor <code>5</code>
-junto com a variável <code>s</code> para tentar extrair a primeira palavra, mas isso
+junto com a variável <code>s</code> para tentar extrair dela a primeira palavra, mas isso
 seria um bug, porque o conteúdo de <code>s</code> mudou desde que salvamos <code>5</code> em <code>word</code>.</p>
 <p>Ter de se preocupar com o índice em <code>word</code> ficando fora de sincronia com os
 dados em <code>s</code> é tedioso e propenso a erros! Gerenciar esses índices fica ainda
@@ -352,7 +352,7 @@ para o byte no índice 6 de <code>s</code> com um valor de comprimento igual a <
 to the byte at index 0 in a table of the string data &quot;hello world&quot; on
 the heap. The third table represents the stack data of the slice world, which
 has a length value of 5 and points to byte 6 of the heap data table." src="img/trpl04-07.svg" class="center" style="width: 50%;" /></p>
-<p><span class="caption">Figura 4-7: Um string slice referindo-se a parte de uma
+<p><span class="caption">Figura 4-7: Um string slice referindo-se a uma parte de
 <code>String</code></span></p>
 <p>Com a sintaxe de intervalo <code>..</code> do Rust, se você quiser começar do índice 0,
 pode omitir o valor antes dos dois pontos. Em outras palavras, estes dois
@@ -387,12 +387,13 @@ let slice = &amp;s[0..len];
 let slice = &amp;s[..];
 <span class="boring">}</span></code></pre>
 <blockquote>
-<p>Observação: os índices de intervalo de string slices precisam ocorrer em
+<p>Observação: os índices de intervalo de string slices precisam estar em
 limites válidos de caracteres UTF-8. Se você tentar criar um string slice no
 meio de um caractere multibyte, seu programa será encerrado com erro.</p>
 </blockquote>
 <p>Com todas essas informações em mente, vamos reescrever <code>first_word</code> para
-retornar um slice. O tipo que significa “string slice” é escrito como <code>&amp;str</code>:</p>
+retornar um slice. O tipo que representa um string slice é escrito como
+<code>&amp;str</code>:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn first_word(s: &amp;String) -&gt; &amp;str {
@@ -411,14 +412,15 @@ retornar um slice. O tipo que significa “string slice” é escrito como <code
 </figure>
 <p>Obtemos o índice do fim da palavra da mesma forma que fizemos na Listagem 4-7,
 procurando a primeira ocorrência de um espaço. Quando encontramos um espaço,
-retornamos um string slice usando o começo da string e o índice do espaço como
+retornamos um string slice usando o início da string e o índice do espaço como
 índices inicial e final.</p>
 <p>Agora, quando chamamos <code>first_word</code>, recebemos de volta um único valor ligado
 aos dados subjacentes. O valor é composto por uma referência ao ponto inicial
 do slice e pelo número de elementos do slice.</p>
 <p>Retornar um slice também funcionaria para uma função <code>second_word</code>:</p>
 <pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {</code></pre>
-<p>Agora temos uma API simples e muito mais difícil de estragar, porque o
+<p>Agora temos uma API simples e muito mais difícil de usar incorretamente,
+porque o
 compilador garante que as referências para dentro da <code>String</code> continuem
 válidas. Lembra do bug no programa da Listagem 4-8, quando obtivemos o índice
 do fim da primeira palavra, mas depois limpamos a string e, com isso, esse
@@ -541,7 +543,8 @@ Essa flexibilidade aproveita coerções de deref, um recurso que veremos na seç
 <a href="ch15-02-deref.html#using-deref-coercions-in-functions-and-methods">“Usando Coerções de Deref em Funções e Métodos”</a><!-- ignore
 --> do Capítulo 15.</p>
 <p>Definir uma função para receber um string slice em vez de uma referência para
-<code>String</code> torna nossa API mais geral e útil, sem perder nenhuma funcionalidade:</p>
+<code>String</code> torna nossa API mais geral e mais útil, sem perder nenhuma
+funcionalidade:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn first_word(s: &amp;str) -&gt; &amp;str {

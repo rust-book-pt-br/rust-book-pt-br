@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fb4bc72d.js";
+            window.path_to_searchindex_js = "searchindex-dcb56b39.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -182,7 +182,7 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="referências-e-empréstimos"><a class="header" href="#referências-e-empréstimos">Referências e Empréstimos</a></h2>
-<p>O problema com o código usando tupla da Listagem 4-5 é que precisamos retornar
+<p>O problema com o código com a tupla da Listagem 4-5 é que precisamos retornar
 a <code>String</code> para a função chamadora para que ainda possamos usá-la depois da
 chamada para <code>calculate_length</code>, porque a <code>String</code> foi movida para dentro de
 <code>calculate_length</code>. Em vez disso, podemos fornecer uma referência ao valor
@@ -207,12 +207,12 @@ fn calculate_length(s: &amp;String) -&gt; usize {
     s.len()
 }</code></pre>
 </figure>
-<p>Primeiro, repare que todo o código envolvendo tupla na declaração da variável e
-no valor de retorno da função desapareceu. Segundo, observe que passamos <code>&amp;s1</code>
-para <code>calculate_length</code> e que, na definição da função, recebemos <code>&amp;String</code> em
-vez de <code>String</code>. Esses e-comerciais representam referências, e elas permitem
-que você se refira a algum valor sem assumir seu ownership. A Figura 4-6
-ilustra esse conceito.</p>
+<p>Primeiro, repare que todo o código envolvendo a tupla na declaração da variável
+e no valor de retorno da função desapareceu. Segundo, observe que passamos
+<code>&amp;s1</code> para <code>calculate_length</code> e que, na definição da função, recebemos
+<code>&amp;String</code> em vez de <code>String</code>. Esses e comerciais (<code>&amp;</code>) representam
+referências, e elas permitem que você se refira a algum valor sem assumir seu
+ownership. A Figura 4-6 ilustra esse conceito.</p>
 <p><img alt="Three tables: the table for s contains only a pointer to the table
 for s1. The table for s1 contains the stack data for s1 and points to the
 string data on the heap." src="img/trpl04-06.svg" class="center" /></p>
@@ -259,8 +259,8 @@ explicativas:</p>
 parâmetro de função, mas o valor apontado pela referência não é desalocado
 quando <code>s</code> deixa de ser usado, porque <code>s</code> não tem ownership. Quando funções
 recebem referências como parâmetros em vez dos próprios valores, não
-precisamos devolver esses valores para devolver ownership, porque nunca o
-tivemos.</p>
+precisamos devolver esses valores para transferir o ownership de volta, porque
+nunca o tivemos.</p>
 <p>Chamamos o ato de criar uma referência de <em>borrowing</em> ou empréstimo. Como na
 vida real: se uma pessoa é dona de algo, você pode pegar emprestado dela.
 Quando terminar, precisa devolver. Você não é o dono.</p>
@@ -410,12 +410,12 @@ error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immuta
 For more information about this error, try `rustc --explain E0502`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
-<p>Ufa! Também <em>não</em> podemos ter uma referência mutável enquanto temos uma
-referência imutável ao mesmo valor.</p>
-<p>Usuários de uma referência imutável não esperam que o valor mude de repente
-por baixo deles! No entanto, múltiplas referências imutáveis são permitidas,
-porque ninguém que esteja apenas lendo os dados consegue afetar a leitura dos
-demais.</p>
+<p>Também <em>não</em> podemos ter uma referência mutável enquanto temos uma referência
+imutável ao mesmo valor.</p>
+<p>Quem está usando uma referência imutável não espera que o valor mude de
+repente enquanto a referência ainda está em uso. No entanto, múltiplas
+referências imutáveis são permitidas, porque ninguém que esteja apenas lendo
+os dados consegue afetar a leitura dos demais.</p>
 <p>Observe que o escopo de uma referência começa no ponto em que ela é
 introduzida e continua até a última vez em que essa referência é usada. Por
 exemplo, este código compila porque o último uso das referências imutáveis está

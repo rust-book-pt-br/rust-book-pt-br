@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fb4bc72d.js";
+            window.path_to_searchindex_js = "searchindex-dcb56b39.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-869888b5.js"></script>
@@ -3917,7 +3917,7 @@ referências.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="referências-e-borrowing"><a href="#referências-e-borrowing" class="header">Referências e Borrowing</a></h1>
 <h2 id="referências-e-empréstimos"><a class="header" href="#referências-e-empréstimos">Referências e Empréstimos</a></h2>
-<p>O problema com o código usando tupla da Listagem 4-5 é que precisamos retornar
+<p>O problema com o código com a tupla da Listagem 4-5 é que precisamos retornar
 a <code>String</code> para a função chamadora para que ainda possamos usá-la depois da
 chamada para <code>calculate_length</code>, porque a <code>String</code> foi movida para dentro de
 <code>calculate_length</code>. Em vez disso, podemos fornecer uma referência ao valor
@@ -3942,12 +3942,12 @@ fn calculate_length(s: &amp;String) -&gt; usize {
     s.len()
 }</code></pre>
 </figure>
-<p>Primeiro, repare que todo o código envolvendo tupla na declaração da variável e
-no valor de retorno da função desapareceu. Segundo, observe que passamos <code>&amp;s1</code>
-para <code>calculate_length</code> e que, na definição da função, recebemos <code>&amp;String</code> em
-vez de <code>String</code>. Esses e-comerciais representam referências, e elas permitem
-que você se refira a algum valor sem assumir seu ownership. A Figura 4-6
-ilustra esse conceito.</p>
+<p>Primeiro, repare que todo o código envolvendo a tupla na declaração da variável
+e no valor de retorno da função desapareceu. Segundo, observe que passamos
+<code>&amp;s1</code> para <code>calculate_length</code> e que, na definição da função, recebemos
+<code>&amp;String</code> em vez de <code>String</code>. Esses e comerciais (<code>&amp;</code>) representam
+referências, e elas permitem que você se refira a algum valor sem assumir seu
+ownership. A Figura 4-6 ilustra esse conceito.</p>
 <p><img alt="Three tables: the table for s contains only a pointer to the table
 for s1. The table for s1 contains the stack data for s1 and points to the
 string data on the heap." src="img/trpl04-06.svg" class="center" /></p>
@@ -3994,8 +3994,8 @@ explicativas:</p>
 parâmetro de função, mas o valor apontado pela referência não é desalocado
 quando <code>s</code> deixa de ser usado, porque <code>s</code> não tem ownership. Quando funções
 recebem referências como parâmetros em vez dos próprios valores, não
-precisamos devolver esses valores para devolver ownership, porque nunca o
-tivemos.</p>
+precisamos devolver esses valores para transferir o ownership de volta, porque
+nunca o tivemos.</p>
 <p>Chamamos o ato de criar uma referência de <em>borrowing</em> ou empréstimo. Como na
 vida real: se uma pessoa é dona de algo, você pode pegar emprestado dela.
 Quando terminar, precisa devolver. Você não é o dono.</p>
@@ -4145,12 +4145,12 @@ error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immuta
 For more information about this error, try `rustc --explain E0502`.
 error: could not compile `ownership` (bin "ownership") due to 1 previous error
 </code></pre>
-<p>Ufa! Também <em>não</em> podemos ter uma referência mutável enquanto temos uma
-referência imutável ao mesmo valor.</p>
-<p>Usuários de uma referência imutável não esperam que o valor mude de repente
-por baixo deles! No entanto, múltiplas referências imutáveis são permitidas,
-porque ninguém que esteja apenas lendo os dados consegue afetar a leitura dos
-demais.</p>
+<p>Também <em>não</em> podemos ter uma referência mutável enquanto temos uma referência
+imutável ao mesmo valor.</p>
+<p>Quem está usando uma referência imutável não espera que o valor mude de
+repente enquanto a referência ainda está em uso. No entanto, múltiplas
+referências imutáveis são permitidas, porque ninguém que esteja apenas lendo
+os dados consegue afetar a leitura dos demais.</p>
 <p>Observe que o escopo de uma referência começa no ponto em que ela é
 introduzida e continua até a última vez em que essa referência é usada. Por
 exemplo, este código compila porque o último uso das referências imutáveis está
@@ -4285,8 +4285,8 @@ apenas ASCII; uma discussão mais completa sobre tratamento de UTF-8 aparece
 na seção <a href="#storing-utf-8-encoded-text-with-strings">“Armazenando Texto Codificado em UTF-8 com
 Strings”</a><!-- ignore --> do Capítulo 8.</p>
 </blockquote>
-<p>Vamos passar por como escreveríamos a assinatura dessa função sem usar slices,
-para entender o problema que slices resolvem:</p>
+<p>Vamos ver como escreveríamos a assinatura dessa função sem usar slices, para
+entender o problema que eles resolvem:</p>
 <pre><code class="language-rust ignore">fn first_word(s: &amp;String) -&gt; ?</code></pre>
 <p>A função <code>first_word</code> recebe um parâmetro do tipo <code>&amp;String</code>. Não precisamos de
 ownership, então isso está ótimo. Em Rust idiomático, funções não assumem
@@ -4313,8 +4313,8 @@ tentar isso, como mostrado na Listagem 4-7.</p>
 <figcaption><a href="#listing-4-7">Listing 4-7</a>: A função <code>first_word</code> que retorna um índice de byte dentro do parâmetro <code>String</code></figcaption>
 </figure>
 <p>Como precisamos percorrer a <code>String</code> elemento por elemento e verificar se um
-valor é um espaço, vamos converter nossa <code>String</code> em um array de bytes usando o
-método <code>as_bytes</code>.</p>
+byte corresponde a um espaço, vamos converter nossa <code>String</code> em um array de
+bytes usando o método <code>as_bytes</code>.</p>
 <pre><code class="language-rust ignore"><span class="boring">fn first_word(s: &amp;String) -&gt; usize {
 </span>    let bytes = s.as_bytes();
 <span class="boring">
@@ -4406,7 +4406,7 @@ função <code>first_word</code> da Listagem 4-7.</p>
 <p>Esse programa compila sem erro algum e também continuaria compilando se
 usássemos <code>word</code> depois da chamada a <code>s.clear()</code>. Como <code>word</code> não está ligado
 ao estado de <code>s</code>, ele ainda contém o valor <code>5</code>. Poderíamos usar esse valor <code>5</code>
-junto com a variável <code>s</code> para tentar extrair a primeira palavra, mas isso
+junto com a variável <code>s</code> para tentar extrair dela a primeira palavra, mas isso
 seria um bug, porque o conteúdo de <code>s</code> mudou desde que salvamos <code>5</code> em <code>word</code>.</p>
 <p>Ter de se preocupar com o índice em <code>word</code> ficando fora de sincronia com os
 dados em <code>s</code> é tedioso e propenso a erros! Gerenciar esses índices fica ainda
@@ -4441,7 +4441,7 @@ para o byte no índice 6 de <code>s</code> com um valor de comprimento igual a <
 to the byte at index 0 in a table of the string data &quot;hello world&quot; on
 the heap. The third table represents the stack data of the slice world, which
 has a length value of 5 and points to byte 6 of the heap data table." src="img/trpl04-07.svg" class="center" style="width: 50%;" /></p>
-<p><span class="caption">Figura 4-7: Um string slice referindo-se a parte de uma
+<p><span class="caption">Figura 4-7: Um string slice referindo-se a uma parte de
 <code>String</code></span></p>
 <p>Com a sintaxe de intervalo <code>..</code> do Rust, se você quiser começar do índice 0,
 pode omitir o valor antes dos dois pontos. Em outras palavras, estes dois
@@ -4476,12 +4476,13 @@ let slice = &amp;s[0..len];
 let slice = &amp;s[..];
 <span class="boring">}</span></code></pre>
 <blockquote>
-<p>Observação: os índices de intervalo de string slices precisam ocorrer em
+<p>Observação: os índices de intervalo de string slices precisam estar em
 limites válidos de caracteres UTF-8. Se você tentar criar um string slice no
 meio de um caractere multibyte, seu programa será encerrado com erro.</p>
 </blockquote>
 <p>Com todas essas informações em mente, vamos reescrever <code>first_word</code> para
-retornar um slice. O tipo que significa “string slice” é escrito como <code>&amp;str</code>:</p>
+retornar um slice. O tipo que representa um string slice é escrito como
+<code>&amp;str</code>:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn first_word(s: &amp;String) -&gt; &amp;str {
@@ -4500,14 +4501,15 @@ retornar um slice. O tipo que significa “string slice” é escrito como <code
 </figure>
 <p>Obtemos o índice do fim da palavra da mesma forma que fizemos na Listagem 4-7,
 procurando a primeira ocorrência de um espaço. Quando encontramos um espaço,
-retornamos um string slice usando o começo da string e o índice do espaço como
+retornamos um string slice usando o início da string e o índice do espaço como
 índices inicial e final.</p>
 <p>Agora, quando chamamos <code>first_word</code>, recebemos de volta um único valor ligado
 aos dados subjacentes. O valor é composto por uma referência ao ponto inicial
 do slice e pelo número de elementos do slice.</p>
 <p>Retornar um slice também funcionaria para uma função <code>second_word</code>:</p>
 <pre><code class="language-rust ignore">fn second_word(s: &amp;String) -&gt; &amp;str {</code></pre>
-<p>Agora temos uma API simples e muito mais difícil de estragar, porque o
+<p>Agora temos uma API simples e muito mais difícil de usar incorretamente,
+porque o
 compilador garante que as referências para dentro da <code>String</code> continuem
 válidas. Lembra do bug no programa da Listagem 4-8, quando obtivemos o índice
 do fim da primeira palavra, mas depois limpamos a string e, com isso, esse
@@ -4630,7 +4632,8 @@ Essa flexibilidade aproveita coerções de deref, um recurso que veremos na seç
 <a href="#using-deref-coercions-in-functions-and-methods">“Usando Coerções de Deref em Funções e Métodos”</a><!-- ignore
 --> do Capítulo 15.</p>
 <p>Definir uma função para receber um string slice em vez de uma referência para
-<code>String</code> torna nossa API mais geral e útil, sem perder nenhuma funcionalidade:</p>
+<code>String</code> torna nossa API mais geral e mais útil, sem perder nenhuma
+funcionalidade:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">fn first_word(s: &amp;str) -&gt; &amp;str {
@@ -6522,7 +6525,7 @@ pouco verbosa.</p>
 <h2 id="fluxo-de-controle-conciso-com-if-let-e-letelse"><a class="header" href="#fluxo-de-controle-conciso-com-if-let-e-letelse">Fluxo de Controle Conciso com <code>if let</code> e <code>let...else</code></a></h2>
 <p>A sintaxe <code>if let</code> permite combinar <code>if</code> e <code>let</code> em uma forma menos verbosa de
 tratar valores que correspondem a um padrão, ignorando os demais. Considere o
-programa da Listagem 6-6, que faz <code>match</code> sobre um valor <code>Option&lt;u8&gt;</code> na
+programa da Listagem 6-6, que usa <code>match</code> com um valor <code>Option&lt;u8&gt;</code> na
 variável <code>config_max</code>, mas só quer executar código se o valor for a variante
 <code>Some</code>.</p>
 <figure class="listing" id="listing-6-6">
@@ -6663,9 +6666,8 @@ de quão antigo era o estado no quarter, poderíamos introduzir um método em
 </span><span class="boring">        println!("{desc}");
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
-<p>Então poderíamos usar <code>if let</code> para fazer <code>match</code> sobre o tipo da moeda,
-introduzindo uma variável <code>state</code> dentro do corpo da condição, como na
-Listagem 6-7.</p>
+<p>Então poderíamos usar <code>if let</code> para verificar o tipo da moeda, introduzindo
+uma variável <code>state</code> dentro do corpo da condição, como na Listagem 6-7.</p>
 <figure class="listing" id="listing-6-7">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)] // so we can inspect the state in a minute
 </span><span class="boring">enum UsState {
@@ -6713,8 +6715,8 @@ Listagem 6-7.</p>
 <p>Isso resolve o problema, mas empurra o trabalho para dentro do corpo da
 instrução <code>if let</code>; se o trabalho a ser feito for mais complicado, pode ficar
 difícil acompanhar exatamente como os ramos de nível superior se relacionam.
-Também poderíamos aproveitar o fato de que expressões produzem um valor para ou
-produzir <code>state</code> a partir do <code>if let</code> ou retornar mais cedo, como na Listagem
+Também poderíamos aproveitar o fato de que expressões produzem valores para
+obter <code>state</code> a partir do <code>if let</code> ou retornar mais cedo, como na Listagem
 6-8. Você também poderia fazer algo parecido com <code>match</code>.</p>
 <figure class="listing" id="listing-6-8">
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#[derive(Debug)] // so we can inspect the state in a minute
