@@ -1,7 +1,7 @@
 ## Apêndice G - Como o Rust é Feito e o “Rust Nightly”
 
 Este apêndice trata de como o Rust é produzido e de como isso afeta você como
-desenvolvedor Rust.
+desenvolvedora ou desenvolvedor Rust.
 
 ### Estabilidade sem estagnação
 
@@ -18,12 +18,12 @@ de atualizar para uma nova versão estável do Rust. Cada atualização deve ser
 indolor, mas também deve trazer recursos novos, menos bugs e tempos de
 compilação mais rápidos.
 
-### Chu, chu! Canais de lançamento e viajando nos trilhos
+### Tchu, tchu! Canais de lançamento e o modelo de trem
 
-O desenvolvimento do Rust opera em um _cronograma de trens_. Isto é, todo o
+O desenvolvimento do Rust segue um _modelo de trem_. Isto é, todo o
 desenvolvimento acontece no branch principal do repositório do Rust. Os
 lançamentos seguem um modelo de trem de lançamento de software, como o usado
-no Cisco IOS e em outros projetos. Há três _canais de lançamento_ do Rust:
+pelo Cisco IOS e por outros projetos. Há três _canais de lançamento_ do Rust:
 
 - Nightly
 - Beta
@@ -56,8 +56,8 @@ nightly: * - - * - - *
 beta:                *
 ```
 
-A maioria das pessoas usuárias de Rust não usa lançamentos beta ativamente,
-mas testa contra o beta em seus sistemas de CI para ajudar Rust a descobrir
+A maioria das pessoas usuárias do Rust não usa lançamentos beta ativamente,
+mas testa contra o beta em seus sistemas de CI para ajudar o Rust a descobrir
 possíveis regressões. Enquanto isso, continua existindo um lançamento nightly
 toda noite:
 
@@ -92,8 +92,8 @@ stable:                                *
 
 Viva! Rust 1.5 está pronto! Só que esquecemos uma coisa: como as seis semanas
 já passaram, também precisamos de um novo beta da _próxima_ versão do Rust,
-1.6. Então, depois que o branch `stable` é criado a partir de `beta`, a próxima
-versão de `beta` volta a ser criada a partir de `nightly`:
+1.6. Então, depois que o branch `stable` se separa de `beta`, a próxima versão
+de `beta` volta a se separar de `nightly`:
 
 ```text
 nightly: * - - * - - * - - * - - * - - * - * - *
@@ -107,12 +107,12 @@ Isso é chamado de “modelo de trem” porque, a cada seis semanas, um lançame
 “sai da estação”, mas ainda precisa percorrer uma jornada pelo canal beta
 antes de chegar como um lançamento stable.
 
-Rust lança uma nova versão a cada seis semanas, como um relógio. Se você sabe
-a data de um lançamento do Rust, pode saber a data do próximo: é seis semanas
-depois. Um aspecto positivo de ter lançamentos programados a cada seis semanas
-é que o próximo trem chega logo. Se um recurso perder um lançamento específico,
-não é preciso se preocupar: outro acontecerá em pouco tempo! Isso ajuda a
-reduzir a pressão para tentar encaixar recursos possivelmente ainda
+O Rust lança uma nova versão a cada seis semanas, como um relógio. Se você
+sabe a data de um lançamento do Rust, pode saber a data do próximo: é seis
+semanas depois. Um aspecto positivo de ter lançamentos programados a cada seis
+semanas é que o próximo trem chega logo. Se um recurso perder um lançamento
+específico, não é preciso se preocupar: outro acontecerá em pouco tempo! Isso
+ajuda a reduzir a pressão para tentar encaixar recursos possivelmente ainda
 inacabados perto da data de lançamento.
 
 Graças a esse processo, você sempre pode testar o próximo build do Rust e
@@ -140,7 +140,7 @@ nightly do Rust e anotar seu código-fonte com a flag apropriada para aderir ao
 recurso.
 
 Se você estiver usando uma versão beta ou stable do Rust, não poderá usar
-nenhuma feature flag. Essa é a chave que nos permite obter uso prático com
+nenhuma feature flag. Essa é a chave que nos permite obter uso prático de
 recursos novos antes de declará-los estáveis para sempre. Quem quiser ficar na
 vanguarda pode fazer isso, e quem quiser uma experiência sólida como rocha
 pode permanecer no stable e saber que seu código não vai quebrar. Estabilidade
@@ -187,10 +187,10 @@ $ rustup override set nightly
 
 Agora, sempre que você chamar `rustc` ou `cargo` dentro de
 _~/projects/needs-nightly_, o `rustup` garantirá que você esteja usando Rust
-nightly, em vez do Rust stable padrão. Isso é útil quando você tem muitos
+nightly, em vez do seu Rust stable padrão. Isso é útil quando você tem muitos
 projetos Rust!
 
-### O Processo de RFC e as equipes
+### O processo de RFC e as equipes
 
 Então, como você fica sabendo desses novos recursos? O modelo de desenvolvimento
 do Rust segue um _processo de Request For Comments (RFC)_. Se você quiser uma
@@ -201,7 +201,7 @@ revisadas e discutidas pela equipe do Rust, composta por muitos subgrupos
 temáticos. Há uma lista completa das equipes [no site do
 Rust](https://www.rust-lang.org/governance), incluindo equipes para cada área
 do projeto: design da linguagem, implementação do compilador, infraestrutura,
-documentação e mais. A equipe apropriada lê a proposta e os comentários,
+documentação e muito mais. A equipe apropriada lê a proposta e os comentários,
 escreve seus próprios comentários e, eventualmente, chega a um consenso para
 aceitar ou rejeitar o recurso.
 
@@ -211,9 +211,9 @@ mesma que propôs o recurso no início! Quando a implementação está pronta, e
 chega ao branch principal atrás de um feature gate, como discutimos na seção
 [“Recursos instáveis”](#recursos-instáveis)<!-- ignore -->.
 
-Depois de algum tempo, uma vez que desenvolvedores Rust usando versões nightly
-tenham conseguido experimentar o novo recurso, integrantes da equipe discutem
-o recurso, como ele se comportou no nightly, e decidem se ele deve ou não
+Depois de algum tempo, quando desenvolvedores Rust que usam versões nightly
+já tiveram oportunidade de experimentar o novo recurso, integrantes da equipe
+discutem o recurso, como ele se comportou no nightly e se ele deve ou não
 entrar no Rust stable. Se a decisão for seguir em frente, o feature gate é
 removido, e o recurso passa a ser considerado estável! Ele pega o trem rumo a
 um novo lançamento stable do Rust.

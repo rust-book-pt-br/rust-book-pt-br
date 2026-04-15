@@ -20,7 +20,7 @@
 
 - [Entendendo Ownership](ch04-00-understanding-ownership.md)
   - [O que é Ownership?](ch04-01-what-is-ownership.md)
-  - [Referências e Borrowing](ch04-02-references-and-borrowing.md)
+  - [Referências e Empréstimos](ch04-02-references-and-borrowing.md)
   - [O Tipo Slice](ch04-03-slices.md)
 
 - [Usando Structs para Organizar Dados Relacionados](ch05-00-structs.md)
@@ -30,14 +30,14 @@
 
 - [Enums e Pattern Matching](ch06-00-enums.md)
   - [Definindo um Enum](ch06-01-defining-an-enum.md)
-  - [A Construção de Fluxo de Controle `match`](ch06-02-match.md)
+  - [A construção de fluxo de controle `match`](ch06-02-match.md)
   - [Fluxo de Controle Conciso com `if let` e `let...else`](ch06-03-if-let.md)
 
 - [Packages, Crates e Módulos](ch07-00-managing-growing-projects-with-packages-crates-and-modules.md)
   - [Packages e Crates](ch07-01-packages-and-crates.md)
   - [Controlando Escopo e Privacidade com Módulos](ch07-02-defining-modules-to-control-scope-and-privacy.md)
   - [Caminhos para Referenciar um Item na Árvore de Módulos](ch07-03-paths-for-referring-to-an-item-in-the-module-tree.md)
-  - [Trazendo Caminhos para o Escopo com a Palavra-chave `use`](ch07-04-bringing-paths-into-scope-with-the-use-keyword.md)
+  - [Trazendo caminhos para o escopo com a palavra-chave `use`](ch07-04-bringing-paths-into-scope-with-the-use-keyword.md)
   - [Separando Módulos em Arquivos Diferentes](ch07-05-separating-modules-into-different-files.md)
 
 - [Coleções Comuns](ch08-00-common-collections.md)
@@ -123,13 +123,13 @@
 - [Projeto Final: Construindo um Servidor Web Multithread](ch21-00-final-project-a-web-server.md)
   - [Construindo um Servidor Web Single-Threaded](ch21-01-single-threaded.md)
   - [De Single-Threaded para um Servidor Multithread](ch21-02-multithreaded.md)
-  - [Desligamento e Limpeza Elegantes](ch21-03-graceful-shutdown-and-cleanup.md)
+  - [Desligamento e limpeza elegantes](ch21-03-graceful-shutdown-and-cleanup.md)
 
 - [Apêndice](appendix-00.md)
   - [A - Palavras-chave](appendix-01-keywords.md)
   - [B - Operadores e Símbolos](appendix-02-operators.md)
   - [C - Traits Deriváveis](appendix-03-derivable-traits.md)
-  - [D - Ferramentas Úteis de Desenvolvimento](appendix-04-useful-development-tools.md)
+  - [D - Ferramentas úteis de desenvolvimento](appendix-04-useful-development-tools.md)
   - [E - Edições](appendix-05-editions.md)
   - [F - Traduções do Livro](appendix-06-translation.md)
   - [G - Como o Rust é Feito e o “Rust Nightly”](appendix-07-nightly-rust.md)

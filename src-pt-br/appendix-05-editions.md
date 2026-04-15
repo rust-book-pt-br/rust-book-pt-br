@@ -1,8 +1,7 @@
 ## Apêndice E: Edições
 
-No Capítulo 1, você viu que `cargo new` adiciona um pouco de metadado ao
-arquivo _Cargo.toml_ sobre uma edição. Este apêndice explica o que isso quer
-dizer!
+No Capítulo 1, você viu que `cargo new` adiciona alguns metadados sobre edição
+ao arquivo _Cargo.toml_. Este apêndice explica o que isso quer dizer!
 
 A linguagem e o compilador Rust têm um ciclo de lançamento de seis semanas, o
 que significa que as pessoas usuárias recebem um fluxo constante de novos
@@ -22,13 +21,14 @@ As edições servem a propósitos diferentes para pessoas diferentes:
 - Para quem usa Rust ativamente, uma nova edição reúne mudanças incrementais
   em um pacote fácil de entender.
 - Para quem ainda não usa Rust, uma nova edição sinaliza que avanços
-  importantes aconteceram, o que pode fazer a linguagem valer uma nova chance.
+  importantes aconteceram, o que pode fazer a linguagem merecer uma nova
+  chance.
 - Para quem desenvolve o próprio Rust, uma nova edição oferece um ponto de
   convergência para o projeto como um todo.
 
 No momento em que este texto foi escrito, há quatro edições do Rust
 disponíveis: Rust 2015, Rust 2018, Rust 2021 e Rust 2024. Este livro foi
-escrito usando os idioms da edição Rust 2024.
+escrito usando as convenções idiomáticas da edição Rust 2024.
 
 A chave `edition` no arquivo _Cargo.toml_ indica qual edição o compilador deve
 usar para o seu código. Se essa chave não existir, Rust usa `2015` como valor
@@ -41,7 +41,7 @@ menos que você opte por essas mudanças, seu código continuará compilando mes
 que você atualize a versão do compilador Rust que utiliza.
 
 Todas as versões do compilador Rust oferecem suporte a qualquer edição que
-existia antes do lançamento daquele compilador, e elas podem ligar entre si
+existia antes do lançamento daquele compilador, e elas podem linkar entre si
 crates de qualquer edição suportada. As mudanças de edição afetam apenas a
 forma como o compilador faz o parsing inicial do código. Portanto, se você
 estiver usando Rust 2015 e uma de suas dependências usar Rust 2018, seu

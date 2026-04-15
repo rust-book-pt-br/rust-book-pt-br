@@ -5,9 +5,9 @@ Comunidade Rust_
 
 Esta versão do texto pressupõe que você está usando Rust 1.90.0 (lançado em
 2025-09-18) ou posterior, com `edition = "2024"` no arquivo *Cargo.toml* de
-todos os projetos para configurá-los com os idioms da Edição 2024 do Rust.
-Consulte a [seção “Instalação” do Capítulo 1][install]<!-- ignore --> para
-instruções de instalação ou atualização do Rust e veja o [Apêndice
+todos os projetos para configurá-los com as convenções idiomáticas da edição
+Rust 2024. Consulte a [seção “Instalação” do Capítulo 1][install]<!-- ignore
+--> para instruções de instalação ou atualização do Rust e veja o [Apêndice
 E][appendix-e]<!-- ignore --> para informações sobre edições.
 
 O formato HTML está disponível online em
