@@ -1,30 +1,32 @@
-## Armazenando Chaves com Valores Associados em Mapas Hash
+## Armazenando Chaves com Valores Associados em Hash Maps
 
-A última de nossas coleções comuns é o mapa hash. O tipo `HashMap<K, V>`
-armazena um mapeamento de chaves do tipo `K` para valores do tipo `V` usando um _hashing
-function_, que determina como colocar essas chaves e valores na memória.
-Muitas linguagens de programação suportam esse tipo de estrutura de dados, mas muitas vezes
-use um nome diferente, como _hash_, _map_, _object_, _hash table_,
-_dicionário_ ou _matriz associativa_, apenas para citar alguns.
+A última das nossas coleções comuns é o hash map. O tipo `HashMap<K, V>`
+armazena um mapeamento de chaves do tipo `K` para valores do tipo `V` usando
+uma _hashing function_, que determina como essas chaves e valores são
+organizados na memória. Muitas linguagens de programação oferecem esse tipo de
+estrutura de dados, mas frequentemente com nomes diferentes, como _hash_,
+_map_, _object_, _hash table_, _dictionary_ ou _associative array_, para citar
+alguns.
 
-Os mapas hash são úteis quando você deseja pesquisar dados sem usar um índice, como
-você pode com vetores, mas usando uma chave que pode ser de qualquer tipo. Por exemplo,
-em um jogo, você pode acompanhar a pontuação de cada equipe em um mapa hash no qual
-cada chave é o nome de uma equipe e os valores são a pontuação de cada equipe. Dada uma equipe
-nome, você pode recuperar sua pontuação.
+Hash maps são úteis quando você quer procurar dados não por índice, como faz
+com vetores, mas por meio de uma chave que pode ser de qualquer tipo. Por
+exemplo, em um jogo, você pode acompanhar a pontuação de cada time em um hash
+map, em que cada chave é o nome de um time e os valores são suas respectivas
+pontuações. Dado o nome de um time, você pode recuperar sua pontuação.
 
-Abordaremos a API básica de mapas hash nesta seção, mas com muito mais novidades
-estão escondidos nas funções definidas em `HashMap<K, V>` pela biblioteca padrão.
-Como sempre, verifique a documentação padrão da biblioteca para obter mais informações.
+Nesta seção, veremos a API básica de hash maps, mas há muito mais
+funcionalidades escondidas nas funções definidas em `HashMap<K, V>` pela
+biblioteca padrão. Como sempre, consulte a documentação da biblioteca padrão
+para mais informações.
 
-### Criando um novo mapa de hash
+### Criando um Novo Hash Map
 
-Uma maneira de criar um mapa hash vazio é usar `new` e adicionar elementos com
-`insert`. Na Listagem 8.20, estamos acompanhando as pontuações de duas equipes cujas
-os nomes são _Azul_ e _Amarelo_. O time Azul começa com 10 pontos, e o
-O time amarelo começa com 50.
+Uma forma de criar um hash map vazio é usar `new` e adicionar elementos com
+`insert`. Na Listagem 8-20, estamos acompanhando as pontuações de dois times,
+_Blue_ e _Yellow_. O time Blue começa com 10 pontos, e o time Yellow começa
+com 50.
 
-<Listing number="8-20" caption="Creating a new hash map and inserting some keys and values">
+<Listing number="8-20" caption="Criando um novo hash map e inserindo algumas chaves e valores">
 
 ```rust
 {{#rustdoc_include ../listings/ch08-common-collections/listing-08-20/src/main.rs:here}}
@@ -32,23 +34,23 @@ O time amarelo começa com 50.
 
 </Listing>
 
-Observe que precisamos primeiro `use` do `HashMap` da parte de coleções do
-a biblioteca padrão. Das nossas três coleções comuns, esta é a menos
-usado com frequência, por isso não está incluído nos recursos incluídos no escopo
-automaticamente no prelude. Os mapas hash também têm menos suporte do
-biblioteca padrão; não há macro integrada para construí-los, por exemplo.
+Observe que primeiro precisamos usar `use` para trazer `HashMap` da parte de
+coleções da biblioteca padrão. Das nossas três coleções comuns, esta é a menos
+usada com frequência, então não faz parte dos itens colocados automaticamente
+em escopo pelo prelude. Hash maps também recebem menos suporte direto da
+biblioteca padrão; por exemplo, não existe uma macro embutida para construí-los.
 
-Assim como os vetores, os mapas hash armazenam seus dados na pilha. Este `HashMap` tem
-chaves do tipo `String` e valores do tipo `i32`. Assim como os vetores, os mapas hash são
-homogêneo: todas as chaves devem ter o mesmo tipo e todos os valores
-deve ser do mesmo tipo.
+Assim como vetores, hash maps armazenam seus dados na heap. Esse `HashMap` tem
+chaves do tipo `String` e valores do tipo `i32`. Como vetores, hash maps são
+homogêneos: todas as chaves precisam ter o mesmo tipo, e todos os valores
+também precisam ter o mesmo tipo.
 
-### Acessando Valores em um Mapa Hash
+### Acessando Valores em um Hash Map
 
-Podemos obter um valor do mapa hash fornecendo sua chave para `get`
-método, conforme mostrado na Listagem 8-21.
+Podemos obter um valor de um hash map fornecendo sua chave ao método `get`,
+como mostra a Listagem 8-21.
 
-<Listing number="8-21" caption="Accessing the score for the Blue team stored in the hash map">
+<Listing number="8-21" caption="Acessando a pontuação do time Blue armazenada no hash map">
 
 ```rust
 {{#rustdoc_include ../listings/ch08-common-collections/listing-08-21/src/main.rs:here}}
@@ -56,21 +58,21 @@ método, conforme mostrado na Listagem 8-21.
 
 </Listing>
 
-Aqui, `score` terá o valor associado ao time Azul, e o
-o resultado será `10`. O método `get` retorna um `Option<&V>`; se não houver
-valor para essa chave no mapa hash, `get` retornará `None`. Este programa
-lida com `Option` chamando `copied` para obter um `Option<i32>` em vez de um
-`Option<&i32>`, então `unwrap_or` para definir `score` como zero se `scores` não
-tem uma entrada para a chave.
+Aqui, `score` terá o valor associado ao time Blue, e o resultado será `10`. O
+método `get` retorna um `Option<&V>`; se não houver valor para aquela chave no
+hash map, `get` retornará `None`. Este programa lida com o `Option` chamando
+`copied` para obter um `Option<i32>` em vez de um `Option<&i32>` e, em seguida,
+`unwrap_or` para definir `score` como zero caso `scores` não tenha uma entrada
+para aquela chave.
 
-Podemos iterar cada par de valores-chave em um mapa hash de maneira semelhante a
-faça com vetores, usando um loop `for`:
+Podemos iterar sobre cada par chave-valor em um hash map de maneira parecida
+com o que fazemos com vetores, usando um loop `for`:
 
 ```rust
 {{#rustdoc_include ../listings/ch08-common-collections/no-listing-03-iterate-over-hashmap/src/main.rs:here}}
 ```
 
-Este código imprimirá cada par em uma ordem arbitrária:
+Esse código imprimirá cada par em uma ordem arbitrária:
 
 ```text
 Yellow: 50
@@ -81,13 +83,14 @@ Blue: 10
 
 <a id="hash-maps-and-ownership"></a>
 
-### Gerenciando propriedade em mapas hash
+### Gerenciando Ownership em Hash Maps
 
-Para tipos que implementam a característica `Copy`, como `i32`, os valores são copiados
-no mapa hash. Para valores próprios como `String`, os valores serão movidos e
-o mapa hash será o proprietário desses valores, conforme demonstrado na Listagem 8.22.
+Para tipos que implementam a trait `Copy`, como `i32`, os valores são copiados
+para dentro do hash map. Para valores próprios, como `String`, os valores são
+movidos, e o hash map passa a ser o proprietário desses valores, como mostra a
+Listagem 8-22.
 
-<Listing number="8-22" caption="Showing that keys and values are owned by the hash map once they’re inserted">
+<Listing number="8-22" caption="Mostrando que as chaves e os valores passam a ser de propriedade do hash map depois de inseridos">
 
 ```rust
 {{#rustdoc_include ../listings/ch08-common-collections/listing-08-22/src/main.rs:here}}
@@ -95,38 +98,39 @@ o mapa hash será o proprietário desses valores, conforme demonstrado na Listag
 
 </Listing>
 
-Não podemos usar as variáveis ​​`field_name` e `field_value` depois
-eles foram movidos para o mapa hash com a chamada para `insert`.
+Não podemos mais usar as variáveis `field_name` e `field_value` depois que elas
+forem movidas para dentro do hash map pela chamada a `insert`.
 
-Se inserirmos referências a valores no mapa hash, os valores não serão movidos
-no mapa hash. Os valores para os quais as referências apontam devem ser válidos por pelo menos
-pelo menos enquanto o mapa hash for válido. Falaremos mais sobre esses assuntos em
-[“Validando Referências com
-Vidas”][validating-references-with-lifetimes]<!-- ignore --> no Capítulo 10.
+Se inserirmos referências a valores no hash map, os valores em si não serão
+movidos para dentro dele. Os valores apontados por essas referências precisam
+continuar válidos por pelo menos tanto tempo quanto o hash map for válido.
+Falaremos mais sobre essas questões em [“Validando Referências com
+Lifetimes”][validating-references-with-lifetimes]<!-- ignore --> no Capítulo
+10.
 
-### Atualizando um mapa hash
+### Atualizando um Hash Map
 
-Embora o número de pares de chave e valor possa crescer, cada chave exclusiva pode
-tem apenas um valor associado a ele por vez (mas não vice-versa: para
-por exemplo, tanto a equipe Azul quanto a equipe Amarela poderiam ter o valor `10`
-armazenado no mapa hash `scores`).
+Embora o número de pares chave-valor possa crescer, cada chave única só pode
+ter um valor associado por vez, embora o inverso não seja verdadeiro. Por
+exemplo, tanto o time Blue quanto o time Yellow podem ter o valor `10`
+armazenado no hash map `scores`.
 
-Quando você deseja alterar os dados em um mapa hash, você deve decidir como
-lidar com o caso quando uma chave já tem um valor atribuído. Você poderia substituir o
-valor antigo pelo novo valor, desconsiderando completamente o valor antigo. Você poderia
-mantenha o valor antigo e ignore o novo valor, apenas adicionando o novo valor se o
-key _não_ já tem um valor. Ou você pode combinar o valor antigo e o
-novo valor. Vejamos como fazer cada um deles!
+Quando você quer alterar os dados em um hash map, precisa decidir como tratar o
+caso em que uma chave já possui um valor associado. Você pode substituir o
+valor antigo pelo novo, ignorando completamente o valor anterior. Pode manter o
+valor antigo e ignorar o novo, adicionando o novo valor apenas se a chave
+_ainda não_ tiver um valor. Ou pode combinar o valor antigo com o novo. Vamos
+ver como fazer cada uma dessas coisas!
 
-#### Substituindo um valor
+#### Sobrescrevendo um Valor
 
-Se inserirmos uma chave e um valor em um mapa hash e depois inserirmos a mesma chave
-com um valor diferente, o valor associado a essa chave será substituído.
-Mesmo que o código na Listagem 8-23 chame `insert` duas vezes, o mapa hash
-contêm apenas um par de valores-chave porque estamos inserindo o valor para o Azul
-chave da equipe em ambas as vezes.
+Se inserirmos uma chave e um valor em um hash map e depois inserirmos essa
+mesma chave com um valor diferente, o valor associado a ela será substituído.
+Mesmo que o código da Listagem 8-23 chame `insert` duas vezes, o hash map
+conterá apenas um par chave-valor, porque estamos inserindo valor para a chave
+do time Blue nas duas vezes.
 
-<Listing number="8-23" caption="Replacing a value stored with a particular key">
+<Listing number="8-23" caption="Substituindo o valor armazenado em uma determinada chave">
 
 ```rust
 {{#rustdoc_include ../listings/ch08-common-collections/listing-08-23/src/main.rs:here}}
@@ -134,28 +138,28 @@ chave da equipe em ambas as vezes.
 
 </Listing>
 
-Este código imprimirá `{"Blue": 25}`. O valor original de `10` foi
+Esse código imprimirá `{"Blue": 25}`. O valor original, `10`, foi
 sobrescrito.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="only-inserting-a-value-if-the-key-has-no-value"></a>
 
-#### Adicionando uma chave e um valor somente se uma chave não estiver presente
+#### Adicionando uma Chave e um Valor Somente se a Chave Ainda Não Estiver Presente
 
-É comum verificar se uma determinada chave já existe no mapa hash
-com um valor e, em seguida, executar as seguintes ações: Se a chave existir em
-no mapa hash, o valor existente deve permanecer como está; se a chave
-não existe, insira-o e um valor para ele.
+É comum verificar se uma determinada chave já existe no hash map com algum
+valor e então tomar as seguintes ações: se a chave já existir, o valor atual
+deve permanecer como está; se a chave não existir, inserimos a chave e um valor
+para ela.
 
-Os mapas hash têm uma API especial para isso chamada `entry` que pega a chave que você
-deseja verificar como parâmetro. O valor de retorno do método `entry` é um enum
-chamado `Entry` que representa um valor que pode ou não existir. Digamos
-queremos verificar se a chave do time Amarelo tem um valor associado
-com isso. Caso contrário, queremos inserir o valor `50`, e o mesmo para o
-Equipe azul. Usando a API `entry`, o código se parece com a Listagem 8.24.
+Hash maps têm uma API especial para isso chamada `entry`, que recebe como
+parâmetro a chave que você quer verificar. O valor retornado pelo método
+`entry` é um enum chamado `Entry`, que representa um valor que pode ou não
+existir. Digamos que queremos verificar se a chave do time Yellow tem um valor
+associado. Se não tiver, queremos inserir o valor `50`, e o mesmo vale para o
+time Blue. Usando a API `entry`, o código fica como na Listagem 8-24.
 
-<Listing number="8-24" caption="Using the `entry` method to only insert if the key does not already have a value">
+<Listing number="8-24" caption="Usando o método `entry` para inserir apenas se a chave ainda não tiver um valor">
 
 ```rust
 {{#rustdoc_include ../listings/ch08-common-collections/listing-08-24/src/main.rs:here}}
@@ -163,28 +167,28 @@ Equipe azul. Usando a API `entry`, o código se parece com a Listagem 8.24.
 
 </Listing>
 
-O método `or_insert` em `Entry` é definido para retornar uma referência mutável para
-o valor da chave `Entry` correspondente, se essa chave existir, e se não, ela
-insere o parâmetro como o novo valor para esta chave e retorna um mutável
-referência ao novo valor. Esta técnica é muito mais limpa do que escrever o
-lógica e, além disso, funciona melhor com o verificador de empréstimo.
+O método `or_insert` em `Entry` foi definido para retornar uma referência
+mutável ao valor da chave correspondente caso essa chave exista; se não
+existir, ele insere o parâmetro como novo valor dessa chave e retorna uma
+referência mutável a esse novo valor. Essa técnica é bem mais limpa do que
+escrever toda a lógica manualmente e, além disso, funciona melhor com o borrow
+checker.
 
-A execução do código na Listagem 8.24 imprimirá `{"Yellow": 50, "Blue": 10}`. O
-a primeira chamada para `entry` irá inserir a chave para o time Amarelo com o valor
-`50` porque o time Amarelo ainda não tem valor. A segunda chamada para
-`entry` não irá alterar o mapa hash, pois a equipe Azul já possui o
-valor `10`.
+Executar o código da Listagem 8-24 imprimirá `{"Yellow": 50, "Blue": 10}`. A
+primeira chamada a `entry` vai inserir a chave do time Yellow com o valor `50`,
+porque o time Yellow ainda não tem um valor. A segunda chamada a `entry` não
+vai alterar o hash map, porque o time Blue já tem o valor `10`.
 
-#### Atualizando um valor com base no valor antigo
+#### Atualizando um Valor com Base no Valor Antigo
 
-Outro caso de uso comum para mapas hash é procurar o valor de uma chave e então
-atualize-o com base no valor antigo. Por exemplo, a Listagem 8-25 mostra o código que
-conta quantas vezes cada palavra aparece em algum texto. Usamos um mapa hash com
-as palavras como chaves e incrementar o valor para controlar quantas vezes
-vi essa palavra. Se for a primeira vez que vemos uma palavra, primeiro inseriremos
-o valor `0`.
+Outro caso de uso comum para hash maps é procurar o valor de uma chave e, em
+seguida, atualizá-lo com base no valor anterior. Por exemplo, a Listagem 8-25
+mostra um código que conta quantas vezes cada palavra aparece em um texto.
+Usamos um hash map com as palavras como chaves e incrementamos o valor para
+acompanhar quantas vezes vimos cada palavra. Se for a primeira vez que vemos
+uma palavra, primeiro inserimos o valor `0`.
 
-<Listing number="8-25" caption="Counting occurrences of words using a hash map that stores words and counts">
+<Listing number="8-25" caption="Contando ocorrências de palavras usando um hash map que armazena palavras e contagens">
 
 ```rust
 {{#rustdoc_include ../listings/ch08-common-collections/listing-08-25/src/main.rs:here}}
@@ -192,61 +196,63 @@ o valor `0`.
 
 </Listing>
 
-Este código imprimirá `{"world": 2, "hello": 1, "wonderful": 1}`. Você pode ver
-os mesmos pares de valores-chave impressos em uma ordem diferente: Lembre-se de [“Acessando
-Valores em um mapa hash”][access]<!-- ignore --> que itera sobre um mapa hash
-acontece em uma ordem arbitrária.
+Esse código imprimirá `{"world": 2, "hello": 1, "wonderful": 1}`. Você pode
+ver os mesmos pares chave-valor impressos em outra ordem. Lembre-se, pela
+seção [“Acessando Valores em um Hash Map”][access]<!-- ignore -->, que iterar
+sobre um hash map acontece em ordem arbitrária.
 
-O método `split_whitespace` retorna um iterador sobre subfatias, separadas por
-espaço em branco, do valor em `text`. O método `or_insert` retorna um mutável
-referência (`&mut V`) ao valor da chave especificada. Aqui, nós armazenamos isso
-referência mutável na variável `count`, portanto, para atribuir a esse valor,
-devemos primeiro desreferenciar `count` usando o asterisco (`*`). O mutável
-referência sai do escopo no final do loop `for`, então todos esses
-as mudanças são seguras e permitidas pelas regras de empréstimo.
+O método `split_whitespace` retorna um iterador sobre subfatias do valor em
+`text`, separadas por espaço em branco. O método `or_insert` retorna uma
+referência mutável (`&mut V`) ao valor da chave especificada. Aqui, armazenamos
+essa referência mutável na variável `count`, então, para atribuir um valor a
+ela, primeiro precisamos desreferenciar `count` usando o asterisco (`*`). A
+referência mutável sai de escopo no fim do loop `for`, então todas essas
+mudanças são seguras e permitidas pelas regras de borrowing.
 
-### Funções de hash
+### Funções de Hash
 
-Por padrão, `HashMap` usa uma função hash chamada _SipHash_ que pode fornecer
-resistência a ataques de negação de serviço (DoS) envolvendo hash
-tabelas[^siphash]<!-- ignore -->. Este não é o algoritmo de hash mais rápido
-disponível, mas a compensação por melhor segurança que vem com a queda na
-o desempenho vale a pena. Se você criar o perfil do seu código e descobrir que o padrão
-a função hash é muito lenta para seus propósitos, você pode mudar para outra função
-especificando um hasher diferente. Um _hasher_ é um tipo que implementa o
-`BuildHasher` característica. Falaremos sobre características e como implementá-las em
-[Capítulo 10][traits]<!-- ignore -->. Você não precisa necessariamente implementar
-seu próprio hasher do zero; [crates.io](https://crates.io/)<!-- ignore -->
-tem bibliotecas compartilhadas por outros usuários do Rust que fornecem hashers implementando muitos
-algoritmos de hash comuns.
+Por padrão, `HashMap` usa uma função de hash chamada _SipHash_, que pode
+oferecer resistência a ataques de negação de serviço (DoS) envolvendo tabelas
+hash[^siphash]<!-- ignore -->. Esse não é o algoritmo de hash mais rápido
+disponível, mas o trade-off por maior segurança, mesmo com a queda de
+desempenho, vale a pena. Se você fizer profiling do seu código e descobrir que
+a função de hash padrão é lenta demais para o seu caso, pode trocar por outra,
+especificando um hasher diferente. Um _hasher_ é um tipo que implementa a trait
+`BuildHasher`. Falaremos sobre traits e sobre como implementá-las no [Capítulo
+10][traits]<!-- ignore -->. Você não precisa necessariamente implementar seu
+próprio hasher do zero; [crates.io](https://crates.io/)<!-- ignore --> tem
+bibliotecas compartilhadas por outros usuários de Rust que fornecem hashers com
+vários algoritmos de hash comuns.
 
 [^siphash]: [https://en.wikipedia.org/wiki/SipHash](https://en.wikipedia.org/wiki/SipHash)
 
 ## Resumo
 
-Vetores, strings e mapas hash fornecerão uma grande quantidade de funcionalidades
-necessário em programas quando você precisa armazenar, acessar e modificar dados. Aqui estão
-alguns exercícios que você agora deve estar preparado para resolver:
+Vetores, strings e hash maps oferecem grande parte da funcionalidade necessária
+em programas quando você precisa armazenar, acessar e modificar dados. Aqui
+estão alguns exercícios para os quais você já deve estar preparado:
 
-1. Dada uma lista de inteiros, use um vetor e retorne a mediana (quando classificado,
-o valor na posição intermediária) e moda (o valor que ocorre mais
-muitas vezes; um mapa hash será útil aqui) da lista.
-1. Converta strings para Pig Latin. A primeira consoante de cada palavra é movida para
-o final da palavra e _ay_ são adicionados, então _first_ se torna _irst-fay_. Palavras
-que começam com uma vogal têm _hay_ adicionado ao final (_apple_ se torna
-_maçã-feno_). Tenha em mente os detalhes sobre a codificação UTF-8!
-1. Usando um mapa hash e vetores, crie uma interface de texto para permitir que um usuário adicione
-nomes de funcionários de um departamento de uma empresa; por exemplo, “Adicionar Sally a
-Engenharia” ou “Adicionar Amir às Vendas”. Em seguida, deixe o usuário recuperar uma lista de
-todas as pessoas de um departamento ou todas as pessoas da empresa por departamento, classificadas
-alfabeticamente.
+1. Dada uma lista de inteiros, use um vetor e retorne a mediana, isto é, o
+   valor na posição do meio após ordenar, e a moda, o valor que ocorre com mais
+   frequência. Um hash map será útil aqui.
+1. Converta strings para Pig Latin. A primeira consoante de cada palavra vai
+   para o final da palavra, e adicionamos _ay_; assim, _first_ vira
+   _irst-fay_. Palavras que começam com vogal recebem _hay_ no final, então
+   _apple_ vira _apple-hay_. Tenha em mente os detalhes da codificação UTF-8!
+1. Usando um hash map e vetores, crie uma interface de texto para permitir que
+   a pessoa usuária adicione nomes de funcionários a um departamento de uma
+   empresa; por exemplo, “Add Sally to Engineering” ou “Add Amir to Sales”.
+   Depois, permita que a pessoa usuária recupere uma lista de todas as pessoas
+   de um departamento ou de todas as pessoas da empresa agrupadas por
+   departamento, em ordem alfabética.
 
-A documentação da API da biblioteca padrão descreve métodos que vetores, strings,
-e mapas hash que serão úteis para esses exercícios!
+A documentação da API da biblioteca padrão descreve métodos de vetores,
+strings e hash maps que serão úteis para esses exercícios!
 
-Estamos entrando em programas mais complexos nos quais as operações podem falhar, por isso é
-um momento perfeito para discutir o tratamento de erros. Faremos isso a seguir!
+Estamos entrando em programas mais complexos, nos quais operações podem falhar,
+então este é um momento perfeito para discutir tratamento de erros. É o que
+veremos a seguir!
 
-[validating-references-with-lifetimes]: ch10-03-lifetime-syntax.html#validating-references-with-lifetimes
-[access]: #accessing-values-in-a-hash-map
+[validating-references-with-lifetimes]: ch10-03-lifetime-syntax.html
+[access]: #acessando-valores-em-um-hash-map
 [traits]: ch10-02-traits.html

@@ -16,7 +16,7 @@ _variables_ dentro do diretório _projects_ usando `cargo new variables`.
 Depois, no novo diretório _variables_, abra _src/main.rs_ e substitua seu
 código pelo seguinte, que ainda não compilará:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Nome do arquivo: src/main.rs</span>
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-01-variables-are-immutable/src/main.rs}}
@@ -32,7 +32,7 @@ erro sobre imutabilidade, como mostrado nesta saída:
 Este exemplo mostra como o compilador ajuda você a encontrar erros em seus
 programas. Erros de compilação podem ser frustrantes, mas, na verdade, eles só
 significam que seu programa ainda não está fazendo com segurança aquilo que
-você quer; eles _não_ significam que você é um mau programador! Rustaceans
+você quer; eles _não_ significam que você é um mau programador! Rustaceanos
 experientes também recebem erros do compilador.
 
 Você recebeu a mensagem de erro `` cannot assign twice to immutable variable
@@ -57,7 +57,7 @@ partes do programa mudarão o valor dessa variável.
 
 Por exemplo, vamos mudar _src/main.rs_ para o seguinte:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Nome do arquivo: src/main.rs</span>
 
 ```rust
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-02-adding-mut/src/main.rs}}
@@ -128,7 +128,7 @@ alterado se o valor hardcoded tiver de ser atualizado no futuro.
 
 Como você viu no tutorial do jogo de adivinhação no [Capítulo
 2][comparing-the-guess-to-the-secret-number]<!-- ignore -->, você pode declarar
-uma nova variável com o mesmo nome de uma variável anterior. Rustaceans dizem
+uma nova variável com o mesmo nome de uma variável anterior. Rustaceanos dizem
 que a primeira variável é _shadowed_ pela segunda, o que significa que a
 segunda variável é aquela que o compilador verá quando você usar aquele nome.
 Na prática, a segunda variável encobre a primeira, e qualquer uso desse nome se
@@ -136,7 +136,7 @@ refere a ela até que ela própria seja shadowed ou até que o escopo termine.
 Podemos fazer shadowing de uma variável repetindo o mesmo nome e usando
 novamente a palavra-chave `let`, assim:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Nome do arquivo: src/main.rs</span>
 
 ```rust
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-03-shadowing/src/main.rs}}

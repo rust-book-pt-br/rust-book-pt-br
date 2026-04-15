@@ -1,7 +1,7 @@
 ## Olá, Cargo!
 
-Cargo é o sistema de build e gerenciador de pacotes do Rust. A maioria das
-Rustaceans usa essa ferramenta para gerenciar seus projetos Rust, porque Cargo
+Cargo é o sistema de build e gerenciador de pacotes do Rust. A maioria dos
+rustaceanos usa essa ferramenta para gerenciar seus projetos Rust, porque Cargo
 cuida de muitas tarefas para você, como compilar seu código, baixar as
 bibliotecas das quais ele depende e compilar essas bibliotecas. Chamamos as
 bibliotecas de que seu código precisa de _dependências_.
@@ -90,7 +90,7 @@ naquela ocasião.
 
 Agora abra _src/main.rs_ e dê uma olhada:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Nome do arquivo: src/main.rs</span>
 
 ```rust
 fn main() {
@@ -185,9 +185,10 @@ Por que você não iria querer um executável? Muitas vezes, `cargo check` é be
 mais rápido do que `cargo build`, porque pula a etapa de gerar o executável. Se
 você estiver checando seu trabalho continuamente enquanto escreve código, usar
 `cargo check` acelera o processo de descobrir se o projeto ainda está
-compilando! Por isso, muitas Rustaceans executam `cargo check` periodicamente
-enquanto escrevem seus programas, para garantir que tudo continua compilando.
-Depois, quando estão prontas para usar o executável, executam `cargo build`.
+compilando! Por isso, muitos rustaceanos executam `cargo check`
+periodicamente enquanto escrevem seus programas, para garantir que tudo
+continua compilando. Depois, quando estão prontos para usar o executável,
+executam `cargo build`.
 
 Vamos recapitular o que aprendemos até aqui sobre Cargo:
 

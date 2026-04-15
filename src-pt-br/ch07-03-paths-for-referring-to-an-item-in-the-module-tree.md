@@ -82,7 +82,7 @@ Os erros que recebemos são mostrados na Listagem 7-4.
 As mensagens de erro dizem que o módulo `hosting` é privado. Em outras
 palavras, temos os caminhos corretos para o módulo `hosting` e para a função
 `add_to_waitlist`, mas Rust não nos deixa usá-los porque não temos acesso às
-seções privadas. Em Rust, todos os itens, como funções, métodos, structs,
+partes privadas. Em Rust, todos os itens, como funções, métodos, structs,
 enums, módulos e constantes, são privados para módulos pai por padrão. Se você
 quiser tornar um item como uma função ou struct privado, basta colocá-lo dentro
 de um módulo.

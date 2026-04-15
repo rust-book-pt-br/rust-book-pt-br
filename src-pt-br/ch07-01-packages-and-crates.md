@@ -22,7 +22,7 @@ _Crates de biblioteca_ não têm função `main` e não são compilados em um
 executável. Em vez disso, eles definem funcionalidades destinadas a ser
 compartilhadas com outros projetos. Por exemplo, o crate `rand`, que usamos no
 [Capítulo 2][rand]<!-- ignore -->, fornece funcionalidades para gerar números
-aleatórios. Na maior parte do tempo, quando Rustaceans dizem “crate”, eles
+aleatórios. Na maior parte do tempo, quando rustaceanos dizem “crate”, eles
 estão falando de um crate de biblioteca e usam “crate” quase como sinônimo da
 ideia geral de “biblioteca”.
 
