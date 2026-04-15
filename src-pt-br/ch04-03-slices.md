@@ -15,8 +15,8 @@ string inteira deve ser retornada.
 > na seção [“Armazenando Texto Codificado em UTF-8 com
 > Strings”][strings]<!-- ignore --> do Capítulo 8.
 
-Vamos passar por como escreveríamos a assinatura dessa função sem usar slices,
-para entender o problema que slices resolvem:
+Vamos ver como escreveríamos a assinatura dessa função sem usar slices, para
+entender o problema que eles resolvem:
 
 ```rust,ignore
 fn first_word(s: &String) -> ?
@@ -39,8 +39,8 @@ tentar isso, como mostrado na Listagem 4-7.
 </Listing>
 
 Como precisamos percorrer a `String` elemento por elemento e verificar se um
-valor é um espaço, vamos converter nossa `String` em um array de bytes usando o
-método `as_bytes`.
+byte corresponde a um espaço, vamos converter nossa `String` em um array de
+bytes usando o método `as_bytes`.
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch04-understanding-ownership/listing-04-07/src/main.rs:as_bytes}}
@@ -93,7 +93,7 @@ função `first_word` da Listagem 4-7.
 Esse programa compila sem erro algum e também continuaria compilando se
 usássemos `word` depois da chamada a `s.clear()`. Como `word` não está ligado
 ao estado de `s`, ele ainda contém o valor `5`. Poderíamos usar esse valor `5`
-junto com a variável `s` para tentar extrair a primeira palavra, mas isso
+junto com a variável `s` para tentar extrair dela a primeira palavra, mas isso
 seria um bug, porque o conteúdo de `s` mudou desde que salvamos `5` em `word`.
 
 Ter de se preocupar com o índice em `word` ficando fora de sincronia com os
@@ -139,7 +139,7 @@ the heap. The third table represents the stack data of the slice world, which
 has a length value of 5 and points to byte 6 of the heap data table."
 src="img/trpl04-07.svg" class="center" style="width: 50%;" />
 
-<span class="caption">Figura 4-7: Um string slice referindo-se a parte de uma
+<span class="caption">Figura 4-7: Um string slice referindo-se a uma parte de
 `String`</span>
 
 Com a sintaxe de intervalo `..` do Rust, se você quiser começar do índice 0,
@@ -177,12 +177,13 @@ let slice = &s[0..len];
 let slice = &s[..];
 ```
 
-> Observação: os índices de intervalo de string slices precisam ocorrer em
+> Observação: os índices de intervalo de string slices precisam estar em
 > limites válidos de caracteres UTF-8. Se você tentar criar um string slice no
 > meio de um caractere multibyte, seu programa será encerrado com erro.
 
 Com todas essas informações em mente, vamos reescrever `first_word` para
-retornar um slice. O tipo que significa “string slice” é escrito como `&str`:
+retornar um slice. O tipo que representa um string slice é escrito como
+`&str`:
 
 <Listing file-name="src/main.rs">
 
@@ -194,7 +195,7 @@ retornar um slice. O tipo que significa “string slice” é escrito como `&str
 
 Obtemos o índice do fim da palavra da mesma forma que fizemos na Listagem 4-7,
 procurando a primeira ocorrência de um espaço. Quando encontramos um espaço,
-retornamos um string slice usando o começo da string e o índice do espaço como
+retornamos um string slice usando o início da string e o índice do espaço como
 índices inicial e final.
 
 Agora, quando chamamos `first_word`, recebemos de volta um único valor ligado
@@ -207,7 +208,8 @@ Retornar um slice também funcionaria para uma função `second_word`:
 fn second_word(s: &String) -> &str {
 ```
 
-Agora temos uma API simples e muito mais difícil de estragar, porque o
+Agora temos uma API simples e muito mais difícil de usar incorretamente,
+porque o
 compilador garante que as referências para dentro da `String` continuem
 válidas. Lembra do bug no programa da Listagem 4-8, quando obtivemos o índice
 do fim da primeira palavra, mas depois limpamos a string e, com isso, esse
@@ -288,7 +290,8 @@ Essa flexibilidade aproveita coerções de deref, um recurso que veremos na seç
 --> do Capítulo 15.
 
 Definir uma função para receber um string slice em vez de uma referência para
-`String` torna nossa API mais geral e útil, sem perder nenhuma funcionalidade:
+`String` torna nossa API mais geral e mais útil, sem perder nenhuma
+funcionalidade:
 
 <Listing file-name="src/main.rs">
 

@@ -1,6 +1,6 @@
 ## Referências e Empréstimos
 
-O problema com o código usando tupla da Listagem 4-5 é que precisamos retornar
+O problema com o código com a tupla da Listagem 4-5 é que precisamos retornar
 a `String` para a função chamadora para que ainda possamos usá-la depois da
 chamada para `calculate_length`, porque a `String` foi movida para dentro de
 `calculate_length`. Em vez disso, podemos fornecer uma referência ao valor
@@ -21,12 +21,12 @@ parâmetro uma referência a um objeto, em vez de assumir o ownership do valor:
 
 </Listing>
 
-Primeiro, repare que todo o código envolvendo tupla na declaração da variável e
-no valor de retorno da função desapareceu. Segundo, observe que passamos `&s1`
-para `calculate_length` e que, na definição da função, recebemos `&String` em
-vez de `String`. Esses e-comerciais representam referências, e elas permitem
-que você se refira a algum valor sem assumir seu ownership. A Figura 4-6
-ilustra esse conceito.
+Primeiro, repare que todo o código envolvendo a tupla na declaração da variável
+e no valor de retorno da função desapareceu. Segundo, observe que passamos
+`&s1` para `calculate_length` e que, na definição da função, recebemos
+`&String` em vez de `String`. Esses e comerciais (`&`) representam
+referências, e elas permitem que você se refira a algum valor sem assumir seu
+ownership. A Figura 4-6 ilustra esse conceito.
 
 <img alt="Three tables: the table for s contains only a pointer to the table
 for s1. The table for s1 contains the stack data for s1 and points to the
@@ -63,8 +63,8 @@ O escopo em que a variável `s` é válida é igual ao escopo de qualquer
 parâmetro de função, mas o valor apontado pela referência não é desalocado
 quando `s` deixa de ser usado, porque `s` não tem ownership. Quando funções
 recebem referências como parâmetros em vez dos próprios valores, não
-precisamos devolver esses valores para devolver ownership, porque nunca o
-tivemos.
+precisamos devolver esses valores para transferir o ownership de volta, porque
+nunca o tivemos.
 
 Chamamos o ato de criar uma referência de _borrowing_ ou empréstimo. Como na
 vida real: se uma pessoa é dona de algo, você pode pegar emprestado dela.
@@ -170,13 +170,13 @@ Este é o erro:
 {{#include ../listings/ch04-understanding-ownership/no-listing-12-immutable-and-mutable-not-allowed/output.txt}}
 ```
 
-Ufa! Também _não_ podemos ter uma referência mutável enquanto temos uma
-referência imutável ao mesmo valor.
+Também _não_ podemos ter uma referência mutável enquanto temos uma referência
+imutável ao mesmo valor.
 
-Usuários de uma referência imutável não esperam que o valor mude de repente
-por baixo deles! No entanto, múltiplas referências imutáveis são permitidas,
-porque ninguém que esteja apenas lendo os dados consegue afetar a leitura dos
-demais.
+Quem está usando uma referência imutável não espera que o valor mude de
+repente enquanto a referência ainda está em uso. No entanto, múltiplas
+referências imutáveis são permitidas, porque ninguém que esteja apenas lendo
+os dados consegue afetar a leitura dos demais.
 
 Observe que o escopo de uma referência começa no ponto em que ela é
 introduzida e continua até a última vez em que essa referência é usada. Por

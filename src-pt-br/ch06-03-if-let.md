@@ -2,7 +2,7 @@
 
 A sintaxe `if let` permite combinar `if` e `let` em uma forma menos verbosa de
 tratar valores que correspondem a um padrão, ignorando os demais. Considere o
-programa da Listagem 6-6, que faz `match` sobre um valor `Option<u8>` na
+programa da Listagem 6-6, que usa `match` com um valor `Option<u8>` na
 variável `config_max`, mas só quer executar código se o valor for a variante
 `Some`.
 
@@ -75,9 +75,8 @@ de quão antigo era o estado no quarter, poderíamos introduzir um método em
 {{#rustdoc_include ../listings/ch06-enums-and-pattern-matching/listing-06-07/src/main.rs:state}}
 ```
 
-Então poderíamos usar `if let` para fazer `match` sobre o tipo da moeda,
-introduzindo uma variável `state` dentro do corpo da condição, como na
-Listagem 6-7.
+Então poderíamos usar `if let` para verificar o tipo da moeda, introduzindo
+uma variável `state` dentro do corpo da condição, como na Listagem 6-7.
 
 <Listing number="6-7" caption="Verificando se um estado já existia em 1900 usando condicionais aninhadas dentro de um `if let`">
 
@@ -90,8 +89,8 @@ Listagem 6-7.
 Isso resolve o problema, mas empurra o trabalho para dentro do corpo da
 instrução `if let`; se o trabalho a ser feito for mais complicado, pode ficar
 difícil acompanhar exatamente como os ramos de nível superior se relacionam.
-Também poderíamos aproveitar o fato de que expressões produzem um valor para ou
-produzir `state` a partir do `if let` ou retornar mais cedo, como na Listagem
+Também poderíamos aproveitar o fato de que expressões produzem valores para
+obter `state` a partir do `if let` ou retornar mais cedo, como na Listagem
 6-8. Você também poderia fazer algo parecido com `match`.
 
 <Listing number="6-8" caption="Usando `if let` para produzir um valor ou retornar antecipadamente">
