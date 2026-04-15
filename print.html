@@ -40,10 +40,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-dcb56b39.js";
+            window.path_to_searchindex_js = "searchindex-8eadf77c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-869888b5.js"></script>
+        <script src="toc-47748130.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -187,9 +187,9 @@
 Comunidade Rust</em></p>
 <p>Esta versão do texto pressupõe que você está usando Rust 1.90.0 (lançado em
 2025-09-18) ou posterior, com <code>edition = "2024"</code> no arquivo <em>Cargo.toml</em> de
-todos os projetos para configurá-los com os idioms da Edição 2024 do Rust.
-Consulte a <a href="#instalação-1">seção “Instalação” do Capítulo 1</a><!-- ignore --> para
-instruções de instalação ou atualização do Rust e veja o <a href="#e---edições">Apêndice
+todos os projetos para configurá-los com as convenções idiomáticas da edição
+Rust 2024. Consulte a <a href="#instalação-1">seção “Instalação” do Capítulo 1</a><!-- ignore
+--> para instruções de instalação ou atualização do Rust e veja o <a href="#e---edições">Apêndice
 E</a><!-- ignore --> para informações sobre edições.</p>
 <p>O formato HTML está disponível online em
 <a href="https://doc.rust-lang.org/stable/book/">https://doc.rust-lang.org/stable/book/</a>
@@ -218,23 +218,23 @@ alto desempenho, <em>e</em> um compilador amigável, <em>e</em> ótimas ferramen
 tantos outros benefícios? A linguagem Rust que você vê hoje combina anos de
 pesquisa em programação de sistemas com a sabedoria prática de uma comunidade
 vibrante e apaixonada. Essa linguagem foi projetada com propósito e lapidada
-com cuidado, oferecendo aos desenvolvedores uma ferramenta que facilita a
-escrita de código seguro, rápido e confiável.</p>
-<p>Mas o que torna o Rust realmente especial é sua raiz na ideia de fortalecer
-você, a pessoa usuária, para alcançar seus objetivos. Esta é uma linguagem que
-quer ver você ter sucesso, e esse princípio de empoderamento percorre o
-núcleo da comunidade que constrói, mantém e promove a linguagem. Desde a
-edição anterior deste texto de referência, Rust se desenvolveu ainda mais e se
-tornou uma linguagem verdadeiramente global e confiável. O Projeto Rust agora
-conta com forte apoio da Rust Foundation, que também investe em iniciativas
-importantes para garantir que Rust permaneça seguro, estável e sustentável.</p>
+com cuidado, oferecendo a desenvolvedoras e desenvolvedores uma ferramenta que
+facilita a escrita de código seguro, rápido e confiável.</p>
+<p>Mas o que torna o Rust realmente especial é sua raiz em capacitar você, a
+pessoa usuária, a alcançar seus objetivos. Esta é uma linguagem que quer ver
+você ter sucesso, e esse princípio de capacitação percorre o núcleo da
+comunidade que constrói, mantém e promove a linguagem. Desde a edição anterior
+deste texto de referência, Rust se desenvolveu ainda mais e se tornou uma
+linguagem verdadeiramente global e confiável. O Projeto Rust agora conta com
+forte apoio da Rust Foundation, que também investe em iniciativas importantes
+para garantir que Rust permaneça seguro, estável e sustentável.</p>
 <p>Esta edição de <em>A Linguagem de Programação Rust</em> é uma atualização abrangente,
 refletindo a evolução da linguagem ao longo dos anos e trazendo informações
 novas valiosas. Mas ela não é apenas um guia de sintaxe e bibliotecas: é um
 convite para participar de uma comunidade que valoriza qualidade, desempenho e
 design cuidadoso. Seja você uma pessoa desenvolvedora experiente querendo
-explorar Rust pela primeira vez, seja uma Rustacean em busca de refinar suas
-habilidades, esta edição oferece algo para todo mundo.</p>
+explorar Rust pela primeira vez, seja alguém já experiente em Rust buscando
+refinar suas habilidades, esta edição oferece algo para todo mundo.</p>
 <p>A jornada do Rust tem sido feita de colaboração, aprendizado e iteração. O
 crescimento da linguagem e do seu ecossistema reflete diretamente a comunidade
 vibrante e diversa por trás dela. As contribuições de milhares de
@@ -3915,7 +3915,7 @@ fn calculate_length(s: String) -&gt; (String, usize) {
 Felizmente, o Rust tem um recurso para usar um valor sem transferir ownership:
 referências.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="referências-e-borrowing"><a href="#referências-e-borrowing" class="header">Referências e Borrowing</a></h1>
+<h1 id="referências-e-empréstimos-1"><a href="#referências-e-empréstimos-1" class="header">Referências e Empréstimos</a></h1>
 <h2 id="referências-e-empréstimos"><a class="header" href="#referências-e-empréstimos">Referências e Empréstimos</a></h2>
 <p>O problema com o código com a tupla da Listagem 4-5 é que precisamos retornar
 a <code>String</code> para a função chamadora para que ainda possamos usá-la depois da
@@ -6153,7 +6153,7 @@ fluxo que faz exatamente isso quando usada com enums: ela executa códigos
 diferentes dependendo de qual variante do enum está presente, e esse código
 pode usar os dados contidos no valor correspondente.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="a-construção-de-fluxo-de-controle-match-1"><a href="#a-construção-de-fluxo-de-controle-match-1" class="header">A Construção de Fluxo de Controle match</a></h1>
+<h1 id="a-construção-de-fluxo-de-controle-match-1"><a href="#a-construção-de-fluxo-de-controle-match-1" class="header">A construção de fluxo de controle match</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="the-match-control-flow-operator"></a></p>
 <h2 id="a-construção-de-fluxo-de-controle-match"><a class="header" href="#a-construção-de-fluxo-de-controle-match">A construção de fluxo de controle <code>match</code></a></h2>
@@ -7515,7 +7515,7 @@ ao último recurso do sistema de módulos que veremos: a palavra-chave <code>use
 Primeiro vamos tratar de <code>use</code> por si só, e depois mostraremos como combinar
 <code>pub</code> e <code>use</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use-1"><a href="#trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use-1" class="header">Trazendo Caminhos para o Escopo com a Palavra-chave use</a></h1>
+<h1 id="trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use-1"><a href="#trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use-1" class="header">Trazendo caminhos para o escopo com a palavra-chave use</a></h1>
 <h2 id="trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use"><a class="header" href="#trazendo-caminhos-para-o-escopo-com-a-palavra-chave-use">Trazendo caminhos para o escopo com a palavra-chave <code>use</code></a></h2>
 <p>Ter de escrever os caminhos completos para chamar funções pode parecer
 inconveniente e repetitivo. Na Listagem 7-7, independentemente de escolhermos o
@@ -29933,7 +29933,7 @@ O sinal é eliminado imediatamente quando a instrução <code> let</code>termina
 o bloco associado. Na Listagem 21-21, o bloqueio permanece mantido durante
 da chamada para <code> job()</code>, o que significa que outras instâncias <code> Worker</code>não podem receber trabalhos.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="desligamento-e-limpeza-elegantes-1"><a href="#desligamento-e-limpeza-elegantes-1" class="header">Desligamento e Limpeza Elegantes</a></h1>
+<h1 id="desligamento-e-limpeza-elegantes-1"><a href="#desligamento-e-limpeza-elegantes-1" class="header">Desligamento e limpeza elegantes</a></h1>
 <h2 id="desligamento-e-limpeza-elegantes"><a class="header" href="#desligamento-e-limpeza-elegantes">Desligamento e limpeza elegantes</a></h2>
 <p>O código na Listagem 21-20 está respondendo a requisições de forma assíncrona por meio do
 uso de um thread pool, como pretendíamos. Recebemos alguns avisos sobre os campos
@@ -30643,47 +30643,47 @@ comunidade acolhedora de outros Rustáceos que adorariam ajudá-lo com qualquer
 desafios que você encontra em sua jornada Rust.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="apêndice"><a class="header" href="#apêndice">Apêndice</a></h1>
-<p>As seções a seguir contêm material de referência útil para você ao longo da
-sua jornada com Rust.</p>
+<p>As seções a seguir contêm material de referência que você pode achar útil ao
+longo da sua jornada com Rust.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="a---palavras-chave"><a href="#a---palavras-chave" class="header">A - Palavras-chave</a></h1>
 <h2 id="apêndice-a-palavras-chave"><a class="header" href="#apêndice-a-palavras-chave">Apêndice A: Palavras-chave</a></h2>
-<p>As listas a seguir contêm palavras-chave reservadas para uso atual ou futuro da
-linguagem Rust. Portanto, elas não podem ser usadas como identificadores, exceto
-como identificadores raw, como discutimos na seção <a href="#identificadores-raw">“Identificadores
+<p>As listas a seguir contêm palavras-chave reservadas para uso atual ou futuro
+na linguagem Rust. Por isso, elas não podem ser usadas como identificadores,
+exceto como identificadores raw, como discutimos na seção <a href="#identificadores-raw">“Identificadores
 raw”</a><!-- ignore -->. <em>Identificadores</em> são nomes de funções,
 variáveis, parâmetros, campos de struct, módulos, crates, constantes, macros,
 valores estáticos, atributos, tipos, traits ou lifetimes.</p>
 <h3 id="palavras-chave-atualmente-em-uso"><a class="header" href="#palavras-chave-atualmente-em-uso">Palavras-chave atualmente em uso</a></h3>
-<p>A seguir está a lista das palavras-chave atualmente em uso, com a descrição da
-funcionalidade de cada uma.</p>
+<p>A seguir, está a lista das palavras-chave atualmente em uso, com a descrição
+da funcionalidade de cada uma.</p>
 <ul>
-<li><strong><code>as</code></strong>: Realiza cast primitivo, desambigua o trait específico que contém
-um item ou renomeia itens em instruções <code>use</code>.</li>
+<li><strong><code>as</code></strong>: Realiza castings primitivos, desambigua o trait específico que
+contém um item ou renomeia itens em instruções <code>use</code>.</li>
 <li><strong><code>async</code></strong>: Retorna um <code>Future</code> em vez de bloquear a thread atual.</li>
 <li><strong><code>await</code></strong>: Suspende a execução até que o resultado de um <code>Future</code> esteja
 pronto.</li>
 <li><strong><code>break</code></strong>: Sai imediatamente de um loop.</li>
 <li><strong><code>const</code></strong>: Define itens constantes ou ponteiros raw constantes.</li>
 <li><strong><code>continue</code></strong>: Continua para a próxima iteração do loop.</li>
-<li><strong><code>crate</code></strong>: Em um caminho de módulo, refere-se à raiz do crate.</li>
+<li><strong><code>crate</code></strong>: Em um caminho de módulo, refere-se à raiz da crate.</li>
 <li><strong><code>dyn</code></strong>: Despacho dinâmico para um trait object.</li>
 <li><strong><code>else</code></strong>: Caminho alternativo para as construções de fluxo de controle
 <code>if</code> e <code>if let</code>.</li>
 <li><strong><code>enum</code></strong>: Define uma enumeração.</li>
-<li><strong><code>extern</code></strong>: Faz link com uma função ou variável externa.</li>
+<li><strong><code>extern</code></strong>: Faz o link de uma função ou variável externa.</li>
 <li><strong><code>false</code></strong>: Literal booleano falso.</li>
 <li><strong><code>fn</code></strong>: Define uma função ou o tipo de ponteiro de função.</li>
 <li><strong><code>for</code></strong>: Itera sobre itens vindos de um iterador, implementa um trait ou
-especifica um lifetime de classificação superior.</li>
+especifica um lifetime de ordem superior.</li>
 <li><strong><code>if</code></strong>: Desvia com base no resultado de uma expressão condicional.</li>
 <li><strong><code>impl</code></strong>: Implementa funcionalidade inerente ou de trait.</li>
 <li><strong><code>in</code></strong>: Parte da sintaxe do loop <code>for</code>.</li>
 <li><strong><code>let</code></strong>: Associa uma variável.</li>
-<li><strong><code>loop</code></strong>: Faz loop incondicionalmente.</li>
+<li><strong><code>loop</code></strong>: Executa um loop incondicional.</li>
 <li><strong><code>match</code></strong>: Faz match de um valor com padrões.</li>
 <li><strong><code>mod</code></strong>: Define um módulo.</li>
-<li><strong><code>move</code></strong>: Faz uma closure assumir ownership de todas as suas capturas.</li>
+<li><strong><code>move</code></strong>: Faz uma closure assumir o ownership de todas as suas capturas.</li>
 <li><strong><code>mut</code></strong>: Indica mutabilidade em referências, ponteiros raw ou bindings de
 padrões.</li>
 <li><strong><code>pub</code></strong>: Indica visibilidade pública em campos de struct, blocos <code>impl</code> ou
@@ -30693,19 +30693,19 @@ módulos.</li>
 <li><strong><code>Self</code></strong>: Um alias de tipo para o tipo que estamos definindo ou
 implementando.</li>
 <li><strong><code>self</code></strong>: Receptor de método ou módulo atual.</li>
-<li><strong><code>static</code></strong>: Variável global ou lifetime que dura toda a execução do
-programa.</li>
+<li><strong><code>static</code></strong>: Variável global ou lifetime que dura durante toda a execução
+do programa.</li>
 <li><strong><code>struct</code></strong>: Define uma estrutura.</li>
 <li><strong><code>super</code></strong>: Módulo pai do módulo atual.</li>
 <li><strong><code>trait</code></strong>: Define um trait.</li>
 <li><strong><code>true</code></strong>: Literal booleano verdadeiro.</li>
 <li><strong><code>type</code></strong>: Define um alias de tipo ou tipo associado.</li>
-<li><strong><code>union</code></strong>: Define uma <a href="https://doc.rust-lang.org/reference/items/unions.html">union</a><!-- ignore -->; é palavra-chave apenas
-quando usada em uma declaração de union.</li>
+<li><strong><code>union</code></strong>: Define uma <a href="../reference/items/unions.html">union</a><!-- ignore -->; é palavra-chave
+apenas quando usada em uma declaração de union.</li>
 <li><strong><code>unsafe</code></strong>: Indica código, funções, traits ou implementações inseguros.</li>
 <li><strong><code>use</code></strong>: Traz símbolos para o escopo.</li>
 <li><strong><code>where</code></strong>: Indica cláusulas que restringem um tipo.</li>
-<li><strong><code>while</code></strong>: Faz loop condicionalmente com base no resultado de uma
+<li><strong><code>while</code></strong>: Executa um loop condicional com base no resultado de uma
 expressão.</li>
 </ul>
 <h3 id="palavras-chave-reservadas-para-uso-futuro"><a class="header" href="#palavras-chave-reservadas-para-uso-futuro">Palavras-chave reservadas para uso futuro</a></h3>
@@ -30733,7 +30733,7 @@ onde normalmente isso não seria permitido. Você usa um identificador raw ao
 prefixar a palavra-chave com <code>r#</code>.</p>
 <p>Por exemplo, <code>match</code> é uma palavra-chave. Se você tentar compilar a função a
 seguir, que usa <code>match</code> como nome:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore does_not_compile">fn match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
     haystack.contains(needle)
 }</code></pre>
@@ -30747,7 +30747,7 @@ seguir, que usa <code>match</code> como nome:</p>
 <p>O erro mostra que você não pode usar a palavra-chave <code>match</code> como
 identificador de função. Para usá-la como nome de função, é preciso recorrer à
 sintaxe de identificador raw, assim:</p>
-<p><span class="filename">Filename: src/main.rs</span></p>
+<p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn r#match(needle: &amp;str, haystack: &amp;str) -&gt; bool {
     haystack.contains(needle)
 }
@@ -30756,14 +30756,14 @@ fn main() {
     assert!(r#match("foo", "foobar"));
 }</code></pre>
 <p>Esse código compilará sem erros. Observe o prefixo <code>r#</code> tanto na definição do
-nome da função quanto no lugar em que ela é chamada em <code>main</code>.</p>
+nome da função quanto no ponto em que ela é chamada em <code>main</code>.</p>
 <p>Identificadores raw permitem usar qualquer palavra como identificador, mesmo
 que essa palavra seja uma palavra-chave reservada. Isso nos dá mais liberdade
 para escolher nomes de identificadores, além de permitir integração com
-programas escritos em linguagens onde essas palavras não são palavras-chave.
+programas escritos em linguagens em que essas palavras não são palavras-chave.
 Além disso, identificadores raw permitem usar bibliotecas escritas em uma
-edição diferente do Rust daquela usada pelo seu crate. Por exemplo, <code>try</code> não é
-palavra-chave na edição 2015, mas é nas edições 2018, 2021 e 2024. Se você
+edição diferente do Rust daquela usada pelo seu crate. Por exemplo, <code>try</code> não
+é palavra-chave na edição 2015, mas é nas edições 2018, 2021 e 2024. Se você
 depender de uma biblioteca escrita na edição 2015 que tenha uma função <code>try</code>,
 precisará usar a sintaxe de identificador raw, neste caso <code>r#try</code>, para
 chamar essa função no seu código em edições mais novas. Veja o
@@ -30773,12 +30773,12 @@ chamar essa função no seu código em edições mais novas. Veja o
 <h2 id="apêndice-b-operadores-e-símbolos"><a class="header" href="#apêndice-b-operadores-e-símbolos">Apêndice B: Operadores e Símbolos</a></h2>
 <p>Este apêndice contém um glossário da sintaxe do Rust, incluindo operadores e
 outros símbolos que aparecem sozinhos ou no contexto de caminhos, genéricos,
-limites de características, macros, atributos, comentários, tuplas e colchetes.</p>
+limites de trait, macros, atributos, comentários, tuplas e colchetes.</p>
 <h3 id="operadores"><a class="header" href="#operadores">Operadores</a></h3>
-<p>A Tabela B-1 contém os operadores em Rust, um exemplo de como o operador seria
-aparecem no contexto, uma breve explicação e se esse operador é
-sobrecarregável. Se um operador for sobrecarregável, a característica relevante a ser usada para
-sobrecarga que o operador está listado.</p>
+<p>A Tabela B-1 contém os operadores do Rust, um exemplo de como cada operador
+aparece em contexto, uma explicação breve e se esse operador é
+sobrecarregável. Se um operador for sobrecarregável, o trait relevante para
+fazer essa sobrecarga também será listado.</p>
 <p><span class="caption">Tabela B-1: Operadores</span></p>
 <div class="table-wrapper">
 <table>
@@ -30786,114 +30786,115 @@ sobrecarga que o operador está listado.</p>
 <tr><th>Operador</th><th>Exemplo</th><th>Explicação</th><th>Sobrecarregável?</th></tr>
 </thead>
 <tbody>
-<tr><td><code>!</code></td><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Expansão macro</td><td></td></tr>
+<tr><td><code>!</code></td><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Expansão de macro</td><td></td></tr>
 <tr><td><code>!</code></td><td><code>!expr</code></td><td>Complemento bit a bit ou lógico</td><td><code>Not</code></td></tr>
-<tr><td><code>!=</code></td><td><code>expr != expr</code></td><td>Comparação de nenhuma qualidade</td><td><code>PartialEq</code></td></tr>
+<tr><td><code>!=</code></td><td><code>expr != expr</code></td><td>Comparação de desigualdade</td><td><code>PartialEq</code></td></tr>
 <tr><td><code>%</code></td><td><code>expr % expr</code></td><td>Resto aritmético</td><td><code>Rem</code></td></tr>
 <tr><td><code>%=</code></td><td><code>var %= expr</code></td><td>Resto aritmético e atribuição</td><td><code>RemAssign</code></td></tr>
-<tr><td><code>&amp;</code></td><td><code>&amp;expr</code>, <code>&amp;mut expr</code></td><td>Emprestar</td><td></td></tr>
+<tr><td><code>&amp;</code></td><td><code>&amp;expr</code>, <code>&amp;mut expr</code></td><td>Empréstimo</td><td></td></tr>
 <tr><td><code>&amp;</code></td><td><code>&amp;type</code>, <code>&amp;mut type</code>, <code>&amp;'a type</code>, <code>&amp;'a mut type</code></td><td>Tipo de ponteiro emprestado</td><td></td></tr>
 <tr><td><code>&amp;</code></td><td><code>expr &amp; expr</code></td><td>E bit a bit</td><td><code>BitAnd</code></td></tr>
-<tr><td><code>&amp;=</code></td><td><code>var &amp;= expr</code></td><td>AND bit a bit e atribuição</td><td><code>BitAndAssign</code></td></tr>
-<tr><td><code>&amp;&amp;</code></td><td><code>expr &amp;&amp; expr</code></td><td>Curto-circuito AND lógico</td><td></td></tr>
+<tr><td><code>&amp;=</code></td><td><code>var &amp;= expr</code></td><td>E bit a bit e atribuição</td><td><code>BitAndAssign</code></td></tr>
+<tr><td><code>&amp;&amp;</code></td><td><code>expr &amp;&amp; expr</code></td><td>E lógico com curto-circuito</td><td></td></tr>
 <tr><td><code>*</code></td><td><code>expr * expr</code></td><td>Multiplicação aritmética</td><td><code>Mul</code></td></tr>
-<tr><td><code>*=</code></td><td><code>var *= expr</code></td><td>Multiplicação e atribuição aritmética</td><td><code>MulAssign</code></td></tr>
+<tr><td><code>*=</code></td><td><code>var *= expr</code></td><td>Multiplicação aritmética e atribuição</td><td><code>MulAssign</code></td></tr>
 <tr><td><code>*</code></td><td><code>*expr</code></td><td>Desreferência</td><td><code>Deref</code></td></tr>
-<tr><td><code>*</code></td><td><code>*const type</code>, <code>*mut type</code></td><td>Ponteiro bruto</td><td></td></tr>
-<tr><td><code>+</code></td><td><code>trait + trait</code>, <code>'a + trait</code></td><td>Restrição de tipo composto</td><td></td></tr>
+<tr><td><code>*</code></td><td><code>*const type</code>, <code>*mut type</code></td><td>Ponteiro raw</td><td></td></tr>
+<tr><td><code>+</code></td><td><code>trait + trait</code>, <code>'a + trait</code></td><td>Restrição composta de tipo</td><td></td></tr>
 <tr><td><code>+</code></td><td><code>expr + expr</code></td><td>Adição aritmética</td><td><code>Add</code></td></tr>
-<tr><td><code>+=</code></td><td><code>var += expr</code></td><td>Adição e atribuição aritmética</td><td><code>AddAssign</code></td></tr>
-<tr><td><code>,</code></td><td><code>expr, expr</code></td><td>Argumento e separador de elemento</td><td></td></tr>
+<tr><td><code>+=</code></td><td><code>var += expr</code></td><td>Adição aritmética e atribuição</td><td><code>AddAssign</code></td></tr>
+<tr><td><code>,</code></td><td><code>expr, expr</code></td><td>Separador de argumentos e elementos</td><td></td></tr>
 <tr><td><code>-</code></td><td><code>- expr</code></td><td>Negação aritmética</td><td><code>Neg</code></td></tr>
 <tr><td><code>-</code></td><td><code>expr - expr</code></td><td>Subtração aritmética</td><td><code>Sub</code></td></tr>
-<tr><td><code>-=</code></td><td><code>var -= expr</code></td><td>Subtração e atribuição aritmética</td><td><code>SubAssign</code></td></tr>
-<tr><td><code>-&gt;</code></td><td><code>fn(...) -&gt; type</code>, <code>|…| -&gt; digite</code></td><td>Função e tipo de retorno de fechamento</td><td></td></tr>
-<tr><td><code>.</code></td><td><code>expr.ident</code></td><td>Acesso ao campo</td><td></td></tr>
+<tr><td><code>-=</code></td><td><code>var -= expr</code></td><td>Subtração aritmética e atribuição</td><td><code>SubAssign</code></td></tr>
+<tr><td><code>-&gt;</code></td><td><code>fn(...) -&gt; type</code>, <code>|…| -&gt; type</code></td><td>Tipo de retorno de função e closure</td><td></td></tr>
+<tr><td><code>.</code></td><td><code>expr.ident</code></td><td>Acesso a campo</td><td></td></tr>
 <tr><td><code>.</code></td><td><code>expr.ident(expr, ...)</code></td><td>Chamada de método</td><td></td></tr>
 <tr><td><code>.</code></td><td><code>expr.0</code>, <code>expr.1</code> e assim por diante</td><td>Indexação de tupla</td><td></td></tr>
 <tr><td><code>..</code></td><td><code>..</code>, <code>expr..</code>, <code>..expr</code>, <code>expr..expr</code></td><td>Literal de intervalo exclusivo à direita</td><td><code>PartialOrd</code></td></tr>
 <tr><td><code>..=</code></td><td><code>..=expr</code>, <code>expr..=expr</code></td><td>Literal de intervalo inclusivo à direita</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>..</code></td><td><code>..expr</code></td><td>Sintaxe de atualização literal estrutural</td><td></td></tr>
-<tr><td><code>..</code></td><td><code>variant(x, ..)</code>, <code>struct_type { x, .. }</code></td><td>Encadernação de padrão “E o resto”</td><td></td></tr>
-<tr><td><code>...</code></td><td><code>expr...expr</code></td><td>(Obsoleto, use <code>..=</code> em vez disso) Em um padrão: padrão de intervalo inclusivo</td><td></td></tr>
+<tr><td><code>..</code></td><td><code>..expr</code></td><td>Sintaxe de atualização de literal de struct</td><td></td></tr>
+<tr><td><code>..</code></td><td><code>variant(x, ..)</code>, <code>struct_type { x, .. }</code></td><td>Binding de padrão “e o restante”</td><td></td></tr>
+<tr><td><code>...</code></td><td><code>expr...expr</code></td><td>(Obsoleto; use <code>..=</code>) Em um padrão: padrão de intervalo inclusivo</td><td></td></tr>
 <tr><td><code>/</code></td><td><code>expr / expr</code></td><td>Divisão aritmética</td><td><code>Div</code></td></tr>
 <tr><td><code>/=</code></td><td><code>var /= expr</code></td><td>Divisão aritmética e atribuição</td><td><code>DivAssign</code></td></tr>
 <tr><td><code>:</code></td><td><code>pat: type</code>, <code>ident: type</code></td><td>Restrições</td><td></td></tr>
-<tr><td><code>:</code></td><td><code>ident: expr</code></td><td>Inicializador de campo estrutural</td><td></td></tr>
-<tr><td><code>:</code></td><td><code>'a: loop {...}</code></td><td>Etiqueta de loop</td><td></td></tr>
-<tr><td><code>;</code></td><td><code>expr;</code></td><td>Terminador de declaração e item</td><td></td></tr>
+<tr><td><code>:</code></td><td><code>ident: expr</code></td><td>Inicializador de campo de struct</td><td></td></tr>
+<tr><td><code>:</code></td><td><code>'a: loop {...}</code></td><td>Rótulo de loop</td><td></td></tr>
+<tr><td><code>;</code></td><td><code>expr;</code></td><td>Terminador de instrução e item</td><td></td></tr>
 <tr><td><code>;</code></td><td><code>[...; len]</code></td><td>Parte da sintaxe de array de tamanho fixo</td><td></td></tr>
-<tr><td><code>&lt;&lt;</code></td><td><code>expr &lt;&lt; expr</code></td><td>Deslocamento para a esquerda</td><td><code>Shl</code></td></tr>
+<tr><td><code>&lt;&lt;</code></td><td><code>expr &lt;&lt; expr</code></td><td>Deslocamento à esquerda</td><td><code>Shl</code></td></tr>
 <tr><td><code>&lt;&lt;=</code></td><td><code>var &lt;&lt;= expr</code></td><td>Deslocamento à esquerda e atribuição</td><td><code>ShlAssign</code></td></tr>
-<tr><td><code>&lt;</code></td><td><code>expr &lt; expr</code></td><td>Menos que comparação</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>&lt;=</code></td><td><code>expr &lt;= expr</code></td><td>Menor ou igual à comparação</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>&lt;</code></td><td><code>expr &lt; expr</code></td><td>Comparação “menor que”</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>&lt;=</code></td><td><code>expr &lt;= expr</code></td><td>Comparação “menor que ou igual a”</td><td><code>PartialOrd</code></td></tr>
 <tr><td><code>=</code></td><td><code>var = expr</code>, <code>ident = type</code></td><td>Atribuição/equivalência</td><td></td></tr>
 <tr><td><code>==</code></td><td><code>expr == expr</code></td><td>Comparação de igualdade</td><td><code>PartialEq</code></td></tr>
-<tr><td><code>=&gt;</code></td><td><code>pat =&gt; expr</code></td><td>Parte da sintaxe do match arm</td><td></td></tr>
-<tr><td><code>&gt;</code></td><td><code>expr &gt; expr</code></td><td>Maior que a comparação</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>&gt;=</code></td><td><code>expr &gt;= expr</code></td><td>Maior ou igual à comparação</td><td><code>PartialOrd</code></td></tr>
-<tr><td><code>&gt;&gt;</code></td><td><code>expr &gt;&gt; expr</code></td><td>Mudança para a direita</td><td><code>Shr</code></td></tr>
-<tr><td><code>&gt;&gt;=</code></td><td><code>var &gt;&gt;= expr</code></td><td>Deslocamento para a direita e atribuição</td><td><code>ShrAssign</code></td></tr>
-<tr><td><code>@</code></td><td><code>ident @ pat</code></td><td>Encadernação de padrão</td><td></td></tr>
-<tr><td><code>^</code></td><td><code>expr ^ expr</code></td><td>OR exclusivo bit a bit</td><td><code>BitXor</code></td></tr>
-<tr><td><code>^=</code></td><td><code>var ^= expr</code></td><td>OR exclusivo bit a bit e atribuição</td><td><code>BitXorAssign</code></td></tr>
+<tr><td><code>=&gt;</code></td><td><code>pat =&gt; expr</code></td><td>Parte da sintaxe de um braço de <code>match</code></td><td></td></tr>
+<tr><td><code>&gt;</code></td><td><code>expr &gt; expr</code></td><td>Comparação “maior que”</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>&gt;=</code></td><td><code>expr &gt;= expr</code></td><td>Comparação “maior que ou igual a”</td><td><code>PartialOrd</code></td></tr>
+<tr><td><code>&gt;&gt;</code></td><td><code>expr &gt;&gt; expr</code></td><td>Deslocamento à direita</td><td><code>Shr</code></td></tr>
+<tr><td><code>&gt;&gt;=</code></td><td><code>var &gt;&gt;= expr</code></td><td>Deslocamento à direita e atribuição</td><td><code>ShrAssign</code></td></tr>
+<tr><td><code>@</code></td><td><code>ident @ pat</code></td><td>Binding de padrão</td><td></td></tr>
+<tr><td><code>^</code></td><td><code>expr ^ expr</code></td><td>OU exclusivo bit a bit</td><td><code>BitXor</code></td></tr>
+<tr><td><code>^=</code></td><td><code>var ^= expr</code></td><td>OU exclusivo bit a bit e atribuição</td><td><code>BitXorAssign</code></td></tr>
 <tr><td><code>|</code></td><td><code>pat | pat</code></td><td>Alternativas de padrão</td><td></td></tr>
 <tr><td><code>|</code></td><td><code>expr | expr</code></td><td>OU bit a bit</td><td><code>BitOr</code></td></tr>
-<tr><td><code>|=</code></td><td><code>var |= expr</code></td><td>OR bit a bit e atribuição</td><td><code>BitOrAssign</code></td></tr>
-<tr><td><code>||</code></td><td><code>expr || expr</code></td><td>OU lógico em curto-circuito</td><td></td></tr>
+<tr><td><code>|=</code></td><td><code>var |= expr</code></td><td>OU bit a bit e atribuição</td><td><code>BitOrAssign</code></td></tr>
+<tr><td><code>||</code></td><td><code>expr || expr</code></td><td>OU lógico com curto-circuito</td><td></td></tr>
 <tr><td><code>?</code></td><td><code>expr?</code></td><td>Propagação de erro</td><td></td></tr>
 </tbody>
 </table>
 </div>
-<h3 id="símbolos-não-operadores"><a class="header" href="#símbolos-não-operadores">Símbolos não-operadores</a></h3>
-<p>As tabelas a seguir contêm todos os símbolos que não funcionam como operadores; que
-isto é, eles não se comportam como uma chamada de função ou método.</p>
-<p>A Tabela B-2 mostra símbolos que aparecem sozinhos e são válidos em uma variedade de
-locais.</p>
-<p><span class="caption">Tabela B-2: Sintaxe Independente</span></p>
+<h3 id="símbolos-não-operadores"><a class="header" href="#símbolos-não-operadores">Símbolos não operadores</a></h3>
+<p>As tabelas a seguir contêm todos os símbolos que não funcionam como
+operadores; isto é, eles não se comportam como chamadas de função ou de
+método.</p>
+<p>A Tabela B-2 mostra símbolos que aparecem sozinhos e são válidos em vários
+lugares.</p>
+<p><span class="caption">Tabela B-2: Sintaxe independente</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
 <tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>'ident</code></td><td>Tempo de vida nomeado ou rótulo de loop</td></tr>
-<tr><td>Dígitos imediatamente seguidos por <code>u8</code>, <code>i32</code>, <code>f64</code>, <code>usize</code> e assim por diante</td><td>Literal numérico de tipo específico</td></tr>
+<tr><td><code>'ident</code></td><td>Lifetime nomeado ou rótulo de loop</td></tr>
+<tr><td>Dígitos imediatamente seguidos por <code>u8</code>, <code>i32</code>, <code>f64</code>, <code>usize</code> etc.</td><td>Literal numérico de um tipo específico</td></tr>
 <tr><td><code>"..."</code></td><td>Literal de string</td></tr>
-<tr><td><code>r"..."</code>, <code>r#"..."#</code>, <code>r##"..."##</code> e assim por diante</td><td>Literal de string bruta; caracteres de escape não processados</td></tr>
-<tr><td><code>b"..."</code></td><td>Literal de cadeia de bytes; constrói uma matriz de bytes em vez de uma string</td></tr>
-<tr><td><code>br"..."</code>, <code>br#"..."#</code>, <code>br##"..."##</code> e assim por diante</td><td>Literal de string de bytes brutos; combinação de literal bruto e de string de bytes</td></tr>
+<tr><td><code>r"..."</code>, <code>r#"..."#</code>, <code>r##"..."##</code> etc.</td><td>Literal de string raw; caracteres de escape não são processados</td></tr>
+<tr><td><code>b"..."</code></td><td>Literal de string de bytes; constrói um array de bytes em vez de uma string</td></tr>
+<tr><td><code>br"..."</code>, <code>br#"..."#</code>, <code>br##"..."##</code> etc.</td><td>Literal de string raw de bytes; combinação de literal raw e literal de string de bytes</td></tr>
 <tr><td><code>'...'</code></td><td>Literal de caractere</td></tr>
 <tr><td><code>b'...'</code></td><td>Literal de byte ASCII</td></tr>
-<tr><td><code>|…| expr</code></td><td>Encerramento</td></tr>
-<tr><td><code>!</code></td><td>Tipo de fundo sempre vazio para funções divergentes</td></tr>
-<tr><td><code>_</code></td><td>Vinculação de padrão “ignorada”; também usado para tornar literais inteiros legíveis</td></tr>
+<tr><td><code>|…| expr</code></td><td>Closure</td></tr>
+<tr><td><code>!</code></td><td>Tipo bottom sempre vazio para funções divergentes</td></tr>
+<tr><td><code>_</code></td><td>Binding de padrão “ignorado”; também usado para tornar literais inteiros mais legíveis</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-3 mostra símbolos que aparecem no contexto de um caminho através do módulo
-hierarquia para um item.</p>
-<p><span class="caption">Tabela B-3: Sintaxe Relacionada ao Caminho</span></p>
+<p>A Tabela B-3 mostra símbolos que aparecem no contexto de um caminho pela
+hierarquia de módulos até um item.</p>
+<p><span class="caption">Tabela B-3: Sintaxe relacionada a caminhos</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
 <tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>ident::ident</code></td><td>Caminho do namespace</td></tr>
-<tr><td><code>::path</code></td><td>Caminho relativo à raiz da crate (ou seja, um caminho explicitamente absoluto)</td></tr>
-<tr><td><code>self::path</code></td><td>Caminho relativo ao módulo atual (ou seja, um caminho explicitamente relativo)</td></tr>
+<tr><td><code>ident::ident</code></td><td>Caminho de namespace</td></tr>
+<tr><td><code>::path</code></td><td>Caminho relativo à raiz da crate (isto é, um caminho explicitamente absoluto)</td></tr>
+<tr><td><code>self::path</code></td><td>Caminho relativo ao módulo atual (isto é, um caminho explicitamente relativo)</td></tr>
 <tr><td><code>super::path</code></td><td>Caminho relativo ao pai do módulo atual</td></tr>
 <tr><td><code>type::ident</code>, <code>&lt;type as trait&gt;::ident</code></td><td>Constantes, funções e tipos associados</td></tr>
-<tr><td><code>&lt;type&gt;::...</code></td><td>Item associado a um tipo que não pode ser nomeado diretamente (por exemplo, <code>&lt;&amp;T&gt;::...</code>, <code>&lt;[T]&gt;::...</code> e assim por diante)</td></tr>
-<tr><td><code>trait::method(...)</code></td><td>Desambiguando uma chamada de método nomeando a característica que a define</td></tr>
-<tr><td><code>type::method(...)</code></td><td>Desambiguando uma chamada de método nomeando o tipo para o qual ela está definida</td></tr>
-<tr><td><code>&lt;type as trait&gt;::method(...)</code></td><td>Desambiguando uma chamada de método nomeando a característica e o tipo</td></tr>
+<tr><td><code>&lt;type&gt;::...</code></td><td>Item associado de um tipo que não pode ser nomeado diretamente (por exemplo, <code>&lt;&amp;T&gt;::...</code>, <code>&lt;[T]&gt;::...</code> etc.)</td></tr>
+<tr><td><code>trait::method(...)</code></td><td>Desambiguar uma chamada de método nomeando o trait que a define</td></tr>
+<tr><td><code>type::method(...)</code></td><td>Desambiguar uma chamada de método nomeando o tipo para o qual ela está definida</td></tr>
+<tr><td><code>&lt;type as trait&gt;::method(...)</code></td><td>Desambiguar uma chamada de método nomeando o trait e o tipo</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-4 mostra símbolos que aparecem no contexto do uso de tipos genéricos
-parâmetros.</p>
+<p>A Tabela B-4 mostra símbolos que aparecem no contexto do uso de parâmetros de
+tipos genéricos.</p>
 <p><span class="caption">Tabela B-4: Genéricos</span></p>
 <div class="table-wrapper">
 <table>
@@ -30902,19 +30903,19 @@ parâmetros.</p>
 </thead>
 <tbody>
 <tr><td><code>path&lt;...&gt;</code></td><td>Especifica parâmetros para um tipo genérico em um tipo (por exemplo, <code>Vec&lt;u8&gt;</code>)</td></tr>
-<tr><td><code>path::&lt;...&gt;</code>, <code>method::&lt;...&gt;</code></td><td>Especifica parâmetros para um tipo, função ou método genérico em uma expressão; frequentemente referido como <em>turbofish</em> (por exemplo, <code>"42".parse::&lt;i32&gt;()</code>)</td></tr>
-<tr><td><code>fn ident&lt;...&gt; ...</code></td><td>Definir função genérica</td></tr>
-<tr><td><code>struct ident&lt;...&gt; ...</code></td><td>Definir estrutura genérica</td></tr>
-<tr><td><code>enum ident&lt;...&gt; ...</code></td><td>Definir enumeração genérica</td></tr>
-<tr><td><code>impl&lt;...&gt; ...</code></td><td>Definir implementação genérica</td></tr>
-<tr><td><code>for&lt;...&gt; type</code></td><td>Limites de tempo de vida com classificação mais alta</td></tr>
-<tr><td><code>type&lt;ident=type&gt;</code></td><td>Um tipo genérico onde um ou mais tipos associados possuem atribuições específicas (por exemplo, <code>Iterator&lt;Item=T&gt;</code>)</td></tr>
+<tr><td><code>path::&lt;...&gt;</code>, <code>method::&lt;...&gt;</code></td><td>Especifica parâmetros para um tipo, função ou método genérico em uma expressão; isso é frequentemente chamado de <em>turbofish</em> (por exemplo, <code>"42".parse::&lt;i32&gt;()</code>)</td></tr>
+<tr><td><code>fn ident&lt;...&gt; ...</code></td><td>Define uma função genérica</td></tr>
+<tr><td><code>struct ident&lt;...&gt; ...</code></td><td>Define uma struct genérica</td></tr>
+<tr><td><code>enum ident&lt;...&gt; ...</code></td><td>Define um enum genérico</td></tr>
+<tr><td><code>impl&lt;...&gt; ...</code></td><td>Define uma implementação genérica</td></tr>
+<tr><td><code>for&lt;...&gt; type</code></td><td>Limites de lifetime de ordem superior</td></tr>
+<tr><td><code>type&lt;ident=type&gt;</code></td><td>Um tipo genérico em que um ou mais tipos associados têm atribuições específicas (por exemplo, <code>Iterator&lt;Item=T&gt;</code>)</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-5 mostra símbolos que aparecem no contexto de restrição de tipo genérico
-parâmetros com limites de características.</p>
-<p><span class="caption">Tabela B-5: Restrições vinculadas a características</span></p>
+<p>A Tabela B-5 mostra símbolos que aparecem no contexto de restringir parâmetros de
+tipos genéricos com limites de trait.</p>
+<p><span class="caption">Tabela B-5: Restrições de limites de trait</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -30922,17 +30923,17 @@ parâmetros com limites de características.</p>
 </thead>
 <tbody>
 <tr><td><code>T: U</code></td><td>Parâmetro genérico <code>T</code> restrito a tipos que implementam <code>U</code></td></tr>
-<tr><td><code>T: 'a</code></td><td>O tipo genérico <code>T</code> deve sobreviver ao tempo de vida <code>'a</code> (o que significa que o tipo não pode conter transitivamente quaisquer referências com tempos de vida inferiores a <code>'a</code>)</td></tr>
-<tr><td><code>T: 'static</code></td><td>O tipo genérico <code>T</code> não contém referências emprestadas além de <code>'static</code></td></tr>
-<tr><td><code>'b: 'a</code></td><td>A vida útil genérica <code>'b</code> deve durar mais que a vida útil <code>'a</code></td></tr>
-<tr><td><code>T: ?Sized</code></td><td>Permitir que o parâmetro de tipo genérico seja um tipo de tamanho dinâmico</td></tr>
-<tr><td><code>'a + trait</code>, <code>trait + trait</code></td><td>Restrição de tipo composto</td></tr>
+<tr><td><code>T: 'a</code></td><td>O tipo genérico <code>T</code> precisa sobreviver ao lifetime <code>'a</code> (isto é, o tipo não pode conter, de forma transitiva, referências com lifetimes menores que <code>'a</code>)</td></tr>
+<tr><td><code>T: 'static</code></td><td>O tipo genérico <code>T</code> não contém referências emprestadas além de referências <code>'static</code></td></tr>
+<tr><td><code>'b: 'a</code></td><td>O lifetime genérico <code>'b</code> precisa sobreviver ao lifetime <code>'a</code></td></tr>
+<tr><td><code>T: ?Sized</code></td><td>Permite que o parâmetro de tipo genérico seja um tipo de tamanho dinâmico</td></tr>
+<tr><td><code>'a + trait</code>, <code>trait + trait</code></td><td>Restrição composta de tipo</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-6 mostra símbolos que aparecem no contexto de chamada ou definição
-macros e especificação de atributos em um item.</p>
-<p><span class="caption">Tabela B-6: Macros e Atributos</span></p>
+<p>A Tabela B-6 mostra símbolos que aparecem no contexto de chamar ou definir
+macros e de especificar atributos em um item.</p>
+<p><span class="caption">Tabela B-6: Macros e atributos</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -30942,7 +30943,7 @@ macros e especificação de atributos em um item.</p>
 <tr><td><code>#[meta]</code></td><td>Atributo externo</td></tr>
 <tr><td><code>#![meta]</code></td><td>Atributo interno</td></tr>
 <tr><td><code>$ident</code></td><td>Substituição de macro</td></tr>
-<tr><td><code>$ident:kind</code></td><td>Metavariável macro</td></tr>
+<tr><td><code>$ident:kind</code></td><td>Metavariável de macro</td></tr>
 <tr><td><code>$(...)...</code></td><td>Repetição de macro</td></tr>
 <tr><td><code>ident!(...)</code>, <code>ident!{...}</code>, <code>ident![...]</code></td><td>Invocação de macro</td></tr>
 </tbody>
@@ -30957,15 +30958,15 @@ macros e especificação de atributos em um item.</p>
 </thead>
 <tbody>
 <tr><td><code>//</code></td><td>Comentário de linha</td></tr>
-<tr><td><code>//!</code></td><td>Comentário do documento da linha interna</td></tr>
-<tr><td><code>///</code></td><td>Comentário do documento da linha externa</td></tr>
-<tr><td><code>/*...*/</code></td><td>Bloquear comentário</td></tr>
-<tr><td><code>/*!...*/</code></td><td>Comentário do documento do bloco interno</td></tr>
-<tr><td><code>/**...*/</code></td><td>Comentário do documento do bloco externo</td></tr>
+<tr><td><code>//!</code></td><td>Comentário interno de documentação em linha</td></tr>
+<tr><td><code>///</code></td><td>Comentário externo de documentação em linha</td></tr>
+<tr><td><code>/*...*/</code></td><td>Comentário de bloco</td></tr>
+<tr><td><code>/*!...*/</code></td><td>Comentário interno de documentação em bloco</td></tr>
+<tr><td><code>/**...*/</code></td><td>Comentário externo de documentação em bloco</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-8 mostra os contextos em que os parênteses são usados.</p>
+<p>A Tabela B-8 mostra os contextos em que parênteses são usados.</p>
 <p><span class="caption">Tabela B-8: Parênteses</span></p>
 <div class="table-wrapper">
 <table>
@@ -30973,18 +30974,18 @@ macros e especificação de atributos em um item.</p>
 <tr><th>Símbolo</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>()</code></td><td>Tupla vazia (também conhecida como unidade), tanto literal quanto de tipo</td></tr>
+<tr><td><code>()</code></td><td>Tupla vazia (também chamada de unit), tanto como literal quanto como tipo</td></tr>
 <tr><td><code>(expr)</code></td><td>Expressão entre parênteses</td></tr>
-<tr><td><code>(expr,)</code></td><td>Expressão de tupla de elemento único</td></tr>
-<tr><td><code>(type,)</code></td><td>Tipo de tupla de elemento único</td></tr>
+<tr><td><code>(expr,)</code></td><td>Expressão de tupla de um único elemento</td></tr>
+<tr><td><code>(type,)</code></td><td>Tipo de tupla de um único elemento</td></tr>
 <tr><td><code>(expr, ...)</code></td><td>Expressão de tupla</td></tr>
 <tr><td><code>(type, ...)</code></td><td>Tipo de tupla</td></tr>
-<tr><td><code>expr(expr, ...)</code></td><td>Expressão de chamada de função; também usado para inicializar variantes da tupla <code>struct</code>s e da tupla <code>enum</code></td></tr>
+<tr><td><code>expr(expr, ...)</code></td><td>Expressão de chamada de função; também usada para inicializar <code>struct</code>s de tupla e variantes de enum em forma de tupla</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-9 mostra os contextos em que as chaves são usadas.</p>
-<p><span class="caption">Tabela B-9: Colchetes</span></p>
+<p>A Tabela B-9 mostra os contextos em que chaves são usadas.</p>
+<p><span class="caption">Tabela B-9: Chaves</span></p>
 <div class="table-wrapper">
 <table>
 <thead>
@@ -30992,11 +30993,11 @@ macros e especificação de atributos em um item.</p>
 </thead>
 <tbody>
 <tr><td><code>{...}</code></td><td>Expressão de bloco</td></tr>
-<tr><td><code>Type {...}</code></td><td>Estrutura literal</td></tr>
+<tr><td><code>Type {...}</code></td><td>Literal de struct</td></tr>
 </tbody>
 </table>
 </div>
-<p>A Tabela B-10 mostra os contextos em que os colchetes são usados.</p>
+<p>A Tabela B-10 mostra os contextos em que colchetes são usados.</p>
 <p><span class="caption">Tabela B-10: Colchetes</span></p>
 <div class="table-wrapper">
 <table>
@@ -31004,11 +31005,11 @@ macros e especificação de atributos em um item.</p>
 <tr><th>Contexto</th><th>Explicação</th></tr>
 </thead>
 <tbody>
-<tr><td><code>[...]</code></td><td>Literal de matriz</td></tr>
-<tr><td><code>[expr; len]</code></td><td>Literal de matriz contendo <code>len</code> cópias de <code>expr</code></td></tr>
-<tr><td><code>[type; len]</code></td><td>Tipo de matriz contendo <code>len</code> instâncias de <code>type</code></td></tr>
-<tr><td><code>expr[expr]</code></td><td>Indexação de coleções; sobrecarregável (<code>Index</code>, <code>IndexMut</code>)</td></tr>
-<tr><td><code>expr[..]</code>, <code>expr[a..]</code>, <code>expr[..b]</code>, <code>expr[a..b]</code></td><td>Indexação de coleção fingindo ser um fatiamento de coleção, usando <code>Range</code>, <code>RangeFrom</code>, <code>RangeTo</code> ou <code>RangeFull</code> como o “índice”</td></tr>
+<tr><td><code>[...]</code></td><td>Literal de array</td></tr>
+<tr><td><code>[expr; len]</code></td><td>Literal de array contendo <code>len</code> cópias de <code>expr</code></td></tr>
+<tr><td><code>[type; len]</code></td><td>Tipo de array contendo <code>len</code> instâncias de <code>type</code></td></tr>
+<tr><td><code>expr[expr]</code></td><td>Indexação de coleção; sobrecarregável (<code>Index</code>, <code>IndexMut</code>)</td></tr>
+<tr><td><code>expr[..]</code>, <code>expr[a..]</code>, <code>expr[..b]</code>, <code>expr[a..b]</code></td><td>Indexação de coleção simulando fatiamento, usando <code>Range</code>, <code>RangeFrom</code>, <code>RangeTo</code> ou <code>RangeFull</code> como “índice”</td></tr>
 </tbody>
 </table>
 </div>
@@ -31029,31 +31030,33 @@ padrão que você pode usar com <code>derive</code>. Cada seção cobre:</p>
 <li>Exemplos de operações que exigem esse trait</li>
 </ul>
 <p>Se você quiser um comportamento diferente daquele fornecido pelo atributo
-<code>derive</code>, consulte a <a href="../std/index.html">documentação da biblioteca padrão</a><!-- ignore --> de cada trait para saber como implementá-lo manualmente.</p>
+<code>derive</code>, consulte a <a href="../std/index.html">documentação da biblioteca padrão</a><!--
+ignore --> de cada trait para saber como implementá-lo manualmente.</p>
 <p>Os traits listados aqui são os únicos definidos pela biblioteca padrão que
 podem ser implementados em seus tipos usando <code>derive</code>. Outros traits definidos
-na biblioteca padrão não têm um comportamento padrão sensato, então cabe a você
-implementá-los da forma que fizer sentido para aquilo que está tentando
+na biblioteca padrão não têm um comportamento padrão sensato, então cabe a
+você implementá-los da forma que fizer sentido para o que está tentando
 construir.</p>
 <p>Um exemplo de trait que não pode ser derivado é <code>Display</code>, responsável pela
 formatação voltada a usuários finais. Você sempre deve considerar qual é a
-forma adequada de exibir um tipo para uma pessoa usuária. Quais partes do tipo
-essa pessoa deve poder ver? Quais partes seriam relevantes para ela? Qual
-formato dos dados faz mais sentido nesse contexto? O compilador Rust não tem
-essa percepção, então ele não pode fornecer para você um comportamento padrão
+forma adequada de exibir um tipo para a pessoa usuária. Quais partes do tipo
+ela deve poder ver? Quais partes seriam relevantes para ela? Qual formato dos
+dados faz mais sentido nesse contexto? O compilador Rust não tem essa
+percepção, então ele não pode fornecer para você um comportamento padrão
 apropriado.</p>
 <p>A lista de traits deriváveis fornecida neste apêndice não é exaustiva:
-bibliotecas podem implementar <code>derive</code> para seus próprios traits, o que torna a
-lista de traits que você pode usar com <code>derive</code> realmente aberta. Implementar
-<code>derive</code> envolve usar uma macro procedural, assunto abordado na seção
-<a href="#custom-derive-macros">“Macros <code>derive</code> personalizadas”</a><!-- ignore --> do
-Capítulo 20.</p>
+bibliotecas podem implementar <code>derive</code> para seus próprios traits, o que torna
+a lista de traits que você pode usar com <code>derive</code> realmente aberta.
+Implementar <code>derive</code> envolve usar uma macro procedural, assunto abordado na
+seção <a href="#custom-derive-macros">“Macros <code>derive</code>
+personalizadas”</a><!-- ignore --> do Capítulo 20.</p>
 <h3 id="debug-para-saída-voltada-a-programadores"><a class="header" href="#debug-para-saída-voltada-a-programadores"><code>Debug</code> para saída voltada a programadores</a></h3>
 <p>O trait <code>Debug</code> habilita a formatação de depuração em format strings, indicada
 ao adicionar <code>:?</code> dentro dos placeholders <code>{}</code>.</p>
-<p>O trait <code>Debug</code> permite imprimir instâncias de um tipo para fins de depuração,
-de modo que você e outras pessoas programadoras usando esse tipo possam
-inspecionar uma instância em um ponto específico da execução do programa.</p>
+<p>O trait <code>Debug</code> permite imprimir instâncias de um tipo para fins de
+depuração, de modo que você e outras pessoas programadoras que usam esse tipo
+possam inspecionar uma instância em um ponto específico da execução do
+programa.</p>
 <p>O trait <code>Debug</code> é exigido, por exemplo, no uso da macro <code>assert_eq!</code>. Essa
 macro imprime os valores das instâncias passadas como argumentos caso a
 asserção de igualdade falhe, para que programadores possam ver por que as duas
@@ -31071,16 +31074,15 @@ precisa conseguir comparar duas instâncias de um tipo quanto à igualdade.</p>
 <p>O trait <code>Eq</code> não possui métodos. Seu objetivo é sinalizar que, para todo valor
 do tipo anotado, o valor é igual a si mesmo. O trait <code>Eq</code> só pode ser aplicado
 a tipos que também implementam <code>PartialEq</code>, embora nem todo tipo que
-implementa <code>PartialEq</code> possa implementar <code>Eq</code>. Um exemplo disso são os tipos de
-números de ponto flutuante: a implementação desses números afirma que duas
+implementa <code>PartialEq</code> possa implementar <code>Eq</code>. Um exemplo disso são os tipos
+de números de ponto flutuante: a implementação desses números afirma que duas
 instâncias do valor not-a-number (<code>NaN</code>) não são iguais entre si.</p>
-<p>Um exemplo de quando <code>Eq</code> é necessário é em chaves de um <code>HashMap&lt;K, V&gt;</code>, para
-que o <code>HashMap&lt;K, V&gt;</code> possa dizer se duas chaves são iguais.</p>
+<p>Um exemplo de quando <code>Eq</code> é necessário é no uso de chaves em um <code>HashMap&lt;K, V&gt;</code>, para que o <code>HashMap&lt;K, V&gt;</code> possa determinar se duas chaves são iguais.</p>
 <h3 id="partialord-e-ord-para-comparações-de-ordenação"><a class="header" href="#partialord-e-ord-para-comparações-de-ordenação"><code>PartialOrd</code> e <code>Ord</code> para comparações de ordenação</a></h3>
 <p>O trait <code>PartialOrd</code> permite comparar instâncias de um tipo para fins de
-ordenação. Um tipo que implementa <code>PartialOrd</code> pode ser usado com os operadores
-<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code> e <code>&gt;=</code>. Você só pode aplicar <code>PartialOrd</code> a tipos que também
-implementem <code>PartialEq</code>.</p>
+ordenação. Um tipo que implementa <code>PartialOrd</code> pode ser usado com os
+operadores <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code> e <code>&gt;=</code>. Você só pode aplicar <code>PartialOrd</code> a tipos
+que também implementem <code>PartialEq</code>.</p>
 <p>Derivar <code>PartialOrd</code> implementa o método <code>partial_cmp</code>, que retorna um
 <code>Option&lt;Ordering&gt;</code> que será <code>None</code> quando os valores comparados não produzirem
 uma ordenação. Um exemplo de valor que não produz ordenação, embora a maioria
@@ -31091,29 +31093,29 @@ valor <code>NaN</code> retornará <code>None</code>.</p>
 valor de cada campo na ordem em que os campos aparecem na definição da struct.
 Quando derivado em enums, variantes declaradas antes na definição do enum são
 consideradas menores do que variantes listadas depois.</p>
-<p>O trait <code>PartialOrd</code> é necessário, por exemplo, para o método <code>gen_range</code> do
-crate <code>rand</code>, que gera um valor aleatório no intervalo especificado por uma
+<p>O trait <code>PartialOrd</code> é exigido, por exemplo, pelo método <code>gen_range</code> do crate
+<code>rand</code>, que gera um valor aleatório no intervalo especificado por uma
 expressão de range.</p>
 <p>O trait <code>Ord</code> permite saber que, para quaisquer dois valores do tipo anotado,
 existirá uma ordenação válida. O trait <code>Ord</code> implementa o método <code>cmp</code>, que
-retorna um <code>Ordering</code> em vez de <code>Option&lt;Ordering&gt;</code>, porque uma ordenação válida
-sempre será possível. Você só pode aplicar o trait <code>Ord</code> a tipos que também
-implementem <code>PartialOrd</code> e <code>Eq</code> e, por consequência, <code>PartialEq</code>. Quando
-derivado em structs e enums, <code>cmp</code> se comporta da mesma forma que a
+retorna um <code>Ordering</code> em vez de <code>Option&lt;Ordering&gt;</code>, porque uma ordenação
+válida sempre será possível. Você só pode aplicar o trait <code>Ord</code> a tipos que
+também implementem <code>PartialOrd</code> e <code>Eq</code> e, por consequência, <code>PartialEq</code>.
+Quando derivado em structs e enums, <code>cmp</code> se comporta da mesma forma que a
 implementação derivada de <code>partial_cmp</code> com <code>PartialOrd</code>.</p>
 <p>Um exemplo de quando <code>Ord</code> é necessário é ao armazenar valores em um
 <code>BTreeSet&lt;T&gt;</code>, uma estrutura de dados que guarda dados com base na ordem de
 classificação dos valores.</p>
 <h3 id="clone-e-copy-para-duplicar-valores"><a class="header" href="#clone-e-copy-para-duplicar-valores"><code>Clone</code> e <code>Copy</code> para duplicar valores</a></h3>
 <p>O trait <code>Clone</code> permite criar explicitamente uma cópia profunda de um valor, e
-o processo de duplicação pode envolver execução de código arbitrário e cópia de
-dados no heap. Veja a seção <a href="#variables-and-data-interacting-with-clone">“Variáveis e dados interagindo com
+o processo de duplicação pode envolver execução de código arbitrário e cópia
+de dados no heap. Veja a seção <a href="#variables-and-data-interacting-with-clone">“Variáveis e dados interagindo com
 Clone”</a><!-- ignore --> do Capítulo
 4 para mais informações sobre <code>Clone</code>.</p>
 <p>Derivar <code>Clone</code> implementa o método <code>clone</code>, que, quando implementado para o
 tipo inteiro, chama <code>clone</code> em cada uma das partes do tipo. Isso significa que
-todos os campos ou valores do tipo também precisam implementar <code>Clone</code> para que
-ele possa ser derivado.</p>
+todos os campos ou valores do tipo também precisam implementar <code>Clone</code> para
+que ele possa ser derivado.</p>
 <p>Um exemplo de quando <code>Clone</code> é necessário é ao chamar o método <code>to_vec</code> em uma
 slice. A slice não é dona das instâncias do tipo que contém, mas o vetor
 retornado por <code>to_vec</code> precisará ser dono dessas instâncias, então <code>to_vec</code>
@@ -31125,32 +31127,32 @@ stack: Copy”</a><!-- ignore --> do Capítulo 4 para mais
 informações sobre <code>Copy</code>.</p>
 <p>O trait <code>Copy</code> não define métodos justamente para impedir que programadores
 sobrecarreguem métodos e violem a suposição de que nenhum código arbitrário
-está sendo executado. Dessa forma, todos podem assumir que copiar um valor será
-muito rápido.</p>
+está sendo executado. Dessa forma, todos podem assumir que copiar um valor
+será muito rápido.</p>
 <p>Você pode derivar <code>Copy</code> em qualquer tipo cujas partes todas implementem
 <code>Copy</code>. Um tipo que implementa <code>Copy</code> também deve implementar <code>Clone</code>, porque
 um tipo que implementa <code>Copy</code> tem uma implementação trivial de <code>Clone</code> que
 realiza a mesma tarefa que <code>Copy</code>.</p>
 <p>O trait <code>Copy</code> raramente é exigido; tipos que implementam <code>Copy</code> têm
-otimizações disponíveis, o que significa que você não precisa chamar <code>clone</code>, e
-isso deixa o código mais conciso.</p>
-<p>Tudo o que é possível fazer com <code>Copy</code> também pode ser feito com <code>Clone</code>, mas o
-código pode ficar mais lento ou precisar usar <code>clone</code> em mais lugares.</p>
+otimizações disponíveis, o que significa que você não precisa chamar <code>clone</code>,
+e isso deixa o código mais conciso.</p>
+<p>Tudo o que é possível fazer com <code>Copy</code> também pode ser feito com <code>Clone</code>, mas
+o código pode ficar mais lento ou precisar usar <code>clone</code> em mais lugares.</p>
 <h3 id="hash-para-mapear-um-valor-para-outro-valor-de-tamanho-fixo"><a class="header" href="#hash-para-mapear-um-valor-para-outro-valor-de-tamanho-fixo"><code>Hash</code> para mapear um valor para outro valor de tamanho fixo</a></h3>
 <p>O trait <code>Hash</code> permite pegar uma instância de um tipo de tamanho arbitrário e
 mapeá-la para um valor de tamanho fixo usando uma função hash. Derivar <code>Hash</code>
-implementa o método <code>hash</code>. A implementação derivada do método <code>hash</code> combina o
-resultado de chamar <code>hash</code> em cada uma das partes do tipo, o que significa que
-todos os campos ou valores também precisam implementar <code>Hash</code> para que <code>Hash</code>
-possa ser derivado.</p>
+implementa o método <code>hash</code>. A implementação derivada do método <code>hash</code> combina
+o resultado de chamar <code>hash</code> em cada uma das partes do tipo, o que significa
+que todos os campos ou valores também precisam implementar <code>Hash</code> para que
+<code>Hash</code> possa ser derivado.</p>
 <p>Um exemplo de quando <code>Hash</code> é necessário é no armazenamento de chaves em um
 <code>HashMap&lt;K, V&gt;</code>, para guardar dados de maneira eficiente.</p>
 <h3 id="default-para-valores-padrão"><a class="header" href="#default-para-valores-padrão"><code>Default</code> para valores padrão</a></h3>
-<p>O trait <code>Default</code> permite criar um valor padrão para um tipo. Derivar <code>Default</code>
-implementa a função <code>default</code>. A implementação derivada de <code>default</code> chama
-<code>default</code> em cada parte do tipo, o que significa que todos os campos ou valores
-do tipo também precisam implementar <code>Default</code> para que esse trait possa ser
-derivado.</p>
+<p>O trait <code>Default</code> permite criar um valor padrão para um tipo. Derivar
+<code>Default</code> implementa a função <code>default</code>. A implementação derivada de
+<code>default</code> chama <code>default</code> em cada parte do tipo, o que significa que todos os
+campos ou valores do tipo também precisam implementar <code>Default</code> para que esse
+trait possa ser derivado.</p>
 <p>A função <code>Default::default</code> é comumente usada em combinação com a sintaxe de
 atualização de struct discutida na seção <a href="#creating-instances-from-other-instances-with-struct-update-syntax">“Criando instâncias a partir de
 outras instâncias com a sintaxe de atualização de
@@ -31160,40 +31162,43 @@ então definir e usar um valor padrão para o restante dos campos usando
 <code>..Default::default()</code>.</p>
 <p>O trait <code>Default</code> é necessário quando você usa, por exemplo, o método
 <code>unwrap_or_default</code> em instâncias de <code>Option&lt;T&gt;</code>. Se o <code>Option&lt;T&gt;</code> for <code>None</code>,
-o método <code>unwrap_or_default</code> retornará o resultado de <code>Default::default</code> para o
-tipo <code>T</code> armazenado no <code>Option&lt;T&gt;</code>.</p>
+o método <code>unwrap_or_default</code> retornará o resultado de <code>Default::default</code> para
+o tipo <code>T</code> armazenado no <code>Option&lt;T&gt;</code>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="d---ferramentas-úteis-de-desenvolvimento"><a href="#d---ferramentas-úteis-de-desenvolvimento" class="header">D - Ferramentas Úteis de Desenvolvimento</a></h1>
+<h1 id="d---ferramentas-úteis-de-desenvolvimento"><a href="#d---ferramentas-úteis-de-desenvolvimento" class="header">D - Ferramentas úteis de desenvolvimento</a></h1>
 <h2 id="apêndice-d-ferramentas-úteis-de-desenvolvimento"><a class="header" href="#apêndice-d-ferramentas-úteis-de-desenvolvimento">Apêndice D: Ferramentas úteis de desenvolvimento</a></h2>
-<p>Neste apêndice, falamos sobre algumas ferramentas de desenvolvimento úteis que o Rust
-projeto fornece. Veremos a formatação automática e maneiras rápidas de aplicar
-correções de aviso, um linter e integração com IDEs.</p>
+<p>Neste apêndice, vamos ver algumas ferramentas úteis de desenvolvimento
+fornecidas pelo projeto Rust. Vamos falar sobre formatação automática,
+maneiras rápidas de aplicar correções sugeridas para avisos, um linter e
+integração com IDEs.</p>
 <h3 id="formatação-automática-com-rustfmt"><a class="header" href="#formatação-automática-com-rustfmt">Formatação automática com <code>rustfmt</code></a></h3>
-<p>A ferramenta <code>rustfmt</code> reformata seu código de acordo com o estilo do código da comunidade.
-Muitos projetos colaborativos usam <code>rustfmt</code> para evitar discussões sobre quais
-estilo a ser usado ao escrever Rust: todos formatam seu código usando a ferramenta.</p>
-<p>As instalações do Rust incluem <code>rustfmt</code> por padrão, então você já deve ter o
-programas <code>rustfmt</code> e <code>cargo-fmt</code> em seu sistema. Esses dois comandos são
-análogo a <code>rustc</code> e <code>cargo</code> em que <code>rustfmt</code> permite um controle mais refinado
-e <code>cargo-fmt</code> entende as convenções de um projeto que usa Cargo. Para formatar
-qualquer projeto Cargo, insira o seguinte:</p>
+<p>A ferramenta <code>rustfmt</code> reformata seu código de acordo com o estilo de código
+da comunidade. Muitos projetos colaborativos usam <code>rustfmt</code> para evitar
+discussões sobre qual estilo usar ao escrever Rust: todo mundo formata o
+código com a mesma ferramenta.</p>
+<p>As instalações do Rust incluem <code>rustfmt</code> por padrão, então você já deve ter os
+programas <code>rustfmt</code> e <code>cargo-fmt</code> no seu sistema. Esses dois comandos são
+análogos a <code>rustc</code> e <code>cargo</code>, no sentido de que <code>rustfmt</code> permite um controle
+mais refinado e <code>cargo-fmt</code> entende as convenções de um projeto que usa Cargo.
+Para formatar qualquer projeto Cargo, execute o seguinte:</p>
 <pre><code class="language-console">$ cargo fmt
 </code></pre>
-<p>A execução deste comando reformata todo o código Rust na crate atual. Esse
-deve alterar apenas o estilo do código, não a semântica do código. Para mais informações
-em <code>rustfmt</code>, consulte <a href="https://github.com/rust-lang/rustfmt">sua documentação</a>.</p>
+<p>Executar esse comando reformata todo o código Rust na crate atual. Isso deve
+alterar apenas o estilo do código, não sua semântica. Para mais informações
+sobre <code>rustfmt</code>, consulte <a href="https://github.com/rust-lang/rustfmt">sua documentação</a>.</p>
 <h3 id="corrija-seu-código-com-rustfix"><a class="header" href="#corrija-seu-código-com-rustfix">Corrija seu código com <code>rustfix</code></a></h3>
-<p>A ferramenta <code>rustfix</code> está incluída nas instalações do Rust e pode automaticamente
-corrigir avisos do compilador que tenham uma maneira clara de corrigir o problema que está
-provavelmente o que você deseja. Você provavelmente já viu avisos do compilador antes. Para
-por exemplo, considere este código:</p>
+<p>A ferramenta <code>rustfix</code> está incluída nas instalações do Rust e pode corrigir
+automaticamente avisos do compilador para os quais haja uma maneira clara de
+resolver o problema, e essa solução provavelmente será a que você quer. Você
+provavelmente já viu avisos do compilador antes. Por exemplo, considere este
+código:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let mut x = 42;
     println!("{x}");
 }</code></pre>
-<p>Aqui, estamos definindo a variável <code>x</code> como mutável, mas na verdade nunca sofremos mutação
-isto. Rust nos avisa sobre isso:</p>
+<p>Aqui, estamos definindo a variável <code>x</code> como mutável, mas na prática nunca a
+mutamos. Rust nos avisa sobre isso:</p>
 <pre><code class="language-console">$ cargo build
    Compiling myprogram v0.1.0 (file:///projects/myprogram)
 warning: variable does not need to be mutable
@@ -31206,33 +31211,34 @@ warning: variable does not need to be mutable
   |
   = note: `#[warn(unused_mut)]` on by default
 </code></pre>
-<p>O aviso sugere que removamos a palavra-chave <code>mut</code>. Podemos automaticamente
-aplique essa sugestão usando a ferramenta <code>rustfix</code> executando o comando <code>cargo consertar</code>:</p>
+<p>O aviso sugere que removamos a palavra-chave <code>mut</code>. Podemos aplicar essa
+sugestão automaticamente com a ferramenta <code>rustfix</code> executando o comando
+<code>cargo fix</code>:</p>
 <pre><code class="language-console">$ cargo fix
     Checking myprogram v0.1.0 (file:///projects/myprogram)
       Fixing src/main.rs (1 fix)
     Finished dev [unoptimized + debuginfo] target(s) in 0.59s
 </code></pre>
-<p>Quando olharmos <em>src/main.rs</em> novamente, veremos que <code>cargo fix</code> mudou o
+<p>Quando olharmos <em>src/main.rs</em> novamente, veremos que <code>cargo fix</code> alterou o
 código:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 42;
     println!("{x}");
 }</code></pre>
-<p>A variável <code>x</code> agora é imutável e o aviso não aparece mais.</p>
-<p>Você também pode usar o comando <code>cargo fix</code> para fazer a transição do seu código entre
+<p>A variável <code>x</code> agora é imutável, e o aviso não aparece mais.</p>
+<p>Você também pode usar o comando <code>cargo fix</code> para migrar seu código entre
 diferentes edições do Rust. As edições são abordadas no <a href="#e---edições">Apêndice E</a><!--
 ignore -->.</p>
-<h3 id="mais-lints-com-clippy"><a class="header" href="#mais-lints-com-clippy">Mais Lints com Clippy</a></h3>
-<p>A ferramenta Clippy é uma coleção de lints para analisar seu código para que você possa
-detecte erros comuns e melhore seu código Rust. Clippy está incluído com
-instalações padrão do Rust.</p>
+<h3 id="mais-lints-com-clippy"><a class="header" href="#mais-lints-com-clippy">Mais lints com Clippy</a></h3>
+<p>A ferramenta Clippy é uma coleção de lints para analisar seu código, de modo
+que você possa detectar erros comuns e melhorar seu código Rust. Clippy está
+incluído nas instalações padrão do Rust.</p>
 <p>Para executar os lints do Clippy em qualquer projeto Cargo, digite o seguinte:</p>
 <pre><code class="language-console">$ cargo clippy
 </code></pre>
-<p>Por exemplo, digamos que você escreve um programa que usa uma aproximação de um
-constante matemática, como pi, como este programa faz:</p>
+<p>Por exemplo, suponha que você escreva um programa que usa uma aproximação de
+uma constante matemática, como pi, assim:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -31241,7 +31247,7 @@ constante matemática, como pi, como este programa faz:</p>
     println!("the area of the circle is {}", x * r * r);
 }</code></pre>
 </figure>
-<p>Executar <code>cargo clippy</code> neste projeto resulta neste erro:</p>
+<p>Executar <code>cargo clippy</code> nesse projeto resulta neste erro:</p>
 <pre><code class="language-text">error: approximate value of `f{32, 64}::consts::PI` found
  --&gt; src/main.rs:2:13
   |
@@ -31252,10 +31258,10 @@ constante matemática, como pi, como este programa faz:</p>
   = help: consider using the constant directly
   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#approx_constant
 </code></pre>
-<p>Este erro permite que você saiba que Rust já possui uma constante <code>PI</code> mais precisa
-definido, e que seu programa seria mais correto se você usasse a constante
-em vez de. Você então alteraria seu código para usar a constante <code>PI</code>.</p>
-<p>O código a seguir não resulta em erros ou avisos do Clippy:</p>
+<p>Esse erro informa que Rust já possui uma constante <code>PI</code> mais precisa definida e
+que seu programa seria mais correto se usasse essa constante. Você então
+alteraria seu código para usar <code>PI</code>.</p>
+<p>O código a seguir não resulta em erros nem avisos do Clippy:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -31264,24 +31270,23 @@ em vez de. Você então alteraria seu código para usar a constante <code>PI</co
     println!("the area of the circle is {}", x * r * r);
 }</code></pre>
 </figure>
-<p>Para obter mais informações sobre o Clippy, consulte <a href="https://github.com/rust-lang/rust-clippy">sua documentação</a>.</p>
-<h3 id="integração-ide-usando-rust-analyzer"><a class="header" href="#integração-ide-usando-rust-analyzer">Integração IDE usando <code>rust-analyzer</code></a></h3>
-<p>Para ajudar na integração do IDE, a comunidade Rust recomenda usar
-<a href="https://rust-analyzer.github.io"><code>rust-analyzer</code></a><!-- ignore -->. Esta ferramenta é um conjunto de
-utilitários centrados no compilador que falam <a href="http://langserver.org/">Language Server Protocol</a><!--
-ignore -->, que é uma especificação para IDEs e linguagens de programação para
-comunicar uns com os outros. Clientes diferentes podem usar <code>rust-analyzer</code>, como
-<a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">o plug-in do analisador Rust para Visual Studio Code</a>.</p>
-<p>Visite a <a href="https://rust-analyzer.github.io">página inicial</a><!-- ignore --> do projeto <code>rust-analyzer</code>
-para obter instruções de instalação e instale o suporte do servidor de idiomas em seu
-IDE específico. Seu IDE ganhará recursos como preenchimento automático, pular para
-definição e erros inline.</p>
+<p>Para mais informações sobre Clippy, consulte <a href="https://github.com/rust-lang/rust-clippy">sua documentação</a>.</p>
+<h3 id="integração-com-ides-usando-rust-analyzer"><a class="header" href="#integração-com-ides-usando-rust-analyzer">Integração com IDEs usando <code>rust-analyzer</code></a></h3>
+<p>Para ajudar na integração com IDEs, a comunidade Rust recomenda usar
+<a href="https://rust-analyzer.github.io"><code>rust-analyzer</code></a><!-- ignore -->. Essa ferramenta é um conjunto
+de utilitários centrados no compilador que falam o <a href="http://langserver.org/">Language Server
+Protocol</a><!-- ignore -->, que é uma especificação para IDEs e linguagens
+de programação se comunicarem entre si. Diferentes clientes podem usar
+<code>rust-analyzer</code>, como <a href="https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer">o plug-in Rust Analyzer para Visual Studio Code</a>.</p>
+<p>Visite a <a href="https://rust-analyzer.github.io">página inicial</a><!-- ignore --> do projeto
+<code>rust-analyzer</code> para obter instruções de instalação e, em seguida, instale o
+suporte ao servidor de linguagem na IDE que você usa. Sua IDE ganhará
+recursos como autocompletar, ir para a definição e erros inline.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="e---edições"><a href="#e---edições" class="header">E - Edições</a></h1>
 <h2 id="apêndice-e-edições"><a class="header" href="#apêndice-e-edições">Apêndice E: Edições</a></h2>
-<p>No Capítulo 1, você viu que <code>cargo new</code> adiciona um pouco de metadado ao
-arquivo <em>Cargo.toml</em> sobre uma edição. Este apêndice explica o que isso quer
-dizer!</p>
+<p>No Capítulo 1, você viu que <code>cargo new</code> adiciona alguns metadados sobre edição
+ao arquivo <em>Cargo.toml</em>. Este apêndice explica o que isso quer dizer!</p>
 <p>A linguagem e o compilador Rust têm um ciclo de lançamento de seis semanas, o
 que significa que as pessoas usuárias recebem um fluxo constante de novos
 recursos. Outras linguagens de programação lançam mudanças maiores com menos
@@ -31298,13 +31303,14 @@ como parte do processo normal de lançamento a cada seis semanas.</p>
 <li>Para quem usa Rust ativamente, uma nova edição reúne mudanças incrementais
 em um pacote fácil de entender.</li>
 <li>Para quem ainda não usa Rust, uma nova edição sinaliza que avanços
-importantes aconteceram, o que pode fazer a linguagem valer uma nova chance.</li>
+importantes aconteceram, o que pode fazer a linguagem merecer uma nova
+chance.</li>
 <li>Para quem desenvolve o próprio Rust, uma nova edição oferece um ponto de
 convergência para o projeto como um todo.</li>
 </ul>
 <p>No momento em que este texto foi escrito, há quatro edições do Rust
 disponíveis: Rust 2015, Rust 2018, Rust 2021 e Rust 2024. Este livro foi
-escrito usando os idioms da edição Rust 2024.</p>
+escrito usando as convenções idiomáticas da edição Rust 2024.</p>
 <p>A chave <code>edition</code> no arquivo <em>Cargo.toml</em> indica qual edição o compilador deve
 usar para o seu código. Se essa chave não existir, Rust usa <code>2015</code> como valor
 da edição por razões de compatibilidade retroativa.</p>
@@ -31314,7 +31320,7 @@ nova palavra-chave que conflita com identificadores no código. Ainda assim, a
 menos que você opte por essas mudanças, seu código continuará compilando mesmo
 que você atualize a versão do compilador Rust que utiliza.</p>
 <p>Todas as versões do compilador Rust oferecem suporte a qualquer edição que
-existia antes do lançamento daquele compilador, e elas podem ligar entre si
+existia antes do lançamento daquele compilador, e elas podem linkar entre si
 crates de qualquer edição suportada. As mudanças de edição afetam apenas a
 forma como o compilador faz o parsing inicial do código. Portanto, se você
 estiver usando Rust 2015 e uma de suas dependências usar Rust 2018, seu
@@ -31367,7 +31373,7 @@ tradução!</p>
 <h1 id="g---como-o-rust-é-feito-e-o-rust-nightly"><a href="#g---como-o-rust-é-feito-e-o-rust-nightly" class="header">G - Como o Rust é Feito e o “Rust Nightly”</a></h1>
 <h2 id="apêndice-g---como-o-rust-é-feito-e-o-rust-nightly"><a class="header" href="#apêndice-g---como-o-rust-é-feito-e-o-rust-nightly">Apêndice G - Como o Rust é Feito e o “Rust Nightly”</a></h2>
 <p>Este apêndice trata de como o Rust é produzido e de como isso afeta você como
-desenvolvedor Rust.</p>
+desenvolvedora ou desenvolvedor Rust.</p>
 <h3 id="estabilidade-sem-estagnação"><a class="header" href="#estabilidade-sem-estagnação">Estabilidade sem estagnação</a></h3>
 <p>Como linguagem, Rust se importa <em>muito</em> com a estabilidade do seu código.
 Queremos que Rust seja uma base sólida sobre a qual você possa construir, e,
@@ -31380,11 +31386,11 @@ estagnação”, e nosso princípio orientador é este: você nunca deveria ter 
 de atualizar para uma nova versão estável do Rust. Cada atualização deve ser
 indolor, mas também deve trazer recursos novos, menos bugs e tempos de
 compilação mais rápidos.</p>
-<h3 id="chu-chu-canais-de-lançamento-e-viajando-nos-trilhos"><a class="header" href="#chu-chu-canais-de-lançamento-e-viajando-nos-trilhos">Chu, chu! Canais de lançamento e viajando nos trilhos</a></h3>
-<p>O desenvolvimento do Rust opera em um <em>cronograma de trens</em>. Isto é, todo o
+<h3 id="tchu-tchu-canais-de-lançamento-e-o-modelo-de-trem"><a class="header" href="#tchu-tchu-canais-de-lançamento-e-o-modelo-de-trem">Tchu, tchu! Canais de lançamento e o modelo de trem</a></h3>
+<p>O desenvolvimento do Rust segue um <em>modelo de trem</em>. Isto é, todo o
 desenvolvimento acontece no branch principal do repositório do Rust. Os
 lançamentos seguem um modelo de trem de lançamento de software, como o usado
-no Cisco IOS e em outros projetos. Há três <em>canais de lançamento</em> do Rust:</p>
+pelo Cisco IOS e por outros projetos. Há três <em>canais de lançamento</em> do Rust:</p>
 <ul>
 <li>Nightly</li>
 <li>Beta</li>
@@ -31410,8 +31416,8 @@ nightly. Agora, há dois lançamentos:</p>
                      |
 beta:                *
 </code></pre>
-<p>A maioria das pessoas usuárias de Rust não usa lançamentos beta ativamente,
-mas testa contra o beta em seus sistemas de CI para ajudar Rust a descobrir
+<p>A maioria das pessoas usuárias do Rust não usa lançamentos beta ativamente,
+mas testa contra o beta em seus sistemas de CI para ajudar o Rust a descobrir
 possíveis regressões. Enquanto isso, continua existindo um lançamento nightly
 toda noite:</p>
 <pre><code class="language-text">nightly: * - - * - - * - - * - - *
@@ -31437,8 +31443,8 @@ stable:                                *
 </code></pre>
 <p>Viva! Rust 1.5 está pronto! Só que esquecemos uma coisa: como as seis semanas
 já passaram, também precisamos de um novo beta da <em>próxima</em> versão do Rust,
-1.6. Então, depois que o branch <code>stable</code> é criado a partir de <code>beta</code>, a próxima
-versão de <code>beta</code> volta a ser criada a partir de <code>nightly</code>:</p>
+1.6. Então, depois que o branch <code>stable</code> se separa de <code>beta</code>, a próxima versão
+de <code>beta</code> volta a se separar de <code>nightly</code>:</p>
 <pre><code class="language-text">nightly: * - - * - - * - - * - - * - - * - * - *
                      |                         |
 beta:                * - - - - - - - - *       *
@@ -31448,12 +31454,12 @@ stable:                                *
 <p>Isso é chamado de “modelo de trem” porque, a cada seis semanas, um lançamento
 “sai da estação”, mas ainda precisa percorrer uma jornada pelo canal beta
 antes de chegar como um lançamento stable.</p>
-<p>Rust lança uma nova versão a cada seis semanas, como um relógio. Se você sabe
-a data de um lançamento do Rust, pode saber a data do próximo: é seis semanas
-depois. Um aspecto positivo de ter lançamentos programados a cada seis semanas
-é que o próximo trem chega logo. Se um recurso perder um lançamento específico,
-não é preciso se preocupar: outro acontecerá em pouco tempo! Isso ajuda a
-reduzir a pressão para tentar encaixar recursos possivelmente ainda
+<p>O Rust lança uma nova versão a cada seis semanas, como um relógio. Se você
+sabe a data de um lançamento do Rust, pode saber a data do próximo: é seis
+semanas depois. Um aspecto positivo de ter lançamentos programados a cada seis
+semanas é que o próximo trem chega logo. Se um recurso perder um lançamento
+específico, não é preciso se preocupar: outro acontecerá em pouco tempo! Isso
+ajuda a reduzir a pressão para tentar encaixar recursos possivelmente ainda
 inacabados perto da data de lançamento.</p>
 <p>Graças a esse processo, você sempre pode testar o próximo build do Rust e
 verificar por conta própria que a atualização é fácil: se um lançamento beta
@@ -31475,7 +31481,7 @@ experimentar esse recurso em andamento, pode, mas terá de usar uma versão
 nightly do Rust e anotar seu código-fonte com a flag apropriada para aderir ao
 recurso.</p>
 <p>Se você estiver usando uma versão beta ou stable do Rust, não poderá usar
-nenhuma feature flag. Essa é a chave que nos permite obter uso prático com
+nenhuma feature flag. Essa é a chave que nos permite obter uso prático de
 recursos novos antes de declará-los estáveis para sempre. Quem quiser ficar na
 vanguarda pode fazer isso, e quem quiser uma experiência sólida como rocha
 pode permanecer no stable e saber que seu código não vai quebrar. Estabilidade
@@ -31510,9 +31516,9 @@ $ rustup override set nightly
 </code></pre>
 <p>Agora, sempre que você chamar <code>rustc</code> ou <code>cargo</code> dentro de
 <em>~/projects/needs-nightly</em>, o <code>rustup</code> garantirá que você esteja usando Rust
-nightly, em vez do Rust stable padrão. Isso é útil quando você tem muitos
+nightly, em vez do seu Rust stable padrão. Isso é útil quando você tem muitos
 projetos Rust!</p>
-<h3 id="o-processo-de-rfc-e-as-equipes"><a class="header" href="#o-processo-de-rfc-e-as-equipes">O Processo de RFC e as equipes</a></h3>
+<h3 id="o-processo-de-rfc-e-as-equipes"><a class="header" href="#o-processo-de-rfc-e-as-equipes">O processo de RFC e as equipes</a></h3>
 <p>Então, como você fica sabendo desses novos recursos? O modelo de desenvolvimento
 do Rust segue um <em>processo de Request For Comments (RFC)</em>. Se você quiser uma
 melhoria no Rust, pode escrever uma proposta, chamada RFC.</p>
@@ -31521,7 +31527,7 @@ revisadas e discutidas pela equipe do Rust, composta por muitos subgrupos
 temáticos. Há uma lista completa das equipes <a href="https://www.rust-lang.org/governance">no site do
 Rust</a>, incluindo equipes para cada área
 do projeto: design da linguagem, implementação do compilador, infraestrutura,
-documentação e mais. A equipe apropriada lê a proposta e os comentários,
+documentação e muito mais. A equipe apropriada lê a proposta e os comentários,
 escreve seus próprios comentários e, eventualmente, chega a um consenso para
 aceitar ou rejeitar o recurso.</p>
 <p>Se o recurso for aceito, uma issue é aberta no repositório do Rust, e alguém
@@ -31529,9 +31535,9 @@ pode implementá-lo. A pessoa que o implementa muito possivelmente não é a
 mesma que propôs o recurso no início! Quando a implementação está pronta, ela
 chega ao branch principal atrás de um feature gate, como discutimos na seção
 <a href="#recursos-instáveis">“Recursos instáveis”</a><!-- ignore -->.</p>
-<p>Depois de algum tempo, uma vez que desenvolvedores Rust usando versões nightly
-tenham conseguido experimentar o novo recurso, integrantes da equipe discutem
-o recurso, como ele se comportou no nightly, e decidem se ele deve ou não
+<p>Depois de algum tempo, quando desenvolvedores Rust que usam versões nightly
+já tiveram oportunidade de experimentar o novo recurso, integrantes da equipe
+discutem o recurso, como ele se comportou no nightly e se ele deve ou não
 entrar no Rust stable. Se a decisão for seguir em frente, o feature gate é
 removido, e o recurso passa a ser considerado estável! Ele pega o trem rumo a
 um novo lançamento stable do Rust.</p>

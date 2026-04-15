@@ -39,10 +39,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-dcb56b39.js";
+            window.path_to_searchindex_js = "searchindex-8eadf77c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-869888b5.js"></script>
+        <script src="toc-47748130.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -182,9 +182,8 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="apêndice-e-edições"><a class="header" href="#apêndice-e-edições">Apêndice E: Edições</a></h2>
-<p>No Capítulo 1, você viu que <code>cargo new</code> adiciona um pouco de metadado ao
-arquivo <em>Cargo.toml</em> sobre uma edição. Este apêndice explica o que isso quer
-dizer!</p>
+<p>No Capítulo 1, você viu que <code>cargo new</code> adiciona alguns metadados sobre edição
+ao arquivo <em>Cargo.toml</em>. Este apêndice explica o que isso quer dizer!</p>
 <p>A linguagem e o compilador Rust têm um ciclo de lançamento de seis semanas, o
 que significa que as pessoas usuárias recebem um fluxo constante de novos
 recursos. Outras linguagens de programação lançam mudanças maiores com menos
@@ -201,13 +200,14 @@ como parte do processo normal de lançamento a cada seis semanas.</p>
 <li>Para quem usa Rust ativamente, uma nova edição reúne mudanças incrementais
 em um pacote fácil de entender.</li>
 <li>Para quem ainda não usa Rust, uma nova edição sinaliza que avanços
-importantes aconteceram, o que pode fazer a linguagem valer uma nova chance.</li>
+importantes aconteceram, o que pode fazer a linguagem merecer uma nova
+chance.</li>
 <li>Para quem desenvolve o próprio Rust, uma nova edição oferece um ponto de
 convergência para o projeto como um todo.</li>
 </ul>
 <p>No momento em que este texto foi escrito, há quatro edições do Rust
 disponíveis: Rust 2015, Rust 2018, Rust 2021 e Rust 2024. Este livro foi
-escrito usando os idioms da edição Rust 2024.</p>
+escrito usando as convenções idiomáticas da edição Rust 2024.</p>
 <p>A chave <code>edition</code> no arquivo <em>Cargo.toml</em> indica qual edição o compilador deve
 usar para o seu código. Se essa chave não existir, Rust usa <code>2015</code> como valor
 da edição por razões de compatibilidade retroativa.</p>
@@ -217,7 +217,7 @@ nova palavra-chave que conflita com identificadores no código. Ainda assim, a
 menos que você opte por essas mudanças, seu código continuará compilando mesmo
 que você atualize a versão do compilador Rust que utiliza.</p>
 <p>Todas as versões do compilador Rust oferecem suporte a qualquer edição que
-existia antes do lançamento daquele compilador, e elas podem ligar entre si
+existia antes do lançamento daquele compilador, e elas podem linkar entre si
 crates de qualquer edição suportada. As mudanças de edição afetam apenas a
 forma como o compilador faz o parsing inicial do código. Portanto, se você
 estiver usando Rust 2015 e uma de suas dependências usar Rust 2018, seu
