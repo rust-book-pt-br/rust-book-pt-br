@@ -1,22 +1,23 @@
-## Separando Módulos em Arquivos Diferentes
+## Separando módulos em arquivos diferentes
 
-Até agora, todos os exemplos neste capítulo definiram vários módulos em um arquivo.
-Quando os módulos ficam grandes, você pode querer mover suas definições para um local separado.
-arquivo para tornar o código mais fácil de navegar.
+Até agora, todos os exemplos deste capítulo definiam vários módulos em um único
+arquivo. Quando os módulos ficam grandes, talvez você queira mover suas
+definições para arquivos separados, para que o código fique mais fácil de
+navegar.
 
-Por exemplo, vamos começar com o código da Listagem 7.17 que tinha vários
-módulos de restaurante. Extrairemos módulos em arquivos em vez de ter todos os
-módulos definidos no arquivo raiz da crate. Neste caso, o arquivo raiz da crate é
-_src/lib.rs_, mas este procedimento também funciona com crates binárias cuja raiz da crate
-arquivo é _src/main.rs_.
+Por exemplo, vamos partir do código da Listagem 7-17, que tinha vários módulos
+relacionados ao restaurante. Vamos extrair módulos para arquivos em vez de
+manter todos eles definidos no arquivo raiz da crate. Neste caso, o arquivo
+raiz da crate é _src/lib.rs_, mas esse procedimento também funciona com crates
+binárias cujo arquivo raiz é _src/main.rs_.
 
-Primeiro, extrairemos o módulo `front_of_house` para seu próprio arquivo. Remova o
-código entre chaves para o módulo `front_of_house`, deixando apenas
-a declaração `mod front_of_house;`, para que _src/lib.rs_ contenha o código
-mostrado na Listagem 7-21. Observe que isso não será compilado até que criemos o
-_src/front_of_house.rs_ na Listagem 7-22.
+Primeiro, vamos extrair o módulo `front_of_house` para seu próprio arquivo.
+Remova o código de dentro das chaves do módulo `front_of_house`, deixando
+apenas a declaração `mod front_of_house;`, para que _src/lib.rs_ contenha o
+código mostrado na Listagem 7-21. Observe que isso ainda não compilará até
+criarmos o arquivo _src/front_of_house.rs_ mostrado na Listagem 7-22.
 
-<Listing number="7-21" file-name="src/lib.rs" caption="Declaring the `front_of_house` module whose body will be in *src/front_of_house.rs*">
+<Listing number="7-21" file-name="src/lib.rs" caption="Declarando o módulo `front_of_house`, cujo corpo ficará em *src/front_of_house.rs*">
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-21-and-22/src/lib.rs}}
@@ -24,12 +25,12 @@ _src/front_of_house.rs_ na Listagem 7-22.
 
 </Listing>
 
-Em seguida, coloque o código que estava entre chaves em um novo arquivo chamado
-_src/front_of_house.rs_, conforme mostrado na Listagem 7-22. O compilador sabe olhar
-neste arquivo porque se deparou com a declaração do módulo na raiz da crate
-com o nome `front_of_house`.
+Em seguida, coloque o código que estava entre as chaves em um novo arquivo
+chamado _src/front_of_house.rs_, como mostra a Listagem 7-22. O compilador sabe
+que deve procurar nesse arquivo porque encontrou, na raiz da crate, a
+declaração de módulo com o nome `front_of_house`.
 
-<Listing number="7-22" file-name="src/front_of_house.rs" caption="Definitions inside the `front_of_house` module in *src/front_of_house.rs*">
+<Listing number="7-22" file-name="src/front_of_house.rs" caption="Definições dentro do módulo `front_of_house` em *src/front_of_house.rs*">
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-21-and-22/src/front_of_house.rs}}
@@ -37,22 +38,24 @@ com o nome `front_of_house`.
 
 </Listing>
 
-Observe que você só precisa carregar um arquivo usando uma declaração `mod` _uma vez_ em seu
-árvore de módulos. Uma vez que o compilador saiba que o arquivo faz parte do projeto (e saiba
-onde na árvore do módulo o código reside por causa de onde você colocou o `mod`
-instrução), outros arquivos em seu projeto devem se referir ao código do arquivo carregado
-usando um caminho para onde foi declarado, conforme abordado em [“Caminhos para referência
-para um item na seção Árvore de Módulos”][paths]<!-- ignore -->. Em outras palavras,
-`mod` _não_ é uma operação de “inclusão” que você pode ter visto em outros
-linguagens de programação.
+Observe que você só precisa carregar um arquivo com uma declaração `mod` _uma
+vez_ na árvore de módulos. Depois que o compilador sabe que o arquivo faz parte
+do projeto, e sabe em que ponto da árvore de módulos aquele código se encontra
+por causa do lugar onde você colocou a instrução `mod`, os outros arquivos do
+projeto devem se referir ao código carregado usando um caminho até o ponto onde
+ele foi declarado, como vimos na seção [“Caminhos para se referir a um item na
+árvore de módulos”][paths]<!-- ignore -->. Em outras palavras, `mod` _não_ é
+uma operação de “include”, como você pode ter visto em outras linguagens de
+programação.
 
-A seguir, extrairemos o módulo `hosting` para seu próprio arquivo. O processo é um pouco
-diferente porque `hosting` é um módulo filho de `front_of_house`, não do
-módulo raiz. Colocaremos o arquivo `hosting` em um novo diretório que será
-nomeado por seus ancestrais na árvore do módulo, neste caso _src/front_of_house_.
+Em seguida, vamos extrair o módulo `hosting` para seu próprio arquivo. O
+processo é um pouco diferente porque `hosting` é um módulo filho de
+`front_of_house`, e não do módulo raiz. Vamos colocar o arquivo de `hosting` em
+um novo diretório nomeado de acordo com seus ancestrais na árvore de módulos;
+neste caso, _src/front_of_house_.
 
-Para começar a mover `hosting`, alteramos _src/front_of_house.rs_ para conter apenas
-a declaração do módulo `hosting`:
+Para começar a mover `hosting`, alteramos _src/front_of_house.rs_ para conter
+apenas a declaração do módulo `hosting`:
 
 <Listing file-name="src/front_of_house.rs">
 
@@ -62,8 +65,8 @@ a declaração do módulo `hosting`:
 
 </Listing>
 
-Em seguida, criamos um diretório _src/front_of_house_ e um arquivo _hosting.rs_ para
-contém as definições feitas no módulo `hosting`:
+Depois, criamos o diretório _src/front_of_house_ e um arquivo _hosting.rs_ para
+conter as definições feitas no módulo `hosting`:
 
 <Listing file-name="src/front_of_house/hosting.rs">
 
@@ -73,57 +76,61 @@ contém as definições feitas no módulo `hosting`:
 
 </Listing>
 
-Se, em vez disso, colocarmos _hosting.rs_ no diretório _src_, o compilador
-espere que o código _hosting.rs_ esteja em um módulo `hosting` declarado na crate
-root e não declarado como filho do módulo `front_of_house`. O
-regras do compilador para quais arquivos verificar o código de quais módulos significam o
-diretórios e arquivos correspondem melhor à árvore do módulo.
+Se, em vez disso, colocássemos _hosting.rs_ no diretório _src_, o compilador
+esperaria que o código de _hosting.rs_ estivesse em um módulo `hosting`
+declarado na raiz da crate, e não como filho do módulo `front_of_house`. As
+regras do compilador sobre quais arquivos verificar para o código de quais
+módulos fazem com que diretórios e arquivos correspondam de maneira mais
+próxima à árvore de módulos.
 
-> ### Caminhos de arquivo alternativos
+> ### Caminhos alternativos de arquivo
 >
-> Até agora, cobrimos os caminhos de arquivo mais idiomáticos que o compilador Rust usa,
-> mas Rust também oferece suporte a um estilo mais antigo de caminho de arquivo. Para um módulo chamado
-> `front_of_house` declarado na raiz da crate, o compilador procurará o
-> código do módulo em:
+> Até agora, cobrimos os caminhos de arquivo mais idiomáticos que o compilador
+> Rust usa, mas Rust também oferece suporte a um estilo mais antigo de caminho
+> de arquivo. Para um módulo chamado `front_of_house` declarado na raiz da
+> crate, o compilador procurará o código do módulo em:
 >
 > - _src/front_of_house.rs_ (o que cobrimos)
-> - _src/front_of_house/mod.rs_ (estilo antigo, caminho ainda suportado)
+> - _src/front_of_house/mod.rs_ (estilo mais antigo, ainda suportado)
 >
-> Para um módulo chamado `hosting` que é um submódulo de `front_of_house`, o
-> o compilador procurará o código do módulo em:
+> Para um módulo chamado `hosting`, que é um submódulo de `front_of_house`, o
+> compilador procurará o código do módulo em:
 >
 > - _src/front_of_house/hosting.rs_ (o que cobrimos)
-> - _src/front_of_house/hosting/mod.rs_ (estilo antigo, caminho ainda suportado)
+> - _src/front_of_house/hosting/mod.rs_ (estilo mais antigo, ainda suportado)
 >
-> Se você usar os dois estilos para o mesmo módulo, receberá um erro do compilador.
-> Usar uma mistura de ambos os estilos para módulos diferentes no mesmo projeto é
-> permitido, mas pode ser confuso para as pessoas que navegam no seu projeto.
+> Se você usar os dois estilos para o mesmo módulo, receberá um erro do
+> compilador. Misturar os dois estilos para módulos diferentes dentro do mesmo
+> projeto é permitido, mas pode ser confuso para quem estiver navegando pelo
+> código.
 >
-> A principal desvantagem do estilo que usa arquivos chamados _mod.rs_ é que seu
-> projeto pode acabar com muitos arquivos chamados _mod.rs_, o que pode ficar confuso
-> quando você os abre em seu editor ao mesmo tempo.
+> A principal desvantagem do estilo que usa arquivos chamados _mod.rs_ é que o
+> projeto pode acabar com muitos arquivos de mesmo nome, o que pode se tornar
+> confuso quando vários deles estão abertos no editor ao mesmo tempo.
 
-Movemos o código de cada módulo para um arquivo separado e a árvore do módulo permanece
-o mesmo. As chamadas de função em `eat_at_restaurant` funcionarão sem qualquer
-modificação, mesmo que as definições residam em arquivos diferentes. Esse
-técnica permite mover módulos para novos arquivos à medida que aumentam de tamanho.
+Movemos o código de cada módulo para um arquivo separado, e a árvore de
+módulos permanece a mesma. As chamadas de função em `eat_at_restaurant`
+continuarão funcionando sem nenhuma modificação, mesmo que as definições agora
+estejam em arquivos diferentes. Essa técnica permite mover módulos para novos
+arquivos à medida que eles crescem.
 
-Observe que a instrução `pub use crate::front_of_house::hosting` em
-_src/lib.rs_ também não mudou, nem `use` tem qualquer impacto em quais arquivos
-são compilados como parte da crate. A palavra-chave `mod` declara módulos e Rust
-procura em um arquivo com o mesmo nome do módulo o código que entra
+Observe que a instrução `pub use crate::front_of_house::hosting` em _src/lib.rs_
+também não mudou, e `use` tampouco tem qualquer impacto sobre quais arquivos
+são compilados como parte da crate. A palavra-chave `mod` declara módulos, e o
+Rust procura em um arquivo com o mesmo nome do módulo o código que deve ir para
 esse módulo.
 
 ## Resumo
 
-Rust permite dividir um pacote em várias crates e uma crate em módulos para que
-que você pode consultar itens definidos em um módulo de outro módulo. Você pode
-faça isso especificando caminhos absolutos ou relativos. Esses caminhos podem ser trazidos
-no escopo com uma instrução `use` para que você possa usar um caminho mais curto para
-múltiplos usos do item nesse escopo. O código do módulo é privado por padrão, mas
-você pode tornar as definições públicas adicionando a palavra-chave `pub`.
+Rust permite dividir um pacote em várias crates e uma crate em módulos, para
+que você possa se referir a itens definidos em um módulo a partir de outro.
+Você pode fazer isso especificando caminhos absolutos ou relativos. Esses
+caminhos podem ser trazidos para o escopo com uma instrução `use`, para que
+você possa usar um caminho mais curto em múltiplos usos do item naquele
+escopo. O código de módulo é privado por padrão, mas você pode tornar
+definições públicas adicionando a palavra-chave `pub`.
 
-No próximo capítulo, veremos algumas estruturas de coleta de dados no
-biblioteca padrão que você pode usar em seu código bem organizado.
+No próximo capítulo, veremos algumas estruturas de dados de coleção da
+biblioteca padrão que você poderá usar no seu código bem organizado.
 
 [paths]: ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html
