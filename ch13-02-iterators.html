@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-162de759.js";
+            window.path_to_searchindex_js = "searchindex-4fe81980.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -252,7 +252,7 @@ código diz que implementar a trait <code>Iterator</code> exige que você també
 tipo <code>Item</code>, e esse tipo é usado no valor de retorno do método <code>next</code>. Em
 outras palavras, <code>Item</code> será o tipo retornado pelo iterador.</p>
 <p>A trait <code>Iterator</code> exige apenas que implementadores definam um método: <code>next</code>,
-que retorna um item do iterador por vez, envolvido em <code>Some</code>, e, quando a
+que retorna um item do iterador por vez, envolto em <code>Some</code>, e, quando a
 iteração termina, retorna <code>None</code>.</p>
 <p>Podemos chamar o método <code>next</code> diretamente em iteradores; a Listagem 13-12
 demonstra quais valores são retornados por chamadas repetidas a <code>next</code> no
@@ -280,7 +280,7 @@ altera o estado interno que ele usa para controlar onde está na sequência. Em
 outras palavras, esse código <em>consome</em>, ou esgota, o iterador. Cada chamada a
 <code>next</code> consome um item do iterador. Não precisamos tornar <code>v1_iter</code> mutável
 quando usamos um laço <code>for</code>, porque o laço tomou ownership de <code>v1_iter</code> e o
-tornou mutável por trás dos panos.</p>
+tornou mutável nos bastidores.</p>
 <p>Observe também que os valores obtidos das chamadas a <code>next</code> são referências
 imutáveis aos valores do vetor. O método <code>iter</code> produz um iterador sobre
 referências imutáveis. Se quisermos criar um iterador que tome ownership de
@@ -293,8 +293,8 @@ pela biblioteca padrão; você pode conhecê-los consultando a documentação da
 de <code>Iterator</code>. Alguns desses métodos chamam <code>next</code> em sua definição, e é por
 isso que você precisa implementar <code>next</code> ao implementar a trait <code>Iterator</code>.</p>
 <p>Métodos que chamam <code>next</code> são chamados de <em>adaptadores consumidores</em>, porque
-chamá-los esgota o iterador. Um exemplo é o método <code>sum</code>, que toma ownership do
-iterador e percorre seus itens chamando <code>next</code> repetidamente, consumindo-o.
+chamá-los esgota o iterador. Um exemplo é o método <code>sum</code>, que toma ownership
+do iterador e percorre seus itens chamando <code>next</code> repetidamente, consumindo-o.
 Durante a iteração, ele soma cada item a um total acumulado e retorna esse
 total quando a iteração termina. A Listagem 13-13 tem um teste que ilustra o
 uso de <code>sum</code>.</p>
@@ -377,8 +377,8 @@ item do vetor original, incrementado em 1.</p>
 </figure>
 <p>Como <code>map</code> recebe uma closure, podemos especificar qualquer operação que
 quisermos realizar sobre cada item. Esse é um ótimo exemplo de como closures
-permitem personalizar um comportamento enquanto reutilizam o comportamento de
-iteração fornecido pela trait <code>Iterator</code>.</p>
+permitem personalizar um comportamento ao mesmo tempo que reutilizam o
+comportamento de iteração fornecido pela trait <code>Iterator</code>.</p>
 <p>Você pode encadear várias chamadas a adaptadores de iteradores para executar
 ações complexas de maneira legível. Mas, como todos os iteradores são
 preguiçosos, é necessário chamar um dos métodos consumidores para obter

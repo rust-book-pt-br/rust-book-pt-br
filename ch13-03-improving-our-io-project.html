@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-162de759.js";
+            window.path_to_searchindex_js = "searchindex-4fe81980.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -258,19 +258,19 @@ ela estava na Listagem 12-23.</p>
 <figcaption><a href="#listing-13-17">Listing 13-17</a>: Reprodução da função <code>Config::build</code> da Listagem 12-23</figcaption>
 </figure>
 <p>Na época, dissemos para não se preocupar com as chamadas ineficientes a
-<code>clone</code>, porque as removeríamos no futuro. Pois bem, esse futuro chegou!</p>
+<code>clone</code>, porque as removeríamos no futuro. Pois bem, esse momento chegou!</p>
 <p>Precisávamos de <code>clone</code> porque temos uma fatia com elementos <code>String</code> no
-parâmetro <code>args</code>, mas a função <code>build</code> não é dona de <code>args</code>. Para devolver
-ownership de uma instância de <code>Config</code>, tivemos de clonar os valores dos campos
-<code>query</code> e <code>file_path</code>, para que a própria instância de <code>Config</code> passasse a
-possuí-los.</p>
+parâmetro <code>args</code>, mas a função <code>build</code> não tem ownership de <code>args</code>. Para
+retornar ownership de uma instância de <code>Config</code>, tivemos de clonar os valores
+dos campos <code>query</code> e <code>file_path</code>, para que a própria instância de <code>Config</code>
+passasse a possuí-los.</p>
 <p>Com nosso novo conhecimento sobre iteradores, podemos alterar <code>build</code> para
-receber ownership de um iterador como argumento, em vez de apenas emprestar uma
-fatia. Usaremos a funcionalidade dos iteradores no lugar do código que verifica
-o comprimento da fatia e indexa posições específicas. Isso deixará mais claro
-o que <code>Config::build</code> está fazendo, porque o iterador é quem acessará os
+receber ownership de um iterador como argumento, em vez de emprestar uma fatia.
+Vamos usar a funcionalidade dos iteradores no lugar do código que verifica o
+comprimento da fatia e indexa posições específicas. Isso deixará mais claro o
+que <code>Config::build</code> está fazendo, porque será o iterador que acessará os
 valores.</p>
-<p>Uma vez que <code>Config::build</code> passe a tomar ownership do iterador e deixe de usar
+<p>Quando <code>Config::build</code> passar a tomar ownership do iterador e deixar de usar
 operações de indexação que fazem empréstimos, poderemos mover os valores
 <code>String</code> do iterador para <code>Config</code>, em vez de chamar <code>clone</code> e fazer uma nova
 alocação.</p>
@@ -576,8 +576,8 @@ programa. Queremos ignorá-lo e chegar ao próximo valor, então primeiro chamam
 para obter o valor que queremos colocar no campo <code>query</code> de <code>Config</code>. Se
 <code>next</code> retornar <code>Some</code>, usamos um <code>match</code> para extrair o valor. Se retornar
 <code>None</code>, isso significa que não foram fornecidos argumentos suficientes, e
-retornamos antecipadamente com um valor <code>Err</code>. Fazemos o mesmo para o valor
-<code>file_path</code>.</p>
+retornamos imediatamente com um valor <code>Err</code>. Fazemos a mesma coisa para o
+valor <code>file_path</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="making-code-clearer-with-iterator-adapters"></a></p>
 <h3 id="tornando-o-código-mais-claro-com-adaptadores-de-iteradores"><a class="header" href="#tornando-o-código-mais-claro-com-adaptadores-de-iteradores">Tornando o Código Mais Claro com Adaptadores de Iteradores</a></h3>
@@ -618,8 +618,8 @@ Listagem 12-19.</p>
 <p>Podemos escrever esse código de forma mais concisa usando métodos adaptadores
 de iteradores. Isso também nos permite evitar um vetor intermediário mutável,
 <code>results</code>. O estilo de programação funcional prefere minimizar a quantidade de
-estado mutável para tornar o código mais claro. Remover o estado mutável pode
-até permitir uma melhoria futura para tornar a busca paralela, porque não
+estado mutável para tornar o código mais claro. Remover esse estado mutável
+pode até permitir uma melhoria futura que torne a busca paralela, porque não
 teríamos de gerenciar acesso concorrente ao vetor <code>results</code>. A Listagem 13-22
 mostra essa mudança.</p>
 <figure class="listing" id="listing-13-22">
@@ -692,11 +692,11 @@ iterador removendo a chamada a <code>collect</code> e mudando o tipo de retorno 
 <code>impl Iterator&lt;Item = &amp;'a str&gt;</code>, de modo que a própria função se torne um
 adaptador de iterador. Observe que você também precisará atualizar os testes!
 Pesquise em um arquivo grande usando sua ferramenta <code>minigrep</code> antes e depois
-de fazer essa alteração para observar a diferença de comportamento. Antes dessa
-mudança, o programa não imprimirá nenhum resultado até ter coletado todos eles;
-depois, os resultados serão impressos à medida que cada linha correspondente
-for encontrada, porque o laço <code>for</code> na função <code>run</code> poderá tirar proveito da
-preguiça do iterador.</p>
+de fazer essa alteração para observar a diferença de comportamento. Antes
+dessa mudança, o programa não imprimirá nenhum resultado até ter coletado
+todos eles; depois, os resultados serão impressos à medida que cada linha
+correspondente for encontrada, porque o laço <code>for</code> na função <code>run</code> poderá
+tirar proveito da natureza preguiçosa do iterador.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="choosing-between-loops-or-iterators"></a></p>
 <h3 id="escolhendo-entre-laços-e-iteradores"><a class="header" href="#escolhendo-entre-laços-e-iteradores">Escolhendo entre Laços e Iteradores</a></h3>

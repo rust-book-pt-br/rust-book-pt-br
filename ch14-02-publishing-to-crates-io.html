@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-162de759.js";
+            window.path_to_searchindex_js = "searchindex-4fe81980.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -233,8 +233,8 @@ resultado em um navegador. Navegue até a função <code>add_one</code> e você 
 texto nos comentários de documentação é renderizado, como mostrado na Figura
 14-1.</p>
 <img alt="Rendered HTML documentation for the `add_one` function of `my_crate` " src="img/trpl14-01.png" class="center" />
-<p><span class="caption">Figura 14-1: A documentação HTML do <code>add_one</code>
-função</span></p>
+<p><span class="caption">Figura 14-1: A documentação HTML da função
+<code>add_one</code></span></p>
 <h4 id="seções-usadas-com-frequência"><a class="header" href="#seções-usadas-com-frequência">Seções Usadas com Frequência</a></h4>
 <p>Usamos o heading Markdown <code># Examples</code> na Listagem 14-1 para criar uma seção no
 HTML com o título “Exemplos”. Aqui estão algumas outras seções que autores de
@@ -280,7 +280,7 @@ entre em pânico e executarmos <code>cargo test</code> novamente, veremos que os
 capturam o fato de que o exemplo e o código estão fora de sincronia!</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="commenting-contained-items"></a></p>
-<h4 id="comentários-em-itens-contêineres"><a class="header" href="#comentários-em-itens-contêineres">Comentários em Itens Contêineres</a></h4>
+<h4 id="comentários-no-item-que-contém-os-comentários"><a class="header" href="#comentários-no-item-que-contém-os-comentários">Comentários no Item que Contém os Comentários</a></h4>
 <p>O estilo de comentário de documentação <code>//!</code> adiciona documentação ao item que
 <em>contém</em> os comentários, e não aos itens que vêm <em>depois</em> deles. Normalmente,
 usamos esse tipo de comentário dentro do arquivo raiz do crate (<em>src/lib.rs</em>,
@@ -346,9 +346,9 @@ escrever <code>use my_crate::some_module::another_module::UsefulType;</code> em 
 <p>A boa notícia é que, se essa estrutura <em>não</em> for conveniente para outras
 pessoas usarem a partir de outra biblioteca, você não precisa reorganizar sua
 estrutura interna. Em vez disso, pode reexportar itens para criar uma estrutura
-pública diferente da privada usando <code>pub use</code>. <em>Reexportar</em> pega um item
-público em um local e o torna público em outro, como se ele tivesse sido
-definido ali.</p>
+pública diferente da sua estrutura privada usando <code>pub use</code>. <em>Reexportar</em>
+pega um item público em um local e o torna público em outro, como se ele
+tivesse sido definido ali.</p>
 <p>Por exemplo, digamos que criamos uma biblioteca chamada <code>art</code> para modelar
 conceitos artísticos. Dentro dela há dois módulos: um módulo <code>kinds</code>,
 contendo dois enums chamados <code>PrimaryColor</code> e <code>SecondaryColor</code>, e um módulo
@@ -391,7 +391,7 @@ pub mod utils {
 gerada por <code>cargo doc</code>.</p>
 <img alt="Rendered documentation for the `art` crate that lists the `kinds` and `utils` modules" src="img/trpl14-03.png" class="center" />
 <p><span class="caption">Figura 14-3: A primeira página da documentação do <code>art</code>
-que lista os módulos <code> kinds</code>e <code> utils</code></span></p>
+que lista os módulos <code>kinds</code> e <code>utils</code></span></p>
 <p>Observe que os tipos <code>PrimaryColor</code> e <code>SecondaryColor</code> não aparecem na página
 inicial, nem a função <code>mix</code>. Precisamos clicar em <code>kinds</code> e <code>utils</code> para vê-los.</p>
 <p>Outro crate que dependa dessa biblioteca precisaria de instruções <code>use</code> que
@@ -461,7 +461,8 @@ pub mod utils {
 <figcaption><a href="#listing-14-5">Listing 14-5</a>: Adicionando instruções <code>pub use</code> para reexportar itens</figcaption>
 </figure>
 <p>A documentação da API que <code>cargo doc</code> gera para esse crate agora listará e
-apontará para as reexportações na página inicial, como mostrado na Figura 14-4,
+criará links para as reexportações na página inicial, como mostrado na Figura
+14-4,
 tornando os tipos <code>PrimaryColor</code> e <code>SecondaryColor</code>, assim como a função
 <code>mix</code>, mais fáceis de encontrar.</p>
 <img alt="Rendered documentation for the `art` crate with the re-exports on the front page" src="img/trpl14-04.png" class="center" />
@@ -596,7 +597,7 @@ usá-la.</p>
 <p>Tenha cuidado, porque uma publicação é <em>permanente</em>. A versão nunca pode ser
 sobrescrita, e o código não pode ser excluído, exceto em determinadas
 circunstâncias. Um dos principais objetivos do Crates.io é atuar como um
-arquivo permanente de código, para que builds de todos os projetos que dependem
+arquivo permanente de código, para que as compilações de todos os projetos que dependem
 de crates de <a href="https://crates.io/">crates.io</a><!-- ignore --> continuem
 funcionando. Permitir exclusões de versões tornaria esse objetivo impossível de
 cumprir. No entanto, não há limite para o número de versões de crate que você
@@ -657,14 +658,15 @@ cargo yank carol-test --version 2.1.0 --undo
     Updating crates.io index
         Yank guessing_game@1.0.1
 </code></pre>
-<p>Ao adicionar <code>--undo</code> ao comando, você também pode desfazer um puxão e permitir projetos
-para começar a depender de uma versão novamente:</p>
+<p>Ao adicionar <code>--undo</code> ao comando, você também pode desfazer o <code>yank</code> e
+permitir que projetos voltem a depender de uma versão:</p>
 <pre><code class="language-console">$ cargo yank --vers 1.0.1 --undo
     Updating crates.io index
       Unyank guessing_game@1.0.1
 </code></pre>
-<p>Um puxão <em>não</em> exclui nenhum código. Não pode, por exemplo, excluir acidentalmente
-segredos carregados. Se isso acontecer, você deverá redefinir esses segredos imediatamente.</p>
+<p>Um <code>yank</code> <em>não</em> exclui código algum. Ele não pode, por exemplo, remover
+segredos enviados acidentalmente. Se isso acontecer, você deverá redefinir
+esses segredos imediatamente.</p>
 
                     </main>
 

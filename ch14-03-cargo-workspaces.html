@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-162de759.js";
+            window.path_to_searchindex_js = "searchindex-4fe81980.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -187,7 +187,7 @@ de biblioteca. À medida que o projeto evolui, você pode perceber que o crate d
 biblioteca continua crescendo e desejar dividir ainda mais o pacote em vários
 crates de biblioteca. O Cargo oferece um recurso chamado <em>workspaces</em> que pode
 ajudar a gerenciar vários pacotes relacionados, desenvolvidos em conjunto.</p>
-<h3 id="criando-um-workspace"><a class="header" href="#criando-um-workspace">Criando um workspace</a></h3>
+<h3 id="criando-um-workspace"><a class="header" href="#criando-um-workspace">Criando um Workspace</a></h3>
 <p>Um <em>workspace</em> é um conjunto de pacotes que compartilham o mesmo
 <em>Cargo.lock</em> e o mesmo diretório de saída. Vamos criar um projeto usando um
 workspace. Usaremos código trivial para que possamos nos concentrar na sua
@@ -244,12 +244,12 @@ artefatos compilados serão colocados; o pacote <code>adder</code> não possui s
 diretório <em>target</em>. Mesmo se executássemos <code>cargo build</code> de dentro do
 diretório <em>adder</em>, os artefatos compilados ainda terminariam em <em>add/target</em>,
 em vez de <em>add/adder/target</em>. O Cargo estrutura o diretório <em>target</em> de um
-workspace dessa forma porque os crates em um workspace foram feitos para
+workspace dessa forma porque os crates em um workspace devem
 depender uns dos outros. Se cada crate tivesse seu próprio diretório <em>target</em>,
 cada um teria de recompilar os outros crates do workspace para colocar os
 artefatos em seu próprio <em>target</em>. Ao compartilhar um único diretório <em>target</em>,
-os crates podem evitar rebuilds desnecessários.</p>
-<h3 id="criando-o-segundo-pacote-no-workspace"><a class="header" href="#criando-o-segundo-pacote-no-workspace">Criando o segundo pacote no workspace</a></h3>
+os crates podem evitar recompilações desnecessárias.</p>
+<h3 id="criando-o-segundo-pacote-no-workspace"><a class="header" href="#criando-o-segundo-pacote-no-workspace">Criando o Segundo Pacote no Workspace</a></h3>
 <p>Em seguida, vamos criar outro pacote membro no workspace e chamá-lo de
 <code>add_one</code>. Gere um novo crate de biblioteca chamado <code>add_one</code>:</p>
 <!-- manual-regeneration
@@ -497,11 +497,11 @@ específico do workspace usando o sinalizador <code>-p</code> e especificando o 
 crate que queremos publicar.</p>
 <p>Como prática adicional, adicione um crate <code>add_two</code> a este workspace de forma
 semelhante ao crate <code>add_one</code>!</p>
-<p>À medida que o projeto cresce, considere usar um workspace: ele permite que
-você trabalhe com componentes menores e mais fáceis de entender do que um único
+<p>À medida que o projeto cresce, considere usar um workspace: ele permite
+trabalhar com componentes menores e mais fáceis de entender do que um único
 grande bloco de código. Além disso, manter os crates em um workspace pode
-facilitar a coordenação entre eles, especialmente se forem alterados com
-frequência ao mesmo tempo.</p>
+facilitar a coordenação entre eles, especialmente quando costumam ser alterados
+ao mesmo tempo.</p>
 
                     </main>
 

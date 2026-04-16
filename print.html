@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-162de759.js";
+            window.path_to_searchindex_js = "searchindex-4fe81980.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -11881,36 +11881,36 @@ que você só precisará em cenários muito avançados; para aqueles, você deve
 a <a href="https://doc.rust-lang.org/reference/trait-bounds.html">Referência do Rust</a>. Mas a seguir, você aprenderá como escrever testes em
 Rust para que você possa ter certeza de que seu código está funcionando como deveria.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="escrevendo-testes-automatizados"><a class="header" href="#escrevendo-testes-automatizados">Escrevendo testes automatizados</a></h1>
-<p>Em seu ensaio de 1972 “The Humble Programmer”, Edsger W. Dijkstra disse que “o programa
-o teste pode ser uma forma muito eficaz de mostrar a presença de bugs, mas é
-irremediavelmente inadequado para mostrar sua ausência.” Isso não significa que não deveríamos
-tente testar o máximo que pudermos!</p>
-<p><em>Correção</em> em nossos programas é o quanto nosso código faz o que pretendemos
-que ele faça. O Rust foi projetado com um alto grau de preocupação com a
-correção dos programas, mas correção é algo complexo e não é fácil de provar.
-O sistema de tipos do Rust assume uma grande parte desse fardo, mas o sistema de tipos
-não pode pegar tudo. Como tal, Rust inclui suporte para escrita automatizada
-testes de software.</p>
-<p>Digamos que escrevemos uma função <code>add_two</code> que adiciona 2 a qualquer número passado
-isso. A assinatura dessa função aceita um inteiro como parâmetro e retorna um
-inteiro como resultado. Quando implementamos e compilamos essa função, o Rust
-faz toda a verificação de tipos e de empréstimos que você aprendeu até agora
-para garantir que, por exemplo, não estamos passando um valor <code>String</code> ou uma
-referência inválida para essa função. Mas o Rust <em>não</em> consegue verificar se
-essa função funcionará corretamente
-o que pretendemos, que é retornar o parâmetro mais 2 em vez de, digamos, o
-parâmetro mais 10 ou o parâmetro menos 50! É aí que entram os testes.</p>
-<p>Podemos escrever testes que afirmem, por exemplo, que quando passamos <code>3</code> para o
-<code>add_two</code>, o valor retornado é <code>5</code>. Podemos executar esses testes sempre que
-fazemos alterações em nosso código para garantir que qualquer comportamento correto existente não tenha
-mudado.</p>
-<p>Testar é uma habilidade complexa: embora não possamos cobrir todos os detalhes em um capítulo
-sobre como escrever bons testes, neste capítulo discutiremos a mecânica de
-Instalações de teste de Rust. Falaremos sobre as anotações e macros
-disponível para você ao escrever seus testes, o comportamento padrão e as opções
-fornecido para executar seus testes e como organizar testes em testes unitários e
-testes de integração.</p>
+<h1 id="escrevendo-testes-automatizados"><a class="header" href="#escrevendo-testes-automatizados">Escrevendo Testes Automatizados</a></h1>
+<p>Em seu ensaio de 1972, “The Humble Programmer”, Edsger W. Dijkstra disse que
+“testar programas pode ser uma forma muito eficaz de mostrar a presença de
+bugs, mas é irremediavelmente inadequado para mostrar sua ausência”. Isso não
+significa que não devamos tentar testar o máximo possível!</p>
+<p>A <em>correção</em> dos nossos programas é a medida de quanto nosso código faz aquilo
+que pretendemos que ele faça. Rust foi projetada com uma grande preocupação
+com a correção dos programas, mas correção é algo complexo e difícil de provar.
+O sistema de tipos de Rust assume uma parte enorme desse fardo, mas ele não
+consegue detectar tudo. Por isso, Rust inclui suporte à escrita de testes
+automatizados de software.</p>
+<p>Suponha que escrevamos uma função <code>add_two</code> que soma 2 a qualquer número
+recebido. A assinatura dessa função aceita um inteiro como parâmetro e retorna
+um inteiro como resultado. Quando implementamos e compilamos essa função, Rust
+faz toda a verificação de tipos e de empréstimos que você aprendeu até aqui
+para garantir, por exemplo, que não estamos passando um valor <code>String</code> nem uma
+referência inválida para essa função. Mas Rust <em>não</em> consegue verificar se
+essa função faz exatamente o que queremos, isto é, retornar o parâmetro mais 2
+em vez de, por exemplo, o parâmetro mais 10 ou menos 50! É aí que entram os
+testes.</p>
+<p>Podemos escrever testes que verifiquem, por exemplo, que ao passar <code>3</code> para a
+função <code>add_two</code>, o valor retornado é <code>5</code>. Podemos executar esses testes sempre
+que fizermos alterações no código para garantir que um comportamento que já
+estava correto não mudou.</p>
+<p>Testar é uma habilidade complexa: embora não possamos cobrir em um único
+capítulo todos os detalhes de como escrever bons testes, neste capítulo vamos
+discutir a mecânica dos recursos de teste de Rust. Falaremos sobre as
+anotações e macros disponíveis ao escrever testes, o comportamento padrão e as
+opções fornecidas para executá-los, e como organizar testes em testes
+unitários e testes de integração.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="como-escrever-testes-1"><a href="#como-escrever-testes-1" class="header">Como Escrever Testes</a></h1>
 <h2 id="como-escrever-testes"><a class="header" href="#como-escrever-testes">Como escrever testes</a></h2>
@@ -15577,17 +15577,17 @@ lidará bem com erros e será bem testado.</p>
 funcionais: closures e iteradores.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="recursos-de-linguagens-funcionais-iteradores-e-closures"><a class="header" href="#recursos-de-linguagens-funcionais-iteradores-e-closures">Recursos de Linguagens Funcionais: Iteradores e Closures</a></h1>
-<p>O design de Rust foi inspirado por muitas linguagens e técnicas existentes, e
-uma influência importante é a <em>programação funcional</em>. Programar em estilo
-funcional costuma incluir usar funções como valores, passando-as como
-argumentos, retornando-as de outras funções, atribuindo-as a variáveis para
-execução posterior, e assim por diante.</p>
-<p>Neste capítulo, não vamos discutir o que programação funcional é ou deixa de
-ser; em vez disso, vamos explorar alguns recursos de Rust que se assemelham a
-recursos presentes em muitas linguagens frequentemente chamadas de funcionais.</p>
+<p>O design de Rust recebeu influência de muitas linguagens e técnicas já
+existentes, e uma influência importante é a <em>programação funcional</em>.
+Programar em estilo funcional costuma incluir usar funções como valores,
+passando-as como argumentos, retornando-as de outras funções, atribuindo-as a
+variáveis para execução posterior e assim por diante.</p>
+<p>Neste capítulo, não vamos discutir o que é ou não é programação funcional; em
+vez disso, veremos alguns recursos de Rust que se assemelham a recursos de
+muitas linguagens frequentemente chamadas de funcionais.</p>
 <p>Mais especificamente, veremos:</p>
 <ul>
-<li><em>Closures</em>, uma construção semelhante a função que você pode armazenar em uma
+<li><em>Closures</em>, uma construção parecida com função que você pode armazenar em uma
 variável</li>
 <li><em>Iteradores</em>, uma forma de processar uma série de elementos</li>
 <li>Como usar closures e iteradores para melhorar o projeto de E/S do Capítulo
@@ -15595,9 +15595,9 @@ variável</li>
 <li>O desempenho de closures e iteradores. Spoiler: eles são mais rápidos do que
 você talvez imagine!</li>
 </ul>
-<p>Já cobrimos outros recursos de Rust, como casamento de padrões e enums, que
-também foram influenciados pelo estilo funcional. Como dominar closures e
-iteradores é uma parte importante de escrever código Rust idiomático e rápido,
+<p>Já cobrimos outros recursos de Rust, como correspondência de padrões e enums,
+que também foram influenciados pelo estilo funcional. Como dominar closures e
+iteradores é uma parte importante de escrever código Rust rápido e idiomático,
 dedicaremos este capítulo inteiro a eles.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="closures-1"><a href="#closures-1" class="header">Closures</a></h1>
@@ -15606,33 +15606,33 @@ dedicaremos este capítulo inteiro a eles.</p>
 <a id="closures-anonymous-functions-that-capture-their-environment"></a></p>
 <h2 id="closures"><a class="header" href="#closures">Closures</a></h2>
 <p>As closures de Rust são funções anônimas que você pode armazenar em uma
-variável ou passar como argumentos para outras funções. Você pode criar a
-closure em um lugar e depois chamá-la em outro, avaliando-a em um contexto
+variável ou passar como argumentos para outras funções. Você pode criar uma
+closure em um lugar e depois chamá-la em outro para avaliá-la em um contexto
 diferente. Ao contrário das funções, closures podem capturar valores do escopo
-em que são definidas. Vamos demonstrar como esses recursos permitem reutilizar
-código e personalizar comportamentos.</p>
+em que são definidas. Vamos demonstrar como esses recursos de closures
+permitem reutilizar código e personalizar comportamentos.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="creating-an-abstraction-of-behavior-with-closures"></a>
 <a id="refactoring-using-functions"></a>
 <a id="refactoring-with-closures-to-store-code"></a>
 <a id="capturing-the-environment-with-closures"></a></p>
 <h3 id="capturando-o-ambiente"><a class="header" href="#capturando-o-ambiente">Capturando o Ambiente</a></h3>
-<p>Examinaremos primeiro como podemos usar closures para capturar valores do
-ambiente em que estão definidos para uso posterior. Aqui está o cenário: de vez em quando
-frequentemente, nossa empresa de camisetas distribui uma camisa exclusiva de edição limitada para
-alguém em nossa mailing list como uma promoção. As pessoas na lista de discussão podem
-opcionalmente, adicione sua cor favorita ao perfil. Se a pessoa escolhida para
-uma camisa grátis tem seu conjunto de cores favoritas, eles ficam com aquela camisa colorida. Se o
-pessoa não especificou uma cor favorita, ela obtém a cor que a empresa
-atualmente tem a maior parte.</p>
-<p>Existem muitas maneiras de implementar isso. Para este exemplo, usaremos um
-enum chamado <code>ShirtColor</code> que possui as variantes <code>Red</code> e <code>Blue</code> (limitando o
-número de cores disponíveis para simplificar). Representamos a empresa
-inventário com uma estrutura <code>Inventory</code> que possui um campo chamado <code>shirts</code> que
-contém um <code>Vec&lt;ShirtColor&gt;</code> representando as cores da camisa atualmente em estoque.
-O método <code>giveaway</code> definido em <code>Inventory</code> obtém a cor opcional da camisa
-preferência do ganhador da camisa grátis, e retorna a cor da camisa
-pessoa vai conseguir. Essa configuração é mostrada na Listagem 13-1.</p>
+<p>Primeiro, vamos examinar como podemos usar closures para capturar valores do
+ambiente em que são definidas para uso posterior. O cenário é o seguinte: de
+tempos em tempos, nossa empresa de camisetas distribui uma camiseta exclusiva,
+de edição limitada, para alguém da nossa lista de e-mails como promoção. As
+pessoas na lista de e-mails podem opcionalmente adicionar sua cor favorita ao
+perfil. Se a pessoa escolhida para ganhar a camiseta tiver uma cor favorita
+definida, ela recebe uma camiseta dessa cor. Se não tiver especificado uma cor
+favorita, ela recebe a cor da qual a empresa tem mais unidades no momento.</p>
+<p>Há muitas formas de implementar isso. Neste exemplo, vamos usar um enum
+chamado <code>ShirtColor</code>, com as variantes <code>Red</code> e <code>Blue</code> para simplificar o
+número de cores disponíveis. Representamos o estoque da empresa com uma struct
+<code>Inventory</code>, que tem um campo chamado <code>shirts</code> contendo um
+<code>Vec&lt;ShirtColor&gt;</code> que representa as cores das camisetas atualmente em estoque.
+O método <code>giveaway</code>, definido em <code>Inventory</code>, recebe a preferência opcional de
+cor da pessoa sorteada e retorna a cor da camiseta que ela vai receber. Essa
+configuração é mostrada na Listagem 13-1.</p>
 <figure class="listing" id="listing-13-1">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust noplayground">#[derive(Debug, PartialEq, Copy, Clone)]
@@ -15689,27 +15689,27 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-13-1">Listing 13-1</a>: Situação de sorteio de camisetas de uma empresa</figcaption>
 </figure>
-<p>O <code>store</code> definido em <code>main</code> tem duas camisas azuis e uma camisa vermelha restantes
-para distribuir nesta promoção de edição limitada. Chamamos o método <code>giveaway</code>
-para um usuário com preferência pela camisa vermelha e um usuário sem nenhuma preferência.</p>
-<p>Novamente, este código poderia ser implementado de várias maneiras, e aqui, para focar
-closures, nos apegamos aos conceitos que você já aprendeu, exceto o corpo do
-o método <code>giveaway</code> que usa um closure. No método <code>giveaway</code>, obtemos o
-preferência do usuário como um parâmetro do tipo <code> Option&lt;ShirtColor&gt;</code>e chame o
-Método <code> unwrap_or_else</code>em <code> user_preference</code>. O <a href="../std/option/enum.Option.html#method.unwrap_or_else">método <code> unwrap_or_else</code>em
-<code>Option&lt;T&gt;</code></a><!-- ignore --> é definido pela biblioteca padrão.
-Leva um argumento: um closure sem nenhum argumento que retorna um valor<code>T</code>
-(o mesmo tipo armazenado na variante<code>Some</code>do<code>Option&lt;T&gt;</code>, neste caso
-<code>ShirtColor</code>). Se<code>Option&lt;T&gt;</code>for a variante<code>Some</code>,<code>unwrap_or_else</code>
-retorna o valor de dentro do<code>Some</code>. Se o<code>Option&lt;T&gt;</code>for o<code>None</code>
-variante,<code> unwrap_or_else</code>chama closure e retorna o valor retornado por
-o closure.</p>
-<p>Especificamos a expressão closure <code>|| self.most_stocked()</code> como argumento para
-<code>unwrap_or_else</code>. Este é um closure que não aceita parâmetros (se o
-closure tinha parâmetros, eles apareceriam entre os dois tubos verticais). O
-corpo do closure chama <code>self.most_stocked()</code>. Estamos definindo o closure
-aqui, e a implementação do <code>unwrap_or_else</code> avaliará o closure
-mais tarde, se o resultado for necessário.</p>
+<p>O <code>store</code> definido em <code>main</code> tem duas camisetas azuis e uma vermelha restantes
+para distribuir nessa promoção de edição limitada. Chamamos o método
+<code>giveaway</code> para uma pessoa que prefere camiseta vermelha e para outra sem
+nenhuma preferência.</p>
+<p>Mais uma vez, esse código poderia ser implementado de várias maneiras, e aqui,
+para manter o foco em closures, ficamos com conceitos que você já aprendeu,
+exceto pelo corpo do método <code>giveaway</code>, que usa uma closure. No método
+<code>giveaway</code>, recebemos a preferência do usuário como um parâmetro do tipo
+<code>Option&lt;ShirtColor&gt;</code> e chamamos o método <code>unwrap_or_else</code> em
+<code>user_preference</code>. O <a href="../std/option/enum.Option.html#method.unwrap_or_else">método <code>unwrap_or_else</code> em <code>Option&lt;T&gt;</code></a></p>
+<!-- ignore --> é definido pela biblioteca padrão. Ele recebe um argumento:
+<p>uma closure sem parâmetros que retorna um valor <code>T</code> (o mesmo tipo armazenado
+na variante <code>Some</code> de <code>Option&lt;T&gt;</code>, neste caso <code>ShirtColor</code>). Se o <code>Option&lt;T&gt;</code>
+for a variante <code>Some</code>, <code>unwrap_or_else</code> retorna o valor dentro de <code>Some</code>. Se
+for a variante <code>None</code>, <code>unwrap_or_else</code> chama a closure e retorna o valor
+produzido por ela.</p>
+<p>Especificamos a expressão de closure <code>|| self.most_stocked()</code> como argumento de
+<code>unwrap_or_else</code>. Essa é uma closure que não recebe parâmetros (se tivesse,
+eles apareceriam entre as duas barras verticais). O corpo da closure chama
+<code>self.most_stocked()</code>. Estamos definindo a closure aqui, e a implementação de
+<code>unwrap_or_else</code> vai avaliá-la depois, se o resultado for necessário.</p>
 <p>A execução deste código imprime o seguinte:</p>
 <pre><code class="language-console">$ cargo run
    Compiling shirt-company v0.1.0 (file:///projects/shirt-company)
@@ -15718,35 +15718,38 @@ mais tarde, se o resultado for necessário.</p>
 The user with preference Some(Red) gets Red
 The user with preference None gets Blue
 </code></pre>
-<p>Um aspecto interessante aqui é que passamos um closure que chama
-<code>self.most_stocked() </code> na instância<code>Inventory </code> atual. A biblioteca padrão
-não precisávamos saber nada sobre os tipos<code>Inventory </code> ou<code>ShirtColor </code> que
-definido, ou a lógica que queremos usar neste cenário. O closure captura um
-referência imutável à instância<code>self</code> <code> Inventory</code>e passa-a com o
-código que especificamos para o método <code> unwrap_or_else</code>. As funções, por outro lado,
-não são capazes de capturar seu ambiente dessa maneira.</p>
+<p>Um aspecto interessante aqui é que passamos uma closure que chama
+<code>self.most_stocked()</code> na instância atual de <code>Inventory</code>. A biblioteca padrão
+não precisou saber nada sobre os tipos <code>Inventory</code> ou <code>ShirtColor</code> que
+definimos, nem sobre a lógica que queremos usar nesse cenário. A closure
+captura uma referência imutável à instância <code>self</code> de <code>Inventory</code> e a passa,
+junto com o código que especificamos, para o método <code>unwrap_or_else</code>.
+Funções, por outro lado, não conseguem capturar o ambiente dessa maneira.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="closure-type-inference-and-annotation"></a></p>
-<h3 id="inferindo-e-anotando-tipos-de-fechamento"><a class="header" href="#inferindo-e-anotando-tipos-de-fechamento">Inferindo e anotando tipos de fechamento</a></h3>
-<p>Existem mais diferenças entre funções e closures. Os fechamentos não
-geralmente exigem que você anote os tipos dos parâmetros ou o valor de retorno
-como fazem as funções <code>fn</code>. Anotações de tipo são necessárias em funções porque o
-tipos fazem parte de uma interface explícita exposta aos seus usuários. Definindo isso
-interface rigidamente é importante para garantir que todos concordem sobre quais tipos
-de valores que uma função usa e retorna. Os fechamentos, por outro lado, não são usados
-em uma interface exposta como esta: eles são armazenados em variáveis e são
-usados sem nomeá-los e expô-los aos usuários de nossa biblioteca.</p>
-<p>Os encerramentos são normalmente curtos e relevantes apenas dentro de um contexto restrito, em vez de
-do que em qualquer cenário arbitrário. Dentro desses contextos limitados, o compilador pode
-inferir os tipos dos parâmetros e o tipo de retorno, semelhante a como é capaz
-para inferir os tipos da maioria das variáveis (há raros casos em que o compilador
-também precisa de anotações do tipo closure).</p>
-<p>Tal como acontece com as variáveis, podemos adicionar anotações de tipo se quisermos aumentar
-explicitação e clareza ao custo de ser mais prolixo do que é estritamente
-necessário. Anotar os tipos para um closure seria parecido com a definição
-mostrado na Listagem 13-2. Neste exemplo, estamos definindo um closure e armazenando-o
-em uma variável, em vez de definir closure no local, passamos-o como um
-argumento, como fizemos na Listagem 13-1.</p>
+<h3 id="inferindo-e-anotando-tipos-de-closures"><a class="header" href="#inferindo-e-anotando-tipos-de-closures">Inferindo e Anotando Tipos de Closures</a></h3>
+<p>Há mais diferenças entre funções e closures. Em geral, closures não exigem que
+você anote os tipos dos parâmetros nem o valor de retorno, como acontece com
+as funções <code>fn</code>. Anotações de tipo são necessárias em funções porque os tipos
+fazem parte de uma interface explícita exposta a quem usa seu código. Definir
+essa interface rigidamente é importante para garantir que todos concordem
+sobre quais tipos de valores uma função usa e retorna. Closures, por outro
+lado, não são usadas em uma interface exposta dessa forma: elas ficam
+armazenadas em variáveis e são usadas sem receber um nome e sem serem expostas
+às pessoas usuárias da nossa biblioteca.</p>
+<p>Closures normalmente são curtas e relevantes apenas dentro de um contexto
+restrito, em vez de em qualquer cenário arbitrário. Dentro desses contextos
+limitados, o compilador consegue inferir os tipos dos parâmetros e o tipo de
+retorno, de maneira semelhante ao que faz com a maioria das variáveis
+(existem casos raros em que o compilador também precisa de anotações de tipo
+em closures).</p>
+<p>Assim como acontece com variáveis, podemos adicionar anotações de tipo se
+quisermos tornar o código mais explícito e claro, ao custo de deixá-lo mais
+verboso do que o estritamente necessário. Anotar os tipos de uma closure
+ficaria como na definição mostrada na Listagem 13-2. Neste exemplo, estamos
+definindo uma closure e armazenando-a em uma variável, em vez de defini-la no
+próprio lugar em que a passamos como argumento, como fizemos na Listagem
+13-1.</p>
 <figure class="listing" id="listing-13-2">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::thread;
@@ -15782,33 +15785,34 @@ argumento, como fizemos na Listagem 13-1.</p>
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-13-2">Listing 13-2</a>: Adicionando anotações opcionais de tipo para o parâmetro e o valor de retorno na closure</figcaption>
 </figure>
-<p>Com anotações de tipo adicionadas, a sintaxe de closures parece mais semelhante à
-sintaxe de funções. Aqui, definimos uma função que adiciona 1 ao seu parâmetro e
-um closure que tem o mesmo comportamento, para comparação. Adicionamos alguns espaços
-para alinhar as partes relevantes. Isso ilustra como a sintaxe closure é semelhante
-para funcionar a sintaxe, exceto pelo uso de barras verticais e pela quantidade de sintaxe que é
-opcional:</p>
+<p>Com as anotações de tipo adicionadas, a sintaxe de closures fica mais parecida
+com a sintaxe de funções. Aqui, definimos uma função que soma 1 ao seu
+parâmetro e uma closure com o mesmo comportamento, para fins de comparação.
+Adicionamos alguns espaços para alinhar as partes relevantes. Isso ilustra como
+a sintaxe de closures é parecida com a de funções, exceto pelo uso das barras
+verticais e pela quantidade de sintaxe que é opcional:</p>
 <pre><code class="language-rust ignore">fn  add_one_v1   (x: u32) -&gt; u32 { x + 1 }
 let add_one_v2 = |x: u32| -&gt; u32 { x + 1 };
 let add_one_v3 = |x|             { x + 1 };
 let add_one_v4 = |x|               x + 1  ;</code></pre>
-<p>A primeira linha mostra uma definição de função e a segunda linha mostra uma definição completa
-definição closure anotada. Na terceira linha, removemos as anotações de tipo
-da definição closure. Na quarta linha, removemos os colchetes, que
-são opcionais porque o corpo closure possui apenas uma expressão. Estes são todos
-definições válidas que produzirão o mesmo comportamento quando forem chamadas. O
-As linhas <code>add_one_v3</code> e <code>add_one_v4</code> exigem que o closures seja avaliado para ser
-capaz de compilar porque os tipos serão inferidos de seu uso. Isto é
-semelhante ao <code>let v = Vec::new();</code>, necessitando de anotações de tipo ou valores de
-algum tipo a ser inserido no <code> Vec</code>para que Rust possa inferir o tipo.</p>
-<p>Para definições closure, o compilador inferirá um tipo concreto para cada um dos
-seus parâmetros e seu valor de retorno. Por exemplo, a Listagem 13-3 mostra
-a definição de um closure curto que apenas retorna o valor que recebe como
-parâmetro. Este closure não é muito útil, exceto para os propósitos deste
-exemplo. Observe que não adicionamos nenhuma anotação de tipo à definição.
-Como não há anotações de tipo, podemos chamar closure com qualquer tipo,
-o que fizemos aqui com <code>String</code> pela primeira vez. Se então tentarmos ligar
-<code>example_closure</code> com um número inteiro, obteremos um erro.</p>
+<p>A primeira linha mostra uma definição de função, e a segunda mostra uma
+definição de closure com anotações completas. Na terceira linha, removemos as
+anotações de tipo da definição da closure. Na quarta, removemos as chaves, que
+são opcionais porque o corpo da closure tem apenas uma expressão. Todas essas
+são definições válidas que produzirão o mesmo comportamento quando forem
+chamadas. As linhas <code>add_one_v3</code> e <code>add_one_v4</code> exigem que as closures sejam
+avaliadas para que possam compilar, porque os tipos serão inferidos com base
+no uso. Isso é semelhante ao fato de <code>let v = Vec::new();</code> precisar de
+anotações de tipo ou de valores de algum tipo inseridos em <code>Vec</code> para que Rust
+consiga inferir o tipo.</p>
+<p>Para definições de closures, o compilador vai inferir um tipo concreto para
+cada parâmetro e para o valor de retorno. Por exemplo, a Listagem 13-3 mostra
+a definição de uma closure curta que simplesmente retorna o valor que recebe
+como parâmetro. Essa closure não é muito útil fora do contexto deste exemplo.
+Observe que não adicionamos nenhuma anotação de tipo à definição. Como não há
+anotações de tipo, podemos chamar a closure com qualquer tipo, e aqui fizemos
+isso pela primeira vez com <code>String</code>. Se depois tentarmos chamar
+<code>example_closure</code> com um inteiro, teremos um erro.</p>
 <figure class="listing" id="listing-13-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">fn main() {
@@ -15850,19 +15854,20 @@ help: try using a conversion method
 For more information about this error, try `rustc --explain E0308`.
 error: could not compile `closure-example` (bin "closure-example") due to 1 previous error
 </code></pre>
-<p>Na primeira vez que chamamos <code>example_closure</code> com o valor <code>String</code>, o compilador
-infere que o tipo de <code> x</code>e o tipo de retorno de closure são <code> String</code>. Aqueles
-tipos são então bloqueados no closure em <code> example_closure</code>, e obtemos um tipo
-erro quando tentarmos usar um tipo diferente com o mesmo closure.</p>
-<h3 id="capturando-referências-ou-transferindo-ownership"><a class="header" href="#capturando-referências-ou-transferindo-ownership">Capturando referências ou transferindo ownership</a></h3>
-<p>Os encerramentos podem capturar valores do seu ambiente de três maneiras, que
-mapeie diretamente as três maneiras pelas quais uma função pode receber um parâmetro: borrowing
-imutável, borrowing mutável e tomando ownership. O closure decidirá
-qual deles usar com base no que o corpo da função faz com o
-valores capturados.</p>
-<p>Na Listagem 13-4, definimos um closure que captura uma referência imutável para
-o vetor denominado <code>list</code> porque ele só precisa de uma referência imutável para imprimir
-o valor.</p>
+<p>Na primeira vez que chamamos <code>example_closure</code> com o valor <code>String</code>, o
+compilador infere que o tipo de <code>x</code> e o tipo de retorno da closure são
+<code>String</code>. Esses tipos então ficam fixados na closure em <code>example_closure</code>, e
+recebemos um erro de tipo quando tentamos usar um tipo diferente com a mesma
+closure.</p>
+<h3 id="capturando-referências-ou-movendo-ownership"><a class="header" href="#capturando-referências-ou-movendo-ownership">Capturando Referências ou Movendo Ownership</a></h3>
+<p>Closures podem capturar valores do ambiente de três maneiras, que correspondem
+diretamente às três maneiras pelas quais uma função pode receber um parâmetro:
+emprestando de forma imutável, emprestando de forma mutável e tomando
+ownership. A closure decidirá qual dessas abordagens usar com base no que o
+corpo da função faz com os valores capturados.</p>
+<p>Na Listagem 13-4, definimos uma closure que captura uma referência imutável ao
+vetor chamado <code>list</code>, porque ela só precisa de uma referência imutável para
+imprimir o valor.</p>
 <figure class="listing" id="listing-13-4">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -15877,13 +15882,13 @@ o valor.</p>
 }</code></pre>
 <figcaption><a href="#listing-13-4">Listing 13-4</a>: Definindo e chamando uma closure que captura uma referência imutável</figcaption>
 </figure>
-<p>Este exemplo também ilustra que uma variável pode ser vinculada a uma definição closure,
-e mais tarde podemos chamar closure usando o nome da variável e parênteses como
-se o nome da variável fosse um nome de função.</p>
-<p>Como podemos ter várias referências imutáveis a <code>list</code> ao mesmo tempo,
-<code>list</code> ainda está acessível a partir do código antes da definição closure, depois
-a definição closure, mas antes de closure ser chamado e depois de closure
-é chamado. Este código compila, executa e imprime:</p>
+<p>Este exemplo também ilustra que uma variável pode se ligar a uma definição de
+closure, e depois podemos chamar a closure usando o nome da variável e
+parênteses, como se o nome da variável fosse o nome de uma função.</p>
+<p>Como podemos ter várias referências imutáveis a <code>list</code> ao mesmo tempo, <code>list</code>
+continua acessível no código antes da definição da closure, depois da
+definição mas antes da chamada, e depois que a closure é chamada. Esse código
+compila, executa e imprime:</p>
 <pre><code class="language-console">$ cargo run
    Compiling closure-example v0.1.0 (file:///projects/closure-example)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s
@@ -15893,8 +15898,8 @@ Before calling closure: [1, 2, 3]
 From closure: [1, 2, 3]
 After calling closure: [1, 2, 3]
 </code></pre>
-<p>A seguir, na Listagem 13-5, alteramos o corpo closure para que ele adicione um elemento ao
-o vetor <code>list</code>. O closure agora captura uma referência mutável.</p>
+<p>A seguir, na Listagem 13-5, alteramos o corpo da closure para que ela adicione
+um elemento ao vetor <code>list</code>. Agora a closure captura uma referência mutável.</p>
 <figure class="listing" id="listing-13-5">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -15916,22 +15921,24 @@ o vetor <code>list</code>. O closure agora captura uma referência mutável.</p>
 Before defining closure: [1, 2, 3]
 After calling closure: [1, 2, 3, 7]
 </code></pre>
-<p>Observe que não há mais <code>println!</code> entre a definição e a chamada de
-o <code>borrows_mutably</code> closure: Quando <code>borrows_mutably</code> é definido, ele captura um
-referência mutável para <code>list</code>. Não usamos o closure novamente depois do closure
-é chamado, então o borrowing mutável termina. Entre a definição closure e o
-chamada closure, um borrowing imutável para impressão não é permitido, porque nenhum outro
-borrowing são permitidos quando há um borrowing mutável. Tente adicionar um <code> println!</code>
-lá para ver qual mensagem de erro você recebe!</p>
-<p>Se você quiser forçar o closure a pegar ownership dos valores que ele usa no
-ambiente, mesmo que o corpo do closure não precise estritamente
+<p>Observe que não há mais um <code>println!</code> entre a definição e a chamada da closure
+<code>borrows_mutably</code>: quando <code>borrows_mutably</code> é definida, ela captura uma
+referência mutável a <code>list</code>. Não usamos a closure de novo depois que ela é
+chamada, então o empréstimo mutável termina ali. Entre a definição da closure
+e sua chamada, não é permitido fazer um empréstimo imutável para imprimir,
+porque nenhum outro empréstimo é permitido enquanto existe um empréstimo
+mutável. Tente adicionar um <code>println!</code> ali para ver qual mensagem de erro você
+obtém!</p>
+<p>Se quiser forçar a closure a tomar ownership dos valores que ela usa do
+ambiente, mesmo quando o corpo da closure não precisa estritamente de
 ownership, você pode usar a palavra-chave <code>move</code> antes da lista de parâmetros.</p>
-<p>Esta técnica é mais útil ao passar um closure para um novo thread para mover
-os dados para que sejam ownership do novo thread. Discutiremos threads e por quê
-você gostaria de usá-los em detalhes no Capítulo 16, quando falamos sobre
-simultaneidade, mas por enquanto, vamos explorar brevemente a geração de um novo thread usando um
-closure que precisa da palavra-chave <code>move</code>. A Listagem 13-6 mostra a Listagem 13-4 modificada
-para imprimir o vetor em um novo thread em vez de no thread principal.</p>
+<p>Essa técnica é especialmente útil quando passamos uma closure para uma nova
+thread, movendo os dados para que passem a pertencer à nova thread. Vamos
+discutir threads e por que você pode querer usá-las em detalhes no Capítulo
+16, quando falarmos sobre concorrência. Por enquanto, vamos apenas explorar
+brevemente a criação de uma nova thread usando uma closure que precisa da
+palavra-chave <code>move</code>. A Listagem 13-6 mostra a Listagem 13-4 modificada para
+imprimir o vetor em uma nova thread em vez de na thread principal.</p>
 <figure class="listing" id="listing-13-6">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">use std::thread;
@@ -15946,55 +15953,57 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-13-6">Listing 13-6</a>: Usando <code>move</code> para forçar a closure da thread a tomar ownership de <code>list</code></figcaption>
 </figure>
-<p>Geramos um novo thread, dando ao thread um closure para ser executado como argumento. O
-O corpo closure imprime a lista. Na Listagem 13-4, o closure capturou apenas
-<code>list </code> usando uma referência imutável porque é a menor quantidade de acesso
-para<code>list </code> necessário para imprimi-lo. Neste exemplo, mesmo que o corpo closure
-ainda precisa apenas de uma referência imutável, precisamos especificar que<code>list </code> deve
-ser movido para o closure colocando a palavra-chave<code>move </code> no início do
-Definição closure. Se o thread principal executou mais operações antes de chamar
-<code>join </code> no novo thread, o novo thread pode terminar antes do resto do
-o thread principal termina, ou o thread principal pode terminar primeiro. Se o thread principal
-manteve ownership de<code>list </code> mas terminou antes do novo thread e descarta
-<code>list </code>, a referência imutável no thread seria inválida. Portanto, o
-o compilador requer que<code>list</code>seja movido para o closure fornecido ao novo thread
-para que a referência seja válida. Tente remover a palavra-chave<code>move</code>ou usar
-<code> list</code>no thread principal após o closure ser definido para ver qual compilador
-erros que você recebe!</p>
+<p>Criamos uma nova thread e passamos para ela uma closure a ser executada. O
+corpo da closure imprime a lista. Na Listagem 13-4, a closure capturava <code>list</code>
+apenas por meio de uma referência imutável, porque esse era o menor nível de
+acesso necessário para imprimi-la. Neste exemplo, embora o corpo da closure
+ainda precise apenas de uma referência imutável, precisamos especificar que
+<code>list</code> deve ser movido para dentro da closure, colocando a palavra-chave
+<code>move</code> no início da definição. Se a thread principal executasse mais operações
+antes de chamar <code>join</code> na nova thread, a nova thread poderia terminar antes do
+resto da thread principal, ou a thread principal poderia terminar primeiro. Se
+a thread principal mantivesse ownership de <code>list</code>, mas terminasse antes da nova
+thread e descartasse <code>list</code>, a referência imutável na thread ficaria inválida.
+Por isso, o compilador exige que <code>list</code> seja movido para a closure passada à
+nova thread, para que a referência continue válida. Tente remover a palavra
+<code>move</code> ou usar <code>list</code> na thread principal depois que a closure for definida
+para ver quais erros do compilador você recebe!</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="storing-closures-using-generic-parameters-and-the-fn-traits"></a>
 <a id="limitations-of-the-cacher-implementation"></a>
 <a id="moving-captured-values-out-of-the-closure-and-the-fn-traits"></a>
 <a id="moving-captured-values-out-of-closures-and-the-fn-traits"></a></p>
-<h3 id="moving-captured-values-out-of-closures"><a class="header" href="#moving-captured-values-out-of-closures">Moving Captured Values Out of Closures</a></h3>
-<p>Depois que um closure capturou uma referência ou capturou ownership de um valor de
-o ambiente onde o closure é definido (afetando assim o que, se houver,
-é movido <em>para</em> o closure), o código no corpo do closure define o que
-acontece com as referências ou valores quando o closure é avaliado posteriormente (portanto
-afetando o que, se houver, é movido <em>para fora</em> do closure).</p>
-<p>Um corpo closure pode fazer o seguinte: Mover um valor capturado para fora do
-closure, altere o valor capturado, não mova nem altere o valor ou
-para começar, não capture nada do ambiente.</p>
-<p>A maneira como um closure captura e trata valores do ambiente afeta
-qual traits o closure implementa, e traits são como funções e estruturas
-podem especificar quais tipos de closures eles podem usar. Os fechamentos serão automaticamente
-implementar um, dois ou todos os três <code>Fn</code> traits, de forma aditiva,
-dependendo de como o corpo do closure lida com os valores:</p>
+<h3 id="movendo-valores-capturados-para-fora-de-closures"><a class="header" href="#movendo-valores-capturados-para-fora-de-closures">Movendo Valores Capturados para Fora de Closures</a></h3>
+<p>Depois que uma closure capturou uma referência ou tomou ownership de um valor
+do ambiente em que foi definida, o código em seu corpo determina o que acontece
+com essas referências ou valores quando a closure for avaliada mais tarde.
+Isso afeta o que, se é que algo é, movido <em>para dentro</em> e <em>para fora</em> da
+closure.</p>
+<p>O corpo de uma closure pode fazer qualquer uma das seguintes coisas: mover para
+fora da closure um valor capturado, modificar o valor capturado, não mover nem
+modificar o valor, ou nem sequer capturar algo do ambiente.</p>
+<p>A forma como uma closure captura e trata valores do ambiente afeta quais traits
+ela implementa, e traits são a maneira como funções e structs podem especificar
+que tipos de closures conseguem usar. Closures implementam automaticamente uma,
+duas ou as três traits <code>Fn</code>, de maneira acumulativa, dependendo de como o
+corpo da closure lida com os valores:</p>
 <ul>
-<li><code>FnOnce</code> se aplica a closures que pode ser chamado uma vez. Todos os implementos closures
-pelo menos este trait porque todos os closures podem ser chamados. Um closure que se move
-valores capturados fora de seu corpo implementarão apenas <code>FnOnce</code> e nenhum dos
-outro <code>Fn</code> traits porque só pode ser chamado uma vez.</li>
-<li><code>FnMut</code> se aplica a closures que não move valores capturados para fora de seu corpo
-mas pode alterar os valores capturados. Esses closures podem ser chamados de mais de
-uma vez.</li>
-<li><code>Fn</code> aplica-se a closures que não move valores capturados para fora de seu corpo
-e não altera os valores capturados, bem como closures que não captura nada
-do seu ambiente. Estes closures podem ser chamados mais de uma vez sem
-alterando seu ambiente, o que é importante em casos como chamar um closure várias vezes simultaneamente.</li>
+<li><code>FnOnce</code> se aplica a closures que podem ser chamadas uma vez. Todas as
+closures implementam pelo menos essa trait, porque todas podem ser chamadas.
+Uma closure que move valores capturados para fora do próprio corpo
+implementará apenas <code>FnOnce</code>, e nenhuma das outras traits <code>Fn</code>, porque só
+pode ser chamada uma vez.</li>
+<li><code>FnMut</code> se aplica a closures que não movem valores capturados para fora do
+próprio corpo, mas podem modificar os valores capturados. Essas closures
+podem ser chamadas mais de uma vez.</li>
+<li><code>Fn</code> se aplica a closures que não movem valores capturados para fora do
+próprio corpo nem modificam valores capturados, bem como a closures que não
+capturam nada do ambiente. Essas closures podem ser chamadas mais de uma vez
+sem modificar o ambiente, o que é importante em casos como chamar uma
+closure várias vezes de forma concorrente.</li>
 </ul>
-<p>Vejamos a definição do método <code>unwrap_or_else</code> em <code>Option&lt;T&gt;</code> que
-usamos na Listagem 13-1:</p>
+<p>Vamos olhar a definição do método <code>unwrap_or_else</code> em <code>Option&lt;T&gt;</code>, que usamos
+na Listagem 13-1:</p>
 <pre><code class="language-rust ignore">impl&lt;T&gt; Option&lt;T&gt; {
     pub fn unwrap_or_else&lt;F&gt;(self, f: F) -&gt; T
     where
@@ -16006,29 +16015,28 @@ usamos na Listagem 13-1:</p>
         }
     }
 }</code></pre>
-<p>Lembre-se de que <code>T</code> é o tipo genérico que representa o tipo do valor no
-Variante <code>Some</code> de um <code>Option</code>. Esse tipo <code> T</code>também é o tipo de retorno do
-Função <code> unwrap_or_else</code>: Código que chama <code> unwrap_or_else</code>em um
-<code>Option&lt;String&gt;</code>, por exemplo, receberá um<code> String</code>.</p>
-<p>A seguir, observe que a função <code>unwrap_or_else</code> possui o tipo genérico adicional
-parâmetro <code>F</code>. O tipo <code> F</code>é o tipo do parâmetro denominado <code> f</code>, que é
-o closure que fornecemos ao chamar <code> unwrap_or_else</code>.</p>
-<p>O limite trait especificado no tipo genérico <code>F</code> é <code>FnOnce() -&gt; T</code>, que
-significa que <code> F</code>deve poder ser chamado uma vez, não receber argumentos e retornar um <code> T</code>.
-Usar <code> FnOnce</code>no limite trait expressa a restrição que
-<code>unwrap_or_else</code>não chamará<code>f</code>mais de uma vez. No corpo de
-<code>unwrap_or_else</code>, podemos ver que se<code>Option</code>for<code>Some</code>,<code>f</code>não será
-chamado. Se<code>Option</code>for<code>None</code>,<code>f</code>será chamado uma vez. Porque tudo
-closures implementa<code>FnOnce</code>,<code> unwrap_or_else</code>aceita todos os três tipos de
-closures e é tão flexível quanto possível.</p>
+<p>Lembre-se de que <code>T</code> é o tipo genérico que representa o tipo do valor na
+variante <code>Some</code> de um <code>Option</code>. Esse tipo <code>T</code> também é o tipo de retorno de
+<code>unwrap_or_else</code>: um código que chama <code>unwrap_or_else</code> em um
+<code>Option&lt;String&gt;</code>, por exemplo, receberá um <code>String</code>.</p>
+<p>Agora, observe que a função <code>unwrap_or_else</code> tem um parâmetro de tipo genérico
+adicional, <code>F</code>. O tipo <code>F</code> é o tipo do parâmetro chamado <code>f</code>, que é a closure
+que fornecemos ao chamar <code>unwrap_or_else</code>.</p>
+<p>O limite de trait especificado sobre o tipo genérico <code>F</code> é <code>FnOnce() -&gt; T</code>, o
+que significa que <code>F</code> precisa poder ser chamado uma vez, não receber
+argumentos e retornar um <code>T</code>. Usar <code>FnOnce</code> no limite de trait expressa a
+restrição de que <code>unwrap_or_else</code> não chamará <code>f</code> mais de uma vez. No corpo de
+<code>unwrap_or_else</code>, vemos que, se o <code>Option</code> for <code>Some</code>, <code>f</code> não será chamado.
+Se o <code>Option</code> for <code>None</code>, <code>f</code> será chamado uma vez. Como todas as closures
+implementam <code>FnOnce</code>, <code>unwrap_or_else</code> aceita os três tipos de closures e é o
+mais flexível possível.</p>
 <blockquote>
-<p>Nota: Se o que queremos fazer não requer a captura de um valor do
-ambiente, podemos usar o nome de uma função em vez de closure onde
-preciso de algo que implemente um dos <code>Fn</code> traits. Por exemplo, em um
-Valor <code>Option&lt;Vec&lt;T&gt;&gt;</code>, poderíamos chamar <code> unwrap_or_else(Vec::new)</code>para obter um
-novo vetor vazio se o valor for <code> None</code>. O compilador automaticamente
-implementa qualquer <code> Fn</code>traits aplicável para uma função
-definição.</p>
+<p>Nota: se o que queremos fazer não exigir capturar um valor do ambiente,
+podemos usar o nome de uma função no lugar de uma closure quando precisarmos
+de algo que implemente uma das traits <code>Fn</code>. Por exemplo, em um valor
+<code>Option&lt;Vec&lt;T&gt;&gt;</code>, poderíamos chamar <code>unwrap_or_else(Vec::new)</code> para obter um
+novo vetor vazio se o valor for <code>None</code>. O compilador implementa
+automaticamente a trait <code>Fn</code> apropriada para uma definição de função.</p>
 </blockquote>
 <p>Agora, vamos observar o método <code>sort_by_key</code>, da biblioteca padrão, definido em
 slices, para ver como ele difere de <code>unwrap_or_else</code> e por que usa <code>FnMut</code>, em
@@ -16082,9 +16090,9 @@ fn main() {
 que ele a chama várias vezes: uma vez para cada item do slice. A closure
 <code>|r| r.width</code> não captura, não modifica nem move nada para fora do seu
 ambiente, então ela satisfaz os requisitos do limite de trait.</p>
-<p>Em contraste, a Listagem 13-8 mostra um exemplo de closure que implementa apenas
-o <code>FnOnce</code> trait, porque move um valor para fora do ambiente. O
-o compilador não nos permitirá usar este closure com <code>sort_by_key</code>.</p>
+<p>Em contraste, a Listagem 13-8 mostra um exemplo de closure que implementa
+apenas a trait <code>FnOnce</code>, porque move um valor para fora do ambiente. O
+compilador não vai permitir que usemos essa closure com <code>sort_by_key</code>.</p>
 <figure class="listing" id="listing-13-8">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile">#[derive(Debug)]
@@ -16111,17 +16119,17 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-13-8">Listing 13-8</a>: Tentando usar uma closure <code>FnOnce</code> com <code>sort_by_key</code></figcaption>
 </figure>
-<p>Esta é uma maneira artificial e complicada (que não funciona) de tentar contar o
-número de vezes que <code>sort_by_key</code> chama closure ao classificar <code>list</code>. Este código
-tenta fazer esta contagem pressionando <code> value</code>- um <code> String</code>do closure
-ambiente - no vetor <code> sort_operations</code>. O closure captura <code> value</code>e
-em seguida, move <code> value</code>para fora do closure transferindo ownership de <code> value</code>para
-o vetor <code> sort_operations</code>. Este closure pode ser chamado uma vez; tentando ligar
-uma segunda vez não funcionaria, porque <code> value</code>não estaria mais no
-ambiente a ser inserido no <code> sort_operations</code>novamente! Portanto, este closure
-implementa apenas <code> FnOnce</code>. Quando tentamos compilar este código, obtemos este erro
-que <code> value</code>não pode ser movido para fora do closure porque o closure deve
-implementar <code> FnMut</code>:</p>
+<p>Essa é uma forma artificial e complicada, que não funciona, de tentar contar o
+número de vezes que <code>sort_by_key</code> chama a closure ao ordenar <code>list</code>. Esse
+código tenta fazer a contagem inserindo <code>value</code>, uma <code>String</code> do ambiente da
+closure, no vetor <code>sort_operations</code>. A closure captura <code>value</code> e então move
+<code>value</code> para fora da closure ao transferir ownership de <code>value</code> para o vetor
+<code>sort_operations</code>. Essa closure só pode ser chamada uma vez; tentar chamá-la
+uma segunda vez não funcionaria, porque <code>value</code> não estaria mais no ambiente
+para ser inserido em <code>sort_operations</code> novamente! Portanto, essa closure
+implementa apenas <code>FnOnce</code>. Quando tentamos compilar esse código, recebemos o
+erro de que <code>value</code> não pode ser movido para fora da closure porque a closure
+precisa implementar <code>FnMut</code>:</p>
 <pre><code class="language-console">$ cargo run
    Compiling rectangles v0.1.0 (file:///projects/rectangles)
 error[E0507]: cannot move out of `value`, a captured variable in an `FnMut` closure
@@ -16145,13 +16153,13 @@ help: consider cloning the value if the performance cost is acceptable
 For more information about this error, try `rustc --explain E0507`.
 error: could not compile `rectangles` (bin "rectangles") due to 1 previous error
 </code></pre>
-<p>O erro aponta para a linha no corpo closure que move <code>value</code> para fora do
-ambiente. Para corrigir isso, precisamos alterar o corpo do closure para que não
-retirar valores do ambiente. Manter um balcão no ambiente e
-incrementar seu valor no corpo closure é uma maneira mais direta de
-conte o número de vezes que o closure é chamado. O closure na Listagem 13-9
-funciona com <code>sort_by_key</code> porque está capturando apenas uma referência mutável para o
-Contador <code>num_sort_operations</code> e, portanto, pode ser chamado mais de uma vez.</p>
+<p>O erro aponta para a linha do corpo da closure que move <code>value</code> para fora do
+ambiente. Para corrigir isso, precisamos mudar o corpo da closure para que ela
+não mova valores para fora do ambiente. Manter um contador no ambiente e
+incrementar seu valor no corpo da closure é uma forma mais direta de contar o
+número de vezes que a closure é chamada. A closure da Listagem 13-9 funciona
+com <code>sort_by_key</code> porque ela captura apenas uma referência mutável ao contador
+<code>num_sort_operations</code> e, por isso, pode ser chamada mais de uma vez.</p>
 <figure class="listing" id="listing-13-9">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
@@ -16176,10 +16184,10 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-13-9">Listing 13-9</a>: Usar uma closure <code>FnMut</code> com <code>sort_by_key</code> é permitido</figcaption>
 </figure>
-<p>As traits <code>Fn</code> são importantes ao definir ou usar funções e tipos que façam
-uso de closures. Na próxima seção, discutiremos iteradores. Muitos métodos de
+<p>As traits <code>Fn</code> são importantes ao definir ou usar funções e tipos que fazem uso
+de closures. Na próxima seção, vamos discutir iteradores. Muitos métodos de
 iteradores recebem closures como argumento, então vale a pena manter esses
-detalhes em mente enquanto continuamos!</p>
+detalhes em mente enquanto avançamos!</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="processando-uma-série-de-itens-com-iteradores-1"><a href="#processando-uma-série-de-itens-com-iteradores-1" class="header">Processando uma Série de Itens com Iteradores</a></h1>
 <h2 id="processando-uma-série-de-itens-com-iteradores"><a class="header" href="#processando-uma-série-de-itens-com-iteradores">Processando uma Série de Itens com Iteradores</a></h2>
@@ -16253,7 +16261,7 @@ código diz que implementar a trait <code>Iterator</code> exige que você també
 tipo <code>Item</code>, e esse tipo é usado no valor de retorno do método <code>next</code>. Em
 outras palavras, <code>Item</code> será o tipo retornado pelo iterador.</p>
 <p>A trait <code>Iterator</code> exige apenas que implementadores definam um método: <code>next</code>,
-que retorna um item do iterador por vez, envolvido em <code>Some</code>, e, quando a
+que retorna um item do iterador por vez, envolto em <code>Some</code>, e, quando a
 iteração termina, retorna <code>None</code>.</p>
 <p>Podemos chamar o método <code>next</code> diretamente em iteradores; a Listagem 13-12
 demonstra quais valores são retornados por chamadas repetidas a <code>next</code> no
@@ -16281,7 +16289,7 @@ altera o estado interno que ele usa para controlar onde está na sequência. Em
 outras palavras, esse código <em>consome</em>, ou esgota, o iterador. Cada chamada a
 <code>next</code> consome um item do iterador. Não precisamos tornar <code>v1_iter</code> mutável
 quando usamos um laço <code>for</code>, porque o laço tomou ownership de <code>v1_iter</code> e o
-tornou mutável por trás dos panos.</p>
+tornou mutável nos bastidores.</p>
 <p>Observe também que os valores obtidos das chamadas a <code>next</code> são referências
 imutáveis aos valores do vetor. O método <code>iter</code> produz um iterador sobre
 referências imutáveis. Se quisermos criar um iterador que tome ownership de
@@ -16294,8 +16302,8 @@ pela biblioteca padrão; você pode conhecê-los consultando a documentação da
 de <code>Iterator</code>. Alguns desses métodos chamam <code>next</code> em sua definição, e é por
 isso que você precisa implementar <code>next</code> ao implementar a trait <code>Iterator</code>.</p>
 <p>Métodos que chamam <code>next</code> são chamados de <em>adaptadores consumidores</em>, porque
-chamá-los esgota o iterador. Um exemplo é o método <code>sum</code>, que toma ownership do
-iterador e percorre seus itens chamando <code>next</code> repetidamente, consumindo-o.
+chamá-los esgota o iterador. Um exemplo é o método <code>sum</code>, que toma ownership
+do iterador e percorre seus itens chamando <code>next</code> repetidamente, consumindo-o.
 Durante a iteração, ele soma cada item a um total acumulado e retorna esse
 total quando a iteração termina. A Listagem 13-13 tem um teste que ilustra o
 uso de <code>sum</code>.</p>
@@ -16378,8 +16386,8 @@ item do vetor original, incrementado em 1.</p>
 </figure>
 <p>Como <code>map</code> recebe uma closure, podemos especificar qualquer operação que
 quisermos realizar sobre cada item. Esse é um ótimo exemplo de como closures
-permitem personalizar um comportamento enquanto reutilizam o comportamento de
-iteração fornecido pela trait <code>Iterator</code>.</p>
+permitem personalizar um comportamento ao mesmo tempo que reutilizam o
+comportamento de iteração fornecido pela trait <code>Iterator</code>.</p>
 <p>Você pode encadear várias chamadas a adaptadores de iteradores para executar
 ações complexas de maneira legível. Mas, como todos os iteradores são
 preguiçosos, é necessário chamar um dos métodos consumidores para obter
@@ -16541,19 +16549,19 @@ ela estava na Listagem 12-23.</p>
 <figcaption><a href="#listing-13-17">Listing 13-17</a>: Reprodução da função <code>Config::build</code> da Listagem 12-23</figcaption>
 </figure>
 <p>Na época, dissemos para não se preocupar com as chamadas ineficientes a
-<code>clone</code>, porque as removeríamos no futuro. Pois bem, esse futuro chegou!</p>
+<code>clone</code>, porque as removeríamos no futuro. Pois bem, esse momento chegou!</p>
 <p>Precisávamos de <code>clone</code> porque temos uma fatia com elementos <code>String</code> no
-parâmetro <code>args</code>, mas a função <code>build</code> não é dona de <code>args</code>. Para devolver
-ownership de uma instância de <code>Config</code>, tivemos de clonar os valores dos campos
-<code>query</code> e <code>file_path</code>, para que a própria instância de <code>Config</code> passasse a
-possuí-los.</p>
+parâmetro <code>args</code>, mas a função <code>build</code> não tem ownership de <code>args</code>. Para
+retornar ownership de uma instância de <code>Config</code>, tivemos de clonar os valores
+dos campos <code>query</code> e <code>file_path</code>, para que a própria instância de <code>Config</code>
+passasse a possuí-los.</p>
 <p>Com nosso novo conhecimento sobre iteradores, podemos alterar <code>build</code> para
-receber ownership de um iterador como argumento, em vez de apenas emprestar uma
-fatia. Usaremos a funcionalidade dos iteradores no lugar do código que verifica
-o comprimento da fatia e indexa posições específicas. Isso deixará mais claro
-o que <code>Config::build</code> está fazendo, porque o iterador é quem acessará os
+receber ownership de um iterador como argumento, em vez de emprestar uma fatia.
+Vamos usar a funcionalidade dos iteradores no lugar do código que verifica o
+comprimento da fatia e indexa posições específicas. Isso deixará mais claro o
+que <code>Config::build</code> está fazendo, porque será o iterador que acessará os
 valores.</p>
-<p>Uma vez que <code>Config::build</code> passe a tomar ownership do iterador e deixe de usar
+<p>Quando <code>Config::build</code> passar a tomar ownership do iterador e deixar de usar
 operações de indexação que fazem empréstimos, poderemos mover os valores
 <code>String</code> do iterador para <code>Config</code>, em vez de chamar <code>clone</code> e fazer uma nova
 alocação.</p>
@@ -16859,8 +16867,8 @@ programa. Queremos ignorá-lo e chegar ao próximo valor, então primeiro chamam
 para obter o valor que queremos colocar no campo <code>query</code> de <code>Config</code>. Se
 <code>next</code> retornar <code>Some</code>, usamos um <code>match</code> para extrair o valor. Se retornar
 <code>None</code>, isso significa que não foram fornecidos argumentos suficientes, e
-retornamos antecipadamente com um valor <code>Err</code>. Fazemos o mesmo para o valor
-<code>file_path</code>.</p>
+retornamos imediatamente com um valor <code>Err</code>. Fazemos a mesma coisa para o
+valor <code>file_path</code>.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="making-code-clearer-with-iterator-adapters"></a></p>
 <h3 id="tornando-o-código-mais-claro-com-adaptadores-de-iteradores"><a class="header" href="#tornando-o-código-mais-claro-com-adaptadores-de-iteradores">Tornando o Código Mais Claro com Adaptadores de Iteradores</a></h3>
@@ -16901,8 +16909,8 @@ Listagem 12-19.</p>
 <p>Podemos escrever esse código de forma mais concisa usando métodos adaptadores
 de iteradores. Isso também nos permite evitar um vetor intermediário mutável,
 <code>results</code>. O estilo de programação funcional prefere minimizar a quantidade de
-estado mutável para tornar o código mais claro. Remover o estado mutável pode
-até permitir uma melhoria futura para tornar a busca paralela, porque não
+estado mutável para tornar o código mais claro. Remover esse estado mutável
+pode até permitir uma melhoria futura que torne a busca paralela, porque não
 teríamos de gerenciar acesso concorrente ao vetor <code>results</code>. A Listagem 13-22
 mostra essa mudança.</p>
 <figure class="listing" id="listing-13-22">
@@ -16975,11 +16983,11 @@ iterador removendo a chamada a <code>collect</code> e mudando o tipo de retorno 
 <code>impl Iterator&lt;Item = &amp;'a str&gt;</code>, de modo que a própria função se torne um
 adaptador de iterador. Observe que você também precisará atualizar os testes!
 Pesquise em um arquivo grande usando sua ferramenta <code>minigrep</code> antes e depois
-de fazer essa alteração para observar a diferença de comportamento. Antes dessa
-mudança, o programa não imprimirá nenhum resultado até ter coletado todos eles;
-depois, os resultados serão impressos à medida que cada linha correspondente
-for encontrada, porque o laço <code>for</code> na função <code>run</code> poderá tirar proveito da
-preguiça do iterador.</p>
+de fazer essa alteração para observar a diferença de comportamento. Antes
+dessa mudança, o programa não imprimirá nenhum resultado até ter coletado
+todos eles; depois, os resultados serão impressos à medida que cada linha
+correspondente for encontrada, porque o laço <code>for</code> na função <code>run</code> poderá
+tirar proveito da natureza preguiçosa do iterador.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="choosing-between-loops-or-iterators"></a></p>
 <h3 id="escolhendo-entre-laços-e-iteradores"><a class="header" href="#escolhendo-entre-laços-e-iteradores">Escolhendo entre Laços e Iteradores</a></h3>
@@ -17002,14 +17010,14 @@ sobre desempenho.</p>
 <h1 id="desempenho-em-loops-vs-iteradores"><a href="#desempenho-em-loops-vs-iteradores" class="header">Desempenho em Loops vs. Iteradores</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="comparing-performance-loops-vs-iterators"></a></p>
-<h2 id="desempenho-em-loops-versus-iterators"><a class="header" href="#desempenho-em-loops-versus-iterators">Desempenho em Loops versus Iterators</a></h2>
-<p>Para decidir se deve usar loops ou iterators, você precisa saber qual
-implementação é mais rápida: a versão da função <code>search</code> com um loop <code>for</code>
-explícito ou a versão com iterators.</p>
+<h2 id="desempenho-em-laços-versus-iteradores"><a class="header" href="#desempenho-em-laços-versus-iteradores">Desempenho em Laços versus Iteradores</a></h2>
+<p>Para decidir se deve usar laços ou iteradores, você precisa saber qual
+implementação é mais rápida: a versão da função <code>search</code> com um laço <code>for</code>
+explícito ou a versão com iteradores.</p>
 <p>Executamos um benchmark carregando todo o conteúdo de <em>The Adventures of
 Sherlock Holmes</em>, de Sir Arthur Conan Doyle, em uma <code>String</code> e procurando a
 palavra <em>the</em> nesse conteúdo. Aqui estão os resultados do benchmark para a
-versão de <code>search</code> usando o loop <code>for</code> e para a versão usando iterators:</p>
+versão de <code>search</code> que usa o laço <code>for</code> e para a versão que usa iteradores:</p>
 <pre><code class="language-text">test bench_search_for  ... bench:  19,620,300 ns/iter (+/- 915,700)
 test bench_search_iter ... bench:  19,234,900 ns/iter (+/- 657,200)
 </code></pre>
@@ -17020,31 +17028,31 @@ comparam em termos de desempenho.</p>
 <p>Para um benchmark mais abrangente, você deveria testar vários textos, de vários
 tamanhos, como <code>contents</code>, diferentes palavras e palavras de comprimentos
 variados como <code>query</code>, além de muitos outros tipos de variação. O ponto é o
-seguinte: iterators, embora sejam uma abstração de alto nível, são compilados
+seguinte: iteradores, embora sejam uma abstração de alto nível, são compilados
 para algo muito próximo do mesmo código que você escreveria manualmente em um
-nível mais baixo. Iterators são uma das <em>abstrações de custo zero</em> do Rust, o
-que significa que usar a abstração não impõe nenhuma sobrecarga adicional em
-tempo de execução. Isso é análogo à forma como Bjarne Stroustrup, o projetista
-e implementador original de C++, define sobrecarga zero em sua keynote da ETAPS
-de 2012, “Foundations of C++”:</p>
+nível mais baixo. Iteradores são uma das <em>abstrações de custo zero</em> de Rust,
+isto é, usar a abstração não impõe nenhuma sobrecarga adicional em tempo de
+execução. Isso é análogo à forma como Bjarne Stroustrup, o projetista e
+implementador original de C++, define sobrecarga zero em sua palestra de 2012
+na ETAPS, “Foundations of C++”:</p>
 <blockquote>
 <p>Em geral, as implementações de C++ obedecem ao princípio da sobrecarga zero:
 o que você não usa, você não paga. E mais: o que você usa, você não conseguiria
 codificar manualmente de forma melhor.</p>
 </blockquote>
-<p>Em muitos casos, o código Rust que usa iterators é compilado para o mesmo
-assembly que você escreveria à mão. Otimizações como desenrolamento de loop e
+<p>Em muitos casos, o código Rust que usa iteradores é compilado para o mesmo
+assembly que você escreveria à mão. Otimizações como desenrolamento de laço e
 eliminação da checagem de limites em acessos a arrays se aplicam e tornam o
 código resultante extremamente eficiente. Agora que você sabe disso, pode usar
-iterators e closures sem medo! Eles fazem o código parecer mais de alto nível,
-mas não impõem penalidade de desempenho em tempo de execução.</p>
+iteradores e closures sem medo! Eles fazem o código parecer mais de alto
+nível, mas não impõem penalidade de desempenho em tempo de execução.</p>
 <h2 id="resumo-12"><a class="header" href="#resumo-12">Resumo</a></h2>
-<p>Closures e iterators são recursos do Rust inspirados em ideias de linguagens de
-programação funcional. Eles contribuem para a capacidade do Rust de expressar
-claramente ideias de alto nível com desempenho de baixo nível. As
-implementações de closures e iterators são tais que o desempenho em tempo de
-execução não é afetado. Isso faz parte do objetivo do Rust de se esforçar para
-fornecer abstrações de custo zero.</p>
+<p>Closures e iteradores são recursos de Rust inspirados em ideias de linguagens
+de programação funcional. Eles contribuem para a capacidade de Rust de
+expressar com clareza ideias de alto nível com desempenho de baixo nível. As
+implementações de closures e iteradores são feitas de tal forma que o
+desempenho em tempo de execução não é afetado. Isso faz parte do objetivo de
+Rust de oferecer abstrações de custo zero.</p>
 <p>Agora que melhoramos a expressividade do nosso projeto de E/S, vamos dar uma
 olhada em mais alguns recursos do <code>cargo</code> que nos ajudarão a compartilhar esse
 projeto com o mundo.</p>
@@ -17055,15 +17063,15 @@ executar e testar nosso código, mas ele pode fazer muito mais. Neste capítulo,
 discutiremos alguns de seus recursos mais avançados para mostrar como fazer o
 seguinte:</p>
 <ul>
-<li>Personalizar o build por meio de perfis de lançamento.</li>
-<li>Publique bibliotecas em <a href="https://crates.io/">crates.io</a><!-- ignore -->.</li>
-<li>Organize grandes projetos com workspaces.</li>
-<li>Instale binários de <a href="https://crates.io/">crates.io</a><!-- ignore -->.</li>
-<li>Estenda Cargo usando comandos personalizados.</li>
+<li>Personalizar seus builds por meio de perfis de release.</li>
+<li>Publicar bibliotecas em <a href="https://crates.io/">crates.io</a><!-- ignore -->.</li>
+<li>Organizar grandes projetos com workspaces.</li>
+<li>Instalar binários de <a href="https://crates.io/">crates.io</a><!-- ignore -->.</li>
+<li>Estender o Cargo usando comandos personalizados.</li>
 </ul>
-<p>O Cargo pode fazer ainda mais do que a funcionalidade que abordamos neste
-capítulo, então, para uma explicação completa de todos os seus recursos,
-consulte <a href="https://doc.rust-lang.org/cargo/">a documentação oficial</a>.</p>
+<p>O Cargo pode fazer ainda mais do que o que abordamos neste capítulo; para uma
+explicação completa de todos os seus recursos, consulte
+<a href="https://doc.rust-lang.org/cargo/">a documentação oficial</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="personalizando-builds-com-perfis-de-lançamento"><a href="#personalizando-builds-com-perfis-de-lançamento" class="header">Personalizando Builds com Perfis de Lançamento</a></h1>
 <h2 id="personalizando-builds-com-perfis-de-release"><a class="header" href="#personalizando-builds-com-perfis-de-release">Personalizando Builds com Perfis de Release</a></h2>
@@ -17074,7 +17082,8 @@ dos demais.</p>
 <p>Cargo tem dois perfis principais: o perfil <code>dev</code>, que o Cargo usa quando você
 executa <code>cargo build</code>, e o perfil <code>release</code>, que o Cargo usa quando você
 executa <code>cargo build --release</code>. O perfil <code>dev</code> tem bons padrões para
-desenvolvimento, e o perfil <code>release</code> tem bons padrões para builds de release.</p>
+desenvolvimento, e o perfil <code>release</code> tem bons padrões para compilações de
+release.</p>
 <p>Esses nomes de perfil talvez já sejam familiares pela saída das suas
 compilações:</p>
 <!-- manual-regeneration
@@ -17088,7 +17097,7 @@ and ensure output below is accurate
 $ cargo build --release
     Finished `release` profile [optimized] target(s) in 0.32s
 </code></pre>
-<p>Esses <code>dev</code> e <code>release</code> são os perfis diferentes usados pelo compilador.</p>
+<p><code>dev</code> e <code>release</code> são esses perfis diferentes usados pelo compilador.</p>
 <p>Cargo possui configurações padrão para cada perfil, aplicadas quando você não
 adiciona explicitamente seções <code>[profile.*]</code> ao arquivo <em>Cargo.toml</em> do
 projeto. Ao adicionar seções <code>[profile.*]</code> para qualquer perfil que queira
@@ -17120,7 +17129,7 @@ perfil de desenvolvimento, podemos adicionar estas duas linhas ao
 <pre><code class="language-toml">[profile.dev]
 opt-level = 1
 </code></pre>
-<p>Esse código substitui a configuração padrão <code>0</code>. Agora, quando executarmos
+<p>Esse código substitui o valor padrão <code>0</code>. Agora, quando executarmos
 <code>cargo build</code>, o Cargo usará os padrões do perfil <code>dev</code> mais a nossa
 customização de <code>opt-level</code>. Como definimos <code>opt-level</code> como <code>1</code>, o Cargo
 aplicará mais otimizações do que o padrão, mas não tantas quanto em um build
@@ -17181,8 +17190,8 @@ resultado em um navegador. Navegue até a função <code>add_one</code> e você 
 texto nos comentários de documentação é renderizado, como mostrado na Figura
 14-1.</p>
 <img alt="Rendered HTML documentation for the `add_one` function of `my_crate` " src="img/trpl14-01.png" class="center" />
-<p><span class="caption">Figura 14-1: A documentação HTML do <code>add_one</code>
-função</span></p>
+<p><span class="caption">Figura 14-1: A documentação HTML da função
+<code>add_one</code></span></p>
 <h4 id="seções-usadas-com-frequência"><a class="header" href="#seções-usadas-com-frequência">Seções Usadas com Frequência</a></h4>
 <p>Usamos o heading Markdown <code># Examples</code> na Listagem 14-1 para criar uma seção no
 HTML com o título “Exemplos”. Aqui estão algumas outras seções que autores de
@@ -17228,7 +17237,7 @@ entre em pânico e executarmos <code>cargo test</code> novamente, veremos que os
 capturam o fato de que o exemplo e o código estão fora de sincronia!</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="commenting-contained-items"></a></p>
-<h4 id="comentários-em-itens-contêineres"><a class="header" href="#comentários-em-itens-contêineres">Comentários em Itens Contêineres</a></h4>
+<h4 id="comentários-no-item-que-contém-os-comentários"><a class="header" href="#comentários-no-item-que-contém-os-comentários">Comentários no Item que Contém os Comentários</a></h4>
 <p>O estilo de comentário de documentação <code>//!</code> adiciona documentação ao item que
 <em>contém</em> os comentários, e não aos itens que vêm <em>depois</em> deles. Normalmente,
 usamos esse tipo de comentário dentro do arquivo raiz do crate (<em>src/lib.rs</em>,
@@ -17294,9 +17303,9 @@ escrever <code>use my_crate::some_module::another_module::UsefulType;</code> em 
 <p>A boa notícia é que, se essa estrutura <em>não</em> for conveniente para outras
 pessoas usarem a partir de outra biblioteca, você não precisa reorganizar sua
 estrutura interna. Em vez disso, pode reexportar itens para criar uma estrutura
-pública diferente da privada usando <code>pub use</code>. <em>Reexportar</em> pega um item
-público em um local e o torna público em outro, como se ele tivesse sido
-definido ali.</p>
+pública diferente da sua estrutura privada usando <code>pub use</code>. <em>Reexportar</em>
+pega um item público em um local e o torna público em outro, como se ele
+tivesse sido definido ali.</p>
 <p>Por exemplo, digamos que criamos uma biblioteca chamada <code>art</code> para modelar
 conceitos artísticos. Dentro dela há dois módulos: um módulo <code>kinds</code>,
 contendo dois enums chamados <code>PrimaryColor</code> e <code>SecondaryColor</code>, e um módulo
@@ -17339,7 +17348,7 @@ pub mod utils {
 gerada por <code>cargo doc</code>.</p>
 <img alt="Rendered documentation for the `art` crate that lists the `kinds` and `utils` modules" src="img/trpl14-03.png" class="center" />
 <p><span class="caption">Figura 14-3: A primeira página da documentação do <code>art</code>
-que lista os módulos <code> kinds</code>e <code> utils</code></span></p>
+que lista os módulos <code>kinds</code> e <code>utils</code></span></p>
 <p>Observe que os tipos <code>PrimaryColor</code> e <code>SecondaryColor</code> não aparecem na página
 inicial, nem a função <code>mix</code>. Precisamos clicar em <code>kinds</code> e <code>utils</code> para vê-los.</p>
 <p>Outro crate que dependa dessa biblioteca precisaria de instruções <code>use</code> que
@@ -17409,7 +17418,8 @@ pub mod utils {
 <figcaption><a href="#listing-14-5">Listing 14-5</a>: Adicionando instruções <code>pub use</code> para reexportar itens</figcaption>
 </figure>
 <p>A documentação da API que <code>cargo doc</code> gera para esse crate agora listará e
-apontará para as reexportações na página inicial, como mostrado na Figura 14-4,
+criará links para as reexportações na página inicial, como mostrado na Figura
+14-4,
 tornando os tipos <code>PrimaryColor</code> e <code>SecondaryColor</code>, assim como a função
 <code>mix</code>, mais fáceis de encontrar.</p>
 <img alt="Rendered documentation for the `art` crate with the re-exports on the front page" src="img/trpl14-04.png" class="center" />
@@ -17544,7 +17554,7 @@ usá-la.</p>
 <p>Tenha cuidado, porque uma publicação é <em>permanente</em>. A versão nunca pode ser
 sobrescrita, e o código não pode ser excluído, exceto em determinadas
 circunstâncias. Um dos principais objetivos do Crates.io é atuar como um
-arquivo permanente de código, para que builds de todos os projetos que dependem
+arquivo permanente de código, para que as compilações de todos os projetos que dependem
 de crates de <a href="https://crates.io/">crates.io</a><!-- ignore --> continuem
 funcionando. Permitir exclusões de versões tornaria esse objetivo impossível de
 cumprir. No entanto, não há limite para o número de versões de crate que você
@@ -17605,14 +17615,15 @@ cargo yank carol-test --version 2.1.0 --undo
     Updating crates.io index
         Yank guessing_game@1.0.1
 </code></pre>
-<p>Ao adicionar <code>--undo</code> ao comando, você também pode desfazer um puxão e permitir projetos
-para começar a depender de uma versão novamente:</p>
+<p>Ao adicionar <code>--undo</code> ao comando, você também pode desfazer o <code>yank</code> e
+permitir que projetos voltem a depender de uma versão:</p>
 <pre><code class="language-console">$ cargo yank --vers 1.0.1 --undo
     Updating crates.io index
       Unyank guessing_game@1.0.1
 </code></pre>
-<p>Um puxão <em>não</em> exclui nenhum código. Não pode, por exemplo, excluir acidentalmente
-segredos carregados. Se isso acontecer, você deverá redefinir esses segredos imediatamente.</p>
+<p>Um <code>yank</code> <em>não</em> exclui código algum. Ele não pode, por exemplo, remover
+segredos enviados acidentalmente. Se isso acontecer, você deverá redefinir
+esses segredos imediatamente.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="workspaces-do-cargo-1"><a href="#workspaces-do-cargo-1" class="header">Workspaces do Cargo</a></h1>
 <h2 id="workspaces-do-cargo"><a class="header" href="#workspaces-do-cargo">Workspaces do Cargo</a></h2>
@@ -17621,7 +17632,7 @@ de biblioteca. À medida que o projeto evolui, você pode perceber que o crate d
 biblioteca continua crescendo e desejar dividir ainda mais o pacote em vários
 crates de biblioteca. O Cargo oferece um recurso chamado <em>workspaces</em> que pode
 ajudar a gerenciar vários pacotes relacionados, desenvolvidos em conjunto.</p>
-<h3 id="criando-um-workspace"><a class="header" href="#criando-um-workspace">Criando um workspace</a></h3>
+<h3 id="criando-um-workspace"><a class="header" href="#criando-um-workspace">Criando um Workspace</a></h3>
 <p>Um <em>workspace</em> é um conjunto de pacotes que compartilham o mesmo
 <em>Cargo.lock</em> e o mesmo diretório de saída. Vamos criar um projeto usando um
 workspace. Usaremos código trivial para que possamos nos concentrar na sua
@@ -17678,12 +17689,12 @@ artefatos compilados serão colocados; o pacote <code>adder</code> não possui s
 diretório <em>target</em>. Mesmo se executássemos <code>cargo build</code> de dentro do
 diretório <em>adder</em>, os artefatos compilados ainda terminariam em <em>add/target</em>,
 em vez de <em>add/adder/target</em>. O Cargo estrutura o diretório <em>target</em> de um
-workspace dessa forma porque os crates em um workspace foram feitos para
+workspace dessa forma porque os crates em um workspace devem
 depender uns dos outros. Se cada crate tivesse seu próprio diretório <em>target</em>,
 cada um teria de recompilar os outros crates do workspace para colocar os
 artefatos em seu próprio <em>target</em>. Ao compartilhar um único diretório <em>target</em>,
-os crates podem evitar rebuilds desnecessários.</p>
-<h3 id="criando-o-segundo-pacote-no-workspace"><a class="header" href="#criando-o-segundo-pacote-no-workspace">Criando o segundo pacote no workspace</a></h3>
+os crates podem evitar recompilações desnecessárias.</p>
+<h3 id="criando-o-segundo-pacote-no-workspace"><a class="header" href="#criando-o-segundo-pacote-no-workspace">Criando o Segundo Pacote no Workspace</a></h3>
 <p>Em seguida, vamos criar outro pacote membro no workspace e chamá-lo de
 <code>add_one</code>. Gere um novo crate de biblioteca chamado <code>add_one</code>:</p>
 <!-- manual-regeneration
@@ -17931,19 +17942,19 @@ específico do workspace usando o sinalizador <code>-p</code> e especificando o 
 crate que queremos publicar.</p>
 <p>Como prática adicional, adicione um crate <code>add_two</code> a este workspace de forma
 semelhante ao crate <code>add_one</code>!</p>
-<p>À medida que o projeto cresce, considere usar um workspace: ele permite que
-você trabalhe com componentes menores e mais fáceis de entender do que um único
+<p>À medida que o projeto cresce, considere usar um workspace: ele permite
+trabalhar com componentes menores e mais fáceis de entender do que um único
 grande bloco de código. Além disso, manter os crates em um workspace pode
-facilitar a coordenação entre eles, especialmente se forem alterados com
-frequência ao mesmo tempo.</p>
+facilitar a coordenação entre eles, especialmente quando costumam ser alterados
+ao mesmo tempo.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="instalando-binários-com-cargo-install-1"><a href="#instalando-binários-com-cargo-install-1" class="header">Instalando Binários com cargo install</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="installing-binaries-from-cratesio-with-cargo-install"></a></p>
-<h2 id="instalando-binários-com-cargo-install"><a class="header" href="#instalando-binários-com-cargo-install">Instalando binários com <code>cargo install</code></a></h2>
+<h2 id="instalando-binários-com-cargo-install"><a class="header" href="#instalando-binários-com-cargo-install">Instalando Binários com <code>cargo install</code></a></h2>
 <p>O comando <code>cargo install</code> permite instalar e usar crates binários localmente.
 Isso não se destina a substituir pacotes do sistema; a ideia é oferecer uma
-forma conveniente para desenvolvedores Rust instalarem ferramentas que outras
+forma conveniente para pessoas desenvolvedoras Rust instalarem ferramentas que outras
 pessoas compartilharam em <a href="https://crates.io/">crates.io</a><!-- ignore -->.
 Observe que você só pode instalar pacotes que tenham alvos binários. Um <em>alvo
 binário</em> é o programa executável criado quando o crate tem um arquivo
@@ -17981,14 +17992,14 @@ começar a usar uma ferramenta mais rápida, escrita em Rust, para pesquisar
 arquivos!</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="estendendo-o-cargo-com-comandos-personalizados"><a href="#estendendo-o-cargo-com-comandos-personalizados" class="header">Estendendo o Cargo com Comandos Personalizados</a></h1>
-<h2 id="estendendo-cargo-com-comandos-personalizados"><a class="header" href="#estendendo-cargo-com-comandos-personalizados">Estendendo Cargo com comandos personalizados</a></h2>
+<h2 id="estendendo-cargo-com-comandos-personalizados"><a class="header" href="#estendendo-cargo-com-comandos-personalizados">Estendendo Cargo com Comandos Personalizados</a></h2>
 <p>O Cargo foi projetado para que você possa estendê-lo com novos subcomandos sem
 precisar modificá-lo. Se um binário no seu <code>$PATH</code> se chamar
 <code>cargo-something</code>, você pode executá-lo como se fosse um subcomando do Cargo,
 rodando <code>cargo something</code>. Comandos personalizados como esse também aparecem
-quando você executa <code>cargo --list</code>. Poder usar <code>cargo install</code> para instalar
-extensões e depois executá-las como se fossem ferramentas nativas do Cargo é um
-benefício muito conveniente do design do Cargo!</p>
+quando você executa <code>cargo --list</code>. A possibilidade de usar <code>cargo install</code>
+para instalar extensões e depois executá-las como se fossem ferramentas
+nativas do Cargo é um benefício muito conveniente do design do Cargo!</p>
 <h2 id="resumo-13"><a class="header" href="#resumo-13">Resumo</a></h2>
 <p>Compartilhar código com Cargo e <a href="https://crates.io/">crates.io</a><!-- ignore -->
 faz parte do que torna o ecossistema Rust útil para muitas tarefas diferentes.

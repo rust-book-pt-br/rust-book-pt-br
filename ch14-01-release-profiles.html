@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-162de759.js";
+            window.path_to_searchindex_js = "searchindex-4fe81980.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -189,7 +189,8 @@ dos demais.</p>
 <p>Cargo tem dois perfis principais: o perfil <code>dev</code>, que o Cargo usa quando você
 executa <code>cargo build</code>, e o perfil <code>release</code>, que o Cargo usa quando você
 executa <code>cargo build --release</code>. O perfil <code>dev</code> tem bons padrões para
-desenvolvimento, e o perfil <code>release</code> tem bons padrões para builds de release.</p>
+desenvolvimento, e o perfil <code>release</code> tem bons padrões para compilações de
+release.</p>
 <p>Esses nomes de perfil talvez já sejam familiares pela saída das suas
 compilações:</p>
 <!-- manual-regeneration
@@ -203,7 +204,7 @@ and ensure output below is accurate
 $ cargo build --release
     Finished `release` profile [optimized] target(s) in 0.32s
 </code></pre>
-<p>Esses <code>dev</code> e <code>release</code> são os perfis diferentes usados pelo compilador.</p>
+<p><code>dev</code> e <code>release</code> são esses perfis diferentes usados pelo compilador.</p>
 <p>Cargo possui configurações padrão para cada perfil, aplicadas quando você não
 adiciona explicitamente seções <code>[profile.*]</code> ao arquivo <em>Cargo.toml</em> do
 projeto. Ao adicionar seções <code>[profile.*]</code> para qualquer perfil que queira
@@ -235,7 +236,7 @@ perfil de desenvolvimento, podemos adicionar estas duas linhas ao
 <pre><code class="language-toml">[profile.dev]
 opt-level = 1
 </code></pre>
-<p>Esse código substitui a configuração padrão <code>0</code>. Agora, quando executarmos
+<p>Esse código substitui o valor padrão <code>0</code>. Agora, quando executarmos
 <code>cargo build</code>, o Cargo usará os padrões do perfil <code>dev</code> mais a nossa
 customização de <code>opt-level</code>. Como definimos <code>opt-level</code> como <code>1</code>, o Cargo
 aplicará mais otimizações do que o padrão, mas não tantas quanto em um build
