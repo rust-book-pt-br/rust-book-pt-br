@@ -50,8 +50,8 @@ texto nos comentários de documentação é renderizado, como mostrado na Figura
 
 <img alt="Rendered HTML documentation for the `add_one` function of `my_crate` " src="img/trpl14-01.png" class="center" />
 
-<span class="caption">Figura 14-1: A documentação HTML do `add_one`
-função</span>
+<span class="caption">Figura 14-1: A documentação HTML da função
+`add_one`</span>
 
 #### Seções Usadas com Frequência
 
@@ -108,7 +108,7 @@ capturam o fato de que o exemplo e o código estão fora de sincronia!
 
 <a id="commenting-contained-items"></a>
 
-#### Comentários em Itens Contêineres
+#### Comentários no Item que Contém os Comentários
 
 O estilo de comentário de documentação `//!` adiciona documentação ao item que
 *contém* os comentários, e não aos itens que vêm *depois* deles. Normalmente,
@@ -172,9 +172,9 @@ escrever `use my_crate::some_module::another_module::UsefulType;` em vez de
 A boa notícia é que, se essa estrutura _não_ for conveniente para outras
 pessoas usarem a partir de outra biblioteca, você não precisa reorganizar sua
 estrutura interna. Em vez disso, pode reexportar itens para criar uma estrutura
-pública diferente da privada usando `pub use`. *Reexportar* pega um item
-público em um local e o torna público em outro, como se ele tivesse sido
-definido ali.
+pública diferente da sua estrutura privada usando `pub use`. *Reexportar*
+pega um item público em um local e o torna público em outro, como se ele
+tivesse sido definido ali.
 
 Por exemplo, digamos que criamos uma biblioteca chamada `art` para modelar
 conceitos artísticos. Dentro dela há dois módulos: um módulo `kinds`,
@@ -195,7 +195,7 @@ gerada por `cargo doc`.
 <img alt="Rendered documentation for the `art` crate that lists the `kinds` and `utils` modules" src="img/trpl14-03.png" class="center" />
 
 <span class="caption">Figura 14-3: A primeira página da documentação do `art`
-que lista os módulos ` kinds`e ` utils`</span>
+que lista os módulos `kinds` e `utils`</span>
 
 Observe que os tipos `PrimaryColor` e `SecondaryColor` não aparecem na página
 inicial, nem a função `mix`. Precisamos clicar em `kinds` e `utils` para vê-los.
@@ -235,7 +235,8 @@ reexportem os itens no nível superior, como mostrado na Listagem 14-5.
 </Listing>
 
 A documentação da API que `cargo doc` gera para esse crate agora listará e
-apontará para as reexportações na página inicial, como mostrado na Figura 14-4,
+criará links para as reexportações na página inicial, como mostrado na Figura
+14-4,
 tornando os tipos `PrimaryColor` e `SecondaryColor`, assim como a função
 `mix`, mais fáceis de encontrar.
 
@@ -399,7 +400,7 @@ usá-la.
 Tenha cuidado, porque uma publicação é _permanente_. A versão nunca pode ser
 sobrescrita, e o código não pode ser excluído, exceto em determinadas
 circunstâncias. Um dos principais objetivos do Crates.io é atuar como um
-arquivo permanente de código, para que builds de todos os projetos que dependem
+arquivo permanente de código, para que as compilações de todos os projetos que dependem
 de crates de [crates.io](https://crates.io/)<!-- ignore --> continuem
 funcionando. Permitir exclusões de versões tornaria esse objetivo impossível de
 cumprir. No entanto, não há limite para o número de versões de crate que você
@@ -477,8 +478,8 @@ $ cargo yank --vers 1.0.1
         Yank guessing_game@1.0.1
 ```
 
-Ao adicionar `--undo` ao comando, você também pode desfazer um puxão e permitir projetos
-para começar a depender de uma versão novamente:
+Ao adicionar `--undo` ao comando, você também pode desfazer o `yank` e
+permitir que projetos voltem a depender de uma versão:
 
 ```console
 $ cargo yank --vers 1.0.1 --undo
@@ -486,8 +487,9 @@ $ cargo yank --vers 1.0.1 --undo
       Unyank guessing_game@1.0.1
 ```
 
-Um puxão _não_ exclui nenhum código. Não pode, por exemplo, excluir acidentalmente
-segredos carregados. Se isso acontecer, você deverá redefinir esses segredos imediatamente.
+Um `yank` _não_ exclui código algum. Ele não pode, por exemplo, remover
+segredos enviados acidentalmente. Se isso acontecer, você deverá redefinir
+esses segredos imediatamente.
 
 [spdx]: https://spdx.org/licenses/
 [semver]: https://semver.org/

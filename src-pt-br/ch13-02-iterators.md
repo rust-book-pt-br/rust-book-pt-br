@@ -73,7 +73,7 @@ tipo `Item`, e esse tipo é usado no valor de retorno do método `next`. Em
 outras palavras, `Item` será o tipo retornado pelo iterador.
 
 A trait `Iterator` exige apenas que implementadores definam um método: `next`,
-que retorna um item do iterador por vez, envolvido em `Some`, e, quando a
+que retorna um item do iterador por vez, envolto em `Some`, e, quando a
 iteração termina, retorna `None`.
 
 Podemos chamar o método `next` diretamente em iteradores; a Listagem 13-12
@@ -93,7 +93,7 @@ altera o estado interno que ele usa para controlar onde está na sequência. Em
 outras palavras, esse código _consome_, ou esgota, o iterador. Cada chamada a
 `next` consome um item do iterador. Não precisamos tornar `v1_iter` mutável
 quando usamos um laço `for`, porque o laço tomou ownership de `v1_iter` e o
-tornou mutável por trás dos panos.
+tornou mutável nos bastidores.
 
 Observe também que os valores obtidos das chamadas a `next` são referências
 imutáveis aos valores do vetor. O método `iter` produz um iterador sobre
@@ -110,8 +110,8 @@ de `Iterator`. Alguns desses métodos chamam `next` em sua definição, e é por
 isso que você precisa implementar `next` ao implementar a trait `Iterator`.
 
 Métodos que chamam `next` são chamados de _adaptadores consumidores_, porque
-chamá-los esgota o iterador. Um exemplo é o método `sum`, que toma ownership do
-iterador e percorre seus itens chamando `next` repetidamente, consumindo-o.
+chamá-los esgota o iterador. Um exemplo é o método `sum`, que toma ownership
+do iterador e percorre seus itens chamando `next` repetidamente, consumindo-o.
 Durante a iteração, ele soma cada item a um total acumulado e retorna esse
 total quando a iteração termina. A Listagem 13-13 tem um teste que ilustra o
 uso de `sum`.
@@ -175,8 +175,8 @@ item do vetor original, incrementado em 1.
 
 Como `map` recebe uma closure, podemos especificar qualquer operação que
 quisermos realizar sobre cada item. Esse é um ótimo exemplo de como closures
-permitem personalizar um comportamento enquanto reutilizam o comportamento de
-iteração fornecido pela trait `Iterator`.
+permitem personalizar um comportamento ao mesmo tempo que reutilizam o
+comportamento de iteração fornecido pela trait `Iterator`.
 
 Você pode encadear várias chamadas a adaptadores de iteradores para executar
 ações complexas de maneira legível. Mas, como todos os iteradores são

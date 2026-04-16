@@ -6,7 +6,7 @@ biblioteca continua crescendo e desejar dividir ainda mais o pacote em vários
 crates de biblioteca. O Cargo oferece um recurso chamado _workspaces_ que pode
 ajudar a gerenciar vários pacotes relacionados, desenvolvidos em conjunto.
 
-### Criando um workspace
+### Criando um Workspace
 
 Um _workspace_ é um conjunto de pacotes que compartilham o mesmo
 _Cargo.lock_ e o mesmo diretório de saída. Vamos criar um projeto usando um
@@ -78,13 +78,13 @@ artefatos compilados serão colocados; o pacote `adder` não possui seu próprio
 diretório _target_. Mesmo se executássemos `cargo build` de dentro do
 diretório _adder_, os artefatos compilados ainda terminariam em _add/target_,
 em vez de _add/adder/target_. O Cargo estrutura o diretório _target_ de um
-workspace dessa forma porque os crates em um workspace foram feitos para
+workspace dessa forma porque os crates em um workspace devem
 depender uns dos outros. Se cada crate tivesse seu próprio diretório _target_,
 cada um teria de recompilar os outros crates do workspace para colocar os
 artefatos em seu próprio _target_. Ao compartilhar um único diretório _target_,
-os crates podem evitar rebuilds desnecessários.
+os crates podem evitar recompilações desnecessárias.
 
-### Criando o segundo pacote no workspace
+### Criando o Segundo Pacote no Workspace
 
 Em seguida, vamos criar outro pacote membro no workspace e chamá-lo de
 `add_one`. Gere um novo crate de biblioteca chamado `add_one`:
@@ -382,8 +382,8 @@ crate que queremos publicar.
 Como prática adicional, adicione um crate `add_two` a este workspace de forma
 semelhante ao crate `add_one`!
 
-À medida que o projeto cresce, considere usar um workspace: ele permite que
-você trabalhe com componentes menores e mais fáceis de entender do que um único
+À medida que o projeto cresce, considere usar um workspace: ele permite
+trabalhar com componentes menores e mais fáceis de entender do que um único
 grande bloco de código. Além disso, manter os crates em um workspace pode
-facilitar a coordenação entre eles, especialmente se forem alterados com
-frequência ao mesmo tempo.
+facilitar a coordenação entre eles, especialmente quando costumam ser alterados
+ao mesmo tempo.

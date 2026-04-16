@@ -22,22 +22,22 @@ ela estava na Listagem 12-23.
 </Listing>
 
 Na época, dissemos para não se preocupar com as chamadas ineficientes a
-`clone`, porque as removeríamos no futuro. Pois bem, esse futuro chegou!
+`clone`, porque as removeríamos no futuro. Pois bem, esse momento chegou!
 
 Precisávamos de `clone` porque temos uma fatia com elementos `String` no
-parâmetro `args`, mas a função `build` não é dona de `args`. Para devolver
-ownership de uma instância de `Config`, tivemos de clonar os valores dos campos
-`query` e `file_path`, para que a própria instância de `Config` passasse a
-possuí-los.
+parâmetro `args`, mas a função `build` não tem ownership de `args`. Para
+retornar ownership de uma instância de `Config`, tivemos de clonar os valores
+dos campos `query` e `file_path`, para que a própria instância de `Config`
+passasse a possuí-los.
 
 Com nosso novo conhecimento sobre iteradores, podemos alterar `build` para
-receber ownership de um iterador como argumento, em vez de apenas emprestar uma
-fatia. Usaremos a funcionalidade dos iteradores no lugar do código que verifica
-o comprimento da fatia e indexa posições específicas. Isso deixará mais claro
-o que `Config::build` está fazendo, porque o iterador é quem acessará os
+receber ownership de um iterador como argumento, em vez de emprestar uma fatia.
+Vamos usar a funcionalidade dos iteradores no lugar do código que verifica o
+comprimento da fatia e indexa posições específicas. Isso deixará mais claro o
+que `Config::build` está fazendo, porque será o iterador que acessará os
 valores.
 
-Uma vez que `Config::build` passe a tomar ownership do iterador e deixe de usar
+Quando `Config::build` passar a tomar ownership do iterador e deixar de usar
 operações de indexação que fazem empréstimos, poderemos mover os valores
 `String` do iterador para `Config`, em vez de chamar `clone` e fazer uma nova
 alocação.
@@ -121,8 +121,8 @@ programa. Queremos ignorá-lo e chegar ao próximo valor, então primeiro chamam
 para obter o valor que queremos colocar no campo `query` de `Config`. Se
 `next` retornar `Some`, usamos um `match` para extrair o valor. Se retornar
 `None`, isso significa que não foram fornecidos argumentos suficientes, e
-retornamos antecipadamente com um valor `Err`. Fazemos o mesmo para o valor
-`file_path`.
+retornamos imediatamente com um valor `Err`. Fazemos a mesma coisa para o
+valor `file_path`.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -145,8 +145,8 @@ Listagem 12-19.
 Podemos escrever esse código de forma mais concisa usando métodos adaptadores
 de iteradores. Isso também nos permite evitar um vetor intermediário mutável,
 `results`. O estilo de programação funcional prefere minimizar a quantidade de
-estado mutável para tornar o código mais claro. Remover o estado mutável pode
-até permitir uma melhoria futura para tornar a busca paralela, porque não
+estado mutável para tornar o código mais claro. Remover esse estado mutável
+pode até permitir uma melhoria futura que torne a busca paralela, porque não
 teríamos de gerenciar acesso concorrente ao vetor `results`. A Listagem 13-22
 mostra essa mudança.
 
@@ -171,11 +171,11 @@ iterador removendo a chamada a `collect` e mudando o tipo de retorno para
 `impl Iterator<Item = &'a str>`, de modo que a própria função se torne um
 adaptador de iterador. Observe que você também precisará atualizar os testes!
 Pesquise em um arquivo grande usando sua ferramenta `minigrep` antes e depois
-de fazer essa alteração para observar a diferença de comportamento. Antes dessa
-mudança, o programa não imprimirá nenhum resultado até ter coletado todos eles;
-depois, os resultados serão impressos à medida que cada linha correspondente
-for encontrada, porque o laço `for` na função `run` poderá tirar proveito da
-preguiça do iterador.
+de fazer essa alteração para observar a diferença de comportamento. Antes
+dessa mudança, o programa não imprimirá nenhum resultado até ter coletado
+todos eles; depois, os resultados serão impressos à medida que cada linha
+correspondente for encontrada, porque o laço `for` na função `run` poderá
+tirar proveito da natureza preguiçosa do iterador.
 
 <!-- Old headings. Do not remove or links may break. -->
 

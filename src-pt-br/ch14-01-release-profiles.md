@@ -8,7 +8,8 @@ dos demais.
 Cargo tem dois perfis principais: o perfil `dev`, que o Cargo usa quando você
 executa `cargo build`, e o perfil `release`, que o Cargo usa quando você
 executa `cargo build --release`. O perfil `dev` tem bons padrões para
-desenvolvimento, e o perfil `release` tem bons padrões para builds de release.
+desenvolvimento, e o perfil `release` tem bons padrões para compilações de
+release.
 
 Esses nomes de perfil talvez já sejam familiares pela saída das suas
 compilações:
@@ -27,7 +28,7 @@ $ cargo build --release
     Finished `release` profile [optimized] target(s) in 0.32s
 ```
 
-Esses `dev` e `release` são os perfis diferentes usados pelo compilador.
+`dev` e `release` são esses perfis diferentes usados pelo compilador.
 
 Cargo possui configurações padrão para cada perfil, aplicadas quando você não
 adiciona explicitamente seções `[profile.*]` ao arquivo _Cargo.toml_ do
@@ -69,7 +70,7 @@ _Cargo.toml_ do projeto:
 opt-level = 1
 ```
 
-Esse código substitui a configuração padrão `0`. Agora, quando executarmos
+Esse código substitui o valor padrão `0`. Agora, quando executarmos
 `cargo build`, o Cargo usará os padrões do perfil `dev` mais a nossa
 customização de `opt-level`. Como definimos `opt-level` como `1`, o Cargo
 aplicará mais otimizações do que o padrão, mas não tantas quanto em um build

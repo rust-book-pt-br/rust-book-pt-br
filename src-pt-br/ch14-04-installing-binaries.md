@@ -2,11 +2,11 @@
 
 <a id="installing-binaries-from-cratesio-with-cargo-install"></a>
 
-## Instalando binários com `cargo install`
+## Instalando Binários com `cargo install`
 
 O comando `cargo install` permite instalar e usar crates binários localmente.
 Isso não se destina a substituir pacotes do sistema; a ideia é oferecer uma
-forma conveniente para desenvolvedores Rust instalarem ferramentas que outras
+forma conveniente para pessoas desenvolvedoras Rust instalarem ferramentas que outras
 pessoas compartilharam em [crates.io](https://crates.io/)<!-- ignore -->.
 Observe que você só pode instalar pacotes que tenham alvos binários. Um _alvo
 binário_ é o programa executável criado quando o crate tem um arquivo
