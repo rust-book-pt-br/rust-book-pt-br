@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4fe81980.js";
+            window.path_to_searchindex_js = "searchindex-597b70a8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -182,434 +182,636 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="refcellt-e-o-padrão-de-mutabilidade-interior"><a class="header" href="#refcellt-e-o-padrão-de-mutabilidade-interior"><code>RefCell&lt;T&gt;</code> e o Padrão de Mutabilidade Interior</a></h2>
-<p><em>Mutabilidade interior</em> (<em>interior mutability</em>) é um padrão em Rust que
-lhe permite modificar um dado mesmo quando há referências imutáveis a ele:
-normalmente, esta ação é proibida pelas regras de empréstimo. Para fazer isso, a
-padrão usa código <code>unsafe</code> (<em>inseguro</em>) dentro de uma estrutura de dados para
-dobrar as regras normais do Rust que governam mutação e empréstimo. Nós ainda
-não cobrimos código unsafe; faremos isso no Capítulo 19. Podemos usar tipos que
-usam o padrão de mutabilidade interior quando podemos garantir que as regras de
-empréstimo serão seguidas em tempo de execução, ainda que o compilador não o
-possa garantir. O código <code>unsafe</code> envolvido é então embrulhado em uma API safe,
-e o tipo exterior permanece imutável.</p>
-<p>Para explorar este conceito, vamos ver o tipo <code>RefCell&lt;T&gt;</code> que segue o padrão
-de mutabilidade interior.</p>
-<h3 id="aplicando-regras-de-empréstimo-em-tempo-de-execução-com-o-refcellt"><a class="header" href="#aplicando-regras-de-empréstimo-em-tempo-de-execução-com-o-refcellt">Aplicando Regras de Empréstimo em Tempo de Execução com o <code>RefCell&lt;T&gt;</code></a></h3>
-<p>Diferente do <code>Rc&lt;T&gt;</code>, o tipo <code>RefCell&lt;T&gt;</code> representa posse única sobre o dado
-que ele contém. Então o que torna o <code>RefCell&lt;T&gt;</code> diferente de um tipo como o
-<code>Box&lt;T&gt;</code>? Lembre-se das regras de empréstimo que você aprendeu no Capítulo 4:</p>
+<p><em>Mutabilidade interior</em> (<em>interior mutability</em>) é um padrão de projeto em Rust
+que permite modificar dados mesmo quando há referências imutáveis para esses
+dados; normalmente, essa ação é proibida pelas regras de borrowing. Para
+modificar dados, o padrão usa código <code>unsafe</code> dentro de uma estrutura de dados
+para flexibilizar as regras usuais de Rust que governam mutação e borrowing.
+Código unsafe indica ao compilador que estamos verificando as regras
+manualmente, em vez de depender do compilador para verificá-las por nós;
+discutiremos código unsafe com mais detalhes no Capítulo 20.</p>
+<p>Só podemos usar tipos que usam o padrão de mutabilidade interior quando
+conseguimos garantir que as regras de borrowing serão seguidas em tempo de
+execução, mesmo que o compilador não consiga garantir isso. O código <code>unsafe</code>
+envolvido é então envolvido por uma API segura, e o tipo externo continua sendo
+imutável.</p>
+<p>Vamos explorar esse conceito olhando para o tipo <code>RefCell&lt;T&gt;</code>, que segue o
+padrão de mutabilidade interior.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="enforcing-borrowing-rules-at-runtime-with-refcellt"></a></p>
+<h3 id="aplicando-regras-de-borrowing-em-tempo-de-execução"><a class="header" href="#aplicando-regras-de-borrowing-em-tempo-de-execução">Aplicando Regras de Borrowing em Tempo de Execução</a></h3>
+<p>Diferente de <code>Rc&lt;T&gt;</code>, o tipo <code>RefCell&lt;T&gt;</code> representa ownership único sobre os
+dados que armazena. Então, o que torna <code>RefCell&lt;T&gt;</code> diferente de um tipo como
+<code>Box&lt;T&gt;</code>? Lembre-se das regras de borrowing que você aprendeu no Capítulo 4:</p>
 <ul>
-<li>Em qualquer momento, você pode ter <em>um dos</em> mas não ambos os seguintes: uma
-única referência mutável <em>ou</em> qualquer número de referências imutáveis;</li>
+<li>Em qualquer momento, você pode ter <em>ou</em> uma referência mutável <em>ou</em> qualquer
+quantidade de referências imutáveis (mas não ambas).</li>
 <li>Referências devem sempre ser válidas.</li>
 </ul>
-<p>Com referências e com o <code>Box&lt;T&gt;</code>, as invariantes das regras de empréstimo são
-aplicadas em tempo de compilação. Com o <code>RefCell&lt;T&gt;</code>, essas invariantes são
-aplicadas <em>em tempo de execução</em>. Com referências, se você quebra essas regras,
-você recebe um erro de compilação. Com o <code>RefCell&lt;T&gt;</code>, se você quebrar essas
-regras, seu programa irá sofrer um <code>panic!</code> e terminar.</p>
-<p>As vantagens de checar as regras de empréstimo em tempo de compilação são que
-erros são pegos mais cedo no processo de desenvolvimento, e não há nenhum custo
-de desempenho de execução porque toda a análise é completada de antemão. Por
-esses motivos, checar as regras de empréstimo em tempo de compilação é a melhor
-opção na maioria dos casos, e por isso este é o padrão do Rust.</p>
-<p>A vantagem de checar as regras de empréstimo em tempo de execução,
-alternativamente, é que certos cenários <em>memory-safe</em> (<em>seguros em termos de
-memória</em>) são então permitidos, ao passo que seriam proibidos pelas checagens em
-tempo de compilação. A análise estática, como a do compilador Rust, é
-inerentemente conservadora. Algumas propriedades do programa são impossíveis de
-detectar analisando o código: o exemplo mais famoso é o Problema da Parada, que
-está além do escopo deste livro mas é um tópico interessante para pesquisa.</p>
-<p>Como algumas análises são impossíveis, se o compilador Rust não consegue se
-assegurar que o código obedece às regras de posse, ele pode rejeitar um programa
-correto; neste sentido, ele é conservador. Se o Rust aceitasse um programa
-incorreto, os usuários não poderiam confiar nas garantias que ele faz. Se, por
-outro lado, o Rust rejeita um programa correto, o programador terá alguma
-inconveniência, mas nada catastrófico pode acontecer. O tipo <code>RefCell&lt;T&gt;</code> é útil
-quando você tem certeza que seu código segue as regras de empréstimo, mas o
-compilador é incapaz de entender e garantir isso.</p>
-<p>Assim como o <code>Rc&lt;T&gt;</code>, o <code>RefCell&lt;T&gt;</code> é apenas para uso em cenários de thread
-única e dará a você um erro de compilação se tentar usá-lo em um contexto de
-múltiplas threads. Falaremos sobre como obter a funcionalidade de um
+<p>Com referências e <code>Box&lt;T&gt;</code>, as invariantes das regras de borrowing são
+aplicadas em tempo de compilação. Com <code>RefCell&lt;T&gt;</code>, essas invariantes são
+aplicadas <em>em tempo de execução</em>. Com referências, se você quebrar essas regras,
+receberá um erro do compilador. Com <code>RefCell&lt;T&gt;</code>, se você quebrar essas regras,
+seu programa entrará em pânico e será encerrado.</p>
+<p>As vantagens de verificar as regras de borrowing em tempo de compilação são que
+os erros são capturados mais cedo no processo de desenvolvimento e não há
+impacto no desempenho em tempo de execução, porque toda a análise é concluída
+previamente. Por esses motivos, verificar as regras de borrowing em tempo de
+compilação é a melhor escolha na maioria dos casos, e por isso esse é o padrão
+de Rust.</p>
+<p>A vantagem de verificar as regras de borrowing em tempo de execução, por outro
+lado, é que certos cenários seguros em memória passam a ser permitidos, embora
+fossem rejeitados pelas verificações em tempo de compilação. Análise estática,
+como a do compilador Rust, é inerentemente conservadora. Algumas propriedades
+do código são impossíveis de detectar analisando o código: o exemplo mais
+famoso é o Problema da Parada, que está fora do escopo deste livro, mas é um
+tópico interessante para pesquisar.</p>
+<p>Como algumas análises são impossíveis, se o compilador Rust não puder ter
+certeza de que o código está de acordo com as regras de ownership, ele pode
+rejeitar um programa correto; nesse sentido, ele é conservador. Se Rust
+aceitasse um programa incorreto, as pessoas não poderiam confiar nas garantias
+que Rust oferece. No entanto, se Rust rejeita um programa correto, a pessoa
+programadora terá um inconveniente, mas nada catastrófico poderá acontecer. O
+tipo <code>RefCell&lt;T&gt;</code> é útil quando você tem certeza de que seu código segue as
+regras de borrowing, mas o compilador é incapaz de entender e garantir isso.</p>
+<p>De forma semelhante a <code>Rc&lt;T&gt;</code>, <code>RefCell&lt;T&gt;</code> deve ser usado apenas em cenários
+de thread única e produzirá um erro em tempo de compilação se você tentar usá-lo
+em um contexto multithread. Falaremos sobre como obter a funcionalidade de
 <code>RefCell&lt;T&gt;</code> em um programa multithread no Capítulo 16.</p>
-<p>Aqui está uma recapitulação das razões para escolher o <code>Box&lt;T&gt;</code>, o <code>Rc&lt;T&gt;</code> ou o
+<p>Aqui está uma recapitulação dos motivos para escolher <code>Box&lt;T&gt;</code>, <code>Rc&lt;T&gt;</code> ou
 <code>RefCell&lt;T&gt;</code>:</p>
 <ul>
-<li>O <code>Rc&lt;T&gt;</code> permite múltiplos possuidores do mesmo dado; <code>Box&lt;T&gt;</code> e <code>RefCell&lt;T&gt;</code>
-têm possuidores únicos.</li>
-<li>O <code>Box&lt;T&gt;</code> permite empréstimos imutáveis ou mutáveis checados em tempo de
-compilação; o <code>Rc&lt;T&gt;</code> permite apenas empréstimos imutáveis em tempo de
-compilação; o <code>RefCell&lt;T&gt;</code> permite empréstimos imutáveis ou mutáveis checados
-em tempo de execução.</li>
-<li>Como o <code>RefCell&lt;T&gt;</code> permite empréstimos mutáveis checados em tempo de
-execução, nós podemos modificar o valor dentro de um <code>RefCell&lt;T&gt;</code> mesmo quando
-o <code>RefCell&lt;T&gt;</code> é imutável.</li>
+<li><code>Rc&lt;T&gt;</code> permite múltiplos donos dos mesmos dados; <code>Box&lt;T&gt;</code> e <code>RefCell&lt;T&gt;</code> têm
+donos únicos.</li>
+<li><code>Box&lt;T&gt;</code> permite empréstimos imutáveis ou mutáveis verificados em tempo de
+compilação; <code>Rc&lt;T&gt;</code> permite apenas empréstimos imutáveis verificados em tempo
+de compilação; <code>RefCell&lt;T&gt;</code> permite empréstimos imutáveis ou mutáveis
+verificados em tempo de execução.</li>
+<li>Como <code>RefCell&lt;T&gt;</code> permite empréstimos mutáveis verificados em tempo de
+execução, você pode modificar o valor dentro de <code>RefCell&lt;T&gt;</code> mesmo quando o
+próprio <code>RefCell&lt;T&gt;</code> é imutável.</li>
 </ul>
-<p>Modificar o valor dentro de um valor imutável é o padrão de <em>mutabilidade
-interior</em>. Vamos dar uma olhada em uma situação em que a mutabilidade interior é
-útil e examinar como ela é possível.</p>
-<h3 id="mutabilidade-interior-um-empréstimo-mutável-de-um-valor-imutável"><a class="header" href="#mutabilidade-interior-um-empréstimo-mutável-de-um-valor-imutável">Mutabilidade Interior: Um Empréstimo Mutável de um Valor Imutável</a></h3>
-<p>Uma consequência das regras de empréstimo é que quando temos um valor imutável,
-nós não podemos pegá-lo emprestado mutavelmente. Por exemplo, este código não
-compila:</p>
-<pre><code class="language-rust ignore">fn main() {
+<p>Modificar o valor dentro de um valor imutável é o padrão de mutabilidade
+interior. Vamos olhar para uma situação em que a mutabilidade interior é útil e
+examinar como ela é possível.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="interior-mutability-a-mutable-borrow-to-an-immutable-value"></a></p>
+<h3 id="usando-mutabilidade-interior"><a class="header" href="#usando-mutabilidade-interior">Usando Mutabilidade Interior</a></h3>
+<p>Uma consequência das regras de borrowing é que, quando você tem um valor
+imutável, não pode pegá-lo emprestado mutavelmente. Por exemplo, este código
+não compila:</p>
+<pre><code class="language-rust ignore does_not_compile">fn main() {
     let x = 5;
     let y = &amp;mut x;
 }</code></pre>
-<p>Quando tentamos compilar este código, recebemos o seguinte erro:</p>
-<pre><code class="language-text">erro[E0596]: não posso pegar emprestado a variável local imutável `x` como
-mutável
- --&gt; src/main.rs:3:18
+<p>Se você tentasse compilar esse código, receberia o seguinte erro:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling borrowing v0.1.0 (file:///projects/borrowing)
+error[E0596]: cannot borrow `x` as mutable, as it is not declared as mutable
+ --&gt; src/main.rs:3:13
   |
-2 |     let x = 5;
-  |         - considere mudar isto para `mut x`
 3 |     let y = &amp;mut x;
-  |                  ^ não posso pegar emprestado mutavelmente
+  |             ^^^^^^ cannot borrow as mutable
+  |
+help: consider changing this to be mutable
+  |
+2 |     let mut x = 5;
+  |         +++
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `borrowing` (bin "borrowing") due to 1 previous error
 </code></pre>
-<p>Contudo, há situações em que seria útil para um valor modificar a si mesmo em
-seus métodos, mas continuar parecendo imutável para código externo. Código fora
-dos métodos do valor não teriam como modificá-lo. Usar o <code>RefCell&lt;T&gt;</code> é um jeito
-de obter a habilidade de ter mutabilidade interior. Mas o <code>RefCell&lt;T&gt;</code> não dá a
-volta nas regras de empréstimo por completo: o borrow checker no compilador
-permite esta mutabilidade interior, e as regras de empréstimo são em vez disso
-checadas em tempo de execução. Se violarmos as regras, receberemos um <code>panic!</code>
-em vez de um erro de compilação.</p>
-<p>Vamos trabalhar com um exemplo prático onde podemos usar o <code>RefCell&lt;T&gt;</code> para
-modificar um valor imutável e ver por que isto é útil.</p>
-<h4 id="um-caso-de-uso-para-a-mutabilidade-interior-objetos-simulados"><a class="header" href="#um-caso-de-uso-para-a-mutabilidade-interior-objetos-simulados">Um Caso de Uso para a Mutabilidade Interior: Objetos Simulados</a></h4>
-<p>Um <em>dublê de teste</em> (<em>test double</em>) é um conceito geral de programação para um
-tipo usado no lugar de outro durante os testes. <em>Objetos simulados</em> (<em>mock
-objects</em>) são tipos específicos de dublês de teste que registram o que acontece
-durante o teste para que possamos confirmar que as ações corretas aconteceram.</p>
-<p>Rust não tem objetos da mesma forma que outras linguagens, e não tem
-funcionalidade de objetos simulados embutida na biblioteca padrão como algumas
-outras linguagens. Contudo, certamente podemos criar uma struct que serve os
-mesmos propósitos que um objeto simulado.</p>
-<p>Eis o cenário que vamos testar: vamos criar uma biblioteca que acompanha um
-valor contra um valor máximo e envia mensagens com base em quão próximo do valor
-máximo o valor atual está. Esta biblioteca pode ser usada para acompanhar a cota
-de um usuário para o número de chamadas de API que ele tem direito a fazer, por
-exemplo.</p>
-<p>Nossa biblioteca irá prover somente a funcionalidade de acompanhar quão perto do
-máximo um valor está e o que as mensagens deveriam ser em quais momentos. As
-aplicações que usarem nossa biblioteca terão a responsabilidade de prover o
-mecanismo para enviar as mensagens: a aplicação pode pôr a mensagem na própria
-aplicação, enviar um email, uma mensagem de texto, ou alguma outra coisa. A
-biblioteca não precisa saber deste detalhe. Tudo que ela precisa é de algo que
-implemente uma trait que iremos prover chamada <code>Mensageiro</code>. A
-Listagem 15-20 mostra o código da biblioteca:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub trait Mensageiro {
-    fn enviar(&amp;self, msg: &amp;str);
+<p>No entanto, há situações em que seria útil que um valor modificasse a si mesmo
+em seus métodos, mas parecesse imutável para outros códigos. O código fora dos
+métodos do valor não conseguiria modificá-lo. Usar <code>RefCell&lt;T&gt;</code> é uma forma de
+obter a capacidade de ter mutabilidade interior, mas <code>RefCell&lt;T&gt;</code> não contorna
+completamente as regras de borrowing: o borrow checker no compilador permite
+essa mutabilidade interior, e as regras de borrowing são verificadas em tempo
+de execução. Se você violar as regras, receberá um <code>panic!</code> em vez de um erro
+do compilador.</p>
+<p>Vamos trabalhar com um exemplo prático em que podemos usar <code>RefCell&lt;T&gt;</code> para
+modificar um valor imutável e ver por que isso é útil.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="a-use-case-for-interior-mutability-mock-objects"></a></p>
+<h4 id="testando-com-objetos-mock"><a class="header" href="#testando-com-objetos-mock">Testando com Objetos Mock</a></h4>
+<p>Às vezes, durante testes, uma pessoa programadora usa um tipo no lugar de outro
+para observar determinado comportamento e verificar que ele foi implementado
+corretamente. Esse tipo substituto é chamado de <em>test double</em>. Pense nele no
+sentido de um dublê no cinema, em que uma pessoa substitui um ator para fazer
+uma cena especialmente complicada. Test doubles substituem outros tipos quando
+executamos testes. <em>Objetos mock</em> (<em>mock objects</em>) são tipos específicos de test
+doubles que registram o que acontece durante um teste para que você possa
+verificar que as ações corretas ocorreram.</p>
+<p>Rust não tem objetos no mesmo sentido em que outras linguagens têm objetos, e
+Rust não tem funcionalidade de objetos mock embutida na biblioteca padrão como
+algumas outras linguagens têm. No entanto, você certamente pode criar uma
+struct que sirva aos mesmos propósitos de um objeto mock.</p>
+<p>Este é o cenário que vamos testar: criaremos uma biblioteca que acompanha um
+valor em relação a um valor máximo e envia mensagens com base em quão próximo o
+valor atual está do valor máximo. Essa biblioteca poderia ser usada, por
+exemplo, para acompanhar a cota de uma pessoa usuária quanto ao número de
+chamadas de API que ela tem permissão para fazer.</p>
+<p>Nossa biblioteca fornecerá apenas a funcionalidade de acompanhar quão perto do
+máximo um valor está e quais mensagens devem ser enviadas em quais momentos.
+Aplicações que usarem nossa biblioteca deverão fornecer o mecanismo de envio
+das mensagens: a aplicação poderia mostrar a mensagem diretamente à pessoa
+usuária, enviar um email, enviar uma mensagem de texto ou fazer outra coisa. A
+biblioteca não precisa saber esse detalhe. Tudo de que ela precisa é algo que
+implemente uma trait que forneceremos, chamada <code>Messenger</code>. A Listagem 15-20
+mostra o código da biblioteca.</p>
+<figure class="listing" id="listing-15-20">
+<span class="file-name">Filename: src/lib.rs</span>
+<pre><code class="language-rust noplayground">pub trait Messenger {
+    fn send(&amp;self, msg: &amp;str);
 }
 
-pub struct AvisaLimite&lt;'a, T: 'a + Mensageiro&gt; {
-    mensageiro: &amp;'a T,
-    valor: usize,
+pub struct LimitTracker&lt;'a, T: Messenger&gt; {
+    messenger: &amp;'a T,
+    value: usize,
     max: usize,
 }
 
-impl&lt;'a, T&gt; AvisaLimite&lt;'a, T&gt;
-    where T: Mensageiro {
-    pub fn new(mensageiro: &amp;T, max: usize) -&gt; AvisaLimite&lt;T&gt; {
-        AvisaLimite {
-            mensageiro,
-            valor: 0,
+impl&lt;'a, T&gt; LimitTracker&lt;'a, T&gt;
+where
+    T: Messenger,
+{
+    pub fn new(messenger: &amp;'a T, max: usize) -&gt; LimitTracker&lt;'a, T&gt; {
+        LimitTracker {
+            messenger,
+            value: 0,
             max,
         }
     }
 
-    pub fn set_valor(&amp;mut self, valor: usize) {
-        self.valor = valor;
+    pub fn set_value(&amp;mut self, value: usize) {
+        self.value = value;
 
-        let porcentagem_do_max = self.valor as f64 / self.max as f64;
+        let percentage_of_max = self.value as f64 / self.max as f64;
 
-        if porcentagem_do_max &gt;= 0.75 &amp;&amp; porcentagem_do_max &lt; 0.9 {
-            self.mensageiro.enviar("Aviso: Você usou mais de 75% da sua cota!");
-        } else if porcentagem_do_max &gt;= 0.9 &amp;&amp; porcentagem_do_max &lt; 1.0 {
-            self.mensageiro.enviar("Aviso urgente: Você usou mais de 90% da sua cota!");
-        } else if porcentagem_do_max &gt;= 1.0 {
-            self.mensageiro.enviar("Erro: Você excedeu sua cota!");
+        if percentage_of_max &gt;= 1.0 {
+            self.messenger.send("Error: You are over your quota!");
+        } else if percentage_of_max &gt;= 0.9 {
+            self.messenger
+                .send("Urgent warning: You've used up over 90% of your quota!");
+        } else if percentage_of_max &gt;= 0.75 {
+            self.messenger
+                .send("Warning: You've used up over 75% of your quota!");
         }
     }
-}
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 15-20: Uma biblioteca para acompanhar quão perto
-do máximo um valor está e avisar quando o valor está em certos níveis</span></p>
-<p>Uma parte importante deste código é que a trait <code>Mensageiro</code> tem um método
-chamado <code>enviar</code> que recebe uma referência imutável a <code>self</code> e o texto da
-mensagem. Esta é a interface que nosso objeto simulado precisa ter. A outra
-parte importante é que queremos testar o comportamento do método <code>set_valor</code> no
-<code>AvisaLimite</code>. Podemos mudar o que passamos para o parâmetro <code>valor</code>, mas o
-<code>set_valor</code> não retorna nada sobre o qual possamos fazer asserções. Queremos
-poder dizer que se criarmos um <code>AvisaLimite</code> com algo que implemente a trait
-<code>Mensageiro</code> e um valor específico de <code>max</code>, quando passarmos diferentes números
-para o <code>valor</code>, o mensageiro receberá o comando para enviar as mensagens
-apropriadas.</p>
-<p>Precisamos de um objeto simulado que, em vez de enviar um email ou mensagem de
-texto quando chamarmos <code>enviar</code>, irá apenas registrar as mensagens que recebeu
-para enviar. Podemos criar uma nova instância do objeto simulado, criar um
-<code>AvisaLimite</code> que use o objeto simulado, chamar o método <code>set_valor</code> no
-<code>AvisaLimite</code>, e então verificar se o objeto simulado tem as mensagens que
-esperamos. A Listagem 15-21 mostra uma tentativa de implementar um objeto
-simulado para fazer exatamente isto, mas que o borrow checker não permite:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+}</code></pre>
+<figcaption><a href="#listing-15-20">Listing 15-20</a>: Uma biblioteca para acompanhar quão próximo um valor está de um valor máximo e avisar quando o valor está em certos níveis</figcaption>
+</figure>
+<p>Uma parte importante desse código é que a trait <code>Messenger</code> tem um método
+chamado <code>send</code>, que recebe uma referência imutável para <code>self</code> e o texto da
+mensagem. Essa trait é a interface que nosso objeto mock precisa implementar
+para que o mock possa ser usado da mesma forma que um objeto real. A outra
+parte importante é que queremos testar o comportamento do método <code>set_value</code> em
+<code>LimitTracker</code>. Podemos mudar o que passamos para o parâmetro <code>value</code>, mas
+<code>set_value</code> não retorna nada sobre o que possamos fazer asserções. Queremos
+poder dizer que, se criarmos um <code>LimitTracker</code> com algo que implementa a trait
+<code>Messenger</code> e um valor específico para <code>max</code>, o messenger será instruído a
+enviar as mensagens apropriadas quando passarmos números diferentes para
+<code>value</code>.</p>
+<p>Precisamos de um objeto mock que, em vez de enviar um email ou mensagem de
+texto quando chamamos <code>send</code>, apenas registre as mensagens que foi instruído a
+enviar. Podemos criar uma nova instância do objeto mock, criar um
+<code>LimitTracker</code> que usa o objeto mock, chamar o método <code>set_value</code> em
+<code>LimitTracker</code> e então verificar se o objeto mock tem as mensagens que
+esperamos. A Listagem 15-21 mostra uma tentativa de implementar um objeto mock
+para fazer exatamente isso, mas o borrow checker não permite.</p>
+<figure class="listing" id="listing-15-21">
+<span class="file-name">Filename: src/lib.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">pub trait Messenger {
+</span><span class="boring">    fn send(&amp;self, msg: &amp;str);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct LimitTracker&lt;'a, T: Messenger&gt; {
+</span><span class="boring">    messenger: &amp;'a T,
+</span><span class="boring">    value: usize,
+</span><span class="boring">    max: usize,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;'a, T&gt; LimitTracker&lt;'a, T&gt;
+</span><span class="boring">where
+</span><span class="boring">    T: Messenger,
+</span><span class="boring">{
+</span><span class="boring">    pub fn new(messenger: &amp;'a T, max: usize) -&gt; LimitTracker&lt;'a, T&gt; {
+</span><span class="boring">        LimitTracker {
+</span><span class="boring">            messenger,
+</span><span class="boring">            value: 0,
+</span><span class="boring">            max,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    pub fn set_value(&amp;mut self, value: usize) {
+</span><span class="boring">        self.value = value;
+</span><span class="boring">
+</span><span class="boring">        let percentage_of_max = self.value as f64 / self.max as f64;
+</span><span class="boring">
+</span><span class="boring">        if percentage_of_max &gt;= 1.0 {
+</span><span class="boring">            self.messenger.send("Error: You are over your quota!");
+</span><span class="boring">        } else if percentage_of_max &gt;= 0.9 {
+</span><span class="boring">            self.messenger
+</span><span class="boring">                .send("Urgent warning: You've used up over 90% of your quota!");
+</span><span class="boring">        } else if percentage_of_max &gt;= 0.75 {
+</span><span class="boring">            self.messenger
+</span><span class="boring">                .send("Warning: You've used up over 75% of your quota!");
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
 </span>#[cfg(test)]
 mod tests {
     use super::*;
 
-    struct MensageiroSimulado {
-        mensagens_enviadas: Vec&lt;String&gt;,
+    struct MockMessenger {
+        sent_messages: Vec&lt;String&gt;,
     }
 
-    impl MensageiroSimulado {
-        fn new() -&gt; MensageiroSimulado {
-            MensageiroSimulado { mensagens_enviadas: vec![] }
+    impl MockMessenger {
+        fn new() -&gt; MockMessenger {
+            MockMessenger {
+                sent_messages: vec![],
+            }
         }
     }
 
-    impl Mensageiro for MensageiroSimulado {
-        fn enviar(&amp;self, mensagem: &amp;str) {
-            self.mensagens_enviadas.push(String::from(mensagem));
+    impl Messenger for MockMessenger {
+        fn send(&amp;self, message: &amp;str) {
+            self.sent_messages.push(String::from(message));
         }
     }
 
     #[test]
-    fn envia_uma_mensagem_de_aviso_de_acima_de_75_porcento() {
-        let mensageiro_simulado = MensageiroSimulado::new();
-        let mut avisa_limite = AvisaLimite::new(&amp;mensageiro_simulado, 100);
+    fn it_sends_an_over_75_percent_warning_message() {
+        let mock_messenger = MockMessenger::new();
+        let mut limit_tracker = LimitTracker::new(&amp;mock_messenger, 100);
 
-        avisa_limite.set_valor(80);
+        limit_tracker.set_value(80);
 
-        assert_eq!(mensageiro_simulado.mensagens_enviadas.len(), 1);
+        assert_eq!(mock_messenger.sent_messages.len(), 1);
     }
-}
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 15-21: Uma tentativa de implementar um
-<code>MensageiroSimulado</code> que não é permitida pelo borrow checker</span></p>
-<p>Este código de teste define uma struct <code>MensageiroSimulado</code> que tem um campo
-<code>mensagens_enviadas</code> com um <code>Vec</code> de valores <code>String</code> para registrar as
-mensagens que ele recebe para enviar. Também definimos uma função associada
-<code>new</code> para facilitar a criação de novos valores <code>MensageiroSimulado</code> que começam
-com uma lista vazia de mensagens. Então implementamos a trait <code>Mensageiro</code> para
-o <code>MensageiroSimulado</code> para que possamos passar um <code>MensageiroSimulado</code> a um
-<code>AvisaLimite</code>. Na definição do método <code>enviar</code>, nós pegamos a mensagem passada
-como parâmetro e a armazenamos na lista <code>mensagens_enviadas</code> do
-<code>MensageiroSimulado</code>.</p>
-<p>No teste, estamos testando o que acontece quando o <code>AvisaLimite</code> recebe o
-comando para setar o <code>valor</code> para algo que é mais do que 75 porcento do valor
-<code>max</code>. Primeiro, criamos um novo <code>MensageiroSimulado</code>, que irá começar com uma
-lista vazia de mensagens. Então criamos um novo <code>AvisaLimite</code> e lhe damos uma
-referência ao novo <code>MensageiroSimulado</code> e um valor <code>max</code> de 100. Nós chamamos o
-método <code>set_valor</code> no <code>AvisaLimite</code> com um valor de 80, que é mais do que 75
-porcento de 100. Então conferimos se a lista de mensagens que o
-<code>MensageiroSimulado</code> está registrando agora tem uma mensagem nela.</p>
-<p>Entretanto, há um problema neste teste, conforme abaixo:</p>
-<pre><code class="language-text">erro[E0596]: não posso pegar emprestado o campo imutável
-             `self.mensagens_enviadas` como mutável
-  --&gt; src/lib.rs:52:13
+}</code></pre>
+<figcaption><a href="#listing-15-21">Listing 15-21</a>: Uma tentativa de implementar um <code>MockMessenger</code> que não é permitida pelo borrow checker</figcaption>
+</figure>
+<p>Esse código de teste define uma struct <code>MockMessenger</code> que tem um campo
+<code>sent_messages</code> com um <code>Vec</code> de valores <code>String</code> para registrar as mensagens
+que foi instruída a enviar. Também definimos uma função associada <code>new</code> para
+facilitar a criação de novos valores <code>MockMessenger</code> que começam com uma lista
+vazia de mensagens. Em seguida, implementamos a trait <code>Messenger</code> para
+<code>MockMessenger</code> para que possamos fornecer um <code>MockMessenger</code> a um
+<code>LimitTracker</code>. Na definição do método <code>send</code>, pegamos a mensagem passada como
+parâmetro e a armazenamos na lista <code>sent_messages</code> de <code>MockMessenger</code>.</p>
+<p>No teste, estamos verificando o que acontece quando o <code>LimitTracker</code> é
+instruído a definir <code>value</code> para algo que é mais de 75 por cento do valor
+<code>max</code>. Primeiro, criamos um novo <code>MockMessenger</code>, que começará com uma lista
+vazia de mensagens. Depois, criamos um novo <code>LimitTracker</code> e damos a ele uma
+referência para o novo <code>MockMessenger</code> e um valor <code>max</code> de <code>100</code>. Chamamos o
+método <code>set_value</code> em <code>LimitTracker</code> com um valor de <code>80</code>, que é mais de 75 por
+cento de 100. Então verificamos que a lista de mensagens que o <code>MockMessenger</code>
+está registrando agora deve conter uma mensagem.</p>
+<p>No entanto, há um problema com esse teste, como mostrado aqui:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
+error[E0596]: cannot borrow `self.sent_messages` as mutable, as it is behind a `&amp;` reference
+  --&gt; src/lib.rs:58:13
    |
-51 |         fn send(&amp;self, message: &amp;str) {
-   |                 ----- use `&amp;mut self` aqui para torná-lo mutável
-52 |             self.sent_messages.push(String::from(message));
-   |             ^^^^^^^^^^^^^^^^^^ não posso pegar emprestado mutavelmente um
-                                    campo imutável
+58 |             self.sent_messages.push(String::from(message));
+   |             ^^^^^^^^^^^^^^^^^^ `self` is a `&amp;` reference, so the data it refers to cannot be borrowed as mutable
+   |
+help: consider changing this to be a mutable reference in the `impl` method and the `trait` definition
+   |
+ 2 ~     fn send(&amp;mut self, msg: &amp;str);
+ 3 | }
+...
+56 |     impl Messenger for MockMessenger {
+57 ~         fn send(&amp;mut self, message: &amp;str) {
+   |
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `limit-tracker` (lib test) due to 1 previous error
 </code></pre>
-<p>Não podemos modificar o <code>MensageiroSimulado</code> para registrar as mensagens porque
-o método <code>enviar</code> recebe uma referência imutável a <code>self</code>. Também não podemos
-seguir a sugestão do texto de erro e usar <code>&amp;mut self</code> em vez disso porque a
-assinatura de <code>enviar</code> não corresponderia à assinatura na definição da trait
-<code>Mensageiro</code> (fique à vontade para tentar e ver qual mensagem de erro você
-recebe).</p>
-<p>Esta é uma situação em que a mutabilidade interior pode ajudar! Vamos armazenas
-as <code>mensagens_enviadas</code> dentro de um <code>RefCell&lt;T&gt;</code>, e então o método <code>enviar</code>
-poderá modificar <code>mensagens_enviadas</code> para armazenar as mensagens que já vimos.
-A Listagem 15-22 mostra como fica isto:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<p>Não podemos modificar o <code>MockMessenger</code> para registrar as mensagens, porque o
+método <code>send</code> recebe uma referência imutável para <code>self</code>. Também não podemos
+seguir a sugestão do texto de erro de usar <code>&amp;mut self</code> tanto no método do
+<code>impl</code> quanto na definição da trait. Não queremos mudar a trait <code>Messenger</code>
+apenas por causa do teste. Em vez disso, precisamos encontrar uma forma de
+fazer nosso código de teste funcionar corretamente com o design existente.</p>
+<p>Essa é uma situação em que a mutabilidade interior pode ajudar! Armazenaremos
+<code>sent_messages</code> dentro de um <code>RefCell&lt;T&gt;</code>, e então o método <code>send</code> poderá
+modificar <code>sent_messages</code> para armazenar as mensagens que vimos. A Listagem
+15-22 mostra como isso fica.</p>
+<figure class="listing" id="listing-15-22">
+<span class="file-name">Filename: src/lib.rs</span>
+<pre><code class="language-rust noplayground"><span class="boring">pub trait Messenger {
+</span><span class="boring">    fn send(&amp;self, msg: &amp;str);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct LimitTracker&lt;'a, T: Messenger&gt; {
+</span><span class="boring">    messenger: &amp;'a T,
+</span><span class="boring">    value: usize,
+</span><span class="boring">    max: usize,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;'a, T&gt; LimitTracker&lt;'a, T&gt;
+</span><span class="boring">where
+</span><span class="boring">    T: Messenger,
+</span><span class="boring">{
+</span><span class="boring">    pub fn new(messenger: &amp;'a T, max: usize) -&gt; LimitTracker&lt;'a, T&gt; {
+</span><span class="boring">        LimitTracker {
+</span><span class="boring">            messenger,
+</span><span class="boring">            value: 0,
+</span><span class="boring">            max,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    pub fn set_value(&amp;mut self, value: usize) {
+</span><span class="boring">        self.value = value;
+</span><span class="boring">
+</span><span class="boring">        let percentage_of_max = self.value as f64 / self.max as f64;
+</span><span class="boring">
+</span><span class="boring">        if percentage_of_max &gt;= 1.0 {
+</span><span class="boring">            self.messenger.send("Error: You are over your quota!");
+</span><span class="boring">        } else if percentage_of_max &gt;= 0.9 {
+</span><span class="boring">            self.messenger
+</span><span class="boring">                .send("Urgent warning: You've used up over 90% of your quota!");
+</span><span class="boring">        } else if percentage_of_max &gt;= 0.75 {
+</span><span class="boring">            self.messenger
+</span><span class="boring">                .send("Warning: You've used up over 75% of your quota!");
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
 </span>#[cfg(test)]
 mod tests {
     use super::*;
     use std::cell::RefCell;
 
-    struct MensageiroSimulado {
-        mensagens_enviadas: RefCell&lt;Vec&lt;String&gt;&gt;,
+    struct MockMessenger {
+        sent_messages: RefCell&lt;Vec&lt;String&gt;&gt;,
     }
 
-    impl MensageiroSimulado {
-        fn new() -&gt; MensageiroSimulado {
-            MensageiroSimulado { mensagens_enviadas: RefCell::new(vec![]) }
+    impl MockMessenger {
+        fn new() -&gt; MockMessenger {
+            MockMessenger {
+                sent_messages: RefCell::new(vec![]),
+            }
         }
     }
 
-    impl Mensageiro for MensageiroSimulado {
-        fn enviar(&amp;self, mensagem: &amp;str) {
-            self.mensagens_enviadas.borrow_mut().push(String::from(mensagem));
+    impl Messenger for MockMessenger {
+        fn send(&amp;self, message: &amp;str) {
+            self.sent_messages.borrow_mut().push(String::from(message));
         }
     }
 
     #[test]
-    fn envia_uma_mensagem_de_aviso_de_acima_de_75_porcento() {
+    fn it_sends_an_over_75_percent_warning_message() {
         // --snip--
-<span class="boring">        let mensageiro_simulado = MensageiroSimulado::new();
-</span><span class="boring">        let mut avisa_limite = AvisaLimite::new(&amp;mensageiro_simulado, 100);
-</span><span class="boring">        avisa_limite.set_valor(75);
+<span class="boring">        let mock_messenger = MockMessenger::new();
+</span><span class="boring">        let mut limit_tracker = LimitTracker::new(&amp;mock_messenger, 100);
+</span><span class="boring">
+</span><span class="boring">        limit_tracker.set_value(80);
 </span>
-        assert_eq!(mensageiro_simulado.mensagens_enviadas.borrow().len(), 1);
-    }
-}
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 15-22: Usando <code>RefCell&lt;T&gt;</code> para modificar um
-valor interno enquanto o valor externo é considerado imutável</span></p>
-<p>O campo <code>mensagens_enviadas</code> agora é do tipo <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> em vez de
-<code>Vec&lt;String&gt;</code>. Na função <code>new</code>, nós criamos uma nova instância de
-<code>RefCell&lt;Vec&lt;String&gt;&gt;</code> em torno do vetor vazio.</p>
-<p>Para a implementação do método <code>enviar</code>, o primeiro parâmetro ainda é um
-empréstimo imutável de <code>self</code>, que corresponde à definição da trait. Nós
-chamamos <code>borrow_mut</code> no <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> em <code>self.mensagens_enviadas</code>
-para obter uma referência mutável ao valor dentro do <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>, que
-é o vetor. Então podemos chamar <code>push</code> na referência mutável ao vetor para
-registrar as mensagens enviadas durante o teste.</p>
-<p>A última mudança que temos que fazer é na asserção: para ver quantos itens estão
-no vetor interno, chamamos <code>borrow</code> no <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> para obter uma
-referência imutável ao vetor.</p>
-<p>Agora que você viu como usar o <code>RefCell&lt;T&gt;</code>, vamos nos aprofundar em como ele
-funciona!</p>
-<h4 id="o-refcellt-registra-empréstimos-em-tempo-de-execução"><a class="header" href="#o-refcellt-registra-empréstimos-em-tempo-de-execução">O <code>RefCell&lt;T&gt;</code> Registra Empréstimos em Tempo de Execução</a></h4>
-<p>Quando estamos criando referências imutáveis e mutáveis, usamos as sintaxes <code>&amp;</code>
-e <code>&amp;mut</code>, respectivamente. Com o <code>RefCell&lt;T&gt;</code>, usamos os métodos <code>borrow</code> e
-<code>borrow_mut</code>, que são parte da API safe que pertence ao <code>RefCell&lt;T&gt;</code>. O método
-<code>borrow</code> retorna o ponteiro inteligente <code>Ref&lt;T&gt;</code>, e o <code>borrow_mut</code> retorna o
-ponteiro inteligente <code>RefMut&lt;T&gt;</code>. Ambos os tipos implementam <code>Deref</code>, então
-podemos tratá-los como referências normais.</p>
-<p>O tipo <code>RefCell&lt;T&gt;</code> mantém registro de quantos ponteiros inteligentes <code>Ref&lt;T&gt;</code> e
-<code>RefMut&lt;T&gt;</code> estão atualmente ativos. Cada vez que chamamos <code>borrow</code>, o
-<code>RefCell&lt;T&gt;</code> aumenta seu contador de quantos empréstimos imutáveis estão ativos.
-Quando um valor <code>Ref&lt;T&gt;</code> sai de escopo, o contador de empréstimos imutáveis
-diminui em um. Assim como as regras de empréstimo em tempo de compilação, o
-<code>RefCell&lt;T&gt;</code> nos permite ter vários empréstimos imutáveis ou um empréstimo
-mutável em um dado momento.</p>
-<p>Se tentarmos violar estas regras, em vez de receber um erro do compilador como
-iríamos com referências, a implementação de <code>RefCell&lt;T&gt;</code> chamará <code>panic!</code> em
-tempo de execução. A Listagem 15-23 mostra uma modificação da implementação do
-<code>enviar</code> da Listagem 15-22. Estamos deliberadamente tentando criar dois
-empréstimos mutáveis ativos para o mesmo escopo para ilustrar que o <code>RefCell&lt;T&gt;</code>
-nos impede de fazer isto em tempo de execução:</p>
-<p><span class="filename">Arquivo: src/lib.rs</span></p>
-<pre><code class="language-rust ignore">impl Mensageiro for MensageiroSimulado {
-    fn enviar(&amp;self, mensagem: &amp;str) {
-        let mut emprestimo_um = self.mensagens_enviadas.borrow_mut();
-        let mut emprestimo_dois = self.mensagens_enviadas.borrow_mut();
-
-        emprestimo_um.push(String::from(mensagem));
-        emprestimo_dois.push(String::from(mensagem));
+        assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
     }
 }</code></pre>
-<p><span class="caption">Listagem 15-23: Criando duas referências mutáveis no mesmo
-escopo para ver que o <code>RefCell&lt;T&gt;</code> irá “entrar em pânico” (i.e., executar
-<code>panic!</code>)</span></p>
-<p>Nós criamos uma variável <code>emprestimo_um</code> para o ponteiro inteligente <code>RefMut&lt;T&gt;</code>
-retornado por <code>borrow_mut</code>. Então criamos outro empréstimo mutável da mesma
-forma na variável <code>emprestimo_dois</code>. Isto resulta em duas referências mutáveis
-no mesmo escopo, o que não é permitido. Quando rodarmos os testes para nossa
-biblioteca, o código na Listagem 15-23 irá compilar sem nenhum erro, mas o teste
-irá falhar:</p>
-<pre><code class="language-text">---- tests::envia_uma_mensagem_de_aviso_de_acima_de_75_porcento stdout ----
-	thread 'tests::envia_uma_mensagem_de_aviso_de_acima_de_75_porcento' entrou
-    em pânico em
-    'já emprestado: BorrowMutError', src/libcore/result.rs:906:4
-nota: Rode com `RUST_BACKTRACE=1` para um backtrace.
+<figcaption><a href="#listing-15-22">Listing 15-22</a>: Usando <code>RefCell&lt;T&gt;</code> para modificar um valor interno enquanto o valor externo é considerado imutável</figcaption>
+</figure>
+<p>O campo <code>sent_messages</code> agora é do tipo <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> em vez de
+<code>Vec&lt;String&gt;</code>. Na função <code>new</code>, criamos uma nova instância de
+<code>RefCell&lt;Vec&lt;String&gt;&gt;</code> em torno do vetor vazio.</p>
+<p>Na implementação do método <code>send</code>, o primeiro parâmetro ainda é um empréstimo
+imutável de <code>self</code>, o que corresponde à definição da trait. Chamamos
+<code>borrow_mut</code> no <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> em <code>self.sent_messages</code> para obter uma
+referência mutável para o valor dentro de <code>RefCell&lt;Vec&lt;String&gt;&gt;</code>, que é o
+vetor. Então podemos chamar <code>push</code> na referência mutável para o vetor para
+registrar as mensagens enviadas durante o teste.</p>
+<p>A última mudança que precisamos fazer é na asserção: para ver quantos itens
+estão no vetor interno, chamamos <code>borrow</code> no <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> para obter
+uma referência imutável para o vetor.</p>
+<p>Agora que você viu como usar <code>RefCell&lt;T&gt;</code>, vamos nos aprofundar em como ele
+funciona!</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="keeping-track-of-borrows-at-runtime-with-refcellt"></a></p>
+<h4 id="registrando-empréstimos-em-tempo-de-execução"><a class="header" href="#registrando-empréstimos-em-tempo-de-execução">Registrando Empréstimos em Tempo de Execução</a></h4>
+<p>Ao criar referências imutáveis e mutáveis, usamos as sintaxes <code>&amp;</code> e <code>&amp;mut</code>,
+respectivamente. Com <code>RefCell&lt;T&gt;</code>, usamos os métodos <code>borrow</code> e <code>borrow_mut</code>,
+que fazem parte da API segura pertencente a <code>RefCell&lt;T&gt;</code>. O método <code>borrow</code>
+retorna o tipo de ponteiro inteligente <code>Ref&lt;T&gt;</code>, e <code>borrow_mut</code> retorna o tipo
+de ponteiro inteligente <code>RefMut&lt;T&gt;</code>. Ambos implementam <code>Deref</code>, então podemos
+tratá-los como referências comuns.</p>
+<p>O <code>RefCell&lt;T&gt;</code> registra quantos ponteiros inteligentes <code>Ref&lt;T&gt;</code> e <code>RefMut&lt;T&gt;</code>
+estão ativos no momento. Toda vez que chamamos <code>borrow</code>, o <code>RefCell&lt;T&gt;</code> aumenta
+sua contagem de quantos empréstimos imutáveis estão ativos. Quando um valor
+<code>Ref&lt;T&gt;</code> sai de escopo, a contagem de empréstimos imutáveis diminui em 1. Assim
+como as regras de borrowing em tempo de compilação, <code>RefCell&lt;T&gt;</code> nos permite
+ter muitos empréstimos imutáveis ou um empréstimo mutável em qualquer momento.</p>
+<p>Se tentarmos violar essas regras, em vez de receber um erro do compilador como
+aconteceria com referências, a implementação de <code>RefCell&lt;T&gt;</code> entrará em pânico
+em tempo de execução. A Listagem 15-23 mostra uma modificação da implementação
+de <code>send</code> da Listagem 15-22. Estamos tentando deliberadamente criar dois
+empréstimos mutáveis ativos no mesmo escopo para ilustrar que <code>RefCell&lt;T&gt;</code> nos
+impede de fazer isso em tempo de execução.</p>
+<figure class="listing" id="listing-15-23">
+<span class="file-name">Filename: src/lib.rs</span>
+<pre><code class="language-rust ignore panics"><span class="boring">pub trait Messenger {
+</span><span class="boring">    fn send(&amp;self, msg: &amp;str);
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">pub struct LimitTracker&lt;'a, T: Messenger&gt; {
+</span><span class="boring">    messenger: &amp;'a T,
+</span><span class="boring">    value: usize,
+</span><span class="boring">    max: usize,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl&lt;'a, T&gt; LimitTracker&lt;'a, T&gt;
+</span><span class="boring">where
+</span><span class="boring">    T: Messenger,
+</span><span class="boring">{
+</span><span class="boring">    pub fn new(messenger: &amp;'a T, max: usize) -&gt; LimitTracker&lt;'a, T&gt; {
+</span><span class="boring">        LimitTracker {
+</span><span class="boring">            messenger,
+</span><span class="boring">            value: 0,
+</span><span class="boring">            max,
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    pub fn set_value(&amp;mut self, value: usize) {
+</span><span class="boring">        self.value = value;
+</span><span class="boring">
+</span><span class="boring">        let percentage_of_max = self.value as f64 / self.max as f64;
+</span><span class="boring">
+</span><span class="boring">        if percentage_of_max &gt;= 1.0 {
+</span><span class="boring">            self.messenger.send("Error: You are over your quota!");
+</span><span class="boring">        } else if percentage_of_max &gt;= 0.9 {
+</span><span class="boring">            self.messenger
+</span><span class="boring">                .send("Urgent warning: You've used up over 90% of your quota!");
+</span><span class="boring">        } else if percentage_of_max &gt;= 0.75 {
+</span><span class="boring">            self.messenger
+</span><span class="boring">                .send("Warning: You've used up over 75% of your quota!");
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[cfg(test)]
+</span><span class="boring">mod tests {
+</span><span class="boring">    use super::*;
+</span><span class="boring">    use std::cell::RefCell;
+</span><span class="boring">
+</span><span class="boring">    struct MockMessenger {
+</span><span class="boring">        sent_messages: RefCell&lt;Vec&lt;String&gt;&gt;,
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    impl MockMessenger {
+</span><span class="boring">        fn new() -&gt; MockMessenger {
+</span><span class="boring">            MockMessenger {
+</span><span class="boring">                sent_messages: RefCell::new(vec![]),
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    }
+</span><span class="boring">
+</span>    impl Messenger for MockMessenger {
+        fn send(&amp;self, message: &amp;str) {
+            let mut one_borrow = self.sent_messages.borrow_mut();
+            let mut two_borrow = self.sent_messages.borrow_mut();
+
+            one_borrow.push(String::from(message));
+            two_borrow.push(String::from(message));
+        }
+    }
+<span class="boring">
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn it_sends_an_over_75_percent_warning_message() {
+</span><span class="boring">        let mock_messenger = MockMessenger::new();
+</span><span class="boring">        let mut limit_tracker = LimitTracker::new(&amp;mock_messenger, 100);
+</span><span class="boring">
+</span><span class="boring">        limit_tracker.set_value(80);
+</span><span class="boring">
+</span><span class="boring">        assert_eq!(mock_messenger.sent_messages.borrow().len(), 1);
+</span><span class="boring">    }
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-15-23">Listing 15-23</a>: Criando duas referências mutáveis no mesmo escopo para ver que <code>RefCell&lt;T&gt;</code> entrará em pânico</figcaption>
+</figure>
+<p>Criamos uma variável <code>one_borrow</code> para o ponteiro inteligente <code>RefMut&lt;T&gt;</code>
+retornado por <code>borrow_mut</code>. Depois, criamos outro empréstimo mutável da mesma
+forma na variável <code>two_borrow</code>. Isso cria duas referências mutáveis no mesmo
+escopo, o que não é permitido. Quando executarmos os testes da nossa
+biblioteca, o código da Listagem 15-23 compilará sem erros, mas o teste
+falhará:</p>
+<pre><code class="language-console">$ cargo test
+   Compiling limit-tracker v0.1.0 (file:///projects/limit-tracker)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.91s
+     Running unittests src/lib.rs (target/debug/deps/limit_tracker-e599811fa246dbde)
+
+running 1 test
+test tests::it_sends_an_over_75_percent_warning_message ... FAILED
+
+failures:
+
+---- tests::it_sends_an_over_75_percent_warning_message stdout ----
+
+thread 'tests::it_sends_an_over_75_percent_warning_message' panicked at src/lib.rs:60:53:
+RefCell already borrowed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tests::it_sends_an_over_75_percent_warning_message
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
 </code></pre>
-<p>Note como o código entrou em pânico com a mensagem <code>já emprestado: BorrowMutError</code>. É assim que o <code>RefCell&lt;T&gt;</code> lida com violações das regras de
-empréstimo em tempo de execução.</p>
-<p>Pegar erros de empréstimo em tempo de execução em vez de em tempo de compilação
-significa encontrar defeitos no nosso código mais tarde no processo de
-desenvolvimento, e possivelmente nem mesmo até que nosso código já tenha sido
-implantado em produção. Além disso, nosso código irá incorrer em uma pequena
-penalidade de desempenho de execução como resultado de manter registro dos
-empréstimos em tempo de execução em vez de compilação. Ainda assim, usar o
-<code>RefCell&lt;T&gt;</code> nos torna possível escrever um objeto simulado que pode se
-modificar para registrar as mensagens que ele já viu enquanto o usamos em um
-contexto onde apenas valores imutáveis são permitidos. Podemos usar o
+<p>Observe que o código entrou em pânico com a mensagem <code>already borrowed: BorrowMutError</code>. É assim que <code>RefCell&lt;T&gt;</code> lida com violações das regras de
+borrowing em tempo de execução.</p>
+<p>Escolher capturar erros de borrowing em tempo de execução em vez de em tempo de
+compilação, como fizemos aqui, significa que você possivelmente encontrará
+erros no seu código mais tarde no processo de desenvolvimento: talvez só depois
+que o código já estiver implantado em produção. Além disso, seu código terá uma
+pequena penalidade de desempenho em tempo de execução como resultado de
+registrar os empréstimos em tempo de execução em vez de em tempo de compilação.
+No entanto, usar <code>RefCell&lt;T&gt;</code> torna possível escrever um objeto mock que pode
+modificar a si mesmo para registrar as mensagens que viu enquanto é usado em um
+contexto em que apenas valores imutáveis são permitidos. Você pode usar
 <code>RefCell&lt;T&gt;</code>, apesar de seus trade-offs, para obter mais funcionalidade do que
-referências regulares nos dão.</p>
-<h3 id="conseguindo-múltiplos-possuidores-de-dados-mutáveis-pela-combinação-de-rct-e-refcellt"><a class="header" href="#conseguindo-múltiplos-possuidores-de-dados-mutáveis-pela-combinação-de-rct-e-refcellt">Conseguindo Múltiplos Possuidores de Dados Mutáveis pela Combinação de <code>Rc&lt;T&gt;</code> e <code>RefCell&lt;T&gt;</code></a></h3>
-<p>Um jeito comum de usar o <code>RefCell&lt;T&gt;</code> é em combinação com o <code>Rc&lt;T&gt;</code>. Lembre-se
-de que o <code>Rc&lt;T&gt;</code> nos permite ter múltiplos possuidores de algum dado, mas ele só
-nos permite acesso imutável a esse dado. Se temos um <code>Rc&lt;T&gt;</code> que contém um
-<code>RefCell&lt;T&gt;</code>, podemos ter um valor que pode ter múltiplos possuidores <em>e</em> que
-podemos modificar!</p>
-<p>Por exemplo, lembre-se da cons list na Listagem 15-18 onde usamos o <code>Rc&lt;T&gt;</code> para
-nos permitir que múltiplas listas compartilhassem posse de outra lista. Como o
-<code>Rc&lt;T&gt;</code> guarda apenas valores imutáveis, nós não podemos modificar nenhum dos
-valores na lista uma vez que os criamos. Vamos adicionar o <code>RefCell&lt;T&gt;</code> para
-ganhar a habilidade de mudar os valores nas listas. A Listagem 15-24 mostra que,
-usando um <code>RefCell&lt;T&gt;</code> na definição do <code>Cons</code>, podemos modificar o valor
-armazenado em todas as listas:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+referências comuns fornecem.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="having-multiple-owners-of-mutable-data-by-combining-rc-t-and-ref-cell-t"></a>
+<a id="allowing-multiple-owners-of-mutable-data-with-rct-and-refcellt"></a></p>
+<h3 id="permitindo-múltiplos-donos-de-dados-mutáveis"><a class="header" href="#permitindo-múltiplos-donos-de-dados-mutáveis">Permitindo Múltiplos Donos de Dados Mutáveis</a></h3>
+<p>Uma forma comum de usar <code>RefCell&lt;T&gt;</code> é em combinação com <code>Rc&lt;T&gt;</code>. Lembre-se de
+que <code>Rc&lt;T&gt;</code> permite ter múltiplos donos de alguns dados, mas só fornece acesso
+imutável a esses dados. Se você tem um <code>Rc&lt;T&gt;</code> que armazena um <code>RefCell&lt;T&gt;</code>,
+pode obter um valor que pode ter múltiplos donos <em>e</em> que você pode modificar!</p>
+<p>Por exemplo, lembre-se do exemplo da cons list na Listagem 15-18, em que usamos
+<code>Rc&lt;T&gt;</code> para permitir que múltiplas listas compartilhassem ownership de outra
+lista. Como <code>Rc&lt;T&gt;</code> armazena apenas valores imutáveis, não podemos alterar
+nenhum dos valores na lista depois de criá-los. Vamos adicionar <code>RefCell&lt;T&gt;</code>
+por sua capacidade de alterar os valores nas listas. A Listagem 15-24 mostra
+que, usando um <code>RefCell&lt;T&gt;</code> na definição de <code>Cons</code>, podemos modificar o valor
+armazenado em todas as listas.</p>
+<figure class="listing" id="listing-15-24">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">#[derive(Debug)]
 enum List {
     Cons(Rc&lt;RefCell&lt;i32&gt;&gt;, Rc&lt;List&gt;),
     Nil,
 }
 
-use List::{Cons, Nil};
-use std::rc::Rc;
+use crate::List::{Cons, Nil};
 use std::cell::RefCell;
+use std::rc::Rc;
 
 fn main() {
-    let valor = Rc::new(RefCell::new(5));
+    let value = Rc::new(RefCell::new(5));
 
-    let a = Rc::new(Cons(Rc::clone(&amp;valor), Rc::new(Nil)));
+    let a = Rc::new(Cons(Rc::clone(&amp;value), Rc::new(Nil)));
 
-    let b = Cons(Rc::new(RefCell::new(6)), Rc::clone(&amp;a));
-    let c = Cons(Rc::new(RefCell::new(10)), Rc::clone(&amp;a));
+    let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&amp;a));
+    let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&amp;a));
 
-    *valor.borrow_mut() += 10;
+    *value.borrow_mut() += 10;
 
-    println!("a depois = {:?}", a);
-    println!("b depois = {:?}", b);
-    println!("c depois = {:?}", c);
+    println!("a after = {a:?}");
+    println!("b after = {b:?}");
+    println!("c after = {c:?}");
 }</code></pre>
-<p><span class="caption">Listagem 15-24: Usando <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> para criar uma
-<code>List</code> que podemos modificar</span></p>
-<p>Nós criamos um valor que é uma instância de <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> e o armazenamos
-em uma variável chamada <code>valor</code> para que possamos acessá-lo diretamente mais
-tarde. Então criamos uma <code>List</code> em <code>a</code> com uma variante <code>Cons</code> que guarda
-<code>valor</code>.</p>
-<p>Nós embrulhamos a lista <code>a</code> em um <code>Rc&lt;T&gt;</code> para que, quando criarmos as listas
-<code>b</code> e <code>c</code>, elas possam ambas se referir a <code>a</code>, que é o que fizemos na Listagem
-15-18.</p>
-<p>Depois de criarmos as listas em <code>a</code>, <code>b</code> e <code>c</code>, adicionamos 10 ao valor em
-<code>valor</code>. Fazemos isto chamando <code>borrow_mut</code> em <code>valor</code>, o que usa a
-funcionalidade de desreferência automática que discutimos no Capítulo 5 (veja a
-seção “Onde está o operador <code>-&gt;</code>?”) para desreferenciar o <code>Rc&lt;T&gt;</code> ao valor
-interno <code>RefCell&lt;T&gt;</code>. O método <code>borrow_mut</code> retorna um ponteiro inteligente
-<code>RefMut&lt;T&gt;</code> no qual usamos o operador de desreferência e modificamos o valor
-interno.</p>
-<p>Quando imprimimos <code>a</code>, <code>b</code> e <code>c</code>, podemos ver que todos eles têm o valor
-modificado de 15 em vez de 5:</p>
-<pre><code class="language-text">a depois = Cons(RefCell { value: 15 }, Nil)
-b depois = Cons(RefCell { value: 6 }, Cons(RefCell { value: 15 }, Nil))
-c depois = Cons(RefCell { value: 10 }, Cons(RefCell { value: 15 }, Nil))
+<figcaption><a href="#listing-15-24">Listing 15-24</a>: Usando <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> para criar uma <code>List</code> que podemos modificar</figcaption>
+</figure>
+<p>Criamos um valor que é uma instância de <code>Rc&lt;RefCell&lt;i32&gt;&gt;</code> e o armazenamos em
+uma variável chamada <code>value</code>, para que possamos acessá-lo diretamente mais
+tarde. Então criamos uma <code>List</code> em <code>a</code> com uma variante <code>Cons</code> que armazena
+<code>value</code>. Precisamos clonar <code>value</code> para que tanto <code>a</code> quanto <code>value</code> tenham
+ownership do valor interno <code>5</code>, em vez de transferir ownership de <code>value</code> para
+<code>a</code> ou fazer <code>a</code> pegar emprestado de <code>value</code>.</p>
+<p>Envolvemos a lista <code>a</code> em um <code>Rc&lt;T&gt;</code> para que, quando criarmos as listas <code>b</code> e
+<code>c</code>, ambas possam se referir a <code>a</code>, que é o que fizemos na Listagem 15-18.</p>
+<p>Depois de criar as listas em <code>a</code>, <code>b</code> e <code>c</code>, queremos adicionar 10 ao valor em
+<code>value</code>. Fazemos isso chamando <code>borrow_mut</code> em <code>value</code>, o que usa o recurso de
+desreferência automática que discutimos em <a href="ch05-03-method-syntax.html#wheres-the---operator">“Onde Está o Operador
+<code>-&gt;</code>?”</a><!-- ignore --> no Capítulo 5 para desreferenciar
+o <code>Rc&lt;T&gt;</code> até o valor interno <code>RefCell&lt;T&gt;</code>. O método <code>borrow_mut</code> retorna um
+ponteiro inteligente <code>RefMut&lt;T&gt;</code>, e usamos o operador de desreferência nele
+para alterar o valor interno.</p>
+<p>Quando imprimimos <code>a</code>, <code>b</code> e <code>c</code>, vemos que todos eles têm o valor modificado
+<code>15</code> em vez de <code>5</code>:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.63s
+     Running `target/debug/cons-list`
+a after = Cons(RefCell { value: 15 }, Nil)
+b after = Cons(RefCell { value: 3 }, Cons(RefCell { value: 15 }, Nil))
+c after = Cons(RefCell { value: 4 }, Cons(RefCell { value: 15 }, Nil))
 </code></pre>
-<p>Esta técnica é bem bacana! Usando um <code>RefCell&lt;T&gt;</code>, temos uma <code>List</code>
-exteriormente imutável. Mas podemos usar os métodos no <code>RefCell&lt;T&gt;</code> que dão
-acesso a sua mutabilidade interior para que possamos modificar nossos dados
-quando precisarmos. As checagens em tempo de execução das regras de empréstimo
-nos protegem de corridas de dados, e às vezes vale a pena trocar um pouco de
-velocidade por esta flexibilidade nas nossas estruturas de dados.</p>
-<p>A biblioteca padrão tem outros tipos que proveem mutabilidade interior, como o
-<code>Cell&lt;T&gt;</code>, que é parecido, exceto que em vez de dar referências ao valor
-interno, o valor é copiado para dentro e para fora do <code>Cell&lt;T&gt;</code>. Tem também o
-<code>Mutex&lt;T&gt;</code>, que oferece mutabilidade interior que é segura de usar entre
-threads; vamos discutir seu uso no Capítulo 16. Confira a documentação da
-biblioteca padrão para mais detalhes sobre as diferenças entre estes tipos.</p>
+<p>Essa técnica é bem interessante! Ao usar <code>RefCell&lt;T&gt;</code>, temos um valor <code>List</code>
+externamente imutável. Mas podemos usar os métodos em <code>RefCell&lt;T&gt;</code> que
+fornecem acesso à sua mutabilidade interior para modificar nossos dados quando
+precisarmos. As verificações em tempo de execução das regras de borrowing nos
+protegem de data races, e às vezes vale trocar um pouco de velocidade por essa
+flexibilidade nas nossas estruturas de dados. Observe que <code>RefCell&lt;T&gt;</code> não
+funciona em código multithread! <code>Mutex&lt;T&gt;</code> é a versão thread-safe de
+<code>RefCell&lt;T&gt;</code>, e discutiremos <code>Mutex&lt;T&gt;</code> no Capítulo 16.</p>
 
                     </main>
 

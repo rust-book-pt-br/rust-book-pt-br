@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4fe81980.js";
+            window.path_to_searchindex_js = "searchindex-597b70a8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -182,103 +182,116 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="rct-o-ponteiro-inteligente-com-contagem-de-referências"><a class="header" href="#rct-o-ponteiro-inteligente-com-contagem-de-referências"><code>Rc&lt;T&gt;</code>, o Ponteiro Inteligente com Contagem de Referências</a></h2>
-<p>Na maioria dos casos, a posse é clara: você sabe exatamente qual variável tem
-posse de um dado valor. Contudo, há casos em que um único valor pode ter múltiplos
-possuidores. Por exemplo, em uma estrutura de dados em grafo, múltiplas arestas
-podem apontar para o mesmo vértice, e esse vértice é conceitualmente possuído
-por todas as arestas que apontam para ele. Um vértice não deveria ser liberado a
-não ser que ele não tenha mais arestas apontando para ele.</p>
-<p>Para permitir posse múltipla, o Rust tem um tipo chamado <code>Rc&lt;T&gt;</code>. Seu nome é uma
-abreviação para <em>reference counting</em> (<em>contagem de referências</em>) que, como o
-nome diz, mantém registro do número de referências a um valor para saber se ele
-ainda está em uso ou não. Se há zero referências a um valor, ele pode ser
-liberado sem que nenhuma referência se torne inválida.</p>
-<p>Imagine o <code>Rc&lt;T&gt;</code> como uma TV numa sala de família. Quando uma pessoa entra para
-assistir à TV, ela a liga. Outros podem entrar na sala e assistir à TV. Quando a
-última pessoa sai da sala, ela desliga a TV porque essa não está mais em uso. Se
-alguém desligasse a TV enquanto outros ainda estão assistindo, haveria revolta
-entre os telespectadores restantes!</p>
-<p>Nós usamos o tipo <code>Rc&lt;T&gt;</code> quando queremos alocar algum dado no heap para que
-múltiplas partes do nosso programa o leiam, e não conseguimos determinar em
-tempo de compilação qual parte irá terminar de usar o dado por último. Se
-soubéssemos qual parte terminaria por último, poderíamos simplesmente tornar
-aquela parte a possuidora do dado e as regras normais de posse aplicadas em
-tempo de compilação teriam efeito.</p>
-<p>Note que o <code>Rc&lt;T&gt;</code> serve apenas para cenários de thread única. Quando
-discutirmos concorrência no Capítulo 16, cobriremos como fazer contagem de
-referências em programas com múltiplas threads.</p>
-<h3 id="usando-rct-para-compartilhar-dados"><a class="header" href="#usando-rct-para-compartilhar-dados">Usando <code>Rc&lt;T&gt;</code> para Compartilhar Dados</a></h3>
-<p>Vamos retornar ao nosso exemplo de <em>cons list</em> da Listagem 15-5. Lembre-se de
-que a definimos usando o <code>Box&lt;T&gt;</code>. Desta vez, vamos criar duas listas que
-compartilham ambas a posse de uma terceira lista, o que conceitualmente vai se
-parecer com a Figura 15-3:</p>
-<img alt="Duas listas que compartilham a posse de uma terceira lista" src="img/trpl15-03.svg" class="center" />
-<p><span class="caption">Figura 15-3: Duas listas, <code>b</code> e <code>c</code>, compartilhando posse
-de uma terceira lista, <code>a</code></span></p>
-<p>Vamos criar a lista <code>a</code> que contém 5 e depois 10. Então criaremos mais duas
-listas: <code>b</code>, que começa com 3 e <code>c</code>, que começa com 4. Ambas as listas <code>b</code> e <code>c</code>
-irão então continuar na lista <code>a</code> contendo 5 e 10. Em outras palavras, ambas as
-listas irão compartilhar a primeira lista contendo 5 e 10.</p>
+<p>Na maioria dos casos, o ownership é claro: você sabe exatamente qual variável
+tem ownership de determinado valor. No entanto, há casos em que um único valor
+pode ter múltiplos donos. Por exemplo, em estruturas de dados em grafo,
+múltiplas arestas podem apontar para o mesmo nó, e esse nó é conceitualmente
+possuído por todas as arestas que apontam para ele. Um nó não deve ser limpo a
+menos que não tenha nenhuma aresta apontando para ele e, portanto, não tenha
+donos.</p>
+<p>Você precisa habilitar ownership múltiplo explicitamente usando o tipo <code>Rc&lt;T&gt;</code>
+de Rust, que é uma abreviação de <em>reference counting</em> (<em>contagem de
+referências</em>). O tipo <code>Rc&lt;T&gt;</code> registra o número de referências a um valor para
+determinar se o valor ainda está em uso ou não. Se houver zero referências a um
+valor, ele pode ser limpo sem que nenhuma referência se torne inválida.</p>
+<p>Imagine <code>Rc&lt;T&gt;</code> como uma TV em uma sala de estar. Quando uma pessoa entra para
+assistir TV, ela a liga. Outras pessoas podem entrar na sala e assistir à TV.
+Quando a última pessoa sai da sala, ela desliga a TV porque ela já não está
+sendo usada. Se alguém desligasse a TV enquanto outras pessoas ainda estivessem
+assistindo, haveria protestos dos espectadores restantes!</p>
+<p>Usamos o tipo <code>Rc&lt;T&gt;</code> quando queremos alocar alguns dados no heap para que
+múltiplas partes do nosso programa os leiam e não conseguimos determinar, em
+tempo de compilação, qual parte terminará de usar os dados por último. Se
+soubéssemos qual parte terminaria por último, poderíamos simplesmente fazer
+dela a dona dos dados, e as regras normais de ownership aplicadas em tempo de
+compilação entrariam em ação.</p>
+<p>Observe que <code>Rc&lt;T&gt;</code> deve ser usado apenas em cenários de thread única. Quando
+discutirmos concorrência no Capítulo 16, veremos como fazer contagem de
+referências em programas multithread.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="using-rct-to-share-data"></a></p>
+<h3 id="compartilhando-dados"><a class="header" href="#compartilhando-dados">Compartilhando Dados</a></h3>
+<p>Vamos retornar ao exemplo da cons list da Listagem 15-5. Lembre-se de que a
+definimos usando <code>Box&lt;T&gt;</code>. Desta vez, criaremos duas listas que compartilham o
+ownership de uma terceira lista. Conceitualmente, isso se parece com a Figura
+15-3.</p>
+<img alt="Uma lista ligada com o rótulo &#39;a&#39; apontando para três elementos. O primeiro elemento contém o inteiro 5 e aponta para o segundo elemento. O segundo elemento contém o inteiro 10 e aponta para o terceiro elemento. O terceiro elemento contém o valor &#39;Nil&#39;, que significa o fim da lista; ele não aponta para nada. Uma lista ligada com o rótulo &#39;b&#39; aponta para um elemento que contém o inteiro 3 e aponta para o primeiro elemento da lista &#39;a&#39;. Uma lista ligada com o rótulo &#39;c&#39; aponta para um elemento que contém o inteiro 4 e também aponta para o primeiro elemento da lista &#39;a&#39;, de modo que as caudas das listas &#39;b&#39; e &#39;c&#39; são ambas a lista &#39;a&#39;." src="img/trpl15-03.svg" class="center" />
+<p><span class="caption">Figura 15-3: Duas listas, <code>b</code> e <code>c</code>, compartilhando
+ownership de uma terceira lista, <code>a</code></span></p>
+<p>Criaremos a lista <code>a</code>, que contém <code>5</code> e depois <code>10</code>. Em seguida, criaremos mais
+duas listas: <code>b</code>, que começa com <code>3</code>, e <code>c</code>, que começa com <code>4</code>. Tanto a lista
+<code>b</code> quanto a lista <code>c</code> continuarão na primeira lista <code>a</code>, que contém <code>5</code> e
+<code>10</code>. Em outras palavras, as duas listas compartilharão a primeira lista que
+contém <code>5</code> e <code>10</code>.</p>
 <p>Tentar implementar esse cenário usando nossa definição de <code>List</code> com <code>Box&lt;T&gt;</code>
-não irá funcionar, como mostra a Listagem 15-17:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre><code class="language-rust ignore">enum List {
+não funcionará, como mostrado na Listagem 15-17.</p>
+<figure class="listing" id="listing-15-17">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile">enum List {
     Cons(i32, Box&lt;List&gt;),
     Nil,
 }
 
-use List::{Cons, Nil};
+use crate::List::{Cons, Nil};
 
 fn main() {
-    let a = Cons(5,
-        Box::new(Cons(10,
-            Box::new(Nil))));
+    let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
     let b = Cons(3, Box::new(a));
     let c = Cons(4, Box::new(a));
 }</code></pre>
-<p><span class="caption">Listagem 15-17: Demonstrando que não é possível termos
-duas listas usando <code>Box&lt;T&gt;</code> que tentam compartilhar posse de uma terceira
-lista</span></p>
+<figcaption><a href="#listing-15-17">Listing 15-17</a>: Demonstrando que não temos permissão para ter duas listas usando <code>Box&lt;T&gt;</code> que tentam compartilhar ownership de uma terceira lista</figcaption>
+</figure>
 <p>Quando compilamos esse código, recebemos este erro:</p>
-<pre><code class="language-text">erro[E0382]: uso de valor movido: `a`
-  --&gt; src/main.rs:13:30
+<pre><code class="language-console">$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+error[E0382]: use of moved value: `a`
+  --&gt; src/main.rs:11:30
    |
-12 |     let b = Cons(3, Box::new(a));
-   |                              - valor movido para cá
-13 |     let c = Cons(4, Box::new(a));
-   |                              ^ valor usado aqui depois de movido
+ 9 |     let a = Cons(5, Box::new(Cons(10, Box::new(Nil))));
+   |         - move occurs because `a` has type `List`, which does not implement the `Copy` trait
+10 |     let b = Cons(3, Box::new(a));
+   |                              - value moved here
+11 |     let c = Cons(4, Box::new(a));
+   |                              ^ value used here after move
    |
-   = nota: o valor é movido porque `a` tem tipo `List`, que não implementa
-   a trait `Copy`
+note: if `List` implemented `Clone`, you could clone the value
+  --&gt; src/main.rs:1:1
+   |
+ 1 | enum List {
+   | ^^^^^^^^^ consider implementing `Clone` for this type
+...
+10 |     let b = Cons(3, Box::new(a));
+   |                              - you could clone this value
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `cons-list` (bin "cons-list") due to 1 previous error
 </code></pre>
-<p>As variantes <code>Cons</code> têm posse dos dados que elas contêm, então quando criamos a
-lista <code>b</code>, <code>a</code> é movida para dentro de <code>b</code>, e <code>b</code> toma posse de <code>a</code>. Então,
-quando tentamos usar <code>a</code> de novo na criação de <code>c</code>, isso não é permitido porque
-<code>a</code> foi movida.</p>
-<p>Poderíamos mudar a definição de <code>Cons</code> para guardar referências, mas aí teríamos
-que especificar parâmetros de tempo de vida (<em>lifetime parameters</em>). Fazendo
-isso, estaríamos especificando que cada elemento da lista devesse viver por pelo
-menos tanto tempo quanto a lista inteira. O <em>verificador de empréstimo</em> (<em>borrow
-checker</em>) não nos deixaria compilar <code>let a = Cons(10, &amp;Nil);</code>, por exemplo,
-porque o valor temporário <code>Nil</code> seria destruído antes que <code>a</code> pudesse receber
-uma referência a ele.</p>
-<p>Em vez disso, vamos mudar nossa definição de <code>List</code> para usar o <code>Rc&lt;T&gt;</code> no lugar
-do <code>Box&lt;T&gt;</code>, como mostra a Listagem 15-18. Cada variante <code>Cons</code> agora vai conter
+<p>As variantes <code>Cons</code> têm ownership dos dados que armazenam, então, quando
+criamos a lista <code>b</code>, <code>a</code> é movida para dentro de <code>b</code>, e <code>b</code> passa a ter
+ownership de <code>a</code>. Depois, quando tentamos usar <code>a</code> novamente ao criar <code>c</code>, isso
+não é permitido porque <code>a</code> foi movida.</p>
+<p>Poderíamos mudar a definição de <code>Cons</code> para armazenar referências, mas então
+teríamos que especificar parâmetros de lifetime. Ao especificar parâmetros de
+lifetime, estaríamos dizendo que cada elemento da lista viverá pelo menos tanto
+quanto a lista inteira. Esse é o caso para os elementos e listas da Listagem
+15-17, mas não em todos os cenários.</p>
+<p>Em vez disso, mudaremos nossa definição de <code>List</code> para usar <code>Rc&lt;T&gt;</code> no lugar de
+<code>Box&lt;T&gt;</code>, como mostrado na Listagem 15-18. Cada variante <code>Cons</code> agora armazenará
 um valor e um <code>Rc&lt;T&gt;</code> apontando para uma <code>List</code>. Quando criarmos <code>b</code>, em vez de
-tomar posse de <code>a</code>, iremos clonar o <code>Rc&lt;List&gt;</code> que <code>a</code> está segurando, o que
-aumenta o número de referências de uma para duas e permite que <code>a</code> e
-<code>b</code> compartilhem posse dos dados naquele <code>Rc&lt;List&gt;</code>. Também vamos clonar <code>a</code>
-quando criarmos <code>c</code>, o que aumenta o número de referências de duas para três.
-Cada vez que chamarmos <code>Rc::clone</code>, a contagem de referências ao valor dentro do
-<code>Rc&lt;List&gt;</code> irá aumentar, e ele não será liberado até que haja zero referências a
-ele:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+tomar ownership de <code>a</code>, clonaremos o <code>Rc&lt;List&gt;</code> que <code>a</code> está armazenando,
+aumentando o número de referências de um para dois e permitindo que <code>a</code> e <code>b</code>
+compartilhem ownership dos dados nesse <code>Rc&lt;List&gt;</code>. Também clonaremos <code>a</code> ao
+criar <code>c</code>, aumentando o número de referências de dois para três. Toda vez que
+chamarmos <code>Rc::clone</code>, a contagem de referências aos dados dentro do <code>Rc&lt;List&gt;</code>
+aumentará, e os dados só serão limpos quando houver zero referências a eles.</p>
+<figure class="listing" id="listing-15-18">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">enum List {
     Cons(i32, Rc&lt;List&gt;),
     Nil,
 }
 
-use List::{Cons, Nil};
+use crate::List::{Cons, Nil};
 use std::rc::Rc;
 
 fn main() {
@@ -286,83 +299,91 @@ fn main() {
     let b = Cons(3, Rc::clone(&amp;a));
     let c = Cons(4, Rc::clone(&amp;a));
 }</code></pre>
-<p><span class="caption">Listagem 15-18: Uma definição de <code>List</code> que usa o
-<code>Rc&lt;T&gt;</code></span></p>
-<p>Precisamos adicionar uma declaração <code>use</code> para trazer o <code>Rc&lt;T&gt;</code> ao escopo porque
-ele não está no prelude. Na <code>main</code>, criamos a lista contendo 5 e 10 e a
-armazenamos em um novo <code>Rc&lt;List&gt;</code> em <code>a</code>. Então quando criamos <code>b</code> e <code>c</code>,
-chamamos a função <code>Rc::clone</code> e passamos uma referência ao <code>Rc&lt;List&gt;</code> em <code>a</code>
-como argumento.</p>
-<p>Poderíamos ter chamado <code>a.clone()</code> em vez de <code>Rc::clone(&amp;a)</code>, mas a convenção do
-Rust é usar <code>Rc::clone</code> neste caso. A implementação de <code>Rc::clone</code> não faz uma
-cópia profunda de todos os dados como faz a implementação de <code>clone</code> da maioria
-dos tipos. A chamada a <code>Rc::clone</code> apenas incrementa a contagem de referências,
-o que não leva muito tempo. Cópias profundas de dados podem levar muito tempo.
-Usando <code>Rc::clone</code> para a contagem de referências, podemos distinguir
-visualmente entre os clones de cópia profunda e os clones que incrementam a
-contagem de referências. Quando estivermos procurando problemas de desempenho no
-código, precisamos apenas considerar os clones de cópia profunda e podemos
-ignorar as chamadas a <code>Rc::clone</code>.</p>
-<h3 id="clonar-um-rct-aumenta-a-contagem-de-referências"><a class="header" href="#clonar-um-rct-aumenta-a-contagem-de-referências">Clonar um <code>Rc&lt;T&gt;</code> Aumenta a Contagem de Referências</a></h3>
-<p>Vamos mudar nosso exemplo de trabalho na Listagem 15-18 para podermos ver a
-contagem de referências mudando conforme criamos e destruímos referências ao
-<code>Rc&lt;List&gt;</code> em <code>a</code>.</p>
-<p>Na Listagem 15-19, vamos mudar a <code>main</code> para que tenha um escopo interno em
-torno da lista <code>c</code>; assim poderemos ver como a contagem de referências muda
-quando <code>c</code> sai de escopo. Em cada ponto do programa onde a contagem de
-referências muda, iremos imprimir seu valor, que podemos obter chamando a função
-<code>Rc::strong_count</code>. Essa função se chama <code>strong_count</code> (<em>contagem das
-referências fortes</em>) em vez de <code>count</code> (<em>contagem</em>) porque o tipo <code>Rc&lt;T&gt;</code> também
-tem uma <code>weak_count</code> (<em>contagem das referências fracas</em>); veremos para que a
-<code>weak_count</code> é usada na seção “Evitando Ciclos de Referências”.</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<figcaption><a href="#listing-15-18">Listing 15-18</a>: Uma definição de <code>List</code> que usa <code>Rc&lt;T&gt;</code></figcaption>
+</figure>
+<p>Precisamos adicionar uma instrução <code>use</code> para trazer <code>Rc&lt;T&gt;</code> para o escopo,
+porque ele não está no prelude. Em <code>main</code>, criamos a lista que armazena <code>5</code> e
+<code>10</code> e a guardamos em um novo <code>Rc&lt;List&gt;</code> em <code>a</code>. Então, quando criamos <code>b</code> e
+<code>c</code>, chamamos a função <code>Rc::clone</code> e passamos uma referência para o <code>Rc&lt;List&gt;</code>
+em <code>a</code> como argumento.</p>
+<p>Poderíamos ter chamado <code>a.clone()</code> em vez de <code>Rc::clone(&amp;a)</code>, mas a convenção
+em Rust é usar <code>Rc::clone</code> nesse caso. A implementação de <code>Rc::clone</code> não faz
+uma cópia profunda de todos os dados como fazem as implementações de <code>clone</code> da
+maioria dos tipos. A chamada a <code>Rc::clone</code> apenas incrementa a contagem de
+referências, o que não leva muito tempo. Cópias profundas de dados podem levar
+muito tempo. Ao usar <code>Rc::clone</code> para contagem de referências, conseguimos
+distinguir visualmente os tipos de clone que fazem cópia profunda dos tipos de
+clone que aumentam a contagem de referências. Ao procurar problemas de
+desempenho no código, só precisamos considerar os clones de cópia profunda e
+podemos desconsiderar chamadas a <code>Rc::clone</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="cloning-an-rct-increases-the-reference-count"></a></p>
+<h3 id="clonando-para-aumentar-a-contagem-de-referências"><a class="header" href="#clonando-para-aumentar-a-contagem-de-referências">Clonando para Aumentar a Contagem de Referências</a></h3>
+<p>Vamos alterar nosso exemplo de trabalho da Listagem 15-18 para que possamos ver
+as contagens de referências mudarem à medida que criamos e descartamos
+referências ao <code>Rc&lt;List&gt;</code> em <code>a</code>.</p>
+<p>Na Listagem 15-19, mudaremos <code>main</code> para que tenha um escopo interno ao redor
+da lista <code>c</code>; assim, poderemos ver como a contagem de referências muda quando
+<code>c</code> sai de escopo.</p>
+<figure class="listing" id="listing-15-19">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">enum List {
 </span><span class="boring">    Cons(i32, Rc&lt;List&gt;),
 </span><span class="boring">    Nil,
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">use List::{Cons, Nil};
+</span><span class="boring">use crate::List::{Cons, Nil};
 </span><span class="boring">use std::rc::Rc;
 </span><span class="boring">
-</span>fn main() {
+</span>// --snip--
+
+fn main() {
     let a = Rc::new(Cons(5, Rc::new(Cons(10, Rc::new(Nil)))));
-    println!("contagem depois de criar a = {}", Rc::strong_count(&amp;a));
+    println!("count after creating a = {}", Rc::strong_count(&amp;a));
     let b = Cons(3, Rc::clone(&amp;a));
-    println!("contagem depois de criar b = {}", Rc::strong_count(&amp;a));
+    println!("count after creating b = {}", Rc::strong_count(&amp;a));
     {
         let c = Cons(4, Rc::clone(&amp;a));
-        println!("contagem depois de criar c = {}", Rc::strong_count(&amp;a));
+        println!("count after creating c = {}", Rc::strong_count(&amp;a));
     }
-    println!("contagem depois que c sai de escopo = {}", Rc::strong_count(&amp;a));
+    println!("count after c goes out of scope = {}", Rc::strong_count(&amp;a));
 }</code></pre>
-<p><span class="caption">Listagem 15-19: Imprimindo a contagem de
-referências</span></p>
+<figcaption><a href="#listing-15-19">Listing 15-19</a>: Imprimindo a contagem de referências</figcaption>
+</figure>
+<p>Em cada ponto do programa em que a contagem de referências muda, imprimimos a
+contagem de referências, que obtemos chamando a função <code>Rc::strong_count</code>. Essa
+função se chama <code>strong_count</code>, em vez de <code>count</code>, porque o tipo <code>Rc&lt;T&gt;</code> também
+tem uma <code>weak_count</code>; veremos para que <code>weak_count</code> é usada em <a href="ch15-06-reference-cycles.html#preventing-reference-cycles-turning-an-rct-into-a-weakt">“Prevenindo
+Ciclos de Referência Usando <code>Weak&lt;T&gt;</code>”</a><!-- ignore -->.</p>
 <p>Esse código imprime o seguinte:</p>
-<pre><code class="language-text">contagem depois de criar a = 1
-contagem depois de criar b = 2
-contagem depois de criar c = 3
-contagem depois que c sai de escopo = 2
+<pre><code class="language-console">$ cargo run
+   Compiling cons-list v0.1.0 (file:///projects/cons-list)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.45s
+     Running `target/debug/cons-list`
+count after creating a = 1
+count after creating b = 2
+count after creating c = 3
+count after c goes out of scope = 2
 </code></pre>
-<p>Podemos ver que o <code>Rc&lt;List&gt;</code> em <code>a</code> tem uma contagem de referências inicial de
-um; depois, cada vez que chamamos <code>clone</code>, a contagem aumenta em um. Quando <code>c</code>
-sai de escopo, a contagem diminui em um. Nós não temos que chamar uma função
-para decrementar a contagem de referências como temos que fazer com a
-<code>Rc::clone</code> para incrementá-la: a implementação da trait <code>Drop</code> diminui a
-contagem automaticamente quando um valor <code>Rc&lt;T&gt;</code> sai de escopo.</p>
-<p>O que não conseguimos ver nesse exemplo é que quando <code>b</code> e depois <code>a</code> saem de
-escopo no final da <code>main</code>, a contagem se torna 0, e o <code>Rc&lt;List&gt;</code> é
-liberado por completo nesse ponto. O uso do <code>Rc&lt;T&gt;</code> permite que um único valor
-tenha múltiplos possuidores, e a contagem garante que o valor permaneça válido
-enquanto algum dos possuidores ainda existir.</p>
-<p>Por funcionar com referências imutáveis, o <code>Rc&lt;T&gt;</code> nos permite compartilhar
-dados entre diversas partes do nosso programa <em>apenas para leitura</em>. Se o
-<code>Rc&lt;T&gt;</code> nos deixasse ter múltiplas referências mutáveis também, nós poderíamos
-violar uma das regras de empréstimo discutidas no Capítulo 4: múltiplos
-empréstimos mutáveis do mesmo lugar podem causar corridas de dados (<em>data
-races</em>) e inconsistências. Mas conseguir modificar dados é muito útil! Na
-próxima seção, discutiremos o padrão de mutabilidade interior (<em>interior
-mutability</em>) e o tipo <code>RefCell&lt;T&gt;</code> que podemos usar junto com um <code>Rc&lt;T&gt;</code> para
-trabalhar com essa restrição de imutabilidade.</p>
+<p>Podemos ver que o <code>Rc&lt;List&gt;</code> em <code>a</code> tem uma contagem inicial de referências de
+1; então, cada vez que chamamos <code>clone</code>, a contagem aumenta em 1. Quando <code>c</code>
+sai de escopo, a contagem diminui em 1. Não precisamos chamar uma função para
+diminuir a contagem de referências como precisamos chamar <code>Rc::clone</code> para
+aumentá-la: a implementação da trait <code>Drop</code> diminui a contagem automaticamente
+quando um valor <code>Rc&lt;T&gt;</code> sai de escopo.</p>
+<p>O que não conseguimos ver nesse exemplo é que, quando <code>b</code> e depois <code>a</code> saem de
+escopo no final de <code>main</code>, a contagem chega a 0, e o <code>Rc&lt;List&gt;</code> é limpo por
+completo. Usar <code>Rc&lt;T&gt;</code> permite que um único valor tenha múltiplos donos, e a
+contagem garante que o valor permaneça válido enquanto qualquer um dos donos
+ainda existir.</p>
+<p>Por meio de referências imutáveis, <code>Rc&lt;T&gt;</code> permite compartilhar dados entre
+múltiplas partes do programa apenas para leitura. Se <code>Rc&lt;T&gt;</code> permitisse também
+múltiplas referências mutáveis, poderíamos violar uma das regras de borrowing
+discutidas no Capítulo 4: múltiplos empréstimos mutáveis para o mesmo lugar
+podem causar data races e inconsistências. Mas poder modificar dados é muito
+útil! Na próxima seção, discutiremos o padrão de mutabilidade interior e o tipo
+<code>RefCell&lt;T&gt;</code>, que você pode usar em conjunto com <code>Rc&lt;T&gt;</code> para trabalhar com essa
+restrição de imutabilidade.</p>
 
                     </main>
 

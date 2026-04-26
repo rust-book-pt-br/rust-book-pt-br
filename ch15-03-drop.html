@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4fe81980.js";
+            window.path_to_searchindex_js = "searchindex-597b70a8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,156 +181,197 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="a-trait-drop-roda-código-durante-a-limpeza"><a class="header" href="#a-trait-drop-roda-código-durante-a-limpeza">A Trait <code>Drop</code> Roda Código durante a Limpeza</a></h2>
-<p>A segunda trait importante no padrão de ponteiros inteligentes é a
-<code>Drop</code>, que nos permite personalizar o que acontece quando um valor está prestes
-a sair de escopo. Nós podemos prover uma implementação da trait <code>Drop</code> para
-qualquer tipo, e o código que especificarmos pode ser usado para liberar
-recursos como arquivos ou conexões de rede. Estamos introduzindo <code>Drop</code> no
-contexto de ponteiros inteligentes porque a funcionalidade da trait <code>Drop</code> é
-usada quase sempre quando estamos implementando ponteiros inteligentes. Por
-exemplo, o <code>Box&lt;T&gt;</code> customiza <code>Drop</code> para desalocar o espaço no heap para o qual
-o box aponta.</p>
-<p>Em algumas linguagens, a pessoa que está programando deve chamar código para
-liberar memória ou recursos toda vez que ela termina de usar uma instância de um
-ponteiro inteligente. Se ela esquece, o sistema pode ficar sobrecarregado e
-falhar. No Rust, podemos especificar que um pedaço específico de código deva ser
-rodado sempre que um valor sair de escopo, e o compilador irá inserir esse
-código automaticamente. Assim, não precisamos cuidadosamente colocar código de
-limpeza em todos os lugares de um programa em que uma instância de um tipo
-específico deixa de ser usada, e ainda assim não vazaremos recursos!</p>
-<p>Para especificar o código que vai rodar quando um valor sair de escopo, nós
-implementamos a trait <code>Drop</code>. A trait <code>Drop</code> requer que implementemos um método
-chamado <code>drop</code> que recebe uma referência mutável de <code>self</code>. Para ver quando o
-Rust chama <code>drop</code>, vamos implementar <code>drop</code> com declarações de <code>println!</code> por
-ora.</p>
-<p>A Listagem 15-14 mostra uma struct <code>CustomSmartPointer</code>
-(“PonteiroInteligentePersonalizado”) cuja única funcionalidade é que ela irá
-imprimir <code>Destruindo CustomSmartPointer!</code> quando a instância sair de escopo.
-Este exemplo demonstra quando o Rust roda a função <code>drop</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+                        <h2 id="executando-código-na-limpeza-com-a-trait-drop"><a class="header" href="#executando-código-na-limpeza-com-a-trait-drop">Executando Código na Limpeza com a Trait <code>Drop</code></a></h2>
+<p>A segunda trait importante para o padrão de ponteiro inteligente é <code>Drop</code>, que
+permite personalizar o que acontece quando um valor está prestes a sair de
+escopo. Você pode fornecer uma implementação da trait <code>Drop</code> para qualquer
+tipo, e esse código pode ser usado para liberar recursos como arquivos ou
+conexões de rede.</p>
+<p>Estamos introduzindo <code>Drop</code> no contexto de ponteiros inteligentes porque a
+funcionalidade da trait <code>Drop</code> quase sempre é usada ao implementar um ponteiro
+inteligente. Por exemplo, quando um <code>Box&lt;T&gt;</code> é descartado, ele desaloca o
+espaço no heap para o qual o box aponta.</p>
+<p>Em algumas linguagens, para alguns tipos, a pessoa programadora precisa chamar
+código para liberar memória ou recursos toda vez que termina de usar uma
+instância desses tipos. Exemplos incluem handles de arquivos, sockets e locks.
+Se a pessoa esquecer, o sistema pode ficar sobrecarregado e travar. Em Rust,
+você pode especificar que um determinado trecho de código seja executado sempre
+que um valor sai de escopo, e o compilador inserirá esse código
+automaticamente. Como resultado, você não precisa tomar cuidado para colocar
+código de limpeza em todos os lugares de um programa em que uma instância de um
+tipo específico deixa de ser usada; ainda assim, você não vazará recursos!</p>
+<p>Você especifica o código a ser executado quando um valor sai de escopo
+implementando a trait <code>Drop</code>. A trait <code>Drop</code> exige que você implemente um
+método chamado <code>drop</code>, que recebe uma referência mutável para <code>self</code>. Para ver
+quando Rust chama <code>drop</code>, vamos implementar <code>drop</code> com instruções <code>println!</code>
+por enquanto.</p>
+<p>A Listagem 15-14 mostra uma struct <code>CustomSmartPointer</code> cuja única
+funcionalidade personalizada é imprimir <code>Dropping CustomSmartPointer!</code> quando a
+instância sai de escopo, para mostrar quando Rust executa o método <code>drop</code>.</p>
+<figure class="listing" id="listing-15-14">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">struct CustomSmartPointer {
     data: String,
 }
 
 impl Drop for CustomSmartPointer {
     fn drop(&amp;mut self) {
-        println!("Destruindo CustomSmartPointer com dados `{}`!", self.data);
+        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
     }
 }
 
 fn main() {
-    let c = CustomSmartPointer { data: String::from("alocado primeiro") };
-    let d = CustomSmartPointer { data: String::from("alocado por último") };
-    println!("CustomSmartPointers criados.");
+    let c = CustomSmartPointer {
+        data: String::from("my stuff"),
+    };
+    let d = CustomSmartPointer {
+        data: String::from("other stuff"),
+    };
+    println!("CustomSmartPointers created");
 }</code></pre>
-<p><span class="caption">Listagem 15-14: Uma struct <code>CustomSmartPointer</code> que
-implementa a trait <code>Drop</code> onde colocaríamos nosso código de limpeza</span></p>
-<p>A trait <code>Drop</code> é incluída no prelude, então não precisamos importá-la. Nós
-implementamos a trait <code>Drop</code> no <code>CustomSmartPointer</code> e fornecemos uma
-implementação para o método <code>drop</code> que chama <code>println!</code>. O corpo da função
-<code>drop</code> é onde você colocaria qualquer que fosse a lógica que você gostaria que
-rodasse quando uma instância do seu tipo for sair de escopo. Aqui estamos
-imprimindo um texto para demonstrar o momento em que o Rust chama <code>drop</code>.</p>
-<p>Na <code>main</code>, nós criamos duas instâncias do <code>CustomSmartPointer</code> e então
-imprimimos <code>CustomSmartPointers criados.</code>. No final da <code>main</code>, nossas instâncias
-de <code>CustomSmartPointer</code> sairão de escopo, e o Rust irá chamar o código que
-colocamos no método <code>drop</code>, imprimindo nossa mensagem final. Note que não
-tivemos que chamar o método <code>drop</code> explicitamente.</p>
-<p>Quando rodarmos esse programa, veremos a seguinte saída:</p>
-<pre><code class="language-text">CustomSmartPointers criados.
-Destruindo CustomSmartPointer com dados `alocado por último`!
-Destruindo CustomSmartPointer com dados `alocado primeiro`!
+<figcaption><a href="#listing-15-14">Listing 15-14</a>: Uma struct <code>CustomSmartPointer</code> que implementa a trait <code>Drop</code>, onde colocaríamos nosso código de limpeza</figcaption>
+</figure>
+<p>A trait <code>Drop</code> está incluída no prelude, então não precisamos trazê-la para o
+escopo. Implementamos a trait <code>Drop</code> em <code>CustomSmartPointer</code> e fornecemos uma
+implementação para o método <code>drop</code> que chama <code>println!</code>. O corpo do método
+<code>drop</code> é onde você colocaria qualquer lógica que quisesse executar quando uma
+instância do seu tipo sai de escopo. Estamos imprimindo algum texto aqui para
+demonstrar visualmente quando Rust chamará <code>drop</code>.</p>
+<p>Em <code>main</code>, criamos duas instâncias de <code>CustomSmartPointer</code> e então imprimimos
+<code>CustomSmartPointers created</code>. No final de <code>main</code>, nossas instâncias de
+<code>CustomSmartPointer</code> sairão de escopo, e Rust chamará o código que colocamos no
+método <code>drop</code>, imprimindo nossa mensagem final. Observe que não precisamos
+chamar o método <code>drop</code> explicitamente.</p>
+<p>Quando executarmos esse programa, veremos a seguinte saída:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling drop-example v0.1.0 (file:///projects/drop-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.60s
+     Running `target/debug/drop-example`
+CustomSmartPointers created
+Dropping CustomSmartPointer with data `other stuff`!
+Dropping CustomSmartPointer with data `my stuff`!
 </code></pre>
-<p>O Rust chamou automaticamente <code>drop</code> para nós quando nossa instância saiu de
-escopo, chamando o código que especificamos. Variáveis são destruídas na ordem
-contrária à de criação, então <code>d</code> foi destruída antes de <code>c</code>. Esse exemplo serve
-apenas para lhe dar um guia visual de como o método <code>drop</code> funciona, mas
-normalmente você especificaria o código de limpeza que o seu tipo precisa rodar
-em vez de imprimir uma mensagem.</p>
-<h3 id="destruindo-um-valor-cedo-com-stdmemdrop"><a class="header" href="#destruindo-um-valor-cedo-com-stdmemdrop">Destruindo um Valor Cedo com <code>std::mem::drop</code></a></h3>
+<p>Rust chamou <code>drop</code> automaticamente para nós quando nossas instâncias saíram de
+escopo, chamando o código que especificamos. Variáveis são descartadas na ordem
+inversa à de sua criação, então <code>d</code> foi descartada antes de <code>c</code>. O propósito
+desse exemplo é dar a você um guia visual de como o método <code>drop</code> funciona;
+normalmente, você especificaria o código de limpeza que seu tipo precisa
+executar em vez de uma mensagem impressa.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="dropping-a-value-early-with-std-mem-drop"></a></p>
 <p>Infelizmente, não é simples desabilitar a funcionalidade automática de <code>drop</code>.
-Desabilitar o <code>drop</code> normalmente não é necessário; o ponto todo da trait <code>Drop</code>
-é que isso seja feito automaticamente. Mas ocasionalmente, você pode querer
-limpar um valor cedo. Um exemplo é quando usamos ponteiros inteligentes que
-gerenciam locks: você pode querer forçar o método <code>drop</code> que libera o lock a
-rodar para que outro código no mesmo escopo possa adquiri-lo. O Rust não nos
-deixa chamar o método <code>drop</code> da trait <code>Drop</code> manualmente; em vez disso, temos
-que chamar a função <code>std::mem::drop</code> disponibilizada pela biblioteca padrão se
-queremos forçar um valor a ser destruído antes do fim de seu escopo.</p>
-<p>Vamos ver o que acontece quando tentamos chamar o método <code>drop</code> da trait <code>Drop</code>
-manualmente, modificando a função <code>main</code> da Listagem 15-14, conforme mostra a
-Listagem 15-15:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre><code class="language-rust ignore">fn main() {
-    let c = CustomSmartPointer { data: String::from("algum dado") };
-    println!("CustomSmartPointer criado.");
+Desabilitar <code>drop</code> geralmente não é necessário; o ponto da trait <code>Drop</code> é que
+isso seja cuidado automaticamente. Ocasionalmente, porém, talvez você queira
+limpar um valor mais cedo. Um exemplo é ao usar ponteiros inteligentes que
+gerenciam locks: talvez você queira forçar o método <code>drop</code> que libera o lock
+para que outro código no mesmo escopo possa adquirir o lock. Rust não permite
+chamar manualmente o método <code>drop</code> da trait <code>Drop</code>; em vez disso, você precisa
+chamar a função <code>std::mem::drop</code>, fornecida pela biblioteca padrão, se quiser
+forçar um valor a ser descartado antes do fim de seu escopo.</p>
+<p>Tentar chamar manualmente o método <code>drop</code> da trait <code>Drop</code> modificando a função
+<code>main</code> da Listagem 15-14 não funcionará, como mostrado na Listagem 15-15.</p>
+<figure class="listing" id="listing-15-15">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">struct CustomSmartPointer {
+</span><span class="boring">    data: String,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Drop for CustomSmartPointer {
+</span><span class="boring">    fn drop(&amp;mut self) {
+</span><span class="boring">        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let c = CustomSmartPointer {
+        data: String::from("some data"),
+    };
+    println!("CustomSmartPointer created");
     c.drop();
-    println!("CustomSmartPointer destruído antes do fim da main.");
+    println!("CustomSmartPointer dropped before the end of main");
 }</code></pre>
-<p><span class="caption">Listagem 15-15: Tentando chamar o método <code>drop</code> da trait <code>Drop</code> manualmente para limpar cedo</span></p>
-<p>Quando tentamos compilar esse código, recebemos este erro:</p>
-<pre><code class="language-text">erro[E0040]: uso explícito de método destrutor
-  --&gt; src/main.rs:14:7
+<figcaption><a href="#listing-15-15">Listing 15-15</a>: Tentando chamar manualmente o método <code>drop</code> da trait <code>Drop</code> para limpar cedo</figcaption>
+</figure>
+<p>Quando tentarmos compilar esse código, receberemos este erro:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling drop-example v0.1.0 (file:///projects/drop-example)
+error[E0040]: explicit use of destructor method
+  --&gt; src/main.rs:16:7
    |
-14 |     c.drop();
-   |       ^^^^ chamadas explícitas a destrutores não são permitidas
+16 |     c.drop();
+   |       ^^^^ explicit destructor calls not allowed
+   |
+help: consider using `drop` function
+   |
+16 -     c.drop();
+16 +     drop(c);
+   |
+
+For more information about this error, try `rustc --explain E0040`.
+error: could not compile `drop-example` (bin "drop-example") due to 1 previous error
 </code></pre>
-<p>Essa mensagem de erro afirma que não nos é permitido chamar explicitamente
-<code>drop</code>. A mensagem de erro usa o termo <em>destrutor</em>, que é um termo geral de
-programação para uma função que limpa uma instância. Um <em>destrutor</em> é análogo a
-um <em>construtor</em>, que cria uma instância. A função <code>drop</code> em Rust é um destrutor
-específico.</p>
-<p>O Rust não nos deixa chamar <code>drop</code> explicitamente porque o <code>drop</code> ainda seria
-chamado no valor ao final da <code>main</code>. Isso seria um erro de <em>liberação dupla</em>
-(<em>double free</em>) porque o Rust estaria tentando limpar o mesmo valor duas vezes.</p>
-<p>Nós não podemos desabilitar a inserção automática do <code>drop</code> quando um valor sai
-de escopo, e também não podemos chamar o método <code>drop</code> explicitamente. Então, se
-precisamos forçar um valor a ser limpo antes, podemos usar a função
+<p>Essa mensagem de erro afirma que não temos permissão para chamar <code>drop</code>
+explicitamente. A mensagem de erro usa o termo <em>destructor</em>, que é o termo
+geral em programação para uma função que limpa uma instância. Um <em>destructor</em> é
+análogo a um <em>constructor</em>, que cria uma instância. A função <code>drop</code> em Rust é
+um destrutor específico.</p>
+<p>Rust não permite que chamemos <code>drop</code> explicitamente porque Rust ainda chamaria
+<code>drop</code> automaticamente no valor ao final de <code>main</code>. Isso causaria um erro de
+<em>double free</em>, porque Rust tentaria limpar o mesmo valor duas vezes.</p>
+<p>Não podemos desabilitar a inserção automática de <code>drop</code> quando um valor sai de
+escopo, e não podemos chamar o método <code>drop</code> explicitamente. Portanto, se
+precisarmos forçar um valor a ser limpo mais cedo, usamos a função
 <code>std::mem::drop</code>.</p>
 <p>A função <code>std::mem::drop</code> é diferente do método <code>drop</code> na trait <code>Drop</code>. Nós a
-chamamos passando como argumento o valor que queremos forçar a ser destruído
-cedo. Essa função está no prelude, então podemos modificar a <code>main</code> na Listagem
-15-14 para chamar a função <code>drop</code>, como mostra a Listagem 15-16:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+chamamos passando como argumento o valor que queremos forçar a descartar. A
+função está no prelude, então podemos modificar <code>main</code> na Listagem 15-15 para
+chamar a função <code>drop</code>, como mostrado na Listagem 15-16.</p>
+<figure class="listing" id="listing-15-16">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">struct CustomSmartPointer {
 </span><span class="boring">    data: String,
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">impl Drop for CustomSmartPointer {
 </span><span class="boring">    fn drop(&amp;mut self) {
-</span><span class="boring">        println!("Destruindo CustomSmartPointer!");
+</span><span class="boring">        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
 </span>fn main() {
-    let c = CustomSmartPointer { data: String::from("algum dado") };
-    println!("CustomSmartPointer criado.");
+    let c = CustomSmartPointer {
+        data: String::from("some data"),
+    };
+    println!("CustomSmartPointer created");
     drop(c);
-    println!("CustomSmartPointer destruído antes do final da main.");
+    println!("CustomSmartPointer dropped before the end of main");
 }</code></pre>
-<p><span class="caption">Listagem 15-16: Chamando <code>std::mem::drop</code> para destruir um
-valor explicitamente antes que ele saia de escopo</span></p>
-<p>Rodar esse código irá imprimir o seguinte:</p>
-<pre><code class="language-text">CustomSmartPointer criado.
-Destruindo CustomSmartPointer com dados `algum dado`!
-CustomSmartPointer destruído antes do final da main.
+<figcaption><a href="#listing-15-16">Listing 15-16</a>: Chamando <code>std::mem::drop</code> para descartar explicitamente um valor antes que ele saia de escopo</figcaption>
+</figure>
+<p>Executar esse código imprimirá o seguinte:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling drop-example v0.1.0 (file:///projects/drop-example)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.73s
+     Running `target/debug/drop-example`
+CustomSmartPointer created
+Dropping CustomSmartPointer with data `some data`!
+CustomSmartPointer dropped before the end of main
 </code></pre>
-<p>O texto <code>Destruindo CustomSmartPointer com dados `algum dado`!</code> é impresso
-entre o texto <code>CustomSmartPointer criado.</code> e <code>CustomSmartPointer destruído antes do final da main.</code>, mostrando que o método <code>drop</code> é chamado para destruir o <code>c</code>
-naquele ponto.</p>
-<p>Podemos usar o código especificado em uma implementação da trait <code>Drop</code> de
-várias maneiras para tornar a limpeza conveniente e segura: por exemplo,
-poderíamos usá-lo para criar nosso próprio alocador de memória! Com a trait
-<code>Drop</code> e o sistema de posse do Rust, não temos que lembrar de fazer a limpeza
-porque o Rust faz isso automaticamente.</p>
-<p>Também não temos que nos preocupar em acidentalmente limpar valores ainda em uso
-porque isso causaria um erro de compilação: o sistema de posse que garante que
-as referências são sempre válidas também garante que o <code>drop</code> é chamado apenas
+<p>O texto <code>Dropping CustomSmartPointer with data `some data`!</code> é impresso entre
+o texto <code>CustomSmartPointer created</code> e <code>CustomSmartPointer dropped before the end of main</code>, mostrando que o código do método <code>drop</code> é chamado para descartar
+<code>c</code> naquele ponto.</p>
+<p>Você pode usar o código especificado em uma implementação da trait <code>Drop</code> de
+várias formas para tornar a limpeza conveniente e segura: por exemplo, poderia
+usá-lo para criar seu próprio alocador de memória! Com a trait <code>Drop</code> e o
+sistema de ownership de Rust, você não precisa se lembrar de limpar, porque
+Rust faz isso automaticamente.</p>
+<p>Você também não precisa se preocupar com problemas resultantes de limpar
+acidentalmente valores ainda em uso: o sistema de ownership que garante que
+referências sejam sempre válidas também garante que <code>drop</code> seja chamado apenas
 uma vez quando o valor não está mais sendo usado.</p>
-<p>Agora que examinamos o <code>Box&lt;T&gt;</code> e algumas características de ponteiros
-inteligentes, vamos dar uma olhada em alguns outros ponteiros inteligentes
-definidos na biblioteca padrão.</p>
+<p>Agora que examinamos <code>Box&lt;T&gt;</code> e algumas das características de ponteiros
+inteligentes, vamos olhar para alguns outros ponteiros inteligentes definidos
+na biblioteca padrão.</p>
 
                     </main>
 

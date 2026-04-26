@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4fe81980.js";
+            window.path_to_searchindex_js = "searchindex-597b70a8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,61 +181,53 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="ponteiros-inteligentes-smart-pointers"><a class="header" href="#ponteiros-inteligentes-smart-pointers">Ponteiros Inteligentes (Smart Pointers)</a></h1>
-<p>Um <em>ponteiro</em> é um conceito geral para uma variável que contém um endereço de
+                        <h1 id="ponteiros-inteligentes"><a class="header" href="#ponteiros-inteligentes">Ponteiros Inteligentes</a></h1>
+<p>Um <em>ponteiro</em> é um conceito geral para uma variável que contém um endereço na
 memória. Esse endereço se refere a, ou “aponta para”, algum outro dado. O tipo
 mais comum de ponteiro em Rust é a referência, sobre a qual você aprendeu no
-Capítulo 4. Referências são indicadas pelo símbolo <code>&amp;</code>, e pegam emprestado o
-valor para o qual apontam. Elas não têm nenhuma outra habilidade senão
-referir-se a dados. Além disso, elas não têm nenhum custo adicional e são o tipo
-de ponteiro que usamos com maior frequência.</p>
+Capítulo 4. Referências são indicadas pelo símbolo <code>&amp;</code> e pegam emprestado o
+valor para o qual apontam. Elas não têm nenhuma capacidade especial além de se
+referirem a dados, e não têm custo adicional.</p>
 <p><em>Ponteiros inteligentes</em> (<em>smart pointers</em>), por outro lado, são estruturas de
 dados que agem como ponteiros, mas também têm metadados e capacidades
-adicionais. O conceito de ponteiros inteligentes não é exclusivo do Rust: ele
-teve origem no C++ e também existe em outras linguagens. No Rust, os diferentes
-ponteiros inteligentes definidos na biblioteca padrão fornecem funcionalidades
-além daquelas providas pelas referências. Um exemplo que vamos explorar neste
-capítulo é o tipo de ponteiro inteligente de <em>contagem de referências</em>
-(<em>reference counting</em>). Esse ponteiro lhe permite ter múltiplos possuidores de
-um dado. Ele mantém registro do número de possuidores e, quando não resta
-nenhum, cuida de limpar o dado.</p>
-<p>Em Rust, onde temos os conceitos de posse (<em>ownership</em>) e empréstimo
-(<em>borrowing</em>), uma diferença adicional entre referências e ponteiros
-inteligentes é que referências são ponteiros que apenas <em>pegam emprestados</em> os
-dados; em contraste, em muitos casos, ponteiros inteligentes <em>têm posse</em> dos
-dados aos quais apontam.</p>
-<p>Nós já encontramos alguns ponteiros inteligentes neste livro, como <code>String</code> e
-<code>Vec&lt;T&gt;</code> no Capítulo 8, apesar de não os termos chamado de ponteiros
-inteligentes naquele momento. Ambos esses tipos contam como ponteiros
-inteligentes porque eles têm posse de uma parte da memória e permitem que você a
-manipule. Eles também têm metadados (como sua capacidade) e habilidades extras
-ou garantias (como a garantia que <code>String</code> dá de que seus dados serão sempre
-UTF-8 válido).</p>
-<p>Ponteiros inteligentes normalmente são implementados usando structs. A
-característica que distingue um ponteiro inteligente de uma struct qualquer é
-que ele implementa as traits <code>Deref</code> e <code>Drop</code>. A trait <code>Deref</code> permite que uma
-instância da struct do ponteiro inteligente se comporte como uma referência.
-Assim podemos escrever código que funcione tanto com referências quanto com
-ponteiros inteligentes. A trait <code>Drop</code> nos permite personalizar o código que é
-executado quando uma instância do ponteiro inteligente sai de escopo. Neste capítulo,
-discutiremos ambas as traits e demonstraremos porque são importantes para
-ponteiros inteligentes.</p>
-<p>Dado que os ponteiros inteligentes são um padrão de projeto (<em>design pattern</em>)
-usado com frequência em Rust, este capítulo não irá cobrir todo ponteiro
-inteligente que existe. Muitas bibliotecas têm seus próprios ponteiros
-inteligentes, e você pode até mesmo criar seus próprios. Nós vamos cobrir os
-ponteiros inteligentes mais comuns na biblioteca padrão:</p>
+adicionais. O conceito de ponteiros inteligentes não é exclusivo de Rust:
+ponteiros inteligentes surgiram em C++ e também existem em outras linguagens. A
+biblioteca padrão de Rust define vários ponteiros inteligentes que oferecem
+funcionalidades além daquelas fornecidas por referências. Para explorar o
+conceito geral, veremos alguns exemplos diferentes de ponteiros inteligentes,
+incluindo um tipo de ponteiro inteligente com <em>contagem de referências</em>
+(<em>reference counting</em>). Esse ponteiro permite que dados tenham múltiplos donos,
+mantendo registro da quantidade de donos e, quando nenhum dono resta, limpando
+os dados.</p>
+<p>Em Rust, com seus conceitos de ownership e borrowing, há uma diferença
+adicional entre referências e ponteiros inteligentes: enquanto referências
+apenas pegam dados emprestados, em muitos casos ponteiros inteligentes <em>têm
+ownership</em> dos dados para os quais apontam.</p>
+<p>Ponteiros inteligentes normalmente são implementados usando structs. Diferente
+de uma struct comum, ponteiros inteligentes implementam as traits <code>Deref</code> e
+<code>Drop</code>. A trait <code>Deref</code> permite que uma instância da struct do ponteiro
+inteligente se comporte como uma referência, para que você possa escrever código
+que funcione tanto com referências quanto com ponteiros inteligentes. A trait
+<code>Drop</code> permite personalizar o código executado quando uma instância do ponteiro
+inteligente sai de escopo. Neste capítulo, discutiremos essas duas traits e
+mostraremos por que elas são importantes para ponteiros inteligentes.</p>
+<p>Como o padrão de ponteiro inteligente é um padrão de projeto geral usado com
+frequência em Rust, este capítulo não cobrirá todos os ponteiros inteligentes
+existentes. Muitas bibliotecas têm seus próprios ponteiros inteligentes, e você
+pode até escrever os seus. Vamos cobrir os ponteiros inteligentes mais comuns
+da biblioteca padrão:</p>
 <ul>
 <li><code>Box&lt;T&gt;</code>, para alocar valores no heap</li>
-<li><code>Rc&lt;T&gt;</code>, um tipo com contagem de referências que permite posse múltipla</li>
-<li><code>Ref&lt;T&gt;</code> e <code>RefMut&lt;T&gt;</code>, acessados através de <code>RefCell&lt;T&gt;</code>, um tipo que aplica
-as regras de empréstimo em tempo de execução em vez de em tempo de compilação</li>
+<li><code>Rc&lt;T&gt;</code>, um tipo com contagem de referências que permite ownership múltiplo</li>
+<li><code>Ref&lt;T&gt;</code> e <code>RefMut&lt;T&gt;</code>, acessados por meio de <code>RefCell&lt;T&gt;</code>, um tipo que
+aplica as regras de borrowing em tempo de execução, em vez de em tempo de
+compilação</li>
 </ul>
 <p>Além disso, vamos cobrir o padrão de <em>mutabilidade interior</em> (<em>interior
-mutability</em>), onde um tipo imutável expõe uma API para modificar um valor
-interno. Também vamos discutir <em>ciclos de referências</em>: como eles podem vazar
+mutability</em>), no qual um tipo imutável expõe uma API para modificar um valor
+interno. Também discutiremos ciclos de referências: como eles podem vazar
 memória e como evitá-los.</p>
-<p>Mergulhemos!</p>
+<p>Vamos mergulhar!</p>
 
                     </main>
 

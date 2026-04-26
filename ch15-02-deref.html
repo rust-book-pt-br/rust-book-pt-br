@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4fe81980.js";
+            window.path_to_searchindex_js = "searchindex-597b70a8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,26 +181,33 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="tratando-ponteiros-inteligentes-como-referências-normais"><a class="header" href="#tratando-ponteiros-inteligentes-como-referências-normais">Tratando Ponteiros Inteligentes como Referências Normais</a></h2>
-<p>Implementar a trait <code>Deref</code> nos permite personalizar o comportamento do
-<em>operador de desreferência</em> (<em>dereference operator</em>), <code>*</code> (que é diferente do
-operador de multiplicação ou de glob). Implementando a <code>Deref</code> de tal modo que o
-ponteiro inteligente possa ser tratado como uma referência normal, podemos
-escrever código que opere sobre referências e usar esse código com ponteiros
-inteligentes também.</p>
-<p>Primeiro vamos ver como o <code>*</code> funciona com referências normais, e então vamos
-tentar definir nosso próprio tipo a la <code>Box&lt;T&gt;</code> e ver por que o <code>*</code> não funciona
-como uma referência no nosso tipo recém-criado. Vamos explorar como a trait
-<code>Deref</code> torna possível aos ponteiros inteligentes funcionarem de um jeito
-similar a referências. E então iremos dar uma olhada na funcionalidade de
-<em>coerção de desreferência</em> (<em>deref coercion</em>) e como ela nos permite trabalhar
-tanto com referências quanto com ponteiros inteligentes.</p>
-<h3 id="seguindo-o-ponteiro-até-o-valor-com-"><a class="header" href="#seguindo-o-ponteiro-até-o-valor-com-">Seguindo o Ponteiro até o Valor com <code>*</code></a></h3>
-<p>Uma referência normal é um tipo de ponteiro, e um jeito de pensar sobre um
-ponteiro é como uma seta até um valor armazenado em outro lugar. Na Listagem
-15-6, nós criamos uma referência a um valor <code>i32</code> e em seguida usamos o operador
-de desreferência para seguir a referência até o dado:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+                        <!-- Old headings. Do not remove or links may break. -->
+<p><a id="treating-smart-pointers-like-regular-references-with-the-deref-trait"></a>
+<a id="treating-smart-pointers-like-regular-references-with-deref"></a></p>
+<h2 id="tratando-ponteiros-inteligentes-como-referências-comuns"><a class="header" href="#tratando-ponteiros-inteligentes-como-referências-comuns">Tratando Ponteiros Inteligentes como Referências Comuns</a></h2>
+<p>Implementar a trait <code>Deref</code> permite personalizar o comportamento do <em>operador
+de desreferência</em> <code>*</code> (não confundir com o operador de multiplicação ou glob).
+Ao implementar <code>Deref</code> de modo que um ponteiro inteligente possa ser tratado
+como uma referência comum, você pode escrever código que opera sobre
+referências e usar esse código também com ponteiros inteligentes.</p>
+<p>Vamos primeiro ver como o operador de desreferência funciona com referências
+comuns. Depois, tentaremos definir um tipo personalizado que se comporta como
+<code>Box&lt;T&gt;</code> e veremos por que o operador de desreferência não funciona como uma
+referência no nosso tipo recém-definido. Exploraremos como implementar a trait
+<code>Deref</code> torna possível que ponteiros inteligentes funcionem de maneiras
+semelhantes a referências. Então veremos o recurso de coerção de desreferência
+de Rust e como ele nos permite trabalhar tanto com referências quanto com
+ponteiros inteligentes.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="following-the-pointer-to-the-value-with-the-dereference-operator"></a>
+<a id="following-the-pointer-to-the-value"></a></p>
+<h3 id="seguindo-a-referência-até-o-valor"><a class="header" href="#seguindo-a-referência-até-o-valor">Seguindo a Referência até o Valor</a></h3>
+<p>Uma referência comum é um tipo de ponteiro, e uma forma de pensar em um
+ponteiro é como uma seta para um valor armazenado em outro lugar. Na Listagem
+15-6, criamos uma referência para um valor <code>i32</code> e então usamos o operador de
+desreferência para seguir a referência até o valor.</p>
+<figure class="listing" id="listing-15-6">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 5;
     let y = &amp;x;
@@ -208,34 +215,40 @@ de desreferência para seguir a referência até o dado:</p>
     assert_eq!(5, x);
     assert_eq!(5, *y);
 }</code></pre>
-<p><span class="caption">Listagem 15-6: Usando o operador de desreferência para
-seguir uma referência a um valor <code>i32</code></span></p>
-<p>A variável <code>x</code> contém um valor <code>i32</code>, <code>5</code>. Nós definimos <code>y</code> como uma
-referência a <code>x</code>. Podemos verificar que <code>x</code> é igual
-a <code>5</code>. Contudo, se queremos fazer uma asserção sobre o valor em <code>y</code>, temos que
-usar <code>*y</code> para seguir a referência até o valor ao qual <code>y</code> aponta (por isso
-“desreferência”). Uma vez que desreferenciamos <code>y</code>, temos acesso ao valor
-inteiro ao qual <code>y</code> aponta para podermos compará-lo com <code>5</code>.</p>
-<p>Se em vez disso tentássemos escrever <code>assert_eq!(5, y);</code>, receberíamos este erro
-de compilação:</p>
-<pre><code class="language-text">erro[E0277]: a trait bound `{integer}: std::cmp::PartialEq&lt;&amp;{integer}&gt;` não foi
-satisfeita
+<figcaption><a href="#listing-15-6">Listing 15-6</a>: Usando o operador de desreferência para seguir uma referência até um valor <code>i32</code></figcaption>
+</figure>
+<p>A variável <code>x</code> armazena um valor <code>i32</code>, <code>5</code>. Definimos <code>y</code> como uma referência
+a <code>x</code>. Podemos verificar que <code>x</code> é igual a <code>5</code>. No entanto, se quisermos fazer
+uma asserção sobre o valor em <code>y</code>, precisamos usar <code>*y</code> para seguir a
+referência até o valor para o qual ela aponta (daí <em>desreferenciar</em>), para que
+o compilador possa comparar o valor real. Depois de desreferenciar <code>y</code>, temos
+acesso ao valor inteiro para o qual <code>y</code> aponta, que podemos comparar com <code>5</code>.</p>
+<p>Se tentássemos escrever <code>assert_eq!(5, y);</code>, receberíamos este erro de
+compilação:</p>
+<pre><code class="language-console">$ cargo run
+   Compiling deref-example v0.1.0 (file:///projects/deref-example)
+error[E0277]: can't compare `{integer}` with `&amp;{integer}`
  --&gt; src/main.rs:6:5
   |
 6 |     assert_eq!(5, y);
-  |     ^^^^^^^^^^^^^^^^^ não posso comparar `{integer}` com `&amp;{integer}`
+  |     ^^^^^^^^^^^^^^^^ no implementation for `{integer} == &amp;{integer}`
   |
-  = ajuda: a trait `std::cmp::PartialEq&lt;&amp;{integer}&gt;` não está implementada para
-  `{integer}`
+  = help: the trait `PartialEq&lt;&amp;{integer}&gt;` is not implemented for `{integer}`
+  = note: this error originates in the macro `assert_eq` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `deref-example` (bin "deref-example") due to 1 previous error
 </code></pre>
-<p>Comparar um número com uma referência a um número não é permitido porque eles
-são de tipos diferentes. Devemos usar <code>*</code> para seguir a referência até o valor
-ao qual ela está apontando.</p>
+<p>Comparar um número com uma referência para um número não é permitido, porque
+eles são tipos diferentes. Precisamos usar o operador de desreferência para
+seguir a referência até o valor para o qual ela aponta.</p>
 <h3 id="usando-boxt-como-uma-referência"><a class="header" href="#usando-boxt-como-uma-referência">Usando <code>Box&lt;T&gt;</code> como uma Referência</a></h3>
-<p>Podemos reescrever o código na Listagem 15-6 para usar um <code>Box&lt;T&gt;</code> em vez de uma
-referência, e o operador de desreferência vai funcionar do mesmo jeito que na
-Listagem 15-7:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<p>Podemos reescrever o código da Listagem 15-6 para usar um <code>Box&lt;T&gt;</code> em vez de
+uma referência; o operador de desreferência usado no <code>Box&lt;T&gt;</code> da Listagem 15-7
+funciona da mesma forma que o operador de desreferência usado na referência da
+Listagem 15-6.</p>
+<figure class="listing" id="listing-15-7">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
     let x = 5;
     let y = Box::new(x);
@@ -243,160 +256,201 @@ Listagem 15-7:</p>
     assert_eq!(5, x);
     assert_eq!(5, *y);
 }</code></pre>
-<p><span class="caption">Listagem 15-7: Usando o operador de desreferência em um
-<code>Box&lt;i32&gt;</code></span></p>
-<p>A única diferença entre a Listagem 15-7 e a Listagem 15-6 é que aqui nós
-definimos <code>y</code> como uma instância de um box apontando para o valor em <code>x</code>, em vez de uma
-referência apontando para o valor de <code>x</code>. Na última asserção, podemos usar o
-operador de desreferência para seguir o ponteiro do box do mesmo jeito que
-fizemos quando <code>y</code> era uma referência. A seguir, vamos explorar o que tem de
-especial no <code>Box&lt;T&gt;</code> que nos permite usar o operador de desreferência, criando
-nosso próprio tipo de box.</p>
+<figcaption><a href="#listing-15-7">Listing 15-7</a>: Usando o operador de desreferência em um <code>Box&lt;i32&gt;</code></figcaption>
+</figure>
+<p>A principal diferença entre a Listagem 15-7 e a Listagem 15-6 é que aqui
+definimos <code>y</code> como uma instância de um box que aponta para uma cópia do valor
+de <code>x</code>, em vez de uma referência que aponta para o valor de <code>x</code>. Na última
+asserção, podemos usar o operador de desreferência para seguir o ponteiro do
+box da mesma forma que fizemos quando <code>y</code> era uma referência. A seguir,
+exploraremos o que há de especial em <code>Box&lt;T&gt;</code> que nos permite usar o operador
+de desreferência, definindo nosso próprio tipo de box.</p>
 <h3 id="definindo-nosso-próprio-ponteiro-inteligente"><a class="header" href="#definindo-nosso-próprio-ponteiro-inteligente">Definindo Nosso Próprio Ponteiro Inteligente</a></h3>
-<p>Vamos construir um ponteiro inteligente parecido com o tipo <code>Box&lt;T&gt;</code> fornecido pela
-biblioteca padrão para vermos como ponteiros inteligentes, por padrão, se
-comportam diferente de referências. Em seguida, veremos como adicionar a
-habilidade de usar o operador de desreferência.</p>
-<p>O tipo <code>Box&lt;T&gt;</code> no fim das contas é definido como uma struct-tupla (<em>tuple
-struct</em>) de um elemento, então a Listagem 15-8 define um tipo <code>MeuBox&lt;T&gt;</code> da
-mesma forma. Também vamos definir uma função <code>new</code> como a definida no <code>Box&lt;T&gt;</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>struct MeuBox&lt;T&gt;(T);
+<p>Vamos construir um tipo wrapper semelhante ao tipo <code>Box&lt;T&gt;</code> fornecido pela
+biblioteca padrão para experimentar como tipos de ponteiros inteligentes se
+comportam de forma diferente de referências por padrão. Depois, veremos como
+adicionar a capacidade de usar o operador de desreferência.</p>
+<blockquote>
+<p>Observação: há uma grande diferença entre o tipo <code>MyBox&lt;T&gt;</code> que estamos
+prestes a construir e o <code>Box&lt;T&gt;</code> real: nossa versão não armazenará seus dados
+no heap. Estamos focando este exemplo em <code>Deref</code>, então o local real onde os
+dados são armazenados é menos importante que o comportamento semelhante ao de
+ponteiro.</p>
+</blockquote>
+<p>No fim das contas, o tipo <code>Box&lt;T&gt;</code> é definido como uma tuple struct com um
+elemento, então a Listagem 15-8 define um tipo <code>MyBox&lt;T&gt;</code> da mesma forma.
+Também definiremos uma função <code>new</code> para corresponder à função <code>new</code> definida
+em <code>Box&lt;T&gt;</code>.</p>
+<figure class="listing" id="listing-15-8">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">struct MyBox&lt;T&gt;(T);
 
-impl&lt;T&gt; MeuBox&lt;T&gt; {
-    fn new(x: T) -&gt; MeuBox&lt;T&gt; {
-        MeuBox(x)
+impl&lt;T&gt; MyBox&lt;T&gt; {
+    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+        MyBox(x)
     }
 }
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 15-8: Definindo um tipo <code>MeuBox&lt;T&gt;</code></span></p>
-<p>Definimos um struct chamado <code>MeuBox</code> e declaramos um parâmetro genérico <code>T</code>,
-porque queremos que nosso tipo contenha valores de qualquer tipo. O tipo
-<code>MeuBox</code> é uma struct-tupla de um elemento do tipo <code>T</code>. A função <code>MeuBox::new</code>
-recebe um argumento do tipo <code>T</code> e retorna uma instância de <code>MeuBox</code> que contém o
-valor passado.</p>
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<figcaption><a href="#listing-15-8">Listing 15-8</a>: Definindo um tipo <code>MyBox&lt;T&gt;</code></figcaption>
+</figure>
+<p>Definimos uma struct chamada <code>MyBox</code> e declaramos um parâmetro genérico <code>T</code>
+porque queremos que nosso tipo armazene valores de qualquer tipo. O tipo
+<code>MyBox</code> é uma tuple struct com um elemento do tipo <code>T</code>. A função <code>MyBox::new</code>
+recebe um parâmetro do tipo <code>T</code> e retorna uma instância de <code>MyBox</code> que armazena
+o valor passado.</p>
 <p>Vamos tentar adicionar a função <code>main</code> da Listagem 15-7 à Listagem 15-8 e
-alterá-la para usar o tipo <code>MeuBox&lt;T&gt;</code> que definimos em vez de <code>Box&lt;T&gt;</code>. O
-código na Listagem 15-9 não irá compilar porque o Rust não sabe como
-desreferenciar <code>MeuBox</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre><code class="language-rust ignore">fn main() {
+alterá-la para usar o tipo <code>MyBox&lt;T&gt;</code> que definimos em vez de <code>Box&lt;T&gt;</code>. O
+código da Listagem 15-9 não compilará, porque Rust não sabe como
+desreferenciar <code>MyBox</code>.</p>
+<figure class="listing" id="listing-15-9">
+<span class="file-name">Filename: src/main.rs</span>
+<pre><code class="language-rust ignore does_not_compile"><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
     let x = 5;
-    let y = MeuBox::new(x);
+    let y = MyBox::new(x);
 
     assert_eq!(5, x);
     assert_eq!(5, *y);
 }</code></pre>
-<p><span class="caption">Listagem 15-9: Tentando usar o <code>MeuBox&lt;T&gt;</code> do mesmo jeito
-que usamos referências e o <code>Box&lt;T&gt;</code></span></p>
+<figcaption><a href="#listing-15-9">Listing 15-9</a>: Tentando usar <code>MyBox&lt;T&gt;</code> da mesma forma que usamos referências e <code>Box&lt;T&gt;</code></figcaption>
+</figure>
 <p>Aqui está o erro de compilação resultante:</p>
-<pre><code class="language-text">erro[E0614]: tipo `MeuBox&lt;{integer}&gt;` não pode ser desreferenciado
+<pre><code class="language-console">$ cargo run
+   Compiling deref-example v0.1.0 (file:///projects/deref-example)
+error[E0614]: type `MyBox&lt;{integer}&gt;` cannot be dereferenced
   --&gt; src/main.rs:14:19
    |
 14 |     assert_eq!(5, *y);
-   |                   ^^
-</code></pre>
-<p>Nosso tipo <code>MeuBox&lt;T&gt;</code> não pode ser desreferenciado porque não implementamos
-essa habilidade nele. Para habilitar desreferenciamento com o operador <code>*</code>,
-temos que implementar a trait <code>Deref</code>.</p>
-<h3 id="implementando-a-trait-deref-para-tratar-um-tipo-como-uma-referência"><a class="header" href="#implementando-a-trait-deref-para-tratar-um-tipo-como-uma-referência">Implementando a Trait <code>Deref</code> para Tratar um Tipo como uma Referência</a></h3>
-<p>Conforme discutimos no Capítulo 10, para implementar uma trait, precisamos
-prover implementações para os métodos exigidos por ela. A trait <code>Deref</code>,
-disponibilizada pela biblioteca padrão, requer que implementemos um método
-chamado <code>deref</code> que pega emprestado <code>self</code> e retorna uma referência para os
-dados internos. A Listagem 15-10 contém uma implementação de <code>Deref</code> que
-agrega à definição de <code>MeuBox</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use std::ops::Deref;
+   |                   ^^ can't be dereferenced
 
-<span class="boring">struct MeuBox&lt;T&gt;(T);
-</span>impl&lt;T&gt; Deref for MeuBox&lt;T&gt; {
+For more information about this error, try `rustc --explain E0614`.
+error: could not compile `deref-example` (bin "deref-example") due to 1 previous error
+</code></pre>
+<p>Nosso tipo <code>MyBox&lt;T&gt;</code> não pode ser desreferenciado porque não implementamos
+essa capacidade no tipo. Para habilitar a desreferência com o operador <code>*</code>,
+implementamos a trait <code>Deref</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="treating-a-type-like-a-reference-by-implementing-the-deref-trait"></a></p>
+<h3 id="implementando-a-trait-deref"><a class="header" href="#implementando-a-trait-deref">Implementando a Trait <code>Deref</code></a></h3>
+<p>Como discutimos em <a href="ch10-02-traits.html#implementing-a-trait-on-a-type">“Implementando uma Trait em um Tipo”</a><!-- ignore -->
+no Capítulo 10, para implementar uma trait precisamos fornecer implementações
+para os métodos exigidos por ela. A trait <code>Deref</code>, fornecida pela biblioteca
+padrão, exige que implementemos um método chamado <code>deref</code>, que pega <code>self</code>
+emprestado e retorna uma referência para os dados internos. A Listagem 15-10
+contém uma implementação de <code>Deref</code> para adicionar à definição de <code>MyBox&lt;T&gt;</code>.</p>
+<figure class="listing" id="listing-15-10">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">use std::ops::Deref;
+
+impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
     type Target = T;
 
-    fn deref(&amp;self) -&gt; &amp;T {
+    fn deref(&amp;self) -&gt; &amp;Self::Target {
         &amp;self.0
     }
 }
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 15-10: Implementando <code>Deref</code> no
-<code>MeuBox&lt;T&gt;</code></span></p>
-<p>A sintaxe <code>type Target = T;</code> define um tipo associado para a trait <code>Deref</code> usar.
-Tipos associados são um jeito ligeiramente diferente de declarar um parâmetro
-genérico, mas você não precisa se preocupar com eles por ora; iremos cobri-los
-em mais detalhe no Capítulo 19.</p>
-<p>Nós preenchemos o corpo do método <code>deref</code> com <code>&amp;self.0</code> para que <code>deref</code> retorne
-uma referência ao valor que queremos acessar com o operador <code>*</code>. A função <code>main</code>
-na Listagem 15-9 que chama <code>*</code> no valor <code>MeuBox&lt;T&gt;</code> agora compila e as asserções
-passam!</p>
-<p>Sem a trait <code>Deref</code>, o compilador só consegue desreferenciar referências <code>&amp;</code>. O
-método <code>deref</code> dá ao compilador a habilidade de tomar um valor de qualquer tipo
-que implemente <code>Deref</code> e chamar o método <code>deref</code> para pegar uma referência <code>&amp;</code>,
-que ele sabe como desreferenciar.</p>
-<p>Quando entramos <code>*y</code> na Listagem 15-9, por trás dos panos o Rust na verdade
-rodou este código:</p>
-<pre><code class="language-rust ignore">*(y.deref())</code></pre>
-<p>O Rust substitui o operador <code>*</code> com uma chamada ao método <code>deref</code> e em seguida
-uma desreferência comum, de modo que nós programadores não precisamos pensar
-sobre se temos ou não que chamar o método <code>deref</code>. Essa funcionalidade do Rust
-nos permite escrever código que funcione identicamente quando temos uma
-referência comum ou um tipo que implementa <code>Deref</code>.</p>
-<p>O fato de o método <code>deref</code> retornar uma referência ao valor, e a desreferência
-comum fora dos parênteses em <code>*(y.deref())</code> ainda ser necessária, é devido ao
-sistema de posse (<em>ownership</em>). Se o método <code>deref</code> retornasse o valor
-diretamente em vez de uma referência ao valor, o valor seria movido para fora do
-<code>self</code>. Nós não queremos tomar posse do valor interno do <code>MeuBox&lt;T&gt;</code> neste e na
-maioria dos casos em que usamos o operador de desreferência.</p>
-<p>Note que o <code>*</code> é substituído por uma chamada ao método <code>deref</code> e então uma
-chamada ao <code>*</code> apenas uma vez, cada vez que digitamos um <code>*</code> no nosso código.
-Como a substituição do <code>*</code> não entra em recursão infinita, nós terminamos com o
-dado do tipo <code>i32</code>, que corresponde ao <code>5</code> em <code>assert_eq!</code> na Listagem 15-9.</p>
-<h3 id="coerções-de-desreferência-implícitas-com-funções-e-métodos"><a class="header" href="#coerções-de-desreferência-implícitas-com-funções-e-métodos">Coerções de Desreferência Implícitas com Funções e Métodos</a></h3>
-<p><em>Coerção de desreferência</em> (<em>deref coercion</em>) é uma conveniência que o Rust
-aplica a argumentos de funções e métodos. A coerção de desreferência converte
-uma referência a um tipo que implementa <code>Deref</code> em uma referência a um tipo ao
-qual a <code>Deref</code> pode converter o tipo original. A coerção de desreferência
-acontece automaticamente quando passamos uma referência ao valor de um tipo
-específico como argumento a uma função ou método e esse tipo não corresponde ao
-tipo do parâmetro na definição da função ou método. Uma sequência de chamadas ao
-método <code>deref</code> converte o tipo que providenciamos no tipo que o parâmetro exige.</p>
-<p>A coerção de desreferência foi adicionada ao Rust para que programadores
-escrevendo chamadas a métodos e funções não precisassem adicionar tantas
-referências e desreferências explícitas com <code>&amp;</code> e <code>*</code>. A funcionalidade de
-coerção de desreferência também nos permite escrever mais código que funcione
-tanto com referências quanto com ponteiros inteligentes.</p>
-<p>Para ver a coerção de desreferência em ação, vamos usar o tipo <code>MeuBox&lt;T&gt;</code> que
-definimos na Listagem 15-8 e também a implementação de <code>Deref</code> que adicionamos
-na Listagem 15-10. A Listagem 15-11 mostra a definição de uma função que tem um
-parâmetro do tipo string slice:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
+<span class="boring">
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
 </span><span class="boring">fn main() {
-</span>fn ola(nome: &amp;str) {
-    println!("Olá, {}!", nome);
+</span><span class="boring">    let x = 5;
+</span><span class="boring">    let y = MyBox::new(x);
+</span><span class="boring">
+</span><span class="boring">    assert_eq!(5, x);
+</span><span class="boring">    assert_eq!(5, *y);
+</span><span class="boring">}</span></code></pre>
+<figcaption><a href="#listing-15-10">Listing 15-10</a>: Implementando <code>Deref</code> em <code>MyBox&lt;T&gt;</code></figcaption>
+</figure>
+<p>A sintaxe <code>type Target = T;</code> define um tipo associado para a trait <code>Deref</code>
+usar. Tipos associados são uma forma um pouco diferente de declarar um
+parâmetro genérico, mas você não precisa se preocupar com eles por enquanto;
+vamos cobri-los em mais detalhes no Capítulo 20.</p>
+<p>Preenchemos o corpo do método <code>deref</code> com <code>&amp;self.0</code> para que <code>deref</code> retorne
+uma referência ao valor que queremos acessar com o operador <code>*</code>; lembre-se de
+<a href="ch05-01-defining-structs.html#creating-different-types-with-tuple-structs">“Criando Diferentes Tipos com Tuple Structs”</a><!-- ignore --> no
+Capítulo 5 que <code>.0</code> acessa o primeiro valor em uma tuple struct. A função
+<code>main</code> da Listagem 15-9, que chama <code>*</code> no valor <code>MyBox&lt;T&gt;</code>, agora compila, e
+as asserções passam!</p>
+<p>Sem a trait <code>Deref</code>, o compilador só consegue desreferenciar referências <code>&amp;</code>.
+O método <code>deref</code> dá ao compilador a capacidade de pegar um valor de qualquer
+tipo que implemente <code>Deref</code> e chamar o método <code>deref</code> para obter uma referência
+que ele sabe desreferenciar.</p>
+<p>Quando escrevemos <code>*y</code> na Listagem 15-9, por trás dos panos Rust executou, na
+verdade, este código:</p>
+<pre><code class="language-rust ignore">*(y.deref())</code></pre>
+<p>Rust substitui o operador <code>*</code> por uma chamada ao método <code>deref</code> e depois por
+uma desreferência comum, para que não precisemos pensar se devemos ou não
+chamar o método <code>deref</code>. Esse recurso de Rust nos permite escrever código que
+funciona de forma idêntica quando temos uma referência comum ou um tipo que
+implementa <code>Deref</code>.</p>
+<p>O motivo pelo qual o método <code>deref</code> retorna uma referência a um valor, e pelo
+qual a desreferência comum fora dos parênteses em <code>*(y.deref())</code> ainda é
+necessária, tem a ver com o sistema de ownership. Se o método <code>deref</code> retornasse
+o valor diretamente em vez de uma referência ao valor, o valor seria movido para
+fora de <code>self</code>. Não queremos tomar ownership do valor interno dentro de
+<code>MyBox&lt;T&gt;</code> neste caso nem na maioria dos casos em que usamos o operador de
+desreferência.</p>
+<p>Observe que o operador <code>*</code> é substituído por uma chamada ao método <code>deref</code> e
+então por uma chamada ao operador <code>*</code> apenas uma vez, cada vez que usamos <code>*</code> em
+nosso código. Como a substituição do operador <code>*</code> não recorre infinitamente,
+acabamos com dados do tipo <code>i32</code>, que correspondem ao <code>5</code> em <code>assert_eq!</code> na
+Listagem 15-9.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="implicit-deref-coercions-with-functions-and-methods"></a>
+<a id="using-deref-coercions-in-functions-and-methods"></a></p>
+<h3 id="usando-coerção-de-desreferência-em-funções-e-métodos"><a class="header" href="#usando-coerção-de-desreferência-em-funções-e-métodos">Usando Coerção de Desreferência em Funções e Métodos</a></h3>
+<p><em>Coerção de desreferência</em> (<em>deref coercion</em>) converte uma referência para um
+tipo que implementa a trait <code>Deref</code> em uma referência para outro tipo. Por
+exemplo, a coerção de desreferência pode converter <code>&amp;String</code> em <code>&amp;str</code> porque
+<code>String</code> implementa a trait <code>Deref</code> de modo que retorna <code>&amp;str</code>. A coerção de
+desreferência é uma conveniência que Rust aplica a argumentos de funções e
+métodos, e funciona apenas em tipos que implementam a trait <code>Deref</code>. Ela
+acontece automaticamente quando passamos uma referência para o valor de um tipo
+específico como argumento para uma função ou método que não corresponde ao tipo
+do parâmetro na definição da função ou do método. Uma sequência de chamadas ao
+método <code>deref</code> converte o tipo que fornecemos no tipo de que o parâmetro
+precisa.</p>
+<p>A coerção de desreferência foi adicionada a Rust para que programadores, ao
+escrever chamadas de funções e métodos, não precisassem adicionar tantas
+referências e desreferências explícitas com <code>&amp;</code> e <code>*</code>. O recurso de coerção de
+desreferência também nos permite escrever mais código que funcione tanto com
+referências quanto com ponteiros inteligentes.</p>
+<p>Para ver a coerção de desreferência em ação, vamos usar o tipo <code>MyBox&lt;T&gt;</code> que
+definimos na Listagem 15-8, bem como a implementação de <code>Deref</code> que adicionamos
+na Listagem 15-10. A Listagem 15-11 mostra a definição de uma função que tem um
+parâmetro string slice.</p>
+<figure class="listing" id="listing-15-11">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024">fn hello(name: &amp;str) {
+    println!("Hello, {name}!");
 }
-<span class="boring">}</span></code></pre>
-<p><span class="caption">Listagem 15-11: Uma função <code>ola</code> que tem um parâmetro
-<code>nome</code> do tipo <code>&amp;str</code></span></p>
-<p>Podemos chamar a função <code>ola</code> passando uma string slice como argumento, por
-exemplo <code>ola("Rust");</code>. A coerção de desreferência torna possível chamar <code>ola</code>
-com uma referência a um valor do tipo <code>MeuBox&lt;String&gt;</code>, como mostra a Listagem
-15-12:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
+<span class="boring">
+</span><span class="boring">fn main() {}</span></code></pre>
+<figcaption><a href="#listing-15-11">Listing 15-11</a>: Uma função <code>hello</code> que tem o parâmetro <code>name</code> do tipo <code>&amp;str</code></figcaption>
+</figure>
+<p>Podemos chamar a função <code>hello</code> com um string slice como argumento, como
+<code>hello("Rust");</code>, por exemplo. A coerção de desreferência torna possível chamar
+<code>hello</code> com uma referência para um valor do tipo <code>MyBox&lt;String&gt;</code>, como mostrado
+na Listagem 15-12.</p>
+<figure class="listing" id="listing-15-12">
+<span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::ops::Deref;
 </span><span class="boring">
-</span><span class="boring">struct MeuBox&lt;T&gt;(T);
-</span><span class="boring">
-</span><span class="boring">impl&lt;T&gt; MeuBox&lt;T&gt; {
-</span><span class="boring">    fn new(x: T) -&gt; MeuBox&lt;T&gt; {
-</span><span class="boring">        MeuBox(x)
-</span><span class="boring">    }
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">impl&lt;T&gt; Deref for MeuBox&lt;T&gt; {
+</span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
 </span><span class="boring">    type Target = T;
 </span><span class="boring">
 </span><span class="boring">    fn deref(&amp;self) -&gt; &amp;T {
@@ -404,39 +458,39 @@ com uma referência a um valor do tipo <code>MeuBox&lt;String&gt;</code>, como m
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn ola(name: &amp;str) {
-</span><span class="boring">    println!("Olá, {}!", name);
-</span><span class="boring">}
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
 </span><span class="boring">
-</span>fn main() {
-    let m = MeuBox::new(String::from("Rust"));
-    ola(&amp;m);
-}</code></pre>
-<p><span class="caption">Listagem 15-12: Chamando <code>ola</code> com uma referência a um
-valor <code>MeuBox&lt;String&gt;</code>, o que só funciona por causa da coerção de
-desreferência</span></p>
-<p>Aqui estamos chamando a função <code>ola</code> com o argumento <code>&amp;m</code>, que é uma referência
-a um valor <code>MeuBox&lt;String&gt;</code>. Como implementamos a trait <code>Deref</code> em <code>MeuBox&lt;T&gt;</code>
-na Listagem 15-10, o Rust pode transformar <code>&amp;MeuBox&lt;String&gt;</code> em <code>&amp;String</code>
-chamando <code>deref</code>. A biblioteca padrão provê uma implementação de <code>Deref</code> para
-<code>String</code> que retorna uma string slice, documentada na API de <code>Deref</code>. O Rust
-chama <code>deref</code> de novo para transformar o <code>&amp;String</code> em <code>&amp;str</code>, que corresponde à
-definição da função <code>ola</code>.</p>
-<p>Se o Rust não implementasse coerção de desreferência, teríamos que escrever o
-código na Listagem 15-13 em vez do código na Listagem 15-12 para chamar <code>ola</code>
-com um valor do tipo <code>&amp;MeuBox&lt;String&gt;</code>:</p>
-<p><span class="filename">Arquivo: src/main.rs</span></p>
-<pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::ops::Deref;
-</span><span class="boring">
-</span><span class="boring">struct MeuBox&lt;T&gt;(T);
-</span><span class="boring">
-</span><span class="boring">impl&lt;T&gt; MeuBox&lt;T&gt; {
-</span><span class="boring">    fn new(x: T) -&gt; MeuBox&lt;T&gt; {
-</span><span class="boring">        MeuBox(x)
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">impl&lt;T&gt; Deref for MeuBox&lt;T&gt; {
+</span><span class="boring">fn hello(name: &amp;str) {
+</span><span class="boring">    println!("Hello, {name}!");
+</span><span class="boring">}
+</span><span class="boring">
+</span>fn main() {
+    let m = MyBox::new(String::from("Rust"));
+    hello(&amp;m);
+}</code></pre>
+<figcaption><a href="#listing-15-12">Listing 15-12</a>: Chamando <code>hello</code> com uma referência para um valor <code>MyBox&lt;String&gt;</code>, o que funciona por causa da coerção de desreferência</figcaption>
+</figure>
+<p>Aqui chamamos a função <code>hello</code> com o argumento <code>&amp;m</code>, que é uma referência para
+um valor <code>MyBox&lt;String&gt;</code>. Como implementamos a trait <code>Deref</code> em <code>MyBox&lt;T&gt;</code> na
+Listagem 15-10, Rust pode transformar <code>&amp;MyBox&lt;String&gt;</code> em <code>&amp;String</code> chamando
+<code>deref</code>. A biblioteca padrão fornece uma implementação de <code>Deref</code> em <code>String</code>
+que retorna um string slice, e isso está documentado na API de <code>Deref</code>. Rust
+chama <code>deref</code> novamente para transformar <code>&amp;String</code> em <code>&amp;str</code>, que corresponde à
+definição da função <code>hello</code>.</p>
+<p>Se Rust não implementasse coerção de desreferência, teríamos que escrever o
+código da Listagem 15-13 em vez do código da Listagem 15-12 para chamar
+<code>hello</code> com um valor do tipo <code>&amp;MyBox&lt;String&gt;</code>.</p>
+<figure class="listing" id="listing-15-13">
+<span class="file-name">Filename: src/main.rs</span>
+<pre class="playground"><code class="language-rust edition2024"><span class="boring">use std::ops::Deref;
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; Deref for MyBox&lt;T&gt; {
 </span><span class="boring">    type Target = T;
 </span><span class="boring">
 </span><span class="boring">    fn deref(&amp;self) -&gt; &amp;T {
@@ -444,52 +498,65 @@ com um valor do tipo <code>&amp;MeuBox&lt;String&gt;</code>:</p>
 </span><span class="boring">    }
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn ola(name: &amp;str) {
-</span><span class="boring">    println!("Olá, {}!", name);
+</span><span class="boring">struct MyBox&lt;T&gt;(T);
+</span><span class="boring">
+</span><span class="boring">impl&lt;T&gt; MyBox&lt;T&gt; {
+</span><span class="boring">    fn new(x: T) -&gt; MyBox&lt;T&gt; {
+</span><span class="boring">        MyBox(x)
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn hello(name: &amp;str) {
+</span><span class="boring">    println!("Hello, {name}!");
 </span><span class="boring">}
 </span><span class="boring">
 </span>fn main() {
-    let m = MeuBox::new(String::from("Rust"));
-    ola(&amp;(*m)[..]);
+    let m = MyBox::new(String::from("Rust"));
+    hello(&amp;(*m)[..]);
 }</code></pre>
-<p><span class="caption">Listagem 15-13: O código que teríamos que escrever se o
-Rust não tivesse coerção de desreferência</span></p>
-<p>O <code>(*m)</code> desreferencia o <code>MeuBox&lt;String&gt;</code> em uma <code>String</code>. Então o <code>&amp;</code> e o
-<code>[..]</code> obtêm uma string slice da <code>String</code> que é igual à string inteira para
-corresponder à assinatura de <code>ola</code>. O código sem coerção de desreferência é mais
-difícil de ler, escrever e entender com todos esses símbolos envolvidos. A
-coerção de desreferência permite que o Rust lide com essas conversões
-automaticamente para nós.</p>
-<p>Quando a trait <code>Deref</code> está definida para os tipos envolvidos, o Rust analisa os
-tipos e usa <code>Deref::deref</code> tantas vezes quanto necessário para chegar a uma
-referência que corresponda ao tipo do parâmetro. O número de vezes que
-<code>Deref::deref</code> precisa ser inserida é resolvido em tempo de compilação, então
-não existe nenhuma penalidade em tempo de execução para tomar vantagem da
-coerção de desreferência.</p>
-<h3 id="como-a-coerção-de-desreferência-interage-com-a-mutabilidade"><a class="header" href="#como-a-coerção-de-desreferência-interage-com-a-mutabilidade">Como a Coerção de Desreferência Interage com a Mutabilidade</a></h3>
-<p>De modo semelhante a como usamos a trait <code>Deref</code> para redefinir <code>*</code> em
-referências imutáveis, o Rust provê uma trait <code>DerefMut</code> para redefinir <code>*</code> em
+<figcaption><a href="#listing-15-13">Listing 15-13</a>: O código que teríamos que escrever se Rust não tivesse coerção de desreferência</figcaption>
+</figure>
+<p>O <code>(*m)</code> desreferencia o <code>MyBox&lt;String&gt;</code> em uma <code>String</code>. Então, <code>&amp;</code> e <code>[..]</code>
+obtêm um string slice da <code>String</code> que é igual à string inteira para
+corresponder à assinatura de <code>hello</code>. Esse código sem coerções de
+desreferência é mais difícil de ler, escrever e entender com todos esses
+símbolos envolvidos. A coerção de desreferência permite que Rust lide com essas
+conversões automaticamente para nós.</p>
+<p>Quando a trait <code>Deref</code> está definida para os tipos envolvidos, Rust analisará
+os tipos e usará <code>Deref::deref</code> tantas vezes quanto necessário para obter uma
+referência que corresponda ao tipo do parâmetro. A quantidade de vezes que
+<code>Deref::deref</code> precisa ser inserida é resolvida em tempo de compilação, então
+não há penalidade em tempo de execução por aproveitar a coerção de
+desreferência!</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="how-deref-coercion-interacts-with-mutability"></a></p>
+<h3 id="lidando-com-coerção-de-desreferência-em-referências-mutáveis"><a class="header" href="#lidando-com-coerção-de-desreferência-em-referências-mutáveis">Lidando com Coerção de Desreferência em Referências Mutáveis</a></h3>
+<p>De forma semelhante a como você usa a trait <code>Deref</code> para sobrescrever o
+operador <code>*</code> em referências imutáveis, você pode usar a trait <code>DerefMut</code> para
+sobrescrever o operador <code>*</code> em referências mutáveis.</p>
+<p>Rust faz coerção de desreferência quando encontra tipos e implementações de
+traits em três casos:</p>
+<ol>
+<li>De <code>&amp;T</code> para <code>&amp;U</code> quando <code>T: Deref&lt;Target=U&gt;</code></li>
+<li>De <code>&amp;mut T</code> para <code>&amp;mut U</code> quando <code>T: DerefMut&lt;Target=U&gt;</code></li>
+<li>De <code>&amp;mut T</code> para <code>&amp;U</code> quando <code>T: Deref&lt;Target=U&gt;</code></li>
+</ol>
+<p>Os dois primeiros casos são iguais, exceto que o segundo implementa
+mutabilidade. O primeiro caso afirma que, se você tem uma <code>&amp;T</code> e <code>T</code> implementa
+<code>Deref</code> para algum tipo <code>U</code>, você pode obter uma <code>&amp;U</code> de forma transparente. O
+segundo caso afirma que a mesma coerção de desreferência acontece para
 referências mutáveis.</p>
-<p>O Rust faz coerção de desreferência quando ele encontra tipos e implementações
-de traits em três casos:</p>
-<ul>
-<li>De <code>&amp;T</code> para <code>&amp;U</code> quando <code>T: Deref&lt;Target=U&gt;</code>;</li>
-<li>De <code>&amp;mut T</code> para <code>&amp;mut U</code> quando <code>T: DerefMut&lt;Target=U&gt;</code>;</li>
-<li>De <code>&amp;mut T</code> para <code>&amp;U</code> quando <code>T: Deref&lt;Target=U&gt;</code>.</li>
-</ul>
-<p>Os primeiros dois casos são o mesmo exceto pela mutabilidade. O primeiro caso
-afirma que se você tem uma <code>&amp;T</code>, e <code>T</code> implementa <code>Deref</code> para algum tipo <code>U</code>,
-você pode obter um <code>&amp;U</code> de maneira transparente. O segundo caso afirma que a
-mesma coerção de desreferência acontece para referências mutáveis.</p>
-<p>O terceiro caso é mais complicado: o Rust também irá coagir uma referência
-mutável a uma imutável. Mas o contrário <em>não</em> é possível: referências imutáveis
-nunca serão coagidas a referências mutáveis. Por causa das regras de empréstimo,
-se você tem uma referência mutável, ela deve ser a única referência àqueles
-dados (caso contrário, o programa não compila). Converter uma referência mutável
-a uma imutável nunca quebrará as regras de empréstimo. Converter uma referência
-imutável a uma mutável exigiria que houvesse apenas uma referência imutável
-àqueles dados, e as regras de empréstimo não garantem isso. Portanto, o Rust não
-pode assumir que converter uma referência imutável a uma mutável seja possível.</p>
+<p>O terceiro caso é mais sutil: Rust também fará coerção de uma referência
+mutável para uma imutável. Mas o inverso <em>não</em> é possível: referências
+imutáveis nunca serão coagidas para referências mutáveis. Por causa das regras
+de borrowing, se você tem uma referência mutável, essa referência mutável deve
+ser a única referência para aqueles dados (caso contrário, o programa não
+compilaria). Converter uma referência mutável em uma referência imutável nunca
+quebrará as regras de borrowing. Converter uma referência imutável em uma
+referência mutável exigiria que a referência imutável inicial fosse a única
+referência imutável para aqueles dados, mas as regras de borrowing não garantem
+isso. Portanto, Rust não pode assumir que converter uma referência imutável em
+uma referência mutável é possível.</p>
 
                     </main>
 
