@@ -5,7 +5,7 @@ garantir que um tipo tenha o comportamento que queremos, lifetimes garantem
 que referências continuem válidas pelo tempo que precisamos delas.
 
 Um detalhe que não discutimos na seção [“Referências e
-Borrowing”][references-and-borrowing]<!-- ignore -->, no Capítulo 4, é que toda
+Empréstimos”][references-and-borrowing]<!-- ignore -->, no Capítulo 4, é que toda
 referência em Rust tem um lifetime, que é o escopo durante o qual essa
 referência é válida. Na maior parte do tempo, lifetimes são implícitos e
 inferidos, assim como geralmente acontece com tipos. Só precisamos anotar tipos
@@ -109,12 +109,12 @@ lifetimes genéricos em parâmetros de função e valores de retorno.
 
 ### Lifetimes Genéricos em Funções
 
-Vamos escrever uma função que retorna a maior entre duas fatias de string. Essa
-função receberá duas fatias de string e retornará uma única fatia de string.
+Vamos escrever uma função que retorna o mais longo entre dois string slices.
+Essa função receberá dois string slices e retornará um único string slice.
 Depois de implementarmos a função `longest`, o código da Listagem 10-19 deverá
 imprimir `The longest string is abcd`.
 
-<Listing number="10-19" file-name="src/main.rs" caption="Uma função `main` que chama `longest` para encontrar a maior de duas fatias de string">
+<Listing number="10-19" file-name="src/main.rs" caption="Uma função `main` que chama `longest` para encontrar o mais longo entre dois string slices">
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-19/src/main.rs}}
@@ -122,9 +122,9 @@ imprimir `The longest string is abcd`.
 
 </Listing>
 
-Observe que queremos que a função receba fatias de string, que são
+Observe que queremos que a função receba string slices, que são
 referências, em vez de strings, porque não queremos que a função `longest`
-tome ownership de seus parâmetros. Consulte [“String Slices como
+assuma ownership de seus parâmetros. Consulte [“String Slices como
 Parâmetros”][string-slices-as-parameters]<!-- ignore --> no Capítulo 4 para uma
 discussão mais detalhada sobre por que os parâmetros da Listagem 10-19 são os
 que queremos.
@@ -132,7 +132,7 @@ que queremos.
 Se tentarmos implementar a função `longest` como mostrado na Listagem 10-20,
 ela não compilará.
 
-<Listing number="10-20" file-name="src/main.rs" caption="Uma implementação de `longest` que retorna a maior de duas fatias de string, mas ainda não compila">
+<Listing number="10-20" file-name="src/main.rs" caption="Uma implementação de `longest` que retorna o mais longo entre dois string slices, mas ainda não compila">
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-20/src/main.rs:here}}
@@ -223,9 +223,9 @@ Esse código deve compilar e produzir o resultado desejado quando for usado com
 a função `main` da Listagem 10-19.
 
 A assinatura da função agora informa ao Rust que, para algum lifetime `'a`, a
-função recebe dois parâmetros, ambos fatias de string que vivem pelo menos
-enquanto `'a`. A assinatura também informa ao Rust que a fatia de string
-retornada durará pelo menos o mesmo tempo que `'a`. Na prática, isso significa
+função recebe dois parâmetros, ambos string slices que vivem pelo menos
+enquanto `'a`. A assinatura também informa ao Rust que o string slice
+retornado viverá pelo menos o mesmo tempo que `'a`. Na prática, isso significa
 que o lifetime da referência retornada por `longest` é o menor dos lifetimes
 dos valores referidos pelos argumentos da função. Essas relações são exatamente
 o que queremos que o Rust use ao analisar esse código.
@@ -270,8 +270,7 @@ mostra um exemplo simples.
 Neste exemplo, `string1` é válido até o final do escopo externo, `string2` é
 válido até o final do escopo interno, e `result` referencia algo que também é
 válido até o fim desse escopo interno. Se você executar esse código, verá que
-o borrow checker o aprova: ele compila e imprime `A string mais longa é uma
-string longa`.
+o borrow checker o aprova: ele compila e imprime `The longest string is long string is long`.
 
 Agora vamos tentar um exemplo que mostra que o lifetime da referência em
 `result` precisa ser o menor lifetime entre os dois argumentos. Vamos mover a
@@ -300,14 +299,14 @@ O erro mostra que para `result` ser válido para a instrução `println!`,
 isso porque anotamos os lifetimes dos parâmetros da função e retornamos
 valores usando o mesmo parâmetro de lifetime `'a`.
 
-Como humanos, podemos olhar para esse código e perceber que `string1` é maior
-que `string2` e, portanto, `result` conterá uma referência a `string1`. Como
-`string1` ainda não saiu de escopo, uma referência a `string1` continuaria
-válida para a instrução `println!`. No entanto, o compilador não consegue
-concluir isso nesse caso. Nós dissemos ao Rust que o lifetime da referência
-retornada pela função `longest` é igual ao menor lifetime das referências
-passadas. Por isso, o borrow checker não permite o código da Listagem 10-23,
-porque ele _poderia_ conter uma referência inválida.
+Como humanos, podemos olhar para esse código e perceber que `string1` é mais
+longa que `string2` e, portanto, `result` conterá uma referência a `string1`.
+Como `string1` ainda não saiu de escopo, uma referência a `string1`
+continuaria válida para a instrução `println!`. No entanto, o compilador não
+consegue concluir isso nesse caso. Nós dissemos ao Rust que o lifetime da
+referência retornada pela função `longest` é igual ao menor lifetime das
+referências passadas. Por isso, o borrow checker não permite o código da
+Listagem 10-23, porque ele _poderia_ conter uma referência inválida.
 
 Tente imaginar outros experimentos, variando os valores, os lifetimes das
 referências passadas para `longest` e a forma como a referência retornada é
@@ -322,7 +321,7 @@ borrow checker antes de compilar; depois, veja se você acertou!
 
 A forma como você precisa especificar parâmetros de lifetime depende do que sua
 função faz. Por exemplo, se alterássemos a implementação de `longest` para
-sempre retornar o primeiro parâmetro, em vez da maior fatia de string, não
+sempre retornar o primeiro parâmetro, em vez do string slice mais longo, não
 precisaríamos especificar um lifetime no parâmetro `y`. O código a seguir
 compila:
 
@@ -334,17 +333,17 @@ compila:
 
 </Listing>
 
-Especificamos um parâmetro de lifetime `'a` para o parâmetro `x` e o retorno
-tipo, mas não para o parâmetro `y`, porque o lifetime de `y` não tem
-qualquer relacionamento com o lifetime de `x` ou o valor de retorno.
+Especificamos um parâmetro de lifetime `'a` para o parâmetro `x` e para o tipo
+de retorno, mas não para o parâmetro `y`, porque o lifetime de `y` não tem
+nenhuma relação com o lifetime de `x` nem com o valor de retorno.
 
 Ao retornar uma referência de uma função, o parâmetro de lifetime para o
-o tipo de retorno precisa corresponder ao parâmetro de lifetime de um dos parâmetros. Se
-a referência retornada _não_ se refere a um dos parâmetros, ela deve se referir
-para um valor criado dentro desta função. No entanto, isso seria uma pendência
-referência porque o valor sairá do escopo no final da função.
-Considere esta tentativa de implementação da função `longest` que não
-compilar:
+tipo de retorno precisa corresponder ao parâmetro de lifetime de um dos
+parâmetros. Se a referência retornada _não_ se refere a um dos parâmetros, ela
+deve se referir a um valor criado dentro desta função. No entanto, isso seria
+uma referência pendente, porque o valor sairá de escopo no final da função.
+Considere esta tentativa de implementação da função `longest`, que não
+compila:
 
 <Listing file-name="src/main.rs">
 
@@ -354,38 +353,40 @@ compilar:
 
 </Listing>
 
-Aqui, embora tenhamos especificado um parâmetro de lifetime `'a` para o retorno
-tipo, esta implementação não será compilada porque o valor de retorno
-a lifetime não está relacionada de forma alguma com a lifetime dos parâmetros. Aqui está o
+Aqui, embora tenhamos especificado um parâmetro de lifetime `'a` para o tipo
+de retorno, esta implementação não compilará porque o lifetime do valor
+de retorno não tem nenhuma relação com o lifetime dos parâmetros. Aqui está a
 mensagem de erro que recebemos:
 
 ```console
 {{#include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-09-unrelated-lifetime/output.txt}}
 ```
 
-O problema é que `result` sai do escopo e é limpo no final
-da função `longest`. Também estamos tentando retornar uma referência para `result`
-da função. Não há como especificar parâmetros de lifetime que
-mudaria a referência pendente, e Rust não nos deixaria criar uma referência pendente
-referência. Nesse caso, a melhor solução seria retornar um tipo de dados próprio
-em vez de uma referência para que a função de chamada seja responsável por
-limpando o valor.
+O problema é que `result` sai de escopo e é limpo no final da função
+`longest`. Também estamos tentando retornar uma referência a `result` a partir
+da função. Não há como especificar parâmetros de lifetime que transformem essa
+referência pendente em uma referência válida, e Rust não nos deixará criar uma
+referência pendente. Nesse caso, a melhor solução seria retornar um tipo de
+dado com ownership, em vez de uma referência, para que a função chamadora seja
+responsável por limpar o valor.
 
-Em última análise, a sintaxe do lifetime trata de conectar os lifetimes de vários
-parâmetros e valores de retorno de funções. Uma vez conectados, Rust tem
-informações suficientes para permitir operações seguras de memória e proibir operações que
-criaria ponteiros pendentes ou violaria a segurança da memória.
+Em última análise, a sintaxe de lifetime serve para conectar os lifetimes de
+vários parâmetros e valores de retorno de funções. Uma vez que eles estão
+conectados, Rust tem informações suficientes para permitir operações seguras em
+memória e proibir operações que criariam ponteiros pendentes ou violariam a
+segurança de memória.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="lifetime-annotations-in-struct-definitions"></a>
 
-### Em definições de estrutura
+### Em Definições de Struct
 
-Até agora, todas as structs que definimos armazenavam tipos com ownership. Podemos definir structs
-que contenham referências, mas, nesse caso, precisamos adicionar uma anotação de lifetime
-a cada referência na definição da struct. A Listagem 10-24 tem um
-struct chamada `ImportantExcerpt` que contém uma fatia de string.
+Até agora, todas as structs que definimos armazenavam tipos com ownership.
+Podemos definir structs que contenham referências, mas, nesse caso, precisamos
+adicionar uma anotação de lifetime a cada referência na definição da struct. A
+Listagem 10-24 tem uma struct chamada `ImportantExcerpt` que contém um string
+slice.
 
 <Listing number="10-24" file-name="src/main.rs" caption="Uma struct que armazena uma referência, exigindo uma anotação de lifetime">
 
@@ -395,26 +396,26 @@ struct chamada `ImportantExcerpt` que contém uma fatia de string.
 
 </Listing>
 
-Esta estrutura possui o único campo `part` que contém uma fatia de string, que é um
-referência. Tal como acontece com os tipos de dados genéricos, declaramos o nome do genérico
-parâmetro de lifetime entre colchetes angulares após o nome da estrutura para que
-podemos usar o parâmetro lifetime no corpo da definição da estrutura. Esse
-anotação significa que uma instância de `ImportantExcerpt` não pode sobreviver à referência
-ele contém em seu campo `part`.
+Essa struct tem um único campo, `part`, que contém um string slice, isto é,
+uma referência. Assim como acontece com tipos de dados genéricos, declaramos o
+nome do parâmetro genérico de lifetime entre colchetes angulares depois do nome
+da struct, para que possamos usar esse parâmetro de lifetime no corpo da
+definição da struct. Essa anotação significa que uma instância de
+`ImportantExcerpt` não pode viver mais do que a referência que ela armazena no
+campo `part`.
 
-A função `main` aqui cria uma instância da estrutura `ImportantExcerpt`
-que contém uma referência à primeira frase da `String` pertencente à
-variável `novel`. Os dados em `novel` existem antes de `ImportantExcerpt`
-instância é criada. Além disso, `novel` não sai do escopo até depois
-o `ImportantExcerpt` sai do escopo, então a referência no
-`ImportantExcerpt` instância é válida.
+A função `main` aqui cria uma instância da struct `ImportantExcerpt` que contém
+uma referência à primeira frase da `String` pertencente à variável `novel`. Os
+dados em `novel` existem antes de a instância de `ImportantExcerpt` ser criada.
+Além disso, `novel` não sai de escopo antes de `ImportantExcerpt` sair de
+escopo, então a referência na instância de `ImportantExcerpt` é válida.
 
 ### Elisão de Lifetime
 
-Você aprendeu que toda referência tem uma anotação de lifetime e que você precisa especificar
-parâmetros de lifetime para funções ou estruturas que usam referências. No entanto, nós
-tinha uma função na Listagem 4-9, mostrada novamente na Listagem 10-25, que compilava
-sem anotações de lifetime.
+Você aprendeu que toda referência tem um lifetime e que você precisa
+especificar parâmetros de lifetime para funções ou structs que usam
+referências. No entanto, tínhamos uma função na Listagem 4-9, mostrada
+novamente na Listagem 10-25, que compilava sem anotações de lifetime.
 
 <Listing number="10-25" file-name="src/lib.rs" caption="Uma função definida na Listagem 4-9 que compilou sem anotações de lifetime, mesmo com parâmetros e retorno sendo referências">
 
@@ -424,116 +425,120 @@ sem anotações de lifetime.
 
 </Listing>
 
-A razão pela qual esta função é compilada sem anotações de lifetime é histórica:
-Nas versões anteriores (pré-1.0) do Rust, este código não teria sido compilado, porque
-cada referência precisava de um lifetime explícito. Naquela época, a função
-a assinatura teria sido escrita assim:
+A razão pela qual essa função compila sem anotações de lifetime é histórica:
+nas versões antigas (pré-1.0) de Rust, esse código não teria compilado, porque
+cada referência precisava de um lifetime explícito. Naquela época, a assinatura
+da função teria sido escrita assim:
 
 ```rust,ignore
 fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
-Depois de escrever muitos códigos Rust, a equipe Rust descobriu que os programadores Rust
-estavam inserindo as mesmas anotações de vida repetidamente, em particular
-situações. Estas situações eram previsíveis e seguiam algumas regras determinísticas.
-padrões. Os desenvolvedores programaram esses padrões no código do compilador para
-que o verificador de empréstimo poderia inferir o lifetime nessas situações e
-não precisaria de anotações explícitas.
+Depois de escrever muito código Rust, a equipe do Rust percebeu que
+programadores escreviam as mesmas anotações de lifetime repetidas vezes em
+situações específicas. Essas situações eram previsíveis e seguiam alguns
+padrões determinísticos. Os desenvolvedores programaram esses padrões no
+compilador para que o borrow checker pudesse inferir os lifetimes nessas
+situações sem exigir anotações explícitas.
 
-Este pedaço da história do Rust é relevante porque é possível que mais
-padrões determinísticos surgirão e serão adicionados ao compilador. No futuro,
-ainda menos anotações de lifetime podem ser necessárias.
+Esse pedaço da história de Rust é relevante porque é possível que mais padrões
+determinísticos surjam e sejam adicionados ao compilador. No futuro, talvez
+ainda menos anotações de lifetime sejam necessárias.
 
-Os padrões programados na análise de referências do Rust são chamados de
-_regras de elisão de lifetime_. Estas não são regras que os programadores devem seguir; eles são
-um conjunto de casos particulares que o compilador irá considerar, e se o seu código
-se encaixa nesses casos, você não precisa escrever os lifetimes explicitamente.
+Os padrões programados na análise de referências de Rust são chamados de
+_regras de elisão de lifetime_. Essas não são regras que programadores precisam
+seguir; elas são um conjunto de casos específicos que o compilador considera.
+Se o seu código se encaixa nesses casos, você não precisa escrever os lifetimes
+explicitamente.
 
-As regras de elisão não fornecem inferência completa. Se ainda houver ambiguidade
-sobre quais lifetimes as referências têm depois que Rust aplica as regras, o
-o compilador não adivinhará qual deveria ser o lifetime das referências restantes.
-Em vez de adivinhar, o compilador apresentará um erro que você pode resolver
-adicionando as anotações de lifetime.
+As regras de elisão não fornecem inferência completa. Se ainda houver
+ambiguidade sobre quais lifetimes as referências têm depois que Rust aplica as
+regras, o compilador não adivinhará qual deve ser o lifetime das referências
+restantes. Em vez de adivinhar, o compilador apresentará um erro que você pode
+resolver adicionando anotações de lifetime.
 
-Os lifetimes nos parâmetros de função ou método são chamados de _lifetimes de entrada_ e
-os lifetimes nos valores de retorno são chamados de _lifetimes de saída_.
+Os lifetimes em parâmetros de função ou método são chamados de _lifetimes de
+entrada_, e os lifetimes em valores de retorno são chamados de _lifetimes de
+saída_.
 
-O compilador usa três regras para descobrir o lifetime das referências
-quando não há anotações explícitas. A primeira regra se aplica à entrada
-lifetimes, e a segunda e terceira regras se aplicam aos lifetimes de saída. Se o
-compilador chega ao final das três regras e ainda há referências para
-que não consegue calcular os lifetimes, o compilador irá parar com um erro.
-Essas regras se aplicam a definições `fn`, bem como a blocos `impl`.
+O compilador usa três regras para descobrir os lifetimes das referências
+quando não há anotações explícitas. A primeira regra se aplica aos lifetimes de
+entrada, e a segunda e a terceira se aplicam aos lifetimes de saída. Se o
+compilador chegar ao fim das três regras e ainda houver referências cujos
+lifetimes ele não consegue descobrir, ele parará com um erro. Essas regras se
+aplicam tanto a definições `fn` quanto a blocos `impl`.
 
-A primeira regra é que o compilador atribua um parâmetro de lifetime a cada
+A primeira regra é que o compilador atribui um parâmetro de lifetime a cada
 parâmetro que é uma referência. Em outras palavras, uma função com um parâmetro
 obtém um parâmetro de lifetime: `fn foo<'a>(x: &'a i32)`; uma função com dois
 parâmetros obtém dois parâmetros de lifetime separados: `fn foo<'a, 'b>(x: &'a i32,
 y: &'b i32)`; e assim por diante.
 
-A segunda regra é que, se houver exatamente um parâmetro de lifetime de entrada, esse
-lifetime é atribuído a todos os parâmetros de lifetime de saída: `fn foo<'a>(x: &'a i32)
--> &'a i32`.
+A segunda regra é que, se houver exatamente um parâmetro de lifetime de
+entrada, esse lifetime é atribuído a todos os parâmetros de lifetime de saída:
+`fn foo<'a>(x: &'a i32) -> &'a i32`.
 
 A terceira regra é que, se houver vários parâmetros de lifetime de entrada, mas
-um deles é `&self` ou `&mut self` porque este é um método, a lifetime de
-`self` é atribuído a todos os parâmetros de lifetime de saída. Esta terceira regra faz
-métodos muito mais agradáveis ​​de ler e escrever porque são necessários menos símbolos.
+um deles for `&self` ou `&mut self` porque se trata de um método, o lifetime de
+`self` será atribuído a todos os parâmetros de lifetime de saída. Essa terceira
+regra torna métodos muito mais agradáveis de ler e escrever, porque exige
+menos símbolos.
 
 Vamos fingir que somos o compilador. Aplicaremos essas regras para descobrir o
-lifetimes das referências na assinatura da função `first_word` em
-Listagem 10-25. A assinatura começa sem nenhum lifetime associado ao
-referências:
+lifetime das referências na assinatura da função `first_word` da Listagem
+10-25. A assinatura começa sem nenhum lifetime associado às referências:
 
 ```rust,ignore
 fn first_word(s: &str) -> &str {
 ```
 
 Então, o compilador aplica a primeira regra, que especifica que cada parâmetro
-obtém sua própria lifetime. Vamos chamá-lo de `'a` como sempre, então agora a assinatura é
-esse:
+recebe seu próprio lifetime. Vamos chamá-lo de `'a`, como de costume, então
+agora a assinatura é esta:
 
 ```rust,ignore
 fn first_word<'a>(s: &'a str) -> &str {
 ```
 
-A segunda regra se aplica porque há exatamente um lifetime de entrada. O segundo
-regra especifica que o lifetime de um parâmetro de entrada é atribuído a
-o lifetime da saída, então a assinatura agora é esta:
+A segunda regra se aplica porque há exatamente um lifetime de entrada. A
+segunda regra especifica que o lifetime do único parâmetro de entrada é
+atribuído ao lifetime de saída, então a assinatura agora é esta:
 
 ```rust,ignore
 fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
-Agora todas as referências nesta assinatura de função têm lifetime, e o
-compilador pode continuar sua análise sem precisar que o programador faça anotações
-os lifetimes nesta assinatura de função.
+Agora todas as referências nessa assinatura de função têm lifetimes, e o
+compilador pode continuar sua análise sem precisar que o programador anote os
+lifetimes nessa assinatura.
 
 Vejamos outro exemplo, desta vez usando a função `longest` que tinha
-nenhum parâmetro de lifetime quando começamos a trabalhar com ele na Listagem 10-20:
+nenhum parâmetro de lifetime quando começamos a trabalhar com ela na Listagem
+10-20:
 
 ```rust,ignore
 fn longest(x: &str, y: &str) -> &str {
 ```
 
-Vamos aplicar a primeira regra: cada parâmetro tem seu próprio lifetime. Desta vez nós
-temos dois parâmetros em vez de um, então temos dois lifetimes:
+Vamos aplicar a primeira regra: cada parâmetro recebe seu próprio lifetime.
+Desta vez, temos dois parâmetros em vez de um, então temos dois lifetimes:
 
 ```rust,ignore
 fn longest<'a, 'b>(x: &'a str, y: &'b str) -> &str {
 ```
 
 Você pode ver que a segunda regra não se aplica, porque há mais de um
-lifetime da entrada. A terceira regra também não se aplica, porque `longest` é um
-função em vez de um método, portanto nenhum dos parâmetros é `self`. Depois
-trabalhando com todas as três regras, ainda não descobrimos qual será o retorno
-a lifetime do tipo é. É por isso que recebemos um erro ao tentar compilar o código em
-Listagem 10-20: O compilador trabalhou através das regras de elisão de lifetime, mas ainda assim
-não consegui descobrir todos os lifetimes das referências na assinatura.
+lifetime de entrada. A terceira regra também não se aplica, porque `longest` é
+uma função, não um método, portanto nenhum dos parâmetros é `self`. Depois de
+percorrer as três regras, ainda não descobrimos qual é o lifetime do tipo de
+retorno. É por isso que recebemos um erro ao tentar compilar o código da
+Listagem 10-20: o compilador percorreu as regras de elisão de lifetime, mas
+ainda assim não conseguiu descobrir todos os lifetimes das referências na
+assinatura.
 
-Como a terceira regra só se aplica a assinaturas de métodos, veremos
-lifetimes nesse contexto, veja a seguir por que a terceira regra significa que não precisamos
-anote lifetimes em assinaturas de métodos com muita frequência.
+Como a terceira regra realmente só se aplica a assinaturas de métodos, veremos
+lifetimes nesse contexto a seguir para entender por que essa regra faz com que
+não precisemos anotar lifetimes em assinaturas de métodos com tanta frequência.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -541,31 +546,34 @@ anote lifetimes em assinaturas de métodos com muita frequência.
 
 ### Em Definições de Método
 
-Quando implementamos métodos em uma estrutura com lifetimes, usamos a mesma sintaxe que
-o dos parâmetros de tipo genérico, conforme mostrado na Listagem 10-11. Onde declaramos
-e usar os parâmetros de lifetime depende se eles estão relacionados ao
-campos struct ou os parâmetros do método e valores de retorno.
+Quando implementamos métodos em uma struct com lifetimes, usamos a mesma
+sintaxe dos parâmetros de tipo genérico, como mostrado na Listagem 10-11. Onde
+declaramos e usamos os parâmetros de lifetime depende de eles estarem
+relacionados aos campos da struct ou aos parâmetros e valores de retorno do
+método.
 
-Nomes de lifetimes para campos struct sempre precisam ser declarados após `impl`
-palavra-chave e usada após o nome da estrutura porque esses lifetimes fazem parte
-do tipo da estrutura.
+Nomes de lifetimes para campos de struct sempre precisam ser declarados depois
+da palavra-chave `impl` e usados depois do nome da struct, porque esses
+lifetimes fazem parte do tipo da struct.
 
-Nas assinaturas de métodos dentro do bloco `impl`, as referências podem estar vinculadas ao
-lifetime das referências nos campos da estrutura, ou elas podem ser independentes. Em
-Além disso, as regras de elisão de lifetime geralmente fazem com que as anotações de lifetime
-não são necessários em assinaturas de métodos. Vejamos alguns exemplos usando o
-struct chamada `ImportantExcerpt` que definimos na Listagem 10-24.
+Nas assinaturas de métodos dentro do bloco `impl`, as referências podem estar
+ligadas ao lifetime das referências nos campos da struct, ou podem ser
+independentes. Além disso, as regras de elisão de lifetime frequentemente fazem
+com que anotações de lifetime não sejam necessárias em assinaturas de métodos.
+Vejamos alguns exemplos usando a struct chamada `ImportantExcerpt` que
+definimos na Listagem 10-24.
 
-Primeiro, usaremos um método chamado `level` cujo único parâmetro é uma referência a
-`self` e cujo valor de retorno é `i32`, que não é referência a nada:
+Primeiro, usaremos um método chamado `level`, cujo único parâmetro é uma
+referência a `self` e cujo valor de retorno é um `i32`, que não é referência a
+nada:
 
 ```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-10-lifetimes-on-methods/src/main.rs:1st}}
 ```
 
 A declaração do parâmetro de lifetime após `impl` e seu uso após o nome do tipo
-são obrigatórios, mas por causa da primeira regra de elisão, não somos obrigados a
-anote o lifetime da referência a `self`.
+são obrigatórios, mas, por causa da primeira regra de elisão, não somos
+obrigados a anotar o lifetime da referência a `self`.
 
 Aqui está um exemplo onde a terceira regra de elisão de lifetime se aplica:
 
@@ -573,31 +581,34 @@ Aqui está um exemplo onde a terceira regra de elisão de lifetime se aplica:
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-10-lifetimes-on-methods/src/main.rs:3rd}}
 ```
 
-Existem dois lifetimes de entrada, então Rust aplica a primeira regra de elisão de lifetime
-e dá a `&self` e `announcement` suas próprias lifetimes. Então, porque
-um dos parâmetros é `&self`, o tipo de retorno obtém o lifetime de `&self`,
-e todas as lifetimes foram contabilizadas.
+Existem dois lifetimes de entrada, então Rust aplica a primeira regra de
+elisão de lifetime e dá a `&self` e `announcement` seus próprios lifetimes.
+Então, como um dos parâmetros é `&self`, o tipo de retorno recebe o lifetime de
+`&self`, e todos os lifetimes foram contabilizados.
 
 ### O Lifetime `static`
 
-Uma vida especial que precisamos discutir é `'static`, o que denota que o
-a referência afetada _pode_ permanecer ativa durante toda a duração do programa. Todos
-literais de string têm o lifetime `'static`, que podemos anotar da seguinte forma:
+Um lifetime especial que precisamos discutir é `'static`, que indica que a
+referência afetada _pode_ permanecer ativa durante toda a duração do programa.
+Todos os literais de string têm o lifetime `'static`, que podemos anotar da
+seguinte forma:
 
 ```rust
 let s: &'static str = "I have a static lifetime.";
 ```
 
 O texto desta string é armazenado diretamente no binário do programa, que é
-sempre disponível. Portanto, o lifetime de todos os literais de string é `'static`.
+sempre disponível. Portanto, o lifetime de todos os literais de string é
+`'static`.
 
 Você pode ver sugestões em mensagens de erro para usar o lifetime `'static`. Mas
 antes de especificar `'static` como o lifetime de uma referência, pense em
-se a referência que você tem realmente vive ou não toda a vida de
-seu programa e se você deseja. Na maioria das vezes, uma mensagem de erro
-sugerindo os resultados da lifetime `'static` da tentativa de criar um pendente
-referência ou uma incompatibilidade das lifetimes disponíveis. Nesses casos, a solução
-é corrigir esses problemas, não especificar o lifetime `'static`.
+se a referência que você tem realmente vive por toda a duração do seu programa
+e se é isso que você deseja. Na maioria das vezes, uma mensagem de erro que
+sugere o lifetime `'static` é resultado de uma tentativa de criar uma
+referência pendente ou de uma incompatibilidade entre os lifetimes disponíveis.
+Nesses casos, a solução é corrigir esses problemas, não especificar o lifetime
+`'static`.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -605,39 +616,41 @@ referência ou uma incompatibilidade das lifetimes disponíveis. Nesses casos, a
 
 ## Parâmetros de tipo genérico, trait bounds e lifetimes
 
-Vejamos brevemente a sintaxe de especificação de parâmetros de tipo genérico, trait
-limites e lifetimes, tudo em uma função!
+Vejamos brevemente a sintaxe para especificar parâmetros de tipo genérico,
+trait bounds e lifetimes, tudo em uma única função!
 
 ```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-11-generics-traits-and-lifetimes/src/main.rs:here}}
 ```
 
-Esta é a função `longest` da Listagem 10.21 que retorna o maior
-duas fatias de barbante. Mas agora ele tem um parâmetro extra chamado `ann` do genérico
-digite `T`, que pode ser preenchido por qualquer tipo que implemente `Display`
-característica conforme especificado pela cláusula `where`. Este parâmetro extra será impresso
-usando `{}`, e é por isso que o limite de característica `Display` é necessário. Porque
-lifetimes são um tipo genérico, as declarações do parâmetro de lifetime
-`'a` e o parâmetro de tipo genérico `T` vão na mesma lista dentro do ângulo
-colchetes após o nome da função.
+Esta é a função `longest` da Listagem 10-21, que retorna o mais longo entre
+dois string slices. Mas agora ela tem um parâmetro extra chamado `ann`, do tipo
+genérico `T`, que pode ser preenchido por qualquer tipo que implemente a trait
+`Display`, conforme especificado pela cláusula `where`. Esse parâmetro extra
+será impresso usando `{}`, e é por isso que o trait bound `Display` é
+necessário. Como lifetimes são um tipo de genérico, as declarações do
+parâmetro de lifetime `'a` e do parâmetro de tipo genérico `T` ficam na mesma
+lista dentro dos colchetes angulares após o nome da função.
 
 ## Resumo
 
-Abordamos muito neste capítulo! Agora que você sabe sobre o tipo genérico
-parâmetros, traits e trait bounds e parâmetros genéricos de lifetime, você está
-pronto para escrever código sem repetição que funcione em muitas situações diferentes.
-Os parâmetros de tipo genérico permitem aplicar o código a diferentes tipos. Características e
-trait bounds garantem que, mesmo que os tipos sejam genéricos, eles terão o
-comportamento que o código precisa. Você aprendeu como usar anotações de lifetime para garantir
-que este código flexível não terá referências pendentes. E tudo isso
-a análise acontece em tempo de compilação, o que não afeta o desempenho em tempo de execução!
+Abordamos muita coisa neste capítulo! Agora que você sabe sobre parâmetros de
+tipo genérico, traits e trait bounds, e parâmetros genéricos de lifetime, você
+está pronto para escrever código sem repetição que funcione em muitas situações
+diferentes. Parâmetros de tipo genérico permitem aplicar o código a diferentes
+tipos. Traits e trait bounds garantem que, mesmo que os tipos sejam genéricos,
+eles terão o comportamento de que o código precisa. Você aprendeu como usar
+anotações de lifetime para garantir que esse código flexível não tenha
+referências pendentes. E toda essa análise acontece em tempo de compilação, o
+que não afeta o desempenho em tempo de execução!
 
-Acredite ou não, há muito mais para aprender sobre os tópicos que discutimos em
-neste capítulo: O Capítulo 18 discute objetos de traits, que são outra maneira de usar
-traits. Existem também cenários mais complexos que envolvem anotações de lifetime
-que você só precisará em cenários muito avançados; para aqueles, você deve ler
-a [Referência do Rust][reference]. Mas a seguir, você aprenderá como escrever testes em
-Rust para que você possa ter certeza de que seu código está funcionando como deveria.
+Acredite ou não, há muito mais para aprender sobre os tópicos que discutimos
+neste capítulo: o Capítulo 18 discute objetos de trait, que são outra forma de
+usar traits. Também existem cenários mais complexos envolvendo anotações de
+lifetime, que você só precisará em situações muito avançadas; para esses casos,
+você deve ler a [Referência do Rust][reference]. Mas, a seguir, você aprenderá
+como escrever testes em Rust para poder ter certeza de que seu código está
+funcionando como deveria.
 
 [references-and-borrowing]: ch04-02-references-and-borrowing.html#references-and-borrowing
 [string-slices-as-parameters]: ch04-03-slices.html#string-slices-as-parameters
