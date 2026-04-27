@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-597b70a8.js";
+            window.path_to_searchindex_js = "searchindex-0804a304.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="todos-os-lugares-em-que-padrões-podem-ser-usados"><a class="header" href="#todos-os-lugares-em-que-padrões-podem-ser-usados">Todos os lugares em que padrões podem ser usados</a></h2>
+                        <h2 id="todos-os-lugares-em-que-padrões-podem-ser-usados"><a class="header" href="#todos-os-lugares-em-que-padrões-podem-ser-usados">Todos os Lugares em Que Padrões Podem Ser Usados</a></h2>
 <p>Padrões aparecem em vários lugares no Rust, e você os tem usado bastante sem
 perceber! Esta seção discute todos os lugares em que padrões são válidos.</p>
 <h3 id="braços-de-match"><a class="header" href="#braços-de-match">Braços de <code>match</code></a></h3>
@@ -303,10 +303,10 @@ para executar se o padrão em <code>if let</code> não corresponder.</p>
 <code>match</code>, na qual só podemos expressar um único valor para comparar com os
 padrões. Além disso, Rust não exige que as condições em uma série de braços
 <code>if let</code>, <code>else if</code> e <code>else if let</code> estejam relacionadas entre si.</p>
-<p>O código na Listagem 19-3 determina em qual cor seu plano de fundo será baseado.
-uma série de verificações para diversas condições. Para este exemplo, criamos
-variáveis com valores codificados que um programa real pode receber do usuário
-entrada.</p>
+<p>O código na Listagem 19-3 determina qual cor usar para o plano de fundo com
+base em uma série de verificações de várias condições. Para este exemplo,
+criamos variáveis com valores codificados que um programa real poderia receber
+da entrada do usuário.</p>
 <figure class="listing" id="listing-19-3">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">fn main() {
@@ -331,11 +331,11 @@ entrada.</p>
 <figcaption><a href="#listing-19-3">Listing 19-3</a>: Misturando <code>if let</code>, <code>else if</code>, <code>else if let</code> e <code>else</code></figcaption>
 </figure>
 <p>Se o usuário especificar uma cor favorita, essa cor será usada como plano de fundo.
-Se nenhuma cor favorita for especificada e hoje for terça-feira, a cor de fundo será
-verde. Caso contrário, se o usuário especificar sua idade como uma string e pudermos analisar
-como um número com sucesso, a cor é roxa ou laranja dependendo
-o valor do número. Se nenhuma destas condições se aplicar, o plano de fundo
-a cor é azul.</p>
+Se nenhuma cor favorita for especificada e hoje for terça-feira, a cor de fundo
+será verde. Caso contrário, se o usuário especificar sua idade como uma string
+e conseguirmos analisá-la como número com sucesso, a cor será roxa ou laranja,
+dependendo do valor do número. Se nenhuma dessas condições se aplicar, a cor do
+plano de fundo será azul.</p>
 <p>Essa estrutura condicional nos permite dar suporte a requisitos complexos. Com
 os valores codificados que temos aqui, este exemplo imprimirá
 <code>Using purple as the background color</code>.</p>
@@ -348,9 +348,9 @@ não podemos combinar essas duas condições em <code>if let Ok(age) = age &amp;
 A nova <code>age</code> que queremos comparar com 30 não é válida até que o novo escopo
 comece com as chaves.</p>
 <p>A desvantagem de usar expressões <code>if let</code> é que o compilador não verifica
-para exaustividade, enquanto com expressões <code>match</code> isso acontece. Se omitimos o
-último bloco <code>else</code> e, portanto, perdeu o tratamento de alguns casos, o compilador
-não nos alerta sobre o possível bug lógico.</p>
+exaustividade, ao contrário do que acontece com expressões <code>match</code>. Se
+omitirmos o último bloco <code>else</code> e, portanto, deixarmos de tratar alguns casos,
+o compilador não nos alertará sobre o possível bug lógico.</p>
 <h3 id="loops-condicionais-while-let"><a class="header" href="#loops-condicionais-while-let">Loops condicionais <code>while let</code></a></h3>
 <p>Semelhante em construção a <code>if let</code>, o loop condicional <code>while let</code> permite que
 um loop <code>while</code> seja executado enquanto um padrão continuar correspondendo. Na
@@ -373,8 +373,8 @@ threads, mas, nesse caso, verificando um <code>Result</code> em vez de um <code>
 </figure>
 <p>Este exemplo imprime <code>1</code>, <code>2</code> e depois <code>3</code>. O método <code>recv</code> tira a primeira
 mensagem do lado receptor do canal e retorna um <code>Ok(value)</code>. Quando vimos
-<code>recv</code> pela primeira vez no Capítulo 16, desembrulhamos o erro diretamente ou
-interagimos com ele como um iterator usando um loop <code>for</code>. Como mostra a
+<code>recv</code> pela primeira vez no Capítulo 16, usamos <code>unwrap</code> diretamente ou
+interagimos com ele como um iterador usando um loop <code>for</code>. Como mostra a
 Listagem 19-4, porém, também podemos usar <code>while let</code>, porque o método <code>recv</code>
 retorna <code>Ok</code> cada vez que uma mensagem chega, enquanto o remetente existir, e
 então produz um <code>Err</code> assim que o lado remetente se desconecta.</p>
@@ -402,7 +402,7 @@ a is at index 0
 b is at index 1
 c is at index 2
 </code></pre>
-<p>Adaptamos um iterator usando o método <code>enumerate</code> para que ele produza um valor
+<p>Adaptamos um iterador usando o método <code>enumerate</code> para que ele produza um valor
 e o índice desse valor, colocados em uma tupla. O primeiro valor produzido é a
 tupla <code>(0, 'a')</code>. Quando esse valor corresponde ao padrão <code>(index, value)</code>,
 <code>index</code> será <code>0</code> e <code>value</code> será <code>'a'</code>, imprimindo a primeira linha da saída.</p>
@@ -436,13 +436,13 @@ fn main() {
 </figure>
 <p>Esse código imprime <code>Current location: (3, 5)</code>. Os valores <code>&amp;(3, 5)</code>
 correspondem ao padrão <code>&amp;(x, y)</code>, então <code>x</code> é o valor <code>3</code> e <code>y</code> é o valor <code>5</code>.</p>
-<p>Também podemos usar padrões nas listas de parâmetros closure da mesma forma que em
-listas de parâmetros de função porque closures são semelhantes a funções, como
-discutido no Capítulo 13.</p>
-<p>Neste ponto, você viu várias maneiras de usar padrões, mas os padrões não
-funcionam da mesma forma em todos os lugares onde podemos usá-los. Em alguns lugares, os padrões devem
-ser irrefutável; em outras circunstâncias, podem ser refutáveis. Nós discutiremos
-esses dois conceitos a seguir.</p>
+<p>Também podemos usar padrões nas listas de parâmetros de closures da mesma forma
+que em listas de parâmetros de função, porque closures são semelhantes a
+funções, como discutido no Capítulo 13.</p>
+<p>Neste ponto, você viu várias maneiras de usar padrões, mas eles não funcionam
+da mesma forma em todos os lugares onde podemos usá-los. Em alguns lugares, os
+padrões devem ser irrefutáveis; em outras circunstâncias, podem ser
+refutáveis. Discutiremos esses dois conceitos a seguir.</p>
 
                     </main>
 

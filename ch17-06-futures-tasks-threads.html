@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-597b70a8.js";
+            window.path_to_searchindex_js = "searchindex-0804a304.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -211,7 +211,7 @@ task pode alternar entre os futures em seu corpo. Por fim, futures são a
 unidade mais granular de concorrência em Rust, e cada future pode representar
 uma árvore de outros futures. O runtime, mais especificamente seu executor,
 gerencia tasks, e tasks gerenciam futures. Nesse sentido, tasks se parecem com
-threads leves gerenciadas em runtime, com capacidades adicionais que surgem do
+threads leves gerenciadas pelo runtime, com capacidades adicionais que surgem do
 fato de serem gerenciadas por um runtime e não pelo sistema operacional.</p>
 <p>Isso não significa que tasks async sejam sempre melhores do que threads, nem o
 contrário. A concorrência com threads é, em alguns aspectos, um modelo de
@@ -219,9 +219,9 @@ programação mais simples do que a concorrência com <code>async</code>. Isso p
 força ou uma fraqueza. Threads são um pouco “dispare e esqueça”: elas não têm
 um equivalente nativo a um future e, portanto, simplesmente executam até o
 fim, sem interrupção, exceto pelo próprio sistema operacional.</p>
-<p>E acontece que threads e tasks muitas vezes funcionam muito bem juntas, porque
+<p>Além disso, threads e tasks muitas vezes funcionam muito bem juntas, porque
 tasks podem, pelo menos em alguns runtimes, ser movidas entre threads. De
-fato, nos bastidores, o runtime que estamos usando, incluindo as funções
+fato, por baixo dos panos, o runtime que estamos usando, incluindo as funções
 <code>spawn_blocking</code> e <code>spawn_task</code>, é multithread por padrão! Muitos runtimes usam
 uma abordagem chamada <em>work stealing</em> para mover tasks de forma transparente
 entre threads, com base em como elas estão sendo utilizadas no momento, a fim
@@ -230,10 +230,10 @@ tasks <em>e</em> threads e, portanto, também futures.</p>
 <p>Ao pensar em qual método usar em cada situação, considere estas regras
 práticas:</p>
 <ul>
-<li>Se o trabalho for <em>muito paralelizável</em> (isto é, limitado por CPU), como
+<li>Se o trabalho for <em>muito paralelizável</em> (isto é, CPU-bound), como
 processar um grande volume de dados em que cada parte pode ser tratada
 separadamente, threads costumam ser a melhor escolha.</li>
-<li>Se o trabalho for <em>muito concorrente</em> (isto é, limitado por E/S), como lidar
+<li>Se o trabalho for <em>muito concorrente</em> (isto é, I/O-bound), como lidar
 com mensagens vindas de muitas fontes diferentes e chegando em intervalos ou
 velocidades diferentes, async costuma ser a melhor escolha.</li>
 </ul>
@@ -276,7 +276,7 @@ mensagens que vimos.</p>
 <p>Voltando ao cenário com o qual abrimos o capítulo, imagine executar um conjunto
 de tarefas de codificação de vídeo usando uma thread dedicada, porque a
 codificação de vídeo é limitada por computação, mas notificar a interface de
-usuário de que essas operações terminaram por meio de um canal async. Existem
+usuário de que essas operações terminaram usando um canal async. Existem
 inúmeros exemplos desse tipo de combinação em casos de uso do mundo real.</p>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
 <p>Esta não é a última vez que você verá concorrência neste livro. O projeto do

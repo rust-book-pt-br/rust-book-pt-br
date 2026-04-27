@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-597b70a8.js";
+            window.path_to_searchindex_js = "searchindex-0804a304.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="traits-avançadas"><a class="header" href="#traits-avançadas">Traits avançadas</a></h2>
+                        <h2 id="traits-avançadas"><a class="header" href="#traits-avançadas">Traits Avançadas</a></h2>
 <p>Abordamos traits pela primeira vez em <a href="ch10-02-traits.html">“Definindo comportamento compartilhado com
 traits”</a><!-- ignore --> no Capítulo 10, mas não discutimos os detalhes
 mais avançados. Agora que você sabe mais sobre Rust, podemos entrar no âmago
@@ -189,7 +189,7 @@ da questão.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="specifying-placeholder-types-in-trait-definitions-with-associated-types"></a>
 <a id="associated-types"></a></p>
-<h3 id="definindo-traits-com-tipos-associados"><a class="header" href="#definindo-traits-com-tipos-associados">Definindo traits com tipos associados</a></h3>
+<h3 id="definindo-traits-com-tipos-associados"><a class="header" href="#definindo-traits-com-tipos-associados">Definindo Traits com Tipos Associados</a></h3>
 <p><em>Tipos associados</em> conectam um espaço reservado de tipo a uma trait, de modo que
 as definições de métodos da trait possam usar esses tipos de espaço reservado
 em suas assinaturas. O implementador de uma trait especificará o tipo concreto
@@ -197,9 +197,9 @@ a ser usado no lugar do espaço reservado para a implementação específica.
 Dessa forma, podemos definir uma trait que usa alguns tipos sem precisar saber
 exatamente quais são esses tipos até que a trait seja implementada.</p>
 <p>Descrevemos a maioria dos recursos avançados deste capítulo como raramente
-necessários. Os tipos associados ficam em algum lugar no meio: são usados com menos frequência
-do que os recursos explicados no restante do livro, mas mais frequentemente do que muitos dos
-outros recursos discutidos aqui.</p>
+necessários. Os tipos associados ficam em algum lugar no meio: são usados com
+menos frequência do que os recursos explicados no restante do livro, mas com
+mais frequência do que muitos dos outros recursos discutidos aqui.</p>
 <p>Um exemplo de trait com tipo associado é a trait <code>Iterator</code>, fornecida pela
 biblioteca padrão. O tipo associado chama-se <code>Item</code> e representa o tipo dos
 valores sobre os quais o tipo que implementa a trait <code>Iterator</code> está iterando.
@@ -269,7 +269,7 @@ implementar a mesma trait várias vezes para um tipo. Na definição da
 Listagem 20-13, que usa tipos associados, só podemos escolher o tipo de <code>Item</code>
 uma única vez, porque só pode existir um <code>impl Iterator for Counter</code>. Não
 precisamos especificar, em todo lugar onde chamamos <code>next</code> em <code>Counter</code>, que
-queremos um iterator de valores <code>u32</code>.</p>
+queremos um iterador de valores <code>u32</code>.</p>
 <p>Os tipos associados também passam a fazer parte do contrato da trait:
 implementadores da trait precisam fornecer um tipo para substituir o espaço
 reservado do tipo associado.
@@ -277,15 +277,15 @@ Os tipos associados geralmente têm um nome que descreve como o tipo será usado
 e documentar o tipo associado na documentação da API é uma boa prática.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="default-generic-type-parameters-and-operator-overloading"></a></p>
-<h3 id="usando-parâmetros-genéricos-padrão-e-sobrecarga-de-operadores"><a class="header" href="#usando-parâmetros-genéricos-padrão-e-sobrecarga-de-operadores">Usando parâmetros genéricos padrão e sobrecarga de operadores</a></h3>
+<h3 id="usando-parâmetros-genéricos-padrão-e-sobrecarga-de-operadores"><a class="header" href="#usando-parâmetros-genéricos-padrão-e-sobrecarga-de-operadores">Usando Parâmetros Genéricos Padrão e Sobrecarga de Operadores</a></h3>
 <p>Quando usamos parâmetros de tipo genérico, podemos especificar um tipo concreto
 padrão para o tipo genérico. Isso elimina a necessidade de implementadores da
 trait especificarem um tipo concreto se o tipo padrão já servir. Você define um
 tipo padrão ao declarar um tipo genérico com a sintaxe
 <code>&lt;PlaceholderType=ConcreteType&gt;</code>.</p>
-<p>Um ótimo exemplo de situação em que essa técnica é útil é a sobrecarga de operadores
-(<em>operator overloading</em>), em que você personaliza o comportamento de um operador, como <code>+</code>,
-em situações específicas.</p>
+<p>Um ótimo exemplo de situação em que essa técnica é útil é a sobrecarga de
+operadores (<em>operator overloading</em>), em que você personaliza o comportamento de
+um operador, como <code>+</code>, em situações específicas.</p>
 <p>Rust não permite que você crie seus próprios operadores nem que sobrecarregue
 operadores arbitrariamente. Mas você pode sobrecarregar as operações e as
 traits correspondentes listadas em <code>std::ops</code> implementando a trait associada
@@ -370,8 +370,8 @@ impl Add&lt;Meters&gt; for Millimeters {
 }</code></pre>
 <figcaption><a href="#listing-20-16">Listing 20-16</a>: Implementando a trait <code>Add</code> em <code>Millimeters</code> para somar <code>Millimeters</code> e <code>Meters</code></figcaption>
 </figure>
-<p>Para somar <code>Millimeters</code> e <code>Meters</code>, especificamos <code>impl Add&lt;Meters&gt;</code> para definir o
-valor do parâmetro de tipo <code>Rhs</code>, em vez de usar o padrão <code>Self</code>.</p>
+<p>Para somar <code>Millimeters</code> e <code>Meters</code>, especificamos <code>impl Add&lt;Meters&gt;</code> para
+definir o valor do parâmetro de tipo <code>Rhs</code>, em vez de usar o padrão <code>Self</code>.</p>
 <p>Você usará parâmetros de tipo padrão de duas maneiras principais:</p>
 <ol>
 <li>Para estender um tipo sem quebrar código existente</li>
@@ -383,14 +383,14 @@ capacidade de ir além disso. Usar um parâmetro de tipo padrão na definição 
 <code>Add</code> significa que você não precisa especificar o parâmetro extra na maior
 parte do tempo. Em outras palavras, evita-se um pouco de boilerplate de
 implementação, o que torna a trait mais fácil de usar.</p>
-<p>O primeiro propósito é parecido com o segundo, mas no sentido inverso: se você quiser adicionar um
-parâmetro de tipo a uma trait existente, pode fornecer um valor padrão para permitir a
-extensão da funcionalidade da trait sem quebrar o
+<p>O primeiro propósito é parecido com o segundo, mas no sentido inverso: se você
+quiser adicionar um parâmetro de tipo a uma trait existente, pode fornecer um
+valor padrão para permitir a extensão da funcionalidade da trait sem quebrar o
 código de implementação já existente.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="fully-qualified-syntax-for-disambiguation-calling-methods-with-the-same-name"></a>
 <a id="disambiguating-between-methods-with-the-same-name"></a></p>
-<h3 id="desambiguando-entre-métodos-com-o-mesmo-nome"><a class="header" href="#desambiguando-entre-métodos-com-o-mesmo-nome">Desambiguando entre métodos com o mesmo nome</a></h3>
+<h3 id="desambiguando-entre-métodos-com-o-mesmo-nome"><a class="header" href="#desambiguando-entre-métodos-com-o-mesmo-nome">Desambiguando entre Métodos com o Mesmo Nome</a></h3>
 <p>Nada em Rust impede que uma trait tenha um método com o mesmo nome que
 o método de outra trait, nem impede que você implemente ambas as traits
 em um mesmo tipo. Também é possível implementar diretamente no tipo um método com
@@ -474,8 +474,8 @@ o método implementado diretamente no tipo, como mostrado na Listagem 20-18.</p>
 <p>A execução desse código imprimirá <code>*waving arms furiously*</code>, mostrando que Rust
 chamou o método <code>fly</code> implementado diretamente em <code>Human</code>.</p>
 <p>Para chamar os métodos <code>fly</code> da trait <code>Pilot</code> ou da trait <code>Wizard</code>,
-precisamos usar uma sintaxe mais explícita para especificar a qual método <code>fly</code> nos referimos.
-A Listagem 20-19 demonstra essa sintaxe.</p>
+precisamos usar uma sintaxe mais explícita para especificar a qual método <code>fly</code>
+nos referimos. A Listagem 20-19 demonstra essa sintaxe.</p>
 <figure class="listing" id="listing-20-19">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">trait Pilot {
@@ -532,13 +532,13 @@ Up!
 implementassem a mesma <em>trait</em>, Rust poderia descobrir qual implementação
 usar com base no tipo de <code>self</code>.</p>
 <p>No entanto, funções associadas que não são métodos não possuem parâmetro <code>self</code>.
-Quando existem vários tipos ou traits que definem funções não associadas a métodos
-com o mesmo nome, Rust nem sempre sabe a qual tipo você está se referindo,
-a menos que use sintaxe totalmente qualificada. Por exemplo, na Listagem 20-20, criamos
-uma trait para um abrigo de animais que quer chamar todos os cães filhotes de Spot. Fazemos
-uma trait <code>Animal</code> com uma função associada não-método chamada <code>baby_name</code>. A
-trait <code>Animal</code> é implementada para a struct <code>Dog</code>, na qual também fornecemos
-diretamente uma função associada não-método <code>baby_name</code>.</p>
+Quando existem vários tipos ou traits que definem funções associadas com o
+mesmo nome, Rust nem sempre sabe a qual tipo você está se referindo, a menos
+que use sintaxe totalmente qualificada. Por exemplo, na Listagem 20-20, criamos
+uma trait para um abrigo de animais que quer chamar todos os filhotes de
+cachorro de Spot. Criamos uma trait <code>Animal</code> com uma função associada chamada
+<code>baby_name</code>. A trait <code>Animal</code> é implementada para a struct <code>Dog</code>, na qual também
+fornecemos diretamente uma função associada <code>baby_name</code>.</p>
 <figure class="listing" id="listing-20-20">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024">trait Animal {
@@ -658,9 +658,9 @@ usar essa sintaxe.</p>
 }</code></pre>
 <figcaption><a href="#listing-20-22">Listing 20-22</a>: Usando sintaxe totalmente qualificada para especificar que queremos chamar a função <code>baby_name</code> da trait <code>Animal</code> como implementada em <code>Dog</code></figcaption>
 </figure>
-<p>Estamos fornecendo ao Rust uma anotação de tipo entre colchetes angulares, que
-indica que queremos chamar o método <code>baby_name</code> da trait <code>Animal</code> como
-implementado em <code>Dog</code>, ou seja, queremos tratar o tipo <code>Dog</code> como um
+<p>Estamos fornecendo ao Rust uma anotação de tipo entre sinais de menor e maior,
+que indica que queremos chamar a função <code>baby_name</code> da trait <code>Animal</code> como
+implementada em <code>Dog</code>, ou seja, queremos tratar o tipo <code>Dog</code> como um
 <code>Animal</code> nessa chamada de função. Esse código agora imprimirá o que queremos:</p>
 <pre><code class="language-console">$ cargo run
    Compiling traits-example v0.1.0 (file:///projects/traits-example)
@@ -670,16 +670,16 @@ A baby dog is called a puppy
 </code></pre>
 <p>Em geral, a sintaxe totalmente qualificada é definida da seguinte forma:</p>
 <pre><code class="language-rust ignore">&lt;Type as Trait&gt;::function(receiver_if_method, next_arg, ...);</code></pre>
-<p>Para funções associadas que não são métodos, não haveria <code>receiver</code>:
-haveria apenas a lista dos outros argumentos. Você poderia usar sintaxe totalmente qualificada
-em todos os lugares em que chama funções ou métodos. No entanto, pode
-omitir qualquer parte dessa sintaxe que Rust consiga deduzir a partir de outras informações
-do programa. Você só precisa usar essa forma mais detalhada quando
-existem várias implementações com o mesmo nome e Rust precisa de ajuda
+<p>Para funções associadas que não são métodos, não haveria <code>receiver</code>: haveria
+apenas a lista dos outros argumentos. Você poderia usar sintaxe totalmente
+qualificada em todos os lugares em que chama funções ou métodos. No entanto,
+pode omitir qualquer parte dessa sintaxe que Rust consiga deduzir a partir de
+outras informações do programa. Você só precisa usar essa forma mais detalhada
+quando existem várias implementações com o mesmo nome e Rust precisa de ajuda
 para identificar qual delas você quer chamar.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-supertraits-to-require-one-traits-functionality-within-another-trait"></a></p>
-<h3 id="usando-supertraits"><a class="header" href="#usando-supertraits">Usando supertraits</a></h3>
+<h3 id="usando-supertraits"><a class="header" href="#usando-supertraits">Usando Supertraits</a></h3>
 <p>Às vezes você pode escrever uma definição de trait que depende de outra trait. Para
 um tipo implementar a primeira trait, você quer exigir que esse tipo também
 implemente a segunda. Você faz isso para que a definição da sua trait possa
@@ -791,8 +791,8 @@ note: required by a bound in `OutlinePrint::outline_print`
 For more information about this error, try `rustc --explain E0277`.
 error: could not compile `traits-example` (bin "traits-example") due to 2 previous errors
 </code></pre>
-<p>Para corrigir isso, implementamos <code>Display</code> para <code>Point</code> e satisfazemos a restrição exigida por
-<code>OutlinePrint</code>, assim:</p>
+<p>Para corrigir isso, implementamos <code>Display</code> para <code>Point</code> e satisfazemos a
+restrição exigida por <code>OutlinePrint</code>, assim:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">trait OutlinePrint: fmt::Display {
@@ -828,12 +828,12 @@ impl fmt::Display for Point {
 </span><span class="boring">}</span></code></pre>
 </figure>
 <p>Então, implementar a trait <code>OutlinePrint</code> para <code>Point</code> compilará
-com sucesso, e poderemos chamar <code>outline_print</code> em uma instância de <code>Point</code> para exibi-la
-dentro de um contorno de asteriscos.</p>
+com sucesso, e poderemos chamar <code>outline_print</code> em uma instância de <code>Point</code> para
+exibi-la dentro de um contorno de asteriscos.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="using-the-newtype-pattern-to-implement-external-traits-on-external-types"></a>
 <a id="using-the-newtype-pattern-to-implement-external-traits"></a></p>
-<h3 id="implementando-traits-externas-com-o-padrão-newtype"><a class="header" href="#implementando-traits-externas-com-o-padrão-newtype">Implementando traits externas com o padrão newtype</a></h3>
+<h3 id="implementando-traits-externas-com-o-padrão-newtype"><a class="header" href="#implementando-traits-externas-com-o-padrão-newtype">Implementando Traits Externas com o Padrão Newtype</a></h3>
 <p>Na seção <a href="ch10-02-traits.html#implementing-a-trait-on-a-type">“Implementando uma trait em um tipo”</a><!--
 ignore --> do Capítulo 10, mencionamos a regra órfã, que afirma que
 só podemos implementar uma trait para um tipo se a trait, o
@@ -842,7 +842,7 @@ restrição usando o padrão newtype, que envolve criar um novo tipo em uma
 tuple struct. (Cobrimos tuple structs na seção <a href="ch05-01-defining-structs.html#creating-different-types-with-tuple-structs">“Criando diferentes tipos com
 tuple structs”</a><!-- ignore -->, no Capítulo 5.) A tuple
 struct terá um campo e será um wrapper fino em torno do tipo para o qual
-queremos implementar uma trait. Assim, o tipo wrapper é local ao nosso crate, e nós
+queremos implementar uma trait. Assim, o tipo wrapper é local ao nosso crate, e
 podemos implementar a trait nele. <em>Newtype</em> é um termo que vem
 da linguagem de programação Haskell. Não há penalidade de desempenho em tempo de execução
 ao usar esse padrão, e o tipo wrapper é eliminado em tempo de compilação.</p>
@@ -884,7 +884,8 @@ do Capítulo 15). Se não quiséssemos que <code>Wrapper</code> tivesse todos os
 métodos do tipo interno, por exemplo, para restringir seu
 comportamento, teríamos de implementar manualmente apenas os métodos desejados.</p>
 <p>Esse padrão newtype também é útil mesmo quando traits não estão envolvidas. Vamos
-mudar o foco e ver algumas maneiras avançadas de interagir com o sistema de tipos do Rust.</p>
+mudar o foco e ver algumas maneiras avançadas de interagir com o sistema de
+tipos de Rust.</p>
 
                     </main>
 

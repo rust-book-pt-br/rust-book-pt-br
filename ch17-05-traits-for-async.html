@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-597b70a8.js";
+            window.path_to_searchindex_js = "searchindex-0804a304.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -183,7 +183,7 @@
                     <main>
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="digging-into-the-traits-for-async"></a></p>
-<h2 id="uma-análise-mais-detalhada-das-traits-de-async"><a class="header" href="#uma-análise-mais-detalhada-das-traits-de-async">Uma análise mais detalhada das traits de async</a></h2>
+<h2 id="uma-análise-mais-detalhada-das-traits-de-async"><a class="header" href="#uma-análise-mais-detalhada-das-traits-de-async">Uma Análise Mais Detalhada das Traits de Async</a></h2>
 <p>Ao longo do capítulo, usamos as traits <code>Future</code>, <code>Stream</code> e <code>StreamExt</code>
 de várias maneiras. Até aqui, porém, evitamos entrar muito nos detalhes de
 como elas funcionam ou como se encaixam, o que é suficiente na maior parte do
@@ -194,7 +194,7 @@ nos aprofundar apenas o bastante para ajudar nesses cenários, deixando o
 mergulho <em>realmente</em> profundo para outras documentações.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="future"></a></p>
-<h3 id="a-trait-future"><a class="header" href="#a-trait-future">A trait <code>Future</code></a></h3>
+<h3 id="a-trait-future"><a class="header" href="#a-trait-future">A Trait <code>Future</code></a></h3>
 <p>Vamos começar olhando mais de perto como a trait <code>Future</code> funciona. Veja como
 o Rust a define:</p>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">#![allow(unused)]
@@ -231,7 +231,7 @@ trabalho a fazer, então o chamador precisará verificá-lo novamente mais tarde
 A variante <code>Ready</code> indica que o <code>Future</code> concluiu seu trabalho e que o valor
 <code>T</code> está disponível.</p>
 <blockquote>
-<p>Observação: raramente é necessário chamar <code>poll</code> diretamente, mas, se você
+<p>Nota: raramente é necessário chamar <code>poll</code> diretamente, mas, se você
 precisar, lembre-se de que, com a maioria dos futures, o chamador não deve
 chamar <code>poll</code> novamente depois que o future tiver retornado <code>Ready</code>. Muitos
 futures entram em <code>panic!</code> se forem consultados outra vez depois de ficarem
@@ -365,9 +365,9 @@ misturar enums geradas pelo compilador.</p>
 aguardamos o resultado. No entanto, isso não compila; aqui está a parte
 relevante das mensagens de erro.</p>
 <!-- manual-regeneration
-listagens de cd/ch17-async-await/listing-17-23
-Construção cargo
-copie *apenas* o bloco `error` final dos erros
+cd listings/ch17-async-await/listing-17-23
+cargo build
+copy *only* the final `error` block from the errors
 -->
 <pre><code class="language-text">error[E0277]: `dyn Future&lt;Output = ()&gt;` cannot be unpinned
   --&gt; src/main.rs:48:33
@@ -417,8 +417,8 @@ pub trait Future {
 }
 <span class="boring">}</span></code></pre>
 <p>O parâmetro <code>cx</code> e seu tipo <code>Context</code> são a chave para como um runtime
-realmente sabe quando verificar um dado future enquanto continua sendo
-preguiçoso. Novamente, os detalhes de como isso funciona estão fora do escopo
+realmente sabe quando verificar um dado future enquanto ele continua sendo
+lazy. Novamente, os detalhes de como isso funciona estão fora do escopo
 deste capítulo, e normalmente você só precisa pensar nisso ao escrever uma
 implementação personalizada de <code>Future</code>. Em vez disso, vamos nos concentrar no
 tipo de <code>self</code>, porque esta é a primeira vez que vemos um método em que <code>self</code>
@@ -428,8 +428,8 @@ principais:</p>
 <ul>
 <li>Informa ao Rust qual tipo <code>self</code> deve ser para que o método seja chamado.</li>
 <li>Não pode ser qualquer tipo. Está restrito ao tipo em que o método está
-implementado, uma referência ou smart pointer para esse tipo, ou um <code>Pin</code> envolvendo um
-referência a esse tipo.</li>
+implementado, uma referência ou smart pointer para esse tipo, ou um <code>Pin</code>
+envolvendo uma referência a esse tipo.</li>
 </ul>
 <p>Veremos mais sobre essa sintaxe no <a href="ch18-00-oop.html">Capítulo 18</a><!-- ignore -->. Por
 enquanto, basta saber que, se quisermos fazer <code>poll</code> em um future para verificar
@@ -447,15 +447,15 @@ explicar a mensagem de erro que vimos antes, mas ela falava em <code>Unpin</code
 <code>Pin</code>. Então, como exatamente <code>Pin</code> se relaciona com <code>Unpin</code>, e por que
 <code>Future</code> precisa que <code>self</code> esteja em um tipo <code>Pin</code> para chamar <code>poll</code>?</p>
 <p>Lembre-se de que, como vimos anteriormente neste capítulo, uma série de pontos
-de espera (<code>await</code>) em um future é compilada em uma máquina de estados, e o
-compilador garante que essa máquina de estados siga todas as regras normais de
-segurança do Rust, incluindo borrowing e ownership. Para fazer isso funcionar,
-o Rust analisa quais dados são necessários entre um ponto <code>await</code> e o próximo,
-ou entre um ponto <code>await</code> e o fim do bloco async. Em seguida, ele cria uma
+de await em um future é compilada em uma máquina de estados, e o compilador
+garante que essa máquina de estados siga todas as regras normais de segurança
+de Rust, incluindo borrowing e ownership. Para fazer isso funcionar, Rust
+analisa quais dados são necessários entre um ponto de await e o próximo, ou
+entre um ponto de await e o fim do bloco async. Em seguida, ele cria uma
 variante correspondente na máquina de estados compilada. Cada variante recebe o
 acesso necessário aos dados que serão usados naquela seção do código-fonte,
-seja tomando ownership desses dados ou obtendo uma
-referência mutável ou imutável a ele.</p>
+seja tomando ownership desses dados ou obtendo uma referência mutável ou
+imutável a eles.</p>
 <p>Até aqui, tudo bem: se houver algo errado com ownership ou com referências em
 um determinado bloco async, o borrow checker nos avisará. Quando queremos mover
 o future correspondente a esse bloco, como ao colocá-lo em um <code>Vec</code> para
@@ -529,9 +529,9 @@ determinada trait em um contexto específico. <code>Unpin</code> informa ao comp
 um determinado tipo <em>não</em> precisa manter garantias especiais sobre se o valor
 em questão pode ser movido com segurança.</p>
 <!--
-O `<code>` embutido no próximo bloco é para permitir o `<em>` embutido dentro dele,
-  combinando o que o NoStarch faz em termos de estilo e enfatizando o texto aqui
-  que é algo distinto de um tipo normal.
+  The inline `<code>` in the next block is to allow the inline `<em>` inside it,
+  matching what NoStarch does style-wise, and emphasizing within the text here
+  that it is something distinct from a normal type.
 -->
 <p>Assim como acontece com <code>Send</code> e <code>Sync</code>, o compilador implementa <code>Unpin</code>
 automaticamente para todos os tipos para os quais consegue provar que isso é
@@ -552,7 +552,7 @@ como mostra a Figura 17-8. No entanto, <code>String</code> implementa <code>Unpi
 automaticamente, assim como a maioria dos outros tipos em Rust.</p>
 <figure>
 <img alt="Uma caixa rotulada “Pin” à esquerda com uma seta apontando para uma caixa rotulada “String” à direita. A caixa “String” contém o dado 5usize, representando o comprimento da string, e as letras “h”, “e”, “l”, “l” e “o”, representando os caracteres da string “hello” armazenada nessa instância de `String`. Um retângulo pontilhado envolve a caixa “String” e seu rótulo, mas não a caixa “Pin”." src="img/trpl17-08.svg" class="center" />
-<figcaption>Figura 17-8: Fixando um `String`; a linha pontilhada indica que `String` implementa a trait `Unpin` e, portanto, não fica permanentemente fixado no lugar</figcaption>
+<figcaption>Figura 17-8: Fixando uma `String`; a linha pontilhada indica que `String` implementa a trait `Unpin` e, portanto, não fica permanentemente fixada no lugar</figcaption>
 </figure>
 <p>Como resultado, podemos fazer coisas que seriam ilegais se <code>String</code>
 implementasse <code>!Unpin</code>, como substituir uma string por outra exatamente no
@@ -561,7 +561,7 @@ mesmo local de memória, como na Figura 17-9. Isso não viola o contrato de
 insegura. É justamente por isso que ela implementa <code>Unpin</code>, e não <code>!Unpin</code>.</p>
 <figure>
 <img alt="Os mesmos dados da string “hello” do exemplo anterior, agora rotulados “s1” e acinzentados. A caixa “Pin” do exemplo anterior agora aponta para uma instância diferente de `String`, rotulada “s2”, que é válida, tem comprimento 7usize e contém os caracteres da string “goodbye”. `s2` é cercada por um retângulo pontilhado porque ela também implementa a trait `Unpin`." src="img/trpl17-09.svg" class="center" />
-<figcaption>Figura 17-9: Substituindo o `String` por um `String` totalmente diferente na memória</figcaption>
+<figcaption>Figura 17-9: Substituindo uma `String` por outra `String` totalmente diferente na memória</figcaption>
 </figure>
 <p>Agora sabemos o suficiente para entender os erros relatados para aquela chamada
 a <code>join_all</code> na Listagem 17-23. Originalmente, tentamos mover os futures
@@ -653,10 +653,10 @@ veja os capítulos <a href="https://rust-lang.github.io/async-book/02_execution/
 <a href="https://rust-lang.github.io/async-book/04_pinning/01_chapter.html">4</a><!-- ignore --> de
 <a href="https://rust-lang.github.io/async-book/"><em>Programação Assíncrona em Rust</em></a>.</p>
 </blockquote>
-<h3 id="a-trait-stream"><a class="header" href="#a-trait-stream">A trait <code>Stream</code></a></h3>
+<h3 id="a-trait-stream"><a class="header" href="#a-trait-stream">A Trait <code>Stream</code></a></h3>
 <p>Agora que você tem uma compreensão mais profunda das traits <code>Future</code>, <code>Pin</code> e
 <code>Unpin</code>, podemos voltar nossa atenção para a trait <code>Stream</code>. Como você aprendeu
-anteriormente neste capítulo, streams são semelhantes a iterators assíncronos.
+anteriormente neste capítulo, streams são semelhantes a iteradores assíncronos.
 Ao contrário de <code>Iterator</code> e <code>Future</code>, porém, <code>Stream</code> ainda não tem uma
 definição na biblioteca padrão no momento em que este texto foi escrito. Ainda
 assim, <em>há</em> uma definição muito comum vinda do crate <code>futures</code>, usada em todo o
@@ -682,7 +682,7 @@ trait Stream {
 }
 <span class="boring">}</span></code></pre>
 <p>A trait <code>Stream</code> define um tipo associado chamado <code>Item</code> para o tipo de itens
-produzidos pelo stream. Isso é semelhante a <code>Iterator</code>, em que pode haver de
+produzidos pela stream. Isso é semelhante a <code>Iterator</code>, em que pode haver de
 zero a muitos itens, e diferente de <code>Future</code>, em que sempre há um único
 <code>Output</code>, mesmo que ele seja o tipo unitário <code>()</code>.</p>
 <p><code>Stream</code> também define um método para obter esses itens. Nós o chamamos de
@@ -691,12 +691,12 @@ zero a muitos itens, e diferente de <code>Future</code>, em que sempre há um ú
 <code>Iterator::next</code>. Seu tipo de retorno combina <code>Poll</code> com <code>Option</code>. O tipo
 externo é <code>Poll</code>, porque ele precisa ser verificado quanto à prontidão, assim
 como acontece com um future. O tipo interno é <code>Option</code>, porque precisa
-sinalizar se ainda existem mais mensagens, assim como acontece com um iterator.</p>
+sinalizar se ainda existem mais mensagens, assim como acontece com um iterador.</p>
 <p>Algo muito semelhante a essa definição provavelmente acabará fazendo parte da
 biblioteca padrão do Rust. Enquanto isso, ela faz parte do conjunto de
 ferramentas da maioria dos runtimes, então você pode contar com isso, e tudo o
 que abordaremos a seguir deve se aplicar de modo geral.</p>
-<p>Nos exemplos que vimos na seção <a href="ch17-04-streams.html">“Streams: Futures in Sequence”</a><!--
+<p>Nos exemplos que vimos na seção <a href="ch17-04-streams.html">“Streams: Futures em Sequência”</a><!--
 ignore -->, porém, não usamos <code>poll_next</code> <em>nem</em> <code>Stream</code>; em vez disso,
 usamos <code>next</code> e <code>StreamExt</code>. <em>Poderíamos</em> trabalhar diretamente com a API
 <code>poll_next</code>, escrevendo manualmente nossas próprias máquinas de estados para
@@ -746,8 +746,8 @@ que, mesmo quando você precisa escrever seu próprio tipo de dado de streaming,
 você <em>só</em> precisa implementar <code>Stream</code>; depois disso, qualquer pessoa que usar
 esse tipo poderá usar <code>StreamExt</code> e seus métodos automaticamente.</p>
 <p>Isso é tudo o que abordaremos sobre os detalhes de mais baixo nível dessas
-traits. Para finalizar, vamos considerar como futures, incluindo streams,
-tarefas e threads se encaixam em conjunto.</p>
+traits. Para finalizar, vamos considerar como futures, incluindo streams, tasks
+e threads se encaixam.</p>
 
                     </main>
 

@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-597b70a8.js";
+            window.path_to_searchindex_js = "searchindex-0804a304.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -183,7 +183,7 @@
                     <main>
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="streams"></a></p>
-<h2 id="streams-futures-em-sequência"><a class="header" href="#streams-futures-em-sequência">Streams: Futures em sequência</a></h2>
+<h2 id="streams-futures-em-sequência"><a class="header" href="#streams-futures-em-sequência">Streams: Futures em Sequência</a></h2>
 <p>Lembre-se de como usamos o receptor do nosso canal async anteriormente neste capítulo,
 na seção <a href="ch17-02-concurrency-with-async.html#message-passing">“Passagem de mensagens”</a><!-- ignore -->. O método async
 <code>recv</code> produz uma sequência de itens ao longo do tempo. Esse é um exemplo de um
@@ -195,10 +195,10 @@ Como streams são futures, podemos usá-los com qualquer outro tipo de future e
 combiná-los de maneiras interessantes. Por exemplo, podemos agrupar eventos para evitar
 disparar muitas chamadas de rede, definir timeouts em sequências de operações longas
 ou limitar eventos da interface do usuário para evitar trabalho desnecessário.</p>
-<p>Vimos uma sequência de itens no Capítulo 13, quando examinamos a trait <code>Iterator</code>
-na seção <a href="ch13-02-iterators.html#the-iterator-trait-and-the-next-method">“A trait <code>Iterator</code> e o método <code>next</code>”</a><!--
-ignore -->, mas há duas diferenças entre iterators e o receptor de canal async.
-A primeira diferença é o tempo: iterators são síncronos, enquanto o receptor do
+<p>Vimos uma sequência de itens no Capítulo 13, quando examinamos a trait
+<code>Iterator</code> na seção <a href="ch13-02-iterators.html#the-iterator-trait-and-the-next-method">“A trait <code>Iterator</code> e o Método <code>next</code>”</a><!--
+ignore -->, mas há duas diferenças entre iteradores e o receptor de canal async.
+A primeira diferença é o tempo: iteradores são síncronos, enquanto o receptor do
 canal é assíncrono. A segunda diferença é a API. Ao trabalhar diretamente com
 <code>Iterator</code>, chamamos seu método síncrono <code>next</code>. Com a stream <code>trpl::Receiver</code>,
 em particular, chamamos um método assíncrono <code>recv</code>. Fora isso, essas APIs
@@ -207,10 +207,10 @@ como uma forma assíncrona de iteração. Enquanto <code>trpl::Receiver</code> e
 especificamente receber mensagens, porém, a API geral de streams é muito mais
 ampla: ela fornece o próximo item da mesma forma que <code>Iterator</code>, mas de modo
 assíncrono.</p>
-<p>A semelhança entre iterators e streams em Rust significa que podemos realmente
-criar uma stream a partir de qualquer iterator. Assim como acontece com um iterator, podemos trabalhar com uma
-stream chamando seu método <code>next</code> e aguardando a saída, como na Listagem
-17-21, que ainda não será compilado.</p>
+<p>A semelhança entre iteradores e streams em Rust significa que podemos realmente
+criar uma stream a partir de qualquer iterador. Assim como acontece com um
+iterador, podemos trabalhar com uma stream chamando seu método <code>next</code> e
+aguardando a saída, como na Listagem 17-21, que ainda não compilará.</p>
 <figure class="listing" id="listing-17-21">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore does_not_compile"><span class="boring">extern crate trpl; // required for mdbook test
@@ -228,8 +228,8 @@ stream chamando seu método <code>next</code> e aguardando a saída, como na Lis
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-21">Listing 17-21</a>: Criando uma stream a partir de um iterador e imprimindo seus valores</figcaption>
 </figure>
-<p>Começamos com um array de números, que convertemos em iterator e depois
-chamamos <code>map</code> para dobrar todos os valores. Então convertemos o iterator em uma
+<p>Começamos com um array de números, que convertemos em um iterador e depois
+chamamos <code>map</code> para dobrar todos os valores. Então convertemos o iterador em uma
 stream usando a função <code>trpl::stream_from_iter</code>. Em seguida, iteramos sobre os
 itens da stream à medida que eles chegam com o loop <code>while let</code>.</p>
 <p>Infelizmente, quando tentamos executar o código, ele não compila; em vez disso,
@@ -267,11 +267,11 @@ até agora, você poderia razoavelmente esperar que essa trait fosse <code>Strea
 na verdade <code>StreamExt</code>. Abreviação de <em>extension</em>, <code>Ext</code> é um padrão comum na
 comunidade Rust para estender uma trait com outra.</p>
 <p>A trait <code>Stream</code> define uma interface de baixo nível que combina efetivamente as
-traits <code>Iterator</code> e <code>Future</code>. <code>StreamExt</code> fornece um conjunto de APIs de nível superior
-sobre <code>Stream</code>, incluindo o método <code>next</code>, bem como outros métodos utilitários
-semelhantes aos fornecidos pela trait <code>Iterator</code>. <code>Stream</code> e <code>StreamExt</code>
-ainda não fazem parte da biblioteca padrão do Rust, mas a maior parte do ecossistema
-usa definições semelhantes.</p>
+traits <code>Iterator</code> e <code>Future</code>. <code>StreamExt</code> fornece um conjunto de APIs de nível
+mais alto sobre <code>Stream</code>, incluindo o método <code>next</code>, bem como outros métodos
+utilitários semelhantes aos fornecidos pela trait <code>Iterator</code>. <code>Stream</code> e
+<code>StreamExt</code> ainda não fazem parte da biblioteca padrão de Rust, mas a maior
+parte dos crates do ecossistema usa definições semelhantes.</p>
 <p>A correção para o erro do compilador é adicionar uma instrução <code>use</code> para
 <code>trpl::StreamExt</code>, como na Listagem 17-22.</p>
 <figure class="listing" id="listing-17-22">
@@ -294,9 +294,9 @@ fn main() {
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-22">Listing 17-22</a>: Usando com sucesso um iterador como base para uma stream</figcaption>
 </figure>
-<p>Com todas essas peças juntas, esse código funciona da maneira que queremos! Além disso,
-agora que temos <code>StreamExt</code> em escopo, podemos usar todos os seus métodos utilitários,
-assim como fazemos com iterators.</p>
+<p>Com todas essas peças juntas, esse código funciona da maneira que queremos!
+Além disso, agora que temos <code>StreamExt</code> em escopo, podemos usar todos os seus
+métodos utilitários, assim como fazemos com iteradores.</p>
 
                     </main>
 

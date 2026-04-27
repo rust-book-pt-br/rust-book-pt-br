@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-597b70a8.js";
+            window.path_to_searchindex_js = "searchindex-0804a304.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -183,25 +183,25 @@
                     <main>
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="concurrency-with-async"></a></p>
-<h2 id="aplicando-concorrência-com-async"><a class="header" href="#aplicando-concorrência-com-async">Aplicando concorrência com Async</a></h2>
+<h2 id="aplicando-concorrência-com-async"><a class="header" href="#aplicando-concorrência-com-async">Aplicando Concorrência com Async</a></h2>
 <p>Nesta seção, aplicaremos async a alguns dos mesmos desafios de concorrência que
-abordamos com threads no Capítulo 16. Como já falamos sobre muitas
-ideias-chave, nesta seção vamos nos concentrar no que há de diferente entre
+enfrentamos com threads no Capítulo 16. Como já falamos sobre muitas das ideias
+principais lá, nesta seção vamos nos concentrar no que há de diferente entre
 threads e futures.</p>
 <p>Em muitos casos, as APIs para trabalhar com concorrência usando async são muito
-semelhantes às usadas com threads. Em outros casos, acabam sendo bastante
-diferentes. Mesmo quando as APIs <em>parecem</em> semelhantes entre threads e async, elas
-muitas vezes têm comportamentos diferentes – e quase sempre têm desempenhos diferentes
-características.</p>
+parecidas com as APIs para usar threads. Em outros casos, elas acabam sendo bem
+diferentes. Mesmo quando as APIs <em>parecem</em> semelhantes entre threads e async,
+elas frequentemente têm comportamento diferente, e quase sempre têm
+características de desempenho diferentes.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="counting"></a></p>
-<h3 id="criando-uma-nova-tarefa-com-spawn_task"><a class="header" href="#criando-uma-nova-tarefa-com-spawn_task">Criando uma nova tarefa com <code>spawn_task</code></a></h3>
-<p>A primeira operação que abordamos em <a href="ch16-01-threads.html#creating-a-new-thread-with-spawn">“Criando uma nova thread com
-<code>spawn</code>”</a><!-- ignore --> no Capítulo 16 foi contar usando
-duas threads separadas. Vamos fazer o mesmo usando async. O crate <code>trpl</code> fornece
-uma função <code>spawn_task</code> que se parece muito com a API <code>thread::spawn</code>, e
-uma função <code>sleep</code> que é uma versão async da API <code>thread::sleep</code>. Podemos
-usá-las juntas para implementar o exemplo de contagem, como mostrado na Listagem 17-6.</p>
+<h3 id="criando-uma-nova-tarefa-com-spawn_task"><a class="header" href="#criando-uma-nova-tarefa-com-spawn_task">Criando uma Nova Tarefa com <code>spawn_task</code></a></h3>
+<p>A primeira operação que enfrentamos na seção <a href="ch16-01-threads.html#creating-a-new-thread-with-spawn">“Criando uma Nova Thread com
+<code>spawn</code>”</a><!-- ignore --> do Capítulo 16 foi contar em duas
+threads separadas. Vamos fazer o mesmo usando async. O crate <code>trpl</code> fornece uma
+função <code>spawn_task</code> que se parece muito com a API <code>thread::spawn</code>, e uma função
+<code>sleep</code> que é uma versão async da API <code>thread::sleep</code>. Podemos usá-las juntas
+para implementar o exemplo de contagem, como mostrado na Listagem 17-6.</p>
 <figure class="listing" id="listing-17-6">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
@@ -223,23 +223,24 @@ fn main() {
         }
     });
 }</code></pre>
-<figcaption><a href="#listing-17-6">Listing 17-6</a>: Criando uma nova tarefa para imprimir algo enquanto a tarefa principal imprime outra coisa</figcaption>
+<figcaption><a href="#listing-17-6">Listing 17-6</a>: Criando uma nova tarefa para imprimir uma coisa enquanto a tarefa principal imprime outra</figcaption>
 </figure>
-<p>Como ponto de partida, configuramos nossa função <code>main</code> com <code>trpl::block_on</code> para
-que nossa função de nível superior possa ser async.</p>
+<p>Como ponto de partida, configuramos nossa função <code>main</code> com <code>trpl::block_on</code>
+para que nossa função de nível superior possa ser async.</p>
 <blockquote>
-<p>Nota: Deste ponto em diante no capítulo, cada exemplo incluirá este
-exatamente o mesmo código de empacotamento com <code>trpl::block_on</code> em <code>main</code>, então frequentemente o ignoraremos
-assim como fazemos com <code> main</code>. Lembre-se de incluí-lo em seu código!</p>
+<p>Nota: Deste ponto em diante no capítulo, todos os exemplos incluirão
+exatamente este mesmo código de envolvimento com <code>trpl::block_on</code> em <code>main</code>,
+então muitas vezes o omitiremos, assim como fazemos com <code>main</code>. Lembre-se de
+incluí-lo no seu código!</p>
 </blockquote>
 <p>Então escrevemos dois loops dentro desse bloco, cada um contendo uma chamada a
 <code>trpl::sleep</code>, que espera meio segundo (500 milissegundos) antes de enviar a
 próxima mensagem. Colocamos um loop no corpo de <code>trpl::spawn_task</code> e o outro em
-um loop <code>for</code> de nível superior. Também adicionamos <code>await</code> após as chamadas a
-<code>sleep</code>.</p>
-<p>Este código se comporta de forma semelhante à implementação baseada em thread - incluindo o
-fato de que você pode ver as mensagens aparecerem em uma ordem diferente em seu próprio
-terminal quando você o executa:</p>
+um loop <code>for</code> de nível superior. Também adicionamos um <code>await</code> depois das
+chamadas a <code>sleep</code>.</p>
+<p>Este código se comporta de forma parecida com a implementação baseada em
+threads, incluindo o fato de que você pode ver as mensagens aparecerem em uma
+ordem diferente no seu próprio terminal ao executá-lo:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
@@ -255,12 +256,12 @@ hi number 5 from the first task!
 </code></pre>
 <p>Esta versão para assim que o loop <code>for</code> no corpo do bloco async principal
 termina, porque a tarefa gerada por <code>spawn_task</code> é encerrada quando a função
-<code>main</code> termina. Se você quiser que ela execute até o fim, precisará usar um
-join handle para aguardar a conclusão dessa tarefa. Com threads, usamos o
-método <code>join</code> para “bloquear” até que a thread termine de executar. Na
-Listagem 17-7, podemos usar <code>await</code> para fazer a mesma coisa, porque o
-identificador da tarefa é, ele próprio, um future. Seu tipo <code>Output</code> é um
-<code>Result</code>, então também o desempacotamos depois de aguardar.</p>
+<code>main</code> termina. Se você quiser que ela rode até a conclusão da tarefa, precisará
+usar um join handle para aguardar a primeira tarefa terminar. Com threads,
+usamos o método <code>join</code> para “bloquear” até que a thread terminasse de rodar. Na
+Listagem 17-7, podemos usar <code>await</code> para fazer a mesma coisa, porque o handle
+da tarefa é ele próprio um future. Seu tipo <code>Output</code> é um <code>Result</code>, então
+também chamamos <code>unwrap</code> nele depois de aguardá-lo.</p>
 <figure class="listing" id="listing-17-7">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
@@ -286,7 +287,7 @@ identificador da tarefa é, ele próprio, um future. Seu tipo <code>Output</code
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-7">Listing 17-7</a>: Usando <code>await</code> com um join handle para executar uma tarefa até a conclusão</figcaption>
 </figure>
-<p>Esta versão atualizada é executada até que <em>ambos</em> os loops terminem:</p>
+<p>Esta versão atualizada roda até que <em>ambos</em> os loops terminem:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
@@ -304,24 +305,23 @@ hi number 7 from the first task!
 hi number 8 from the first task!
 hi number 9 from the first task!
 </code></pre>
-<p>Até aqui, async e threads parecem nos dar resultados parecidos, apenas com uma
-sintaxe diferente: usamos <code>await</code> em vez de chamar <code>join</code> no <code>JoinHandle</code>, e
+<p>Até aqui, parece que async e threads nos dão resultados semelhantes, apenas com
+sintaxe diferente: usamos <code>await</code> em vez de chamar <code>join</code> no join handle, e
 aguardamos as chamadas a <code>sleep</code>.</p>
-<p>A diferença maior é que não precisamos criar outra thread do sistema
+<p>A diferença maior é que não precisamos gerar outra thread do sistema
 operacional para fazer isso. Na verdade, nem precisamos gerar uma tarefa aqui.
 Como blocos async são compilados em futures anônimos, podemos colocar cada loop
 em um bloco async e fazer o runtime executar ambos até o fim usando a função
 <code>trpl::join</code>.</p>
-<p>Na seção <a href="ch16-01-threads.html#waiting-for-all-threads-to-finish">“Esperando todas as threads terminarem”</a><!-- ignore -->
+<p>Na seção <a href="ch16-01-threads.html#waiting-for-all-threads-to-finish">“Esperando Todas as Threads Terminarem”</a><!-- ignore -->
 do Capítulo 16, mostramos como usar o método <code>join</code> no tipo <code>JoinHandle</code>
 retornado quando você chama <code>std::thread::spawn</code>. A função <code>trpl::join</code> é
-parecida, mas para futures. Quando você entrega dois futures a ela, ela produz
-um único novo future cuja saída é uma tupla contendo a saída de cada future que
-você passou, assim que <em>ambos</em> forem concluídos. Por isso, na Listagem 17-8,
+semelhante, mas para futures. Quando você entrega dois futures a ela, ela
+produz um único novo future cuja saída é uma tupla contendo a saída de cada
+future que você passou, depois que <em>ambos</em> terminarem. Assim, na Listagem 17-8,
 usamos <code>trpl::join</code> para esperar que <code>fut1</code> e <code>fut2</code> terminem. Nós <em>não</em>
-aguardamos <code>fut1</code> e <code>fut2</code> diretamente, mas sim o novo future produzido por
-<code>trpl::join</code>. Ignoramos a saída porque ela é apenas uma tupla contendo dois
-valores unitários.</p>
+aguardamos <code>fut1</code> e <code>fut2</code>, mas sim o novo future produzido por <code>trpl::join</code>.
+Ignoramos a saída, porque ela é apenas uma tupla contendo dois valores unit.</p>
 <figure class="listing" id="listing-17-8">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
@@ -349,7 +349,7 @@ valores unitários.</p>
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-8">Listing 17-8</a>: Usando <code>trpl::join</code> para aguardar dois futures anônimos</figcaption>
 </figure>
-<p>Quando executamos isso, vemos ambos futures sendo executados até a conclusão:</p>
+<p>Quando executamos isso, vemos ambos os futures rodarem até o fim:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
@@ -367,42 +367,41 @@ hi number 7 from the first task!
 hi number 8 from the first task!
 hi number 9 from the first task!
 </code></pre>
-<p>Agora, você verá exatamente a mesma ordem em todas as execuções, o que é bem
-diferente do que vimos com threads e com <code>trpl::spawn_task</code> na Listagem 17-7.
-Isso acontece porque a função <code>trpl::join</code> é <em>justa</em>, o que significa que ela
+<p>Agora você verá exatamente a mesma ordem todas as vezes, o que é bem diferente
+do que vimos com threads e com <code>trpl::spawn_task</code> na Listagem 17-7. Isso
+acontece porque a função <code>trpl::join</code> é <em>justa</em>, o que significa que ela
 verifica cada future com a mesma frequência, alternando entre eles, e nunca
-deixa um disparar muito à frente se o outro estiver pronto. Com threads, o
-sistema operacional decide qual thread verificar e por quanto tempo deixá-la
-executar. Com async em Rust, o runtime decide qual tarefa verificar. Na
-prática, os detalhes ficam complicados, porque um runtime async pode usar
-threads do sistema operacional nos bastidores como parte de como gerencia a
-concorrência, então garantir justiça pode dar mais trabalho, mas ainda assim é
-possível. Runtimes não precisam garantir justiça para toda operação e, com
-frequência, oferecem APIs diferentes para permitir que você escolha se quer ou
-não esse comportamento.</p>
+deixa um disparar à frente se o outro estiver pronto. Com threads, o sistema
+operacional decide qual thread verificar e por quanto tempo deixá-la rodar. Com
+Rust async, o runtime decide qual tarefa verificar. (Na prática, os detalhes
+ficam complicados porque um runtime async pode usar threads do sistema
+operacional por baixo dos panos como parte de como gerencia concorrência, então
+garantir justiça pode dar mais trabalho para um runtime, mas ainda é possível!)
+Runtimes não precisam garantir justiça para qualquer operação específica, e
+frequentemente oferecem APIs diferentes para permitir que você escolha se quer
+ou não justiça.</p>
 <p>Experimente algumas destas variações ao aguardar os futures e veja o que elas
 fazem:</p>
 <ul>
 <li>Remova o bloco async ao redor de um ou de ambos os loops.</li>
-<li>Aguarde cada bloco async imediatamente após defini-lo.</li>
-<li>Enrole apenas o primeiro loop em um bloco async e await o future resultante
-após o corpo do segundo loop.</li>
+<li>Aguarde cada bloco async imediatamente depois de defini-lo.</li>
+<li>Envolva apenas o primeiro loop em um bloco async e aguarde o future
+resultante depois do corpo do segundo loop.</li>
 </ul>
-<p>Como desafio extra, tente descobrir qual será o resultado em cada caso <em>antes</em>
-de executar o código!</p>
+<p>Como desafio extra, veja se consegue descobrir qual será a saída em cada caso
+<em>antes</em> de executar o código!</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="message-passing"></a>
 <a id="counting-up-on-two-tasks-using-message-passing"></a></p>
-<h3 id="envio-de-dados-entre-duas-tarefas-usando-passagem-de-mensagens"><a class="header" href="#envio-de-dados-entre-duas-tarefas-usando-passagem-de-mensagens">Envio de dados entre duas tarefas usando passagem de mensagens</a></h3>
-<p>Compartilhar dados entre futures também vai soar familiar: usaremos novamente a
-passagem de mensagens, mas agora com versões async dos tipos e das funções.
-Vamos seguir um caminho um pouco diferente do que seguimos na seção
-<a href="ch16-02-message-passing.html">“Transferindo dados entre threads com passagem de
-mensagens”</a><!-- ignore --> do Capítulo 16 para
-ilustrar algumas das diferenças principais entre concorrência baseada em
-threads e concorrência baseada em futures. Na Listagem 17-9, vamos começar com
-apenas um bloco async, <em>sem</em> gerar uma tarefa separada, da mesma forma que
-antes geramos uma thread separada.</p>
+<h3 id="enviando-dados-entre-duas-tarefas-usando-passagem-de-mensagens"><a class="header" href="#enviando-dados-entre-duas-tarefas-usando-passagem-de-mensagens">Enviando Dados Entre Duas Tarefas Usando Passagem de Mensagens</a></h3>
+<p>Compartilhar dados entre futures também será familiar: usaremos passagem de
+mensagens novamente, mas desta vez com versões async dos tipos e funções. Vamos
+seguir um caminho um pouco diferente daquele que seguimos na seção
+<a href="ch16-02-message-passing.html">“Transferindo Dados Entre Threads com Passagem de Mensagens”</a><!-- ignore -->
+do Capítulo 16 para ilustrar algumas das principais diferenças entre
+concorrência baseada em threads e concorrência baseada em futures. Na Listagem
+17-9, começaremos com apenas um bloco async, <em>sem</em> gerar uma tarefa separada
+como geramos uma thread separada antes.</p>
 <figure class="listing" id="listing-17-9">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
@@ -420,34 +419,34 @@ antes geramos uma thread separada.</p>
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-9">Listing 17-9</a>: Criando um canal async e atribuindo suas duas metades a <code>tx</code> e <code>rx</code></figcaption>
 </figure>
-<p>Aqui usamos <code>trpl::channel</code>, uma versão async da API de canal com múltiplos
-produtores e um único consumidor que usamos com threads no Capítulo 16. A
-versão async da API é apenas um pouco diferente da versão baseada em threads:
-ela usa um receptor mutável, e não imutável, <code>rx</code>, e seu método <code>recv</code>
+<p>Aqui, usamos <code>trpl::channel</code>, uma versão async da API de canal com múltiplos
+produtores e consumidor único que usamos com threads no Capítulo 16. A versão
+async da API é só um pouco diferente da versão baseada em threads: ela usa um
+receptor mutável, em vez de um receptor imutável, <code>rx</code>, e seu método <code>recv</code>
 produz um future que precisamos aguardar, em vez de produzir o valor
-diretamente. Agora podemos enviar mensagens do emissor para o receptor.
-Observe que não precisamos criar uma thread separada nem mesmo uma tarefa;
-basta aguardar a chamada a <code>rx.recv</code>.</p>
-<p>O método síncrono <code>Receiver::recv</code> em <code>std::mpsc::channel</code> bloqueia até
-receber uma mensagem. O método <code>trpl::Receiver::recv</code> não, porque é
-async. Em vez de bloquear, ele devolve o controle ao runtime até que uma
-mensagem seja recebida ou o lado emissor do canal seja fechado. Em contrapartida, não
-aguardamos a chamada <code>send</code>, porque ela não bloqueia. Isso não é necessário,
-porque o canal para o qual estamos enviando é ilimitado.</p>
+diretamente. Agora podemos enviar mensagens do sender para o receiver. Observe
+que não precisamos gerar uma thread separada nem mesmo uma tarefa; precisamos
+apenas aguardar a chamada a <code>rx.recv</code>.</p>
+<p>O método síncrono <code>Receiver::recv</code> em <code>std::mpsc::channel</code> bloqueia até receber
+uma mensagem. O método <code>trpl::Receiver::recv</code> não bloqueia, porque é async. Em
+vez de bloquear, ele devolve o controle ao runtime até que uma mensagem seja
+recebida ou o lado de envio do canal seja fechado. Em contraste, não aguardamos
+a chamada a <code>send</code>, porque ela não bloqueia. Ela não precisa bloquear, porque o
+canal para o qual estamos enviando é ilimitado.</p>
 <blockquote>
-<p>Nota: Como todo esse código async é executado dentro de um bloco async em uma
-chamada a <code>trpl::block_on</code>, tudo o que está dentro dele pode evitar bloqueio.
-Em contrapartida, o código <em>fora</em> dele ficará bloqueado até que a função
-<code>block_on</code> retorne. Esse é justamente o objetivo de <code>trpl::block_on</code>: deixar
-você <em>escolher</em> onde bloquear em um conjunto de código async e, portanto,
-onde fazer a transição entre código síncrono e assíncrono.</p>
+<p>Nota: Como todo esse código async roda em um bloco async dentro de uma chamada
+a <code>trpl::block_on</code>, tudo dentro dele pode evitar bloqueio. No entanto, o
+código <em>fora</em> dele bloqueará enquanto espera a função <code>block_on</code> retornar.
+Esse é o objetivo da função <code>trpl::block_on</code>: ela permite que você <em>escolha</em>
+onde bloquear em algum conjunto de código async e, portanto, onde fazer a
+transição entre código sync e async.</p>
 </blockquote>
-<p>Observe duas coisas neste exemplo. Primeiro, a mensagem chegará imediatamente.
-Segundo, embora estejamos usando um future aqui, ainda não há concorrência.
+<p>Observe duas coisas sobre este exemplo. Primeiro, a mensagem chegará
+imediatamente. Segundo, embora usemos um future aqui, ainda não há concorrência.
 Tudo na listagem acontece em sequência, exatamente como aconteceria se não
 houvesse futures envolvidos.</p>
-<p>Vamos abordar a primeira parte enviando uma série de mensagens e dormindo
-entre elas, conforme mostrado na Listagem 17-10.</p>
+<p>Vamos abordar a primeira parte enviando uma série de mensagens e dormindo entre
+elas, como mostrado na Listagem 17-10.</p>
 <!-- We cannot test this one because it never stops! -->
 <figure class="listing" id="listing-17-10">
 <span class="file-name">Filename: src/main.rs</span>
@@ -476,54 +475,57 @@ entre elas, conforme mostrado na Listagem 17-10.</p>
         }
 <span class="boring">    });
 </span><span class="boring">}</span></code></pre>
-<figcaption><a href="#listing-17-10">Listing 17-10</a>: Enviando e recebendo várias mensagens pelo canal async e aguardando com <code>await</code> entre cada mensagem</figcaption>
+<figcaption><a href="#listing-17-10">Listing 17-10</a>: Enviando e recebendo múltiplas mensagens pelo canal async e dormindo com um <code>await</code> entre cada mensagem</figcaption>
 </figure>
-<p>Além de enviar as mensagens, precisamos recebê-las. Neste caso,
-como sabemos quantas mensagens estão chegando, poderíamos fazer isso manualmente,
-chamando <code>rx.recv().await</code> quatro vezes. No mundo real, porém, geralmente
-estaremos esperando por um número <em>desconhecido</em> de mensagens, então precisamos continuar esperando
-até determinarmos que não há mais mensagens.</p>
-<p>Na Listagem 16-10, usamos um loop <code>for</code> para processar todos os itens recebidos de um
-canal síncrono. O Rust ainda não tem como usar um loop <code>for</code> com uma
-série de itens <em>produzidos de forma assíncrona</em>, portanto, precisamos usar um loop que
-ainda não vimos: o loop condicional <code>while let</code>. Esta é a versão em loop
-da construção <code>if let</code> que vimos na seção <a href="ch06-03-if-let.html">“Fluxo de controle conciso com <code>if let</code> e <code>let...else</code>”</a><!-- ignore --> no Capítulo 6. O loop
-continuará em execução enquanto o padrão especificado continuar dando <code>match</code> com
-o valor.</p>
-<p>A chamada <code>rx.recv</code> produz um future, que aguardamos. O runtime pausará
-esse future até que esteja pronto. Assim que uma mensagem chegar, o future
-resolverá para <code>Some(message)</code> quantas vezes isso acontecer. Quando o canal for
-fechado, independentemente de <em>alguma</em> mensagem ter chegado, o future irá, em vez disso,
-resolver para <code>None</code>, para indicar que não há mais valores e, portanto, devemos
-parar de consultar, isto é, parar de esperar.</p>
-<p>O loop <code>while let</code> reúne tudo isso. Se o resultado da chamada
-<code>rx.recv().await</code> for <code>Some(message)</code>, temos acesso à mensagem e podemos
-usá-la no corpo do loop, assim como poderíamos com <code>if let</code>. Se o resultado for
-<code>None</code>, o loop termina. Cada vez que o loop é concluído, ele atinge o ponto <code>await</code>
-novamente, então o runtime o pausa outra vez até que outra mensagem chegue.</p>
-<p>O código agora envia e recebe com êxito todas as mensagens.
-Infelizmente, ainda existem alguns problemas. Por um lado, as
-mensagens não chegam em intervalos de meio segundo. Elas chegam todas de uma vez, 2
-segundos (2.000 milissegundos) depois de iniciarmos o programa. Por outro lado, o
-programa também nunca termina! Em vez disso, espera eternamente por novas mensagens. Você
-precisará encerrá-lo usando <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
-<h4 id="o-código-dentro-de-um-bloco-assíncrono-é-executado-linearmente"><a class="header" href="#o-código-dentro-de-um-bloco-assíncrono-é-executado-linearmente">O código dentro de um bloco assíncrono é executado linearmente</a></h4>
-<p>Vamos começar examinando por que as mensagens chegam todas de uma vez após o atraso
-completo, em vez de chegarem com atrasos entre si. Dentro de um determinado bloco async,
-bloco, a ordem em que as palavras-chave <code>await</code> aparecem no código também é a ordem
-em que elas são executadas quando o programa roda.</p>
-<p>Há apenas um bloco async na Listagem 17-10, então tudo nele é executado
-linearmente. Ainda não há concorrência. Todas as chamadas a <code>tx.send</code> acontecem,
-intercaladas com todas as chamadas a <code>trpl::sleep</code> e seus pontos <code>await</code>
-associados. Só então o loop <code>while let</code> passa por qualquer um dos
-pontos <code>await</code> nas chamadas <code>recv</code>.</p>
-<p>Para obter o comportamento que desejamos, em que o atraso acontece entre cada
-mensagem, precisamos colocar as operações <code>tx</code> e <code>rx</code> em seus próprios blocos async,
-como mostrado na Listagem 17-11. Então o runtime pode executar cada um deles separadamente
-usando <code>trpl::join</code>, assim como na Listagem 17-8. Mais uma vez, aguardamos o resultado de
-chamar <code>trpl::join</code>, não os futures individuais. Se aguardássemos os
-futures em sequência, acabaríamos voltando a um fluxo sequencial, exatamente
-o que estamos tentando <em>não</em> fazer.</p>
+<p>Além de enviar as mensagens, precisamos recebê-las. Neste caso, como sabemos
+quantas mensagens virão, poderíamos fazer isso manualmente chamando
+<code>rx.recv().await</code> quatro vezes. No mundo real, porém, geralmente estaremos
+esperando por algum número <em>desconhecido</em> de mensagens, então precisamos
+continuar esperando até determinar que não há mais mensagens.</p>
+<p>Na Listagem 16-10, usamos um loop <code>for</code> para processar todos os itens recebidos
+de um canal síncrono. Rust ainda não tem uma forma de usar um loop <code>for</code> com
+uma série de itens <em>produzida assincronamente</em>, porém, então precisamos usar um
+loop que ainda não vimos: o loop condicional <code>while let</code>. Esta é a versão em
+loop da construção <code>if let</code> que vimos na seção <a href="ch06-03-if-let.html">“Fluxo de Controle Conciso com
+<code>if let</code> e <code>let...else</code>”</a><!-- ignore --> do Capítulo 6. O loop
+continuará executando enquanto o padrão especificado continuar correspondendo
+ao valor.</p>
+<p>A chamada <code>rx.recv</code> produz um future, que aguardamos. O runtime pausará o
+future até que ele esteja pronto. Assim que uma mensagem chega, o future se
+resolve para <code>Some(message)</code> tantas vezes quantas mensagens chegarem. Quando o
+canal fecha, independentemente de <em>qualquer</em> mensagem ter chegado ou não, o
+future se resolve para <code>None</code> para indicar que não há mais valores e, portanto,
+devemos parar de fazer polling, isto é, parar de aguardar.</p>
+<p>O loop <code>while let</code> junta tudo isso. Se o resultado de chamar
+<code>rx.recv().await</code> for <code>Some(message)</code>, obtemos acesso à mensagem e podemos
+usá-la no corpo do loop, assim como poderíamos fazer com <code>if let</code>. Se o
+resultado for <code>None</code>, o loop termina. Toda vez que o loop completa, ele atinge
+o ponto de await de novo, então o runtime o pausa novamente até que outra
+mensagem chegue.</p>
+<p>O código agora envia e recebe todas as mensagens com sucesso. Infelizmente,
+ainda há alguns problemas. Primeiro, as mensagens não chegam em intervalos de
+meio segundo. Elas chegam todas de uma vez, 2 segundos (2.000 milissegundos)
+depois de iniciarmos o programa. Segundo, este programa também nunca termina!
+Em vez disso, ele espera para sempre por novas mensagens. Você precisará
+encerrá-lo usando <kbd>ctrl</kbd>-<kbd>C</kbd>.</p>
+<h4 id="código-dentro-de-um-bloco-async-executa-linearmente"><a class="header" href="#código-dentro-de-um-bloco-async-executa-linearmente">Código Dentro de Um Bloco Async Executa Linearmente</a></h4>
+<p>Vamos começar examinando por que as mensagens chegam todas de uma vez depois
+do atraso completo, em vez de chegarem com atrasos entre elas. Dentro de um
+determinado bloco async, a ordem em que as palavras-chave <code>await</code> aparecem no
+código também é a ordem em que elas são executadas quando o programa roda.</p>
+<p>Há apenas um bloco async na Listagem 17-10, então tudo nele roda linearmente.
+Ainda não há concorrência. Todas as chamadas a <code>tx.send</code> acontecem,
+intercaladas com todas as chamadas a <code>trpl::sleep</code> e seus pontos de await
+associados. Só então o loop <code>while let</code> chega a passar por algum dos pontos de
+await nas chamadas a <code>recv</code>.</p>
+<p>Para obter o comportamento que queremos, em que o atraso de sleep acontece
+entre cada mensagem, precisamos colocar as operações <code>tx</code> e <code>rx</code> em seus
+próprios blocos async, como mostrado na Listagem 17-11. Então o runtime pode
+executar cada uma separadamente usando <code>trpl::join</code>, assim como na Listagem
+17-8. Mais uma vez, aguardamos o resultado de chamar <code>trpl::join</code>, não os
+futures individuais. Se aguardássemos os futures individuais em sequência,
+acabaríamos voltando a um fluxo sequencial, exatamente o que estamos tentando
+<em>não</em> fazer.</p>
 <!-- We cannot test this one because it never stops! -->
 <figure class="listing" id="listing-17-11">
 <span class="file-name">Filename: src/main.rs</span>
@@ -560,39 +562,41 @@ o que estamos tentando <em>não</em> fazer.</p>
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-11">Listing 17-11</a>: Separando <code>send</code> e <code>recv</code> em seus próprios blocos <code>async</code> e aguardando os futures desses blocos</figcaption>
 </figure>
-<p>Com o código atualizado na Listagem 17-11, as mensagens são impressas em
-intervalos de 500 milissegundos, em vez de chegarem todas de uma vez após 2 segundos.</p>
-<h4 id="movendo-a-ownership-para-um-bloco-assíncrono"><a class="header" href="#movendo-a-ownership-para-um-bloco-assíncrono">Movendo a ownership para um bloco assíncrono</a></h4>
-<p>O programa ainda nunca sai, devido à forma como o loop <code>while let</code>
-interage com <code>trpl::join</code>:</p>
+<p>Com o código atualizado da Listagem 17-11, as mensagens são impressas em
+intervalos de 500 milissegundos, em vez de todas de uma vez depois de 2
+segundos.</p>
+<h4 id="movendo-ownership-para-dentro-de-um-bloco-async"><a class="header" href="#movendo-ownership-para-dentro-de-um-bloco-async">Movendo Ownership Para Dentro de Um Bloco Async</a></h4>
+<p>O programa ainda nunca termina, porém, por causa da forma como o loop
+<code>while let</code> interage com <code>trpl::join</code>:</p>
 <ul>
-<li>O future retornado por <code>trpl::join</code> só é concluído quando <em>ambos</em> os futures
-passados a ele forem concluídos.</li>
-<li>O future <code>tx_fut</code> é concluído quando termina de dormir após enviar a última
+<li>O future retornado por <code>trpl::join</code> só completa quando <em>ambos</em> os futures
+passados a ele completarem.</li>
+<li>O future <code>tx_fut</code> completa depois que termina de dormir após enviar a última
 mensagem em <code>vals</code>.</li>
-<li>O future <code>rx_fut</code> não será concluído até que o loop <code>while let</code> termine.</li>
+<li>O future <code>rx_fut</code> não completará até que o loop <code>while let</code> termine.</li>
 <li>O loop <code>while let</code> não terminará até que aguardar <code>rx.recv</code> produza <code>None</code>.</li>
-<li>Aguardar <code>rx.recv</code> retornará <code>None</code> apenas quando a outra extremidade do canal
-estiver fechada.</li>
-<li>O canal só será fechado se chamarmos <code>rx.close</code> ou quando o lado transmissor,
+<li>Aguardar <code>rx.recv</code> retornará <code>None</code> somente depois que a outra extremidade do
+canal for fechada.</li>
+<li>O canal fechará somente se chamarmos <code>rx.close</code> ou quando o lado de envio,
 <code>tx</code>, for descartado.</li>
-<li>Não chamamos <code>rx.close</code> em nenhum lugar, e <code>tx</code> não será descartado até que
-o bloco async mais externo passado a <code>trpl::block_on</code> termine.</li>
-<li>O bloco não pode terminar porque está bloqueado aguardando a conclusão de <code>trpl::join</code>, o que
-nos leva de volta ao topo desta lista.</li>
+<li>Não chamamos <code>rx.close</code> em lugar nenhum, e <code>tx</code> não será descartado até que o
+bloco async mais externo passado a <code>trpl::block_on</code> termine.</li>
+<li>O bloco não consegue terminar porque está bloqueado em <code>trpl::join</code>
+completando, o que nos leva de volta ao topo desta lista.</li>
 </ul>
-<p>No momento, o bloco async no qual enviamos as mensagens apenas <em>pega emprestado</em> <code>tx</code>,
-porque enviar uma mensagem não requer ownership, mas, se pudéssemos <em>mover</em>
-<code>tx</code> para esse bloco async, ele seria descartado assim que o bloco terminasse. Na
-<a href="ch13-01-closures.html#capturing-references-or-moving-ownership">“Capturing References or Moving Ownership”</a><!-- ignore -->
-seção do Capítulo 13, você aprendeu a usar a palavra-chave <code>move</code> com closures,
-e, conforme discutido em <a href="ch16-01-threads.html#using-move-closures-with-threads">“Usando fechamentos <code>move</code> com
-Threads”</a><!-- ignore --> no Capítulo 16, muitas vezes precisamos
-mover dados para closures ao trabalhar com threads. A mesma dinâmica básica
-se aplica a blocos async, portanto a palavra-chave <code>move</code> funciona com blocos async da mesma forma que
-funciona com closures.</p>
-<p>Na Listagem 17-12, alteramos o bloco usado para enviar mensagens de <code>async</code> para
-<code>async move</code>.</p>
+<p>Neste momento, o bloco async em que enviamos as mensagens apenas <em>pega
+emprestado</em> <code>tx</code>, porque enviar uma mensagem não exige ownership. Mas, se
+pudéssemos <em>mover</em> <code>tx</code> para dentro desse bloco async, ele seria descartado
+assim que o bloco terminasse. Na seção <a href="ch13-01-closures.html#capturing-references-or-moving-ownership">“Capturando Referências ou Movendo
+Ownership”</a><!-- ignore --> do Capítulo 13, você aprendeu a
+usar a palavra-chave <code>move</code> com closures e, como discutido na seção <a href="ch16-01-threads.html#using-move-closures-with-threads">“Usando
+Closures <code>move</code> com Threads”</a><!-- ignore --> do Capítulo 16,
+muitas vezes precisamos mover dados para dentro de closures ao trabalhar com
+threads. A mesma dinâmica básica se aplica a blocos async, então a
+palavra-chave <code>move</code> funciona com blocos async assim como funciona com
+closures.</p>
+<p>Na Listagem 17-12, alteramos o bloco usado para enviar mensagens de <code>async</code>
+para <code>async move</code>.</p>
 <figure class="listing" id="listing-17-12">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
@@ -629,13 +633,13 @@ funciona com closures.</p>
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-12">Listing 17-12</a>: Uma revisão do código da Listagem 17-11 que encerra corretamente ao terminar</figcaption>
 </figure>
-<p>Quando executamos <em>esta</em> versão do código, ele termina normalmente após a última
-mensagem ser enviada e recebida. A seguir, vamos ver o que precisaria ser alterado para enviar
-dados de mais de um future.</p>
-<h4 id="unindo-um-número-de-futures-com-a-macro-join"><a class="header" href="#unindo-um-número-de-futures-com-a-macro-join">Unindo um número de Futures com a macro <code>join!</code></a></h4>
-<p>Este canal async também é um canal de múltiplos produtores, então podemos chamar <code>clone</code>
-em <code> tx</code>se quisermos enviar mensagens de vários futures, conforme mostrado na listagem
-17-13.</p>
+<p>Quando executamos <em>esta</em> versão do código, ela encerra de forma adequada depois
+que a última mensagem é enviada e recebida. A seguir, vamos ver o que precisaria
+mudar para enviar dados a partir de mais de um future.</p>
+<h4 id="juntando-vários-futures-com-a-macro-join"><a class="header" href="#juntando-vários-futures-com-a-macro-join">Juntando Vários Futures com a Macro <code>join!</code></a></h4>
+<p>Esse canal async também é um canal de múltiplos produtores, então podemos
+chamar <code>clone</code> em <code>tx</code> se quisermos enviar mensagens a partir de múltiplos
+futures, como mostrado na Listagem 17-13.</p>
 <figure class="listing" id="listing-17-13">
 <span class="file-name">Filename: src/main.rs</span>
 <pre class="playground"><code class="language-rust edition2024"><span class="boring">extern crate trpl; // required for mdbook test
@@ -686,22 +690,24 @@ em <code> tx</code>se quisermos enviar mensagens de vários futures, conforme mo
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-17-13">Listing 17-13</a>: Usando múltiplos produtores com blocos async</figcaption>
 </figure>
-<p>Primeiro, clonamos <code>tx</code>, criando <code> tx1</code>fora do primeiro bloco async. Nós nos movemos
-<code>tx1</code>nesse bloco, assim como fizemos antes com<code>tx</code>. Então, mais tarde, movemos o
-<code> tx</code>original em um <em>novo</em> bloco async, onde enviamos mais mensagens em um
-atraso ligeiramente mais lento. Acontece que colocamos este novo bloco async após o async
-bloquear para receber mensagens, mas também poderia ir antes. A chave é
-a ordem em que os futures são aguardados, não a ordem em que são criados.</p>
-<p>Ambos os blocos async para envio de mensagens precisam ser blocos <code>async move</code>, então
-que <code> tx</code>e <code> tx1</code>sejam eliminados quando esses blocos terminarem. Caso contrário, iremos
-acabaremos de volta no mesmo loop infinito em que começamos.</p>
-<p>Finalmente, mudamos de <code>trpl::join</code> para <code>trpl::join!</code> para lidar com o adicional
-future: a macro <code>join!</code> aguarda um número arbitrário de futures onde sabemos
-o número de futures em tempo de compilação. Discutiremos a espera de uma coleção de
-um número desconhecido de futures posteriormente neste capítulo.</p>
-<p>Agora vemos todas as mensagens do envio futures e porque o envio
-futures usa atrasos ligeiramente diferentes após o envio, as mensagens também são
-recebidos nesses diferentes intervalos:</p>
+<p>Primeiro, clonamos <code>tx</code>, criando <code>tx1</code> fora do primeiro bloco async. Movemos
+<code>tx1</code> para dentro desse bloco exatamente como fizemos antes com <code>tx</code>. Então,
+mais tarde, movemos o <code>tx</code> original para dentro de um <em>novo</em> bloco async, onde
+enviamos mais mensagens com um atraso um pouco mais lento. Acontece que
+colocamos esse novo bloco async depois do bloco async que recebe mensagens, mas
+ele poderia vir antes também. O que importa é a ordem em que os futures são
+aguardados, não a ordem em que são criados.</p>
+<p>Ambos os blocos async para enviar mensagens precisam ser blocos <code>async move</code>
+para que tanto <code>tx</code> quanto <code>tx1</code> sejam descartados quando esses blocos
+terminarem. Caso contrário, voltaríamos ao mesmo loop infinito em que
+começamos.</p>
+<p>Por fim, trocamos <code>trpl::join</code> por <code>trpl::join!</code> para lidar com o future
+adicional: a macro <code>join!</code> aguarda um número arbitrário de futures quando
+sabemos o número de futures em tempo de compilação. Discutiremos como aguardar
+uma coleção com um número desconhecido de futures mais adiante neste capítulo.</p>
+<p>Agora vemos todas as mensagens dos dois futures de envio e, como os futures de
+envio usam atrasos ligeiramente diferentes depois de enviar, as mensagens
+também são recebidas nesses intervalos diferentes:</p>
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
 changes in the compiler -->
@@ -714,10 +720,11 @@ received 'future'
 received 'for'
 received 'you'
 </code></pre>
-<p>Exploramos como usar a passagem de mensagens para enviar dados entre futures, como
-código dentro de um bloco async é executado sequencialmente, como mover ownership para um
-bloco async e como unir vários futures. A seguir, vamos discutir como e por quê
-para informar ao tempo de execução que ele pode mudar para outra tarefa.</p>
+<p>Exploramos como usar passagem de mensagens para enviar dados entre futures,
+como o código dentro de um bloco async roda sequencialmente, como mover
+ownership para dentro de um bloco async e como juntar múltiplos futures. A
+seguir, vamos discutir como e por que informar ao runtime que ele pode alternar
+para outra tarefa.</p>
 
                     </main>
 
