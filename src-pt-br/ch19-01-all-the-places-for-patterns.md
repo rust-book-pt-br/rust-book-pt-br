@@ -1,4 +1,4 @@
-## Todos os lugares em que padrões podem ser usados
+## Todos os Lugares em Que Padrões Podem Ser Usados
 
 Padrões aparecem em vários lugares no Rust, e você os tem usado bastante sem
 perceber! Esta seção discute todos os lugares em que padrões são válidos.
@@ -138,10 +138,10 @@ A Listagem 19-3 mostra que também é possível misturar expressões `if let`,
 padrões. Além disso, Rust não exige que as condições em uma série de braços
 `if let`, `else if` e `else if let` estejam relacionadas entre si.
 
-O código na Listagem 19-3 determina em qual cor seu plano de fundo será baseado.
-uma série de verificações para diversas condições. Para este exemplo, criamos
-variáveis com valores codificados que um programa real pode receber do usuário
-entrada.
+O código na Listagem 19-3 determina qual cor usar para o plano de fundo com
+base em uma série de verificações de várias condições. Para este exemplo,
+criamos variáveis com valores codificados que um programa real poderia receber
+da entrada do usuário.
 
 <Listing number="19-3" file-name="src/main.rs" caption="Misturando `if let`, `else if`, `else if let` e `else`">
 
@@ -152,11 +152,11 @@ entrada.
 </Listing>
 
 Se o usuário especificar uma cor favorita, essa cor será usada como plano de fundo.
-Se nenhuma cor favorita for especificada e hoje for terça-feira, a cor de fundo será
-verde. Caso contrário, se o usuário especificar sua idade como uma string e pudermos analisar
-como um número com sucesso, a cor é roxa ou laranja dependendo
-o valor do número. Se nenhuma destas condições se aplicar, o plano de fundo
-a cor é azul.
+Se nenhuma cor favorita for especificada e hoje for terça-feira, a cor de fundo
+será verde. Caso contrário, se o usuário especificar sua idade como uma string
+e conseguirmos analisá-la como número com sucesso, a cor será roxa ou laranja,
+dependendo do valor do número. Se nenhuma dessas condições se aplicar, a cor do
+plano de fundo será azul.
 
 Essa estrutura condicional nos permite dar suporte a requisitos complexos. Com
 os valores codificados que temos aqui, este exemplo imprimirá
@@ -172,9 +172,9 @@ A nova `age` que queremos comparar com 30 não é válida até que o novo escopo
 comece com as chaves.
 
 A desvantagem de usar expressões `if let` é que o compilador não verifica
-para exaustividade, enquanto com expressões `match` isso acontece. Se omitimos o
-último bloco `else` e, portanto, perdeu o tratamento de alguns casos, o compilador
-não nos alerta sobre o possível bug lógico.
+exaustividade, ao contrário do que acontece com expressões `match`. Se
+omitirmos o último bloco `else` e, portanto, deixarmos de tratar alguns casos,
+o compilador não nos alertará sobre o possível bug lógico.
 
 ### Loops condicionais `while let`
 
@@ -193,8 +193,8 @@ threads, mas, nesse caso, verificando um `Result` em vez de um `Option`.
 
 Este exemplo imprime `1`, `2` e depois `3`. O método `recv` tira a primeira
 mensagem do lado receptor do canal e retorna um `Ok(value)`. Quando vimos
-`recv` pela primeira vez no Capítulo 16, desembrulhamos o erro diretamente ou
-interagimos com ele como um iterator usando um loop `for`. Como mostra a
+`recv` pela primeira vez no Capítulo 16, usamos `unwrap` diretamente ou
+interagimos com ele como um iterador usando um loop `for`. Como mostra a
 Listagem 19-4, porém, também podemos usar `while let`, porque o método `recv`
 retorna `Ok` cada vez que uma mensagem chega, enquanto o remetente existir, e
 então produz um `Err` assim que o lado remetente se desconecta.
@@ -222,7 +222,7 @@ O código na Listagem 19-5 imprimirá o seguinte:
 {{#include ../listings/ch19-patterns-and-matching/listing-19-05/output.txt}}
 ```
 
-Adaptamos um iterator usando o método `enumerate` para que ele produza um valor
+Adaptamos um iterador usando o método `enumerate` para que ele produza um valor
 e o índice desse valor, colocados em uma tupla. O primeiro valor produzido é a
 tupla `(0, 'a')`. Quando esse valor corresponde ao padrão `(index, value)`,
 `index` será `0` e `value` será `'a'`, imprimindo a primeira linha da saída.
@@ -258,13 +258,13 @@ função.
 Esse código imprime `Current location: (3, 5)`. Os valores `&(3, 5)`
 correspondem ao padrão `&(x, y)`, então `x` é o valor `3` e `y` é o valor `5`.
 
-Também podemos usar padrões nas listas de parâmetros closure da mesma forma que em
-listas de parâmetros de função porque closures são semelhantes a funções, como
-discutido no Capítulo 13.
+Também podemos usar padrões nas listas de parâmetros de closures da mesma forma
+que em listas de parâmetros de função, porque closures são semelhantes a
+funções, como discutido no Capítulo 13.
 
-Neste ponto, você viu várias maneiras de usar padrões, mas os padrões não
-funcionam da mesma forma em todos os lugares onde podemos usá-los. Em alguns lugares, os padrões devem
-ser irrefutável; em outras circunstâncias, podem ser refutáveis. Nós discutiremos
-esses dois conceitos a seguir.
+Neste ponto, você viu várias maneiras de usar padrões, mas eles não funcionam
+da mesma forma em todos os lugares onde podemos usá-los. Em alguns lugares, os
+padrões devem ser irrefutáveis; em outras circunstâncias, podem ser
+refutáveis. Discutiremos esses dois conceitos a seguir.
 
 [ignoring-values-in-a-pattern]: ch19-03-pattern-syntax.html#ignoring-values-in-a-pattern

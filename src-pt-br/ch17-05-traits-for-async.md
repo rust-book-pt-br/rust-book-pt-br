@@ -2,7 +2,7 @@
 
 <a id="digging-into-the-traits-for-async"></a>
 
-## Uma análise mais detalhada das traits de async
+## Uma Análise Mais Detalhada das Traits de Async
 
 Ao longo do capítulo, usamos as traits `Future`, `Stream` e `StreamExt`
 de várias maneiras. Até aqui, porém, evitamos entrar muito nos detalhes de
@@ -17,7 +17,7 @@ mergulho _realmente_ profundo para outras documentações.
 
 <a id="future"></a>
 
-### A trait `Future`
+### A Trait `Future`
 
 Vamos começar olhando mais de perto como a trait `Future` funciona. Veja como
 o Rust a define:
@@ -58,7 +58,7 @@ trabalho a fazer, então o chamador precisará verificá-lo novamente mais tarde
 A variante `Ready` indica que o `Future` concluiu seu trabalho e que o valor
 `T` está disponível.
 
-> Observação: raramente é necessário chamar `poll` diretamente, mas, se você
+> Nota: raramente é necessário chamar `poll` diretamente, mas, se você
 > precisar, lembre-se de que, com a maioria dos futures, o chamador não deve
 > chamar `poll` novamente depois que o future tiver retornado `Ready`. Muitos
 > futures entram em `panic!` se forem consultados outra vez depois de ficarem
@@ -164,9 +164,9 @@ aguardamos o resultado. No entanto, isso não compila; aqui está a parte
 relevante das mensagens de erro.
 
 <!-- manual-regeneration
-listagens de cd/ch17-async-await/listing-17-23
-Construção cargo
-copie *apenas* o bloco `error` final dos erros
+cd listings/ch17-async-await/listing-17-23
+cargo build
+copy *only* the final `error` block from the errors
 -->
 
 ```text
@@ -223,8 +223,8 @@ pub trait Future {
 ```
 
 O parâmetro `cx` e seu tipo `Context` são a chave para como um runtime
-realmente sabe quando verificar um dado future enquanto continua sendo
-preguiçoso. Novamente, os detalhes de como isso funciona estão fora do escopo
+realmente sabe quando verificar um dado future enquanto ele continua sendo
+lazy. Novamente, os detalhes de como isso funciona estão fora do escopo
 deste capítulo, e normalmente você só precisa pensar nisso ao escrever uma
 implementação personalizada de `Future`. Em vez disso, vamos nos concentrar no
 tipo de `self`, porque esta é a primeira vez que vemos um método em que `self`
@@ -234,8 +234,8 @@ principais:
 
 - Informa ao Rust qual tipo `self` deve ser para que o método seja chamado.
 - Não pode ser qualquer tipo. Está restrito ao tipo em que o método está
-  implementado, uma referência ou smart pointer para esse tipo, ou um `Pin` envolvendo um
-  referência a esse tipo.
+  implementado, uma referência ou smart pointer para esse tipo, ou um `Pin`
+  envolvendo uma referência a esse tipo.
 
 Veremos mais sobre essa sintaxe no [Capítulo 18][ch-18]<!-- ignore -->. Por
 enquanto, basta saber que, se quisermos fazer `poll` em um future para verificar
@@ -256,15 +256,15 @@ explicar a mensagem de erro que vimos antes, mas ela falava em `Unpin`, não em
 `Future` precisa que `self` esteja em um tipo `Pin` para chamar `poll`?
 
 Lembre-se de que, como vimos anteriormente neste capítulo, uma série de pontos
-de espera (`await`) em um future é compilada em uma máquina de estados, e o
-compilador garante que essa máquina de estados siga todas as regras normais de
-segurança do Rust, incluindo borrowing e ownership. Para fazer isso funcionar,
-o Rust analisa quais dados são necessários entre um ponto `await` e o próximo,
-ou entre um ponto `await` e o fim do bloco async. Em seguida, ele cria uma
+de await em um future é compilada em uma máquina de estados, e o compilador
+garante que essa máquina de estados siga todas as regras normais de segurança
+de Rust, incluindo borrowing e ownership. Para fazer isso funcionar, Rust
+analisa quais dados são necessários entre um ponto de await e o próximo, ou
+entre um ponto de await e o fim do bloco async. Em seguida, ele cria uma
 variante correspondente na máquina de estados compilada. Cada variante recebe o
 acesso necessário aos dados que serão usados naquela seção do código-fonte,
-seja tomando ownership desses dados ou obtendo uma
-referência mutável ou imutável a ele.
+seja tomando ownership desses dados ou obtendo uma referência mutável ou
+imutável a eles.
 
 Até aqui, tudo bem: se houver algo errado com ownership ou com referências em
 um determinado bloco async, o borrow checker nos avisará. Quando queremos mover
@@ -363,9 +363,9 @@ um determinado tipo _não_ precisa manter garantias especiais sobre se o valor
 em questão pode ser movido com segurança.
 
 <!--
-O `<code>` embutido no próximo bloco é para permitir o `<em>` embutido dentro dele,
-  combinando o que o NoStarch faz em termos de estilo e enfatizando o texto aqui
-  que é algo distinto de um tipo normal.
+  The inline `<code>` in the next block is to allow the inline `<em>` inside it,
+  matching what NoStarch does style-wise, and emphasizing within the text here
+  that it is something distinct from a normal type.
 -->
 
 Assim como acontece com `Send` e `Sync`, o compilador implementa `Unpin`
@@ -392,7 +392,7 @@ automaticamente, assim como a maioria dos outros tipos em Rust.
 
 <img alt="Uma caixa rotulada “Pin” à esquerda com uma seta apontando para uma caixa rotulada “String” à direita. A caixa “String” contém o dado 5usize, representando o comprimento da string, e as letras “h”, “e”, “l”, “l” e “o”, representando os caracteres da string “hello” armazenada nessa instância de `String`. Um retângulo pontilhado envolve a caixa “String” e seu rótulo, mas não a caixa “Pin”." src="img/trpl17-08.svg" class="center" />
 
-<figcaption>Figura 17-8: Fixando um `String`; a linha pontilhada indica que `String` implementa a trait `Unpin` e, portanto, não fica permanentemente fixado no lugar</figcaption>
+<figcaption>Figura 17-8: Fixando uma `String`; a linha pontilhada indica que `String` implementa a trait `Unpin` e, portanto, não fica permanentemente fixada no lugar</figcaption>
 
 </figure>
 
@@ -406,7 +406,7 @@ insegura. É justamente por isso que ela implementa `Unpin`, e não `!Unpin`.
 
 <img alt="Os mesmos dados da string “hello” do exemplo anterior, agora rotulados “s1” e acinzentados. A caixa “Pin” do exemplo anterior agora aponta para uma instância diferente de `String`, rotulada “s2”, que é válida, tem comprimento 7usize e contém os caracteres da string “goodbye”. `s2` é cercada por um retângulo pontilhado porque ela também implementa a trait `Unpin`." src="img/trpl17-09.svg" class="center" />
 
-<figcaption>Figura 17-9: Substituindo o `String` por um `String` totalmente diferente na memória</figcaption>
+<figcaption>Figura 17-9: Substituindo uma `String` por outra `String` totalmente diferente na memória</figcaption>
 
 </figure>
 
@@ -453,11 +453,11 @@ código.
 > [4][pinning]<!-- ignore --> de
 > [_Programação Assíncrona em Rust_][async-book].
 
-### A trait `Stream`
+### A Trait `Stream`
 
 Agora que você tem uma compreensão mais profunda das traits `Future`, `Pin` e
 `Unpin`, podemos voltar nossa atenção para a trait `Stream`. Como você aprendeu
-anteriormente neste capítulo, streams são semelhantes a iterators assíncronos.
+anteriormente neste capítulo, streams são semelhantes a iteradores assíncronos.
 Ao contrário de `Iterator` e `Future`, porém, `Stream` ainda não tem uma
 definição na biblioteca padrão no momento em que este texto foi escrito. Ainda
 assim, _há_ uma definição muito comum vinda do crate `futures`, usada em todo o
@@ -485,7 +485,7 @@ trait Stream {
 ```
 
 A trait `Stream` define um tipo associado chamado `Item` para o tipo de itens
-produzidos pelo stream. Isso é semelhante a `Iterator`, em que pode haver de
+produzidos pela stream. Isso é semelhante a `Iterator`, em que pode haver de
 zero a muitos itens, e diferente de `Future`, em que sempre há um único
 `Output`, mesmo que ele seja o tipo unitário `()`.
 
@@ -495,14 +495,14 @@ zero a muitos itens, e diferente de `Future`, em que sempre há um único
 `Iterator::next`. Seu tipo de retorno combina `Poll` com `Option`. O tipo
 externo é `Poll`, porque ele precisa ser verificado quanto à prontidão, assim
 como acontece com um future. O tipo interno é `Option`, porque precisa
-sinalizar se ainda existem mais mensagens, assim como acontece com um iterator.
+sinalizar se ainda existem mais mensagens, assim como acontece com um iterador.
 
 Algo muito semelhante a essa definição provavelmente acabará fazendo parte da
 biblioteca padrão do Rust. Enquanto isso, ela faz parte do conjunto de
 ferramentas da maioria dos runtimes, então você pode contar com isso, e tudo o
 que abordaremos a seguir deve se aplicar de modo geral.
 
-Nos exemplos que vimos na seção [“Streams: Futures in Sequence”][streams]<!--
+Nos exemplos que vimos na seção [“Streams: Futures em Sequência”][streams]<!--
 ignore -->, porém, não usamos `poll_next` _nem_ `Stream`; em vez disso,
 usamos `next` e `StreamExt`. _Poderíamos_ trabalhar diretamente com a API
 `poll_next`, escrevendo manualmente nossas próprias máquinas de estados para
@@ -541,8 +541,8 @@ você _só_ precisa implementar `Stream`; depois disso, qualquer pessoa que usar
 esse tipo poderá usar `StreamExt` e seus métodos automaticamente.
 
 Isso é tudo o que abordaremos sobre os detalhes de mais baixo nível dessas
-traits. Para finalizar, vamos considerar como futures, incluindo streams,
-tarefas e threads se encaixam em conjunto.
+traits. Para finalizar, vamos considerar como futures, incluindo streams, tasks
+e threads se encaixam.
 
 [message-passing]: ch17-02-concurrency-with-async.md#sending-data-between-two-tasks-using-message-passing
 [ch-18]: ch18-00-oop.html

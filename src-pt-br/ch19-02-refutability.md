@@ -1,4 +1,4 @@
-## Refutabilidade: se um padrão pode não corresponder
+## Refutabilidade: Se um Padrão Pode Falhar ao Corresponder
 
 Os padrões vêm em duas formas: refutáveis e irrefutáveis. Padrões que
 correspondem a qualquer valor possível passado são _irrefutáveis_. Um exemplo
@@ -17,11 +17,12 @@ construções servem para lidar com possíveis falhas: a utilidade de uma
 condicional está em sua capacidade de se comportar de maneira diferente
 dependendo do sucesso ou do fracasso.
 
-Em geral, você não deveria se preocupar com a distinção entre refutável
-e padrões irrefutáveis; no entanto, você precisa estar familiarizado com o conceito
-de refutabilidade para que você possa responder quando vir uma mensagem de erro. Em
-nesses casos, você precisará alterar o padrão ou a construção que está
-usando o padrão com, dependendo do comportamento pretendido do código.
+Em geral, você não deveria se preocupar com a distinção entre padrões
+refutáveis e irrefutáveis; no entanto, precisa estar familiarizado com o
+conceito de refutabilidade para conseguir responder quando o vir em uma
+mensagem de erro. Nesses casos, você precisará alterar o padrão ou a construção
+com a qual está usando o padrão, dependendo do comportamento pretendido do
+código.
 
 Vejamos um exemplo do que acontece quando tentamos usar um padrão refutável onde
 Rust exige um padrão irrefutável, e vice-versa. A Listagem 19-8 mostra uma
@@ -86,11 +87,10 @@ padrão irrefutável:
 
 Por essa razão, os braços de `match` devem usar padrões refutáveis, exceto o
 último braço, que deve corresponder a quaisquer valores restantes com um padrão
-irrefutável. Rust
-nos permite usar um padrão irrefutável em um `match` com apenas um braço, mas
-esta sintaxe não é particularmente útil e pode ser substituída por uma mais simples
-Instrução `let`.
+irrefutável. Rust nos permite usar um padrão irrefutável em um `match` com
+apenas um braço, mas essa sintaxe não é particularmente útil e pode ser
+substituída por uma instrução `let` mais simples.
 
-Agora que você sabe onde usar padrões e a diferença entre refutáveis
-e padrões irrefutáveis, vamos cobrir toda a sintaxe que podemos usar para criar
-padrões.
+Agora que você sabe onde usar padrões e conhece a diferença entre padrões
+refutáveis e irrefutáveis, vamos cobrir toda a sintaxe que podemos usar para
+criar padrões.

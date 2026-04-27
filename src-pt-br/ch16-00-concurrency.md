@@ -47,5 +47,5 @@ Aqui estão os tópicos que abordaremos neste capítulo:
 - Como criar threads para executar vários trechos de código ao mesmo tempo
 - Concorrência por _passagem de mensagens_, em que canais enviam mensagens entre threads
 - Concorrência de _estado compartilhado_, em que várias threads têm acesso a algum dado
-- Os traits `Sync` e `Send`, que estendem as garantias de concorrência do Rust
+- As traits `Sync` e `Send`, que estendem as garantias de concorrência do Rust
   a tipos definidos pelo usuário, bem como a tipos fornecidos pela biblioteca padrão

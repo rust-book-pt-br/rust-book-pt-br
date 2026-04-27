@@ -1,4 +1,4 @@
-## Tipos avançados
+## Tipos Avançados
 
 O sistema de tipos do Rust possui alguns recursos que mencionamos até agora, mas
 ainda não discutimos de fato. Começaremos falando de newtypes em geral, à
@@ -10,10 +10,10 @@ pouco diferente. Também discutiremos o tipo `!` e os tipos de tamanho dinâmico
 
 <a id="using-the-newtype-pattern-for-type-safety-and-abstraction"></a>
 
-### Segurança de tipos e abstração com o padrão Newtype
+### Segurança de Tipos e Abstração com o Padrão Newtype
 
 Esta seção pressupõe que você tenha lido a seção anterior,
-[“Implementando traits externas com o padrão Newtype”][newtype]<!-- ignore -->.
+[“Implementando Traits Externas com o Padrão Newtype”][newtype]<!-- ignore -->.
 O padrão newtype também é útil para tarefas além daquelas que discutimos até
 aqui, incluindo impor estaticamente que valores nunca sejam confundidos e
 indicar as unidades de um valor. Você viu um exemplo de uso de newtypes para
@@ -42,7 +42,7 @@ no Capítulo 18.
 
 <a id="creating-type-synonyms-with-type-aliases"></a>
 
-### Sinônimos e aliases de tipo
+### Sinônimos e Aliases de Tipo
 
 Rust oferece a capacidade de declarar um _type alias_ para dar outro nome a um
 tipo existente. Para isso, usamos a palavra-chave `type`. Por exemplo, podemos
@@ -138,7 +138,7 @@ só outra forma de escrever `Result<T, E>`, o que significa que podemos usar
 com ele qualquer método que funcione com `Result<T, E>`, além de sintaxes especiais,
 como o operador `?`.
 
-### O tipo never, que nunca retorna
+### O Tipo Never, Que Nunca Retorna
 
 Rust tem um tipo especial chamado `!`, conhecido, no jargão da teoria dos
 tipos, como _tipo vazio_, porque não possui valores. Preferimos chamá-lo de
@@ -153,9 +153,9 @@ Esse código é lido como “a função `bar` retorna never”. Funções que nu
 retornam são chamadas de _funções divergentes_. Não podemos criar valores do
 tipo `!`, então `bar` jamais poderá retornar.
 
-Mas para que serve um tipo para o qual você nunca pode criar valores? Lembre-se do código da
-Listagem 2-5, parte do jogo de adivinhação de números; reproduzimos um trecho dele
-aqui na Listagem 20-27.
+Mas para que serve um tipo para o qual você nunca pode criar valores? Lembre-se
+do código da Listagem 2-5, parte do jogo de adivinhação de números;
+reproduzimos um trecho dele aqui na Listagem 20-27.
 
 <Listing number="20-27" caption="Um `match` com um braço que termina em `continue`">
 
@@ -180,15 +180,15 @@ retorna? Como pudemos retornar um `u32` de um braço e ter outro braço
 que termina com `continue` na Listagem 20-27?
 
 Como você já deve ter imaginado, `continue` tem o valor `!`. Ou seja, quando Rust
-calcula o tipo de `guess`, ele analisa ambos os braços do `match`: o primeiro com um
-valor `u32` e o segundo com um valor `!`. Como `!` nunca pode ter um
+calcula o tipo de `guess`, ele analisa ambos os braços do `match`: o primeiro
+com um valor `u32` e o segundo com um valor `!`. Como `!` nunca pode ter um
 valor, Rust decide que o tipo de `guess` é `u32`.
 
 A forma formal de descrever esse comportamento é que expressões do tipo `!` podem
-ser coercidas para qualquer outro tipo. Podemos encerrar esse braço do `match` com
-`continue` porque `continue` não retorna um valor; em vez disso, ele transfere o controle
-de volta para o início do loop, portanto, no caso `Err`, nunca atribuímos um valor a
-`guess`.
+ser coercidas para qualquer outro tipo. Podemos encerrar esse braço do `match`
+com `continue` porque `continue` não retorna um valor; em vez disso, ele
+transfere o controle de volta para o início do loop, portanto, no caso `Err`,
+nunca atribuímos um valor a `guess`.
 
 O tipo never também é útil com a macro `panic!`. Lembre-se da função `unwrap`,
 que chamamos em valores `Option<T>` para produzir um valor ou gerar um panic, com
@@ -214,51 +214,53 @@ Aqui, o loop nunca termina, então `!` é o valor da expressão. No entanto, iss
 não seria verdade se incluíssemos um `break`, porque o loop terminaria
 ao chegar ao `break`.
 
-### Tipos de tamanho dinâmico e a trait `Sized`
+### Tipos de Tamanho Dinâmico e a Trait `Sized`
 
 Rust precisa saber alguns detalhes sobre seus tipos, como quanto espaço deve ser
-alocar para um valor de um tipo específico. Isso deixa um canto do seu tipo
-sistema um pouco confuso no início: o conceito de _tipos de tamanho dinâmico_.
+alocado para um valor de um tipo específico. Isso deixa um canto do sistema de
+tipos um pouco confuso no início: o conceito de _tipos de tamanho dinâmico_.
 Às vezes chamados de _DSTs_ ou _unsized types_, esses tipos nos permitem escrever
 código usando valores cujo tamanho só podemos saber em tempo de execução.
 
 Vamos nos aprofundar nos detalhes de um tipo de tamanho dinâmico chamado `str`, que
 temos usado ao longo do livro. Isso mesmo: não `&str`, mas `str` por
-si só, é um DST. Em muitos casos, como ao armazenar um texto inserido pelo usuário,
-não podemos saber o tamanho da string até o tempo de execução. Isso significa que não podemos criar
-uma variável do tipo `str`, nem aceitar um argumento do tipo `str`. Considere
-o código a seguir, que não funciona:
+si só, é um DST. Em muitos casos, como ao armazenar um texto inserido pelo
+usuário, não podemos saber o tamanho da string até o tempo de execução. Isso
+significa que não podemos criar uma variável do tipo `str`, nem aceitar um
+argumento do tipo `str`. Considere o código a seguir, que não funciona:
 
 ```rust,ignore,does_not_compile
 {{#rustdoc_include ../listings/ch20-advanced-features/no-listing-11-cant-create-str/src/main.rs:here}}
 ```
 
-Rust precisa saber quanta memória deve ser alocada para qualquer valor de um determinado
-tipo, e todos os valores de um mesmo tipo devem usar a mesma quantidade de memória. Se Rust
-nos permitisse escrever esse código, esses dois valores `str` precisariam ocupar a
-mesma quantidade de espaço. Mas eles têm comprimentos diferentes: `s1` precisa de 12 bytes de
-armazenamento, e `s2`, de 15. Por isso, não é possível criar uma variável
-armazenando um tipo de tamanho dinâmico.
+Rust precisa saber quanta memória deve ser alocada para qualquer valor de um
+determinado tipo, e todos os valores de um mesmo tipo devem usar a mesma
+quantidade de memória. Se Rust nos permitisse escrever esse código, esses dois
+valores `str` precisariam ocupar a mesma quantidade de espaço. Mas eles têm
+comprimentos diferentes: `s1` precisa de 12 bytes de armazenamento, e `s2`, de
+15. Por isso, não é possível criar uma variável armazenando um tipo de tamanho
+dinâmico.
 
 Então, o que fazemos? Nesse caso, você já sabe a resposta: fazemos com que o tipo
 de `s1` e `s2` seja string slice (`&str`), em vez de `str`. Lembre-se da
 seção [“String Slices”][string-slices]<!-- ignore -->, no Capítulo 4: a
 estrutura de dados slice armazena apenas a posição inicial e o comprimento do
-slice. Portanto, embora `&T` seja um único valor que armazena o endereço de memória de
-onde `T` está localizado, uma string slice tem _dois_ valores: o endereço do
-`str` e seu comprimento. Assim, podemos saber o tamanho de uma string slice em
-tempo de compilação: ele é o dobro do tamanho de um `usize`. Ou seja, sempre sabemos o
-tamanho de uma string slice, não importa quão longa seja a string à qual ela se refere. Em
-geral, é assim que tipos de tamanho dinâmico são usados em Rust:
-eles carregam um pouco extra de metadados que armazena o tamanho da
-informação dinâmica. A regra de ouro para tipos de tamanho dinâmico é que devemos sempre
-colocar valores desses tipos atrás de algum tipo de ponteiro.
+slice. Portanto, embora `&T` seja um único valor que armazena o endereço de
+memória de onde `T` está localizado, uma string slice tem _dois_ valores: o
+endereço do `str` e seu comprimento. Assim, podemos saber o tamanho de uma
+string slice em tempo de compilação: ele é o dobro do tamanho de um `usize`. Ou
+seja, sempre sabemos o tamanho de uma string slice, não importa quão longa seja
+a string à qual ela se refere. Em geral, é assim que tipos de tamanho dinâmico
+são usados em Rust: eles carregam um pouco extra de metadados que armazena o
+tamanho da informação dinâmica. A regra de ouro para tipos de tamanho dinâmico
+é que devemos sempre colocar valores desses tipos atrás de algum tipo de
+ponteiro.
 
 Podemos combinar `str` com vários tipos de ponteiro, por exemplo, `Box<str>` ou
-`Rc<str>`. Na verdade, você já viu isso antes, mas com outro
-tipo de tamanho dinâmico: traits. Toda trait é um tipo de tamanho dinâmico ao qual podemos nos referir
-usando o nome da trait. Na seção [“Usando objetos de trait para abstrair
-comportamento compartilhado”][using-trait-objects-to-abstract-over-shared-behavior]<!--
+`Rc<str>`. Na verdade, você já viu isso antes, mas com outro tipo de tamanho
+dinâmico: traits. Toda trait é um tipo de tamanho dinâmico ao qual podemos nos
+referir usando o nome da trait. Na seção [“Usando Objetos de Trait para Abstrair
+Comportamento Compartilhado”][using-trait-objects-to-abstract-over-shared-behavior]<!--
 ignore --> do Capítulo 18, mencionamos que, para usar traits como trait
 objects, devemos colocá-las atrás de um ponteiro, como `&dyn Trait` ou `Box<dyn
 Trait>` (`Rc<dyn Trait>` também funcionaria).
@@ -266,9 +268,8 @@ Trait>` (`Rc<dyn Trait>` também funcionaria).
 Para trabalhar com DSTs, Rust fornece a trait `Sized` para determinar se o
 tamanho de um tipo é conhecido em tempo de compilação. Essa trait é
 implementada automaticamente para tudo cujo tamanho é conhecido em tempo de
-compilação. Além disso, Rust
-adiciona implicitamente um limite em `Sized` a cada função genérica. Ou seja, um
-definição de função genérica como esta:
+compilação. Além disso, Rust adiciona implicitamente um limite `Sized` a cada
+função genérica. Ou seja, uma definição de função genérica como esta:
 
 ```rust,ignore
 {{#rustdoc_include ../listings/ch20-advanced-features/no-listing-12-generic-fn-definition/src/lib.rs}}
@@ -288,7 +289,7 @@ restrição:
 {{#rustdoc_include ../listings/ch20-advanced-features/no-listing-14-generic-maybe-sized/src/lib.rs}}
 ```
 
-Uma bound de trait `?Sized` significa “`T` pode ou não ser `Sized`”, e essa
+Um trait bound `?Sized` significa “`T` pode ou não ser `Sized`”, e essa
 notação substitui o comportamento padrão segundo o qual tipos genéricos precisam
 ter tamanho conhecido em tempo de compilação. A sintaxe `?Trait` com esse
 significado só está disponível para `Sized`, e não para outras traits.

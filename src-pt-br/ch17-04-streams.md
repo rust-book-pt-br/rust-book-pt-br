@@ -2,7 +2,7 @@
 
 <a id="streams"></a>
 
-## Streams: Futures em sequência
+## Streams: Futures em Sequência
 
 Lembre-se de como usamos o receptor do nosso canal async anteriormente neste capítulo,
 na seção [“Passagem de mensagens”][17-02-messages]<!-- ignore -->. O método async
@@ -16,10 +16,10 @@ combiná-los de maneiras interessantes. Por exemplo, podemos agrupar eventos par
 disparar muitas chamadas de rede, definir timeouts em sequências de operações longas
 ou limitar eventos da interface do usuário para evitar trabalho desnecessário.
 
-Vimos uma sequência de itens no Capítulo 13, quando examinamos a trait `Iterator`
-na seção [“A trait `Iterator` e o método `next`”][iterator-trait]<!--
-ignore -->, mas há duas diferenças entre iterators e o receptor de canal async.
-A primeira diferença é o tempo: iterators são síncronos, enquanto o receptor do
+Vimos uma sequência de itens no Capítulo 13, quando examinamos a trait
+`Iterator` na seção [“A trait `Iterator` e o Método `next`”][iterator-trait]<!--
+ignore -->, mas há duas diferenças entre iteradores e o receptor de canal async.
+A primeira diferença é o tempo: iteradores são síncronos, enquanto o receptor do
 canal é assíncrono. A segunda diferença é a API. Ao trabalhar diretamente com
 `Iterator`, chamamos seu método síncrono `next`. Com a stream `trpl::Receiver`,
 em particular, chamamos um método assíncrono `recv`. Fora isso, essas APIs
@@ -29,10 +29,10 @@ especificamente receber mensagens, porém, a API geral de streams é muito mais
 ampla: ela fornece o próximo item da mesma forma que `Iterator`, mas de modo
 assíncrono.
 
-A semelhança entre iterators e streams em Rust significa que podemos realmente
-criar uma stream a partir de qualquer iterator. Assim como acontece com um iterator, podemos trabalhar com uma
-stream chamando seu método `next` e aguardando a saída, como na Listagem
-17-21, que ainda não será compilado.
+A semelhança entre iteradores e streams em Rust significa que podemos realmente
+criar uma stream a partir de qualquer iterador. Assim como acontece com um
+iterador, podemos trabalhar com uma stream chamando seu método `next` e
+aguardando a saída, como na Listagem 17-21, que ainda não compilará.
 
 <Listing number="17-21" caption="Criando uma stream a partir de um iterador e imprimindo seus valores" file-name="src/main.rs">
 
@@ -42,8 +42,8 @@ stream chamando seu método `next` e aguardando a saída, como na Listagem
 
 </Listing>
 
-Começamos com um array de números, que convertemos em iterator e depois
-chamamos `map` para dobrar todos os valores. Então convertemos o iterator em uma
+Começamos com um array de números, que convertemos em um iterador e depois
+chamamos `map` para dobrar todos os valores. Então convertemos o iterador em uma
 stream usando a função `trpl::stream_from_iter`. Em seguida, iteramos sobre os
 itens da stream à medida que eles chegam com o loop `while let`.
 
@@ -87,11 +87,11 @@ na verdade `StreamExt`. Abreviação de _extension_, `Ext` é um padrão comum n
 comunidade Rust para estender uma trait com outra.
 
 A trait `Stream` define uma interface de baixo nível que combina efetivamente as
-traits `Iterator` e `Future`. `StreamExt` fornece um conjunto de APIs de nível superior
-sobre `Stream`, incluindo o método `next`, bem como outros métodos utilitários
-semelhantes aos fornecidos pela trait `Iterator`. `Stream` e `StreamExt`
-ainda não fazem parte da biblioteca padrão do Rust, mas a maior parte do ecossistema
-usa definições semelhantes.
+traits `Iterator` e `Future`. `StreamExt` fornece um conjunto de APIs de nível
+mais alto sobre `Stream`, incluindo o método `next`, bem como outros métodos
+utilitários semelhantes aos fornecidos pela trait `Iterator`. `Stream` e
+`StreamExt` ainda não fazem parte da biblioteca padrão de Rust, mas a maior
+parte dos crates do ecossistema usa definições semelhantes.
 
 A correção para o erro do compilador é adicionar uma instrução `use` para
 `trpl::StreamExt`, como na Listagem 17-22.
@@ -104,9 +104,9 @@ A correção para o erro do compilador é adicionar uma instrução `use` para
 
 </Listing>
 
-Com todas essas peças juntas, esse código funciona da maneira que queremos! Além disso,
-agora que temos `StreamExt` em escopo, podemos usar todos os seus métodos utilitários,
-assim como fazemos com iterators.
+Com todas essas peças juntas, esse código funciona da maneira que queremos!
+Além disso, agora que temos `StreamExt` em escopo, podemos usar todos os seus
+métodos utilitários, assim como fazemos com iteradores.
 
 [17-02-messages]: ch17-02-concurrency-with-async.html#message-passing
 [iterator-trait]: ch13-02-iterators.html#the-iterator-trait-and-the-next-method

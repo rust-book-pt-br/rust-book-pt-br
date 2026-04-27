@@ -1,47 +1,46 @@
 ## Usando Threads para Executar Código Simultaneamente
 
-Na maioria dos sistemas operacionais atuais, o código de um programa é executado em um
-_process_, e o sistema operacional gerencia vários processos ao mesmo tempo.
-Dentro de um programa, você também pode ter partes independentes que são executadas simultaneamente.
-Os recursos que executam essas partes independentes são chamados de _threads_. Por
-exemplo, um web server pode ter várias threads para que possa responder a
-mais de uma solicitação ao mesmo tempo.
+Na maioria dos sistemas operacionais atuais, o código de um programa em
+execução roda em um _processo_, e o sistema operacional gerencia vários
+processos ao mesmo tempo. Dentro de um programa, você também pode ter partes
+independentes que rodam simultaneamente. Os recursos que executam essas partes
+independentes são chamados de _threads_. Por exemplo, um servidor web poderia
+ter várias threads para responder a mais de uma requisição ao mesmo tempo.
 
-Dividir o cálculo do seu programa em várias threads para executar várias
-tarefas ao mesmo tempo pode melhorar o desempenho, mas também adiciona complexidade.
-Como as threads podem ser executadas simultaneamente, não há garantia inerente sobre a
-ordem em que partes do seu código em diferentes threads serão executadas. Isso pode levar
-a problemas, como:
+Dividir a computação do seu programa em várias threads para executar várias
+tarefas ao mesmo tempo pode melhorar o desempenho, mas também adiciona
+complexidade. Como threads podem rodar simultaneamente, não há garantia
+inerente sobre a ordem em que partes do seu código em diferentes threads serão
+executadas. Isso pode levar a problemas como:
 
-- Condições de corrida, nas quais threads acessam dados ou recursos em uma
-  ordem inconsistente
-- Deadlocks, nos quais duas threads ficam esperando uma pela outra, impedindo que ambas
-  as threads continuem
-- Bugs que só acontecem em determinadas situações e são difíceis de reproduzir e corrigir
-  de forma confiável
+- Condições de corrida, em que threads acessam dados ou recursos em uma ordem
+  inconsistente
+- Deadlocks, em que duas threads ficam esperando uma pela outra, impedindo que
+  ambas continuem
+- Bugs que acontecem apenas em determinadas situações e são difíceis de
+  reproduzir e corrigir de forma confiável
 
-Rust tenta mitigar os efeitos negativos do uso de threads, mas
-a programação em um contexto multithread ainda exige reflexão cuidadosa e requer
-uma estrutura de código diferente daquela dos programas executados em um único
-thread.
+Rust tenta mitigar os efeitos negativos do uso de threads, mas programar em um
+contexto multithread ainda exige reflexão cuidadosa e requer uma estrutura de
+código diferente daquela usada em programas que rodam em uma única thread.
 
-As linguagens de programação implementam threads de maneiras diferentes, e muitos
-sistemas operacionais fornecem uma API que a linguagem pode chamar para criar
-novas threads. A biblioteca padrão do Rust usa um modelo de implementação de
-threads _1:1_, em que um programa usa uma thread do sistema operacional para cada
-thread da linguagem. Existem crates que implementam outros modelos de threading,
-fazendo trade-offs diferentes em relação ao modelo 1:1. (O sistema async do Rust,
-que veremos no próximo capítulo, também oferece outra abordagem para a
-concorrência.)
+Linguagens de programação implementam threads de algumas maneiras diferentes, e
+muitos sistemas operacionais fornecem uma API que a linguagem de programação
+pode chamar para criar novas threads. A biblioteca padrão de Rust usa um modelo
+de implementação de threads _1:1_, em que um programa usa uma thread do sistema
+operacional para cada thread da linguagem. Existem crates que implementam
+outros modelos de threading, com trade-offs diferentes em relação ao modelo
+1:1. (O sistema async de Rust, que veremos no próximo capítulo, também fornece
+outra abordagem para concorrência.)
 
-### Criando um novo thread com `spawn`
+### Criando uma Nova Thread com `spawn`
 
-Para criar um novo thread, chamamos a função `thread::spawn` e passamos a ela um
-closure (falamos sobre closures no Capítulo 13) contendo o código que queremos
-execute no novo thread. O exemplo na Listagem 16-1 imprime algum texto de um main
-thread e outros textos de um novo thread.
+Para criar uma nova thread, chamamos a função `thread::spawn` e passamos a ela
+uma closure (falamos sobre closures no Capítulo 13) contendo o código que
+queremos executar na nova thread. O exemplo da Listagem 16-1 imprime algum
+texto de uma thread principal e outro texto de uma nova thread.
 
-<Listing number="16-1" file-name="src/main.rs" caption="Criando uma nova thread para imprimir algo enquanto a thread principal imprime outra coisa">
+<Listing number="16-1" file-name="src/main.rs" caption="Criando uma nova thread para imprimir uma coisa enquanto a thread principal imprime outra">
 
 ```rust
 {{#rustdoc_include ../listings/ch16-fearless-concurrency/listing-16-01/src/main.rs}}
@@ -49,9 +48,9 @@ thread e outros textos de um novo thread.
 
 </Listing>
 
-Observe que quando o thread principal de um programa Rust for concluído, todos os threads gerados
-são desligados, tenham ou não terminado a execução. A saída deste
-programa pode ser um pouco diferente a cada vez, mas será semelhante ao
+Observe que, quando a thread principal de um programa Rust termina, todas as
+threads geradas são encerradas, tenham ou não terminado sua execução. A saída
+desse programa pode ser um pouco diferente a cada vez, mas será parecida com a
 seguinte:
 
 <!-- Not extracting output because changes to this output aren't significant;
@@ -70,36 +69,36 @@ hi number 4 from the spawned thread!
 hi number 5 from the spawned thread!
 ```
 
-As chamadas para `thread::sleep` forçam um thread a interromper sua execução por um breve período.
-duração, permitindo que um thread diferente seja executado. O threads provavelmente levará
-gira, mas isso não é garantido: depende de como o seu sistema operacional
-agenda o threads. Nesta execução, o thread principal foi impresso primeiro, embora
-a instrução print do thread gerado aparece primeiro no código. E mesmo
-embora tenhamos dito ao thread gerado para imprimir até que `i` seja `9`, ele só chegou a ` 5`
-antes que o thread principal seja desligado.
+As chamadas a `thread::sleep` forçam uma thread a interromper sua execução por
+um curto período, permitindo que outra thread rode. As threads provavelmente se
+alternarão, mas isso não é garantido: depende de como o sistema operacional
+agenda as threads. Nesta execução, a thread principal imprimiu primeiro, embora
+a instrução de impressão da thread gerada apareça primeiro no código. E, embora
+tenhamos dito à thread gerada para imprimir até que `i` fosse `9`, ela só
+chegou a `5` antes de a thread principal ser encerrada.
 
-Se você executar este código e ver apenas a saída do thread principal ou não ver nenhum
-sobreposição, tente aumentar os números nos intervalos para criar mais oportunidades
-para o sistema operacional alternar entre o threads.
+Se você executar esse código e vir apenas a saída da thread principal, ou não
+vir nenhuma sobreposição, tente aumentar os números nos intervalos para criar
+mais oportunidades para o sistema operacional alternar entre as threads.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="waiting-for-all-threads-to-finish-using-join-handles"></a>
 
-### Esperando que todos os threads terminem
+### Esperando Todas as Threads Terminarem
 
-O código na Listagem 16-1 não apenas interrompe o thread gerado prematuramente na maior parte
-o tempo devido ao término principal do thread, mas porque não há garantia de
-a ordem em que o threads é executado, também não podemos garantir que o thread gerado
-vai começar a correr!
+O código da Listagem 16-1 não apenas interrompe a thread gerada prematuramente
+na maior parte do tempo por causa do término da thread principal, mas, como não
+há garantia sobre a ordem em que as threads rodam, também não podemos garantir
+que a thread gerada chegará a rodar!
 
-Podemos corrigir o problema do thread gerado não funcionar ou terminar
-prematuramente salvando o valor de retorno de `thread::spawn` em uma variável. O
-o tipo de retorno de `thread::spawn` é `JoinHandle<T>`. Um ` JoinHandle<T>`é um
-valor de ownership que, quando chamarmos o método ` join`nele, aguardará seu
-thread para finalizar. A Listagem 16-2 mostra como usar o ` JoinHandle<T>`do
-thread que criamos na Listagem 16-1 e como chamar ` join`para garantir que o
-thread gerado termina antes de ` main`sair.
+Podemos corrigir o problema da thread gerada não rodar ou terminar
+prematuramente salvando o valor de retorno de `thread::spawn` em uma variável.
+O tipo de retorno de `thread::spawn` é `JoinHandle<T>`. Um `JoinHandle<T>` é um
+valor com ownership que, quando chamamos o método `join` nele, espera sua
+thread terminar. A Listagem 16-2 mostra como usar o `JoinHandle<T>` da thread
+que criamos na Listagem 16-1 e como chamar `join` para garantir que a thread
+gerada termine antes de `main` sair.
 
 <Listing number="16-2" file-name="src/main.rs" caption="Salvando um `JoinHandle<T>` retornado por `thread::spawn` para garantir que a thread execute até o fim">
 
@@ -109,11 +108,11 @@ thread gerado termina antes de ` main`sair.
 
 </Listing>
 
-Chamar `join` no identificador bloqueia o thread atualmente em execução até que o
-thread representado pelo identificador termina. _Bloquear_ um thread significa que
-thread é impedido de realizar trabalho ou sair. Porque nós colocamos a chamada
-para `join` após o loop `for` do thread principal, a execução da Listagem 16-2 deve
-produza uma saída semelhante a esta:
+Chamar `join` no handle bloqueia a thread atualmente em execução até que a
+thread representada pelo handle termine. _Bloquear_ uma thread significa que
+ela fica impedida de realizar trabalho ou sair. Como colocamos a chamada a
+`join` depois do loop `for` da thread principal, executar a Listagem 16-2 deve
+produzir uma saída parecida com esta:
 
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
@@ -135,11 +134,12 @@ hi number 8 from the spawned thread!
 hi number 9 from the spawned thread!
 ```
 
-Os dois threads continuam alternando, mas o thread principal espera por causa do
-chamada para `handle.join()` e não termina até que o thread gerado seja concluído.
+As duas threads continuam alternando, mas a thread principal espera por causa
+da chamada a `handle.join()` e não termina até que a thread gerada tenha
+terminado.
 
-Mas vamos ver o que acontece quando movemos `handle.join()` antes do
-Loop `for` em `main`, assim:
+Mas vamos ver o que acontece quando movemos `handle.join()` para antes do loop
+`for` em `main`, assim:
 
 <Listing file-name="src/main.rs">
 
@@ -149,8 +149,8 @@ Loop `for` em `main`, assim:
 
 </Listing>
 
-O thread principal aguardará o thread gerado terminar e então executará seu
-Loop `for`, então a saída não será mais intercalada, conforme mostrado aqui:
+A thread principal aguardará a thread gerada terminar e então executará seu
+loop `for`, de modo que a saída não será mais intercalada, como mostrado aqui:
 
 <!-- Not extracting output because changes to this output aren't significant;
 the changes are likely to be due to the threads running differently rather than
@@ -172,24 +172,24 @@ hi number 3 from the main thread!
 hi number 4 from the main thread!
 ```
 
-Pequenos detalhes, como onde `join` é chamado, podem afetar se o seu
-threads é executado ao mesmo tempo.
+Pequenos detalhes, como onde `join` é chamado, podem afetar se suas threads
+rodam ou não ao mesmo tempo.
 
-### Usando fechamentos `move` com threads
+### Usando Closures `move` com Threads
 
-Freqüentemente usaremos a palavra-chave `move` com closures passado para `thread::spawn`
-porque o closure pegará ownership dos valores que usa do
-ambiente, transferindo assim ownership desses valores de um thread para
-outro. Em [“Capturando referências ou movendo ownership”][capture]<!-- ignore
---> no Capítulo 13, discutimos ` move`no contexto de closures. Agora vamos
-concentre-se mais na interação entre ` move`e ` thread::spawn`.
+Frequentemente usaremos a palavra-chave `move` com closures passadas para
+`thread::spawn`, porque a closure então tomará ownership dos valores que usa do
+ambiente, transferindo o ownership desses valores de uma thread para outra. Em
+[“Capturando Referências ou Movendo Ownership”][capture]<!-- ignore --> no
+Capítulo 13, discutimos `move` no contexto de closures. Agora vamos nos
+concentrar mais na interação entre `move` e `thread::spawn`.
 
-Observe na Listagem 16-1 que o closure que passamos para `thread::spawn` não leva
-argumentos: não estamos usando nenhum dado do thread principal no gerado
-Código de thread. Para usar dados do thread principal no thread gerado, o
-O closure do thread gerado deve capturar os valores necessários. Listagem 16-3 programas
-uma tentativa de criar um vetor no thread principal e usá-lo no gerado
-thread. No entanto, isso ainda não funcionará, como você verá em breve.
+Observe na Listagem 16-1 que a closure que passamos para `thread::spawn` não
+recebe argumentos: não estamos usando nenhum dado da thread principal no código
+da thread gerada. Para usar dados da thread principal na thread gerada, a
+closure da thread gerada deve capturar os valores de que precisa. A Listagem
+16-3 mostra uma tentativa de criar um vetor na thread principal e usá-lo na
+thread gerada. No entanto, isso ainda não funcionará, como você verá em breve.
 
 <Listing number="16-3" file-name="src/main.rs" caption="Tentando usar em outra thread um vetor criado pela thread principal">
 
@@ -199,22 +199,22 @@ thread. No entanto, isso ainda não funcionará, como você verá em breve.
 
 </Listing>
 
-O closure usa `v`, então ele irá capturar ` v`e torná-lo parte do closure
-ambiente. Como ` thread::spawn`executa este closure em um novo thread, nós
-deve ser capaz de acessar ` v`dentro desse novo thread. Mas quando compilamos isso
-exemplo, obtemos o seguinte erro:
+A closure usa `v`, então ela capturará `v` e o tornará parte do ambiente da
+closure. Como `thread::spawn` executa essa closure em uma nova thread, deveríamos
+conseguir acessar `v` dentro dessa nova thread. Mas, quando compilamos esse
+exemplo, recebemos o seguinte erro:
 
 ```console
 {{#include ../listings/ch16-fearless-concurrency/listing-16-03/output.txt}}
 ```
 
-Rust _infere_ como capturar `v` e porque `println!` só precisa de uma referência
-para `v`, o closure tenta emprestar ` v`. No entanto, há um problema: Rust não pode
-dizer por quanto tempo o thread gerado será executado, para que ele não saiba se o
-referência a ` v`será sempre válida.
+Rust _infere_ como capturar `v` e, como `println!` precisa apenas de uma
+referência para `v`, a closure tenta pegar `v` emprestado. No entanto, há um
+problema: Rust não consegue dizer por quanto tempo a thread gerada será
+executada, então não sabe se a referência para `v` sempre será válida.
 
-A Listagem 16-4 fornece um cenário com maior probabilidade de ter uma referência a `v`
-isso não será válido.
+A Listagem 16-4 apresenta um cenário em que é mais provável que uma referência
+para `v` não seja válida.
 
 <Listing number="16-4" file-name="src/main.rs" caption="Uma thread com uma closure que tenta capturar uma referência a `v` de uma thread principal que faz `drop` de `v`">
 
@@ -224,15 +224,15 @@ isso não será válido.
 
 </Listing>
 
-Se Rust nos permitiu executar este código, existe a possibilidade de que o código gerado
-thread seria imediatamente colocado em segundo plano, sem ser executado. O
-gerado thread tem uma referência a `v` dentro, mas o thread principal imediatamente
-descarta `v`, usando a função ` drop`que discutimos no Capítulo 15. Então, quando o
-thread gerado começa a ser executado, ` v`não é mais válido, portanto, uma referência a ele
-também é inválido. Oh não!
+Se Rust nos permitisse executar esse código, haveria a possibilidade de a
+thread gerada ser colocada imediatamente em segundo plano sem rodar. A thread
+gerada tem uma referência para `v` dentro dela, mas a thread principal descarta
+`v` imediatamente usando a função `drop` que discutimos no Capítulo 15. Então,
+quando a thread gerada começasse a executar, `v` não seria mais válido, de modo
+que uma referência a ele também seria inválida. Ah, não!
 
-Para corrigir o erro do compilador na Listagem 16-3, podemos usar a mensagem de erro
-conselho:
+Para corrigir o erro do compilador na Listagem 16-3, podemos usar o conselho da
+mensagem de erro:
 
 <!-- manual-regeneration
 after automatic regeneration, look at listings/ch16-fearless-concurrency/listing-16-03/output.txt and copy the relevant part
@@ -245,10 +245,10 @@ help: to force the closure to take ownership of `v` (and any other referenced va
   |                                ++++
 ```
 
-Ao adicionar a palavra-chave `move` antes do closure, forçamos o closure a tomar
-ownership dos valores que está usando, em vez de permitir que Rust infira que
-deveria emprestar os valores. A modificação na Listagem 16-3 mostrada na Listagem
-16-5 será compilado e executado conforme pretendido.
+Ao adicionar a palavra-chave `move` antes da closure, forçamos a closure a
+tomar ownership dos valores que está usando, em vez de permitir que Rust infira
+que ela deve pegar os valores emprestados. A modificação da Listagem 16-3
+mostrada na Listagem 16-5 compilará e rodará como pretendemos.
 
 <Listing number="16-5" file-name="src/main.rs" caption="Usando a palavra-chave `move` para forçar uma closure a tomar ownership dos valores que utiliza">
 
@@ -258,28 +258,29 @@ deveria emprestar os valores. A modificação na Listagem 16-3 mostrada na Lista
 
 </Listing>
 
-Poderíamos ficar tentados a tentar a mesma coisa para corrigir o código da Listagem 16-4, onde
-o thread principal chamado `drop` usando um `move` closure. No entanto, esta correção irá
-não funciona porque o que a Listagem 16-4 está tentando fazer não é permitido por um
-motivo diferente. Se adicionarmos `move` ao closure, moveríamos `v` para o
-ambiente closure, e não podíamos mais chamar `drop` nele no principal
-thread. Em vez disso, receberíamos este erro do compilador:
+Poderíamos ficar tentados a tentar a mesma coisa para corrigir o código da
+Listagem 16-4, em que a thread principal chamou `drop`, usando uma closure
+`move`. No entanto, essa correção não funcionará, porque o que a Listagem 16-4
+está tentando fazer é proibido por outro motivo. Se adicionássemos `move` à
+closure, moveríamos `v` para o ambiente da closure e não poderíamos mais chamar
+`drop` nele na thread principal. Em vez disso, receberíamos este erro do
+compilador:
 
 ```console
 {{#include ../listings/ch16-fearless-concurrency/output-only-01-move-drop/output.txt}}
 ```
 
-As regras ownership do Rust nos salvaram novamente! Recebemos um erro no código em
-Listagem 16-3 porque Rust estava sendo conservador e apenas borrowing `v` para o
-thread, o que significava que o thread principal poderia teoricamente invalidar o gerado
-Referência do thread. Dizendo ao Rust para mover o ownership do `v` para o gerado
-thread, estamos garantindo ao Rust que o thread principal não usará mais o `v`.
-Se alterarmos a Listagem 16-4 da mesma maneira, estaremos violando o ownership
-regras quando tentamos usar ` v`no thread principal. A palavra-chave ` move`substitui
-Padrão conservador de Rust de borrowing; não nos permite violar o
-Regras ownership.
+As regras de ownership de Rust nos salvaram novamente! Recebemos um erro no
+código da Listagem 16-3 porque Rust estava sendo conservador e apenas pegando
+`v` emprestado para a thread, o que significava que a thread principal poderia,
+em teoria, invalidar a referência da thread gerada. Ao dizer a Rust para mover
+o ownership de `v` para a thread gerada, garantimos a Rust que a thread
+principal não usará mais `v`. Se alterarmos a Listagem 16-4 da mesma forma,
+violaremos as regras de ownership ao tentar usar `v` na thread principal. A
+palavra-chave `move` substitui o padrão conservador de Rust de pegar emprestado;
+ela não nos permite violar as regras de ownership.
 
-Agora que cobrimos o que são threads e os métodos fornecidos pelo thread
-API, vejamos algumas situações em que podemos usar threads.
+Agora que cobrimos o que são threads e os métodos fornecidos pela API de
+threads, vejamos algumas situações em que podemos usar threads.
 
 [capture]: ch13-01-closures.html#capturing-references-or-moving-ownership

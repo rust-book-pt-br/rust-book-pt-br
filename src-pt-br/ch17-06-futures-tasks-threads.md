@@ -32,7 +32,7 @@ task pode alternar entre os futures em seu corpo. Por fim, futures são a
 unidade mais granular de concorrência em Rust, e cada future pode representar
 uma árvore de outros futures. O runtime, mais especificamente seu executor,
 gerencia tasks, e tasks gerenciam futures. Nesse sentido, tasks se parecem com
-threads leves gerenciadas em runtime, com capacidades adicionais que surgem do
+threads leves gerenciadas pelo runtime, com capacidades adicionais que surgem do
 fato de serem gerenciadas por um runtime e não pelo sistema operacional.
 
 Isso não significa que tasks async sejam sempre melhores do que threads, nem o
@@ -42,9 +42,9 @@ força ou uma fraqueza. Threads são um pouco “dispare e esqueça”: elas nã
 um equivalente nativo a um future e, portanto, simplesmente executam até o
 fim, sem interrupção, exceto pelo próprio sistema operacional.
 
-E acontece que threads e tasks muitas vezes funcionam muito bem juntas, porque
+Além disso, threads e tasks muitas vezes funcionam muito bem juntas, porque
 tasks podem, pelo menos em alguns runtimes, ser movidas entre threads. De
-fato, nos bastidores, o runtime que estamos usando, incluindo as funções
+fato, por baixo dos panos, o runtime que estamos usando, incluindo as funções
 `spawn_blocking` e `spawn_task`, é multithread por padrão! Muitos runtimes usam
 uma abordagem chamada _work stealing_ para mover tasks de forma transparente
 entre threads, com base em como elas estão sendo utilizadas no momento, a fim
@@ -54,10 +54,10 @@ tasks _e_ threads e, portanto, também futures.
 Ao pensar em qual método usar em cada situação, considere estas regras
 práticas:
 
-- Se o trabalho for _muito paralelizável_ (isto é, limitado por CPU), como
+- Se o trabalho for _muito paralelizável_ (isto é, CPU-bound), como
   processar um grande volume de dados em que cada parte pode ser tratada
   separadamente, threads costumam ser a melhor escolha.
-- Se o trabalho for _muito concorrente_ (isto é, limitado por E/S), como lidar
+- Se o trabalho for _muito concorrente_ (isto é, I/O-bound), como lidar
   com mensagens vindas de muitas fontes diferentes e chegando em intervalos ou
   velocidades diferentes, async costuma ser a melhor escolha.
 
@@ -86,7 +86,7 @@ mensagens que vimos.
 Voltando ao cenário com o qual abrimos o capítulo, imagine executar um conjunto
 de tarefas de codificação de vídeo usando uma thread dedicada, porque a
 codificação de vídeo é limitada por computação, mas notificar a interface de
-usuário de que essas operações terminaram por meio de um canal async. Existem
+usuário de que essas operações terminaram usando um canal async. Existem
 inúmeros exemplos desse tipo de combinação em casos de uso do mundo real.
 
 ## Resumo

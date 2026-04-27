@@ -1,4 +1,4 @@
-## Traits avançadas
+## Traits Avançadas
 
 Abordamos traits pela primeira vez em [“Definindo comportamento compartilhado com
 traits”][traits]<!-- ignore --> no Capítulo 10, mas não discutimos os detalhes
@@ -10,7 +10,7 @@ da questão.
 <a id="specifying-placeholder-types-in-trait-definitions-with-associated-types"></a>
 <a id="associated-types"></a>
 
-### Definindo traits com tipos associados
+### Definindo Traits com Tipos Associados
 
 _Tipos associados_ conectam um espaço reservado de tipo a uma trait, de modo que
 as definições de métodos da trait possam usar esses tipos de espaço reservado
@@ -20,9 +20,9 @@ Dessa forma, podemos definir uma trait que usa alguns tipos sem precisar saber
 exatamente quais são esses tipos até que a trait seja implementada.
 
 Descrevemos a maioria dos recursos avançados deste capítulo como raramente
-necessários. Os tipos associados ficam em algum lugar no meio: são usados com menos frequência
-do que os recursos explicados no restante do livro, mas mais frequentemente do que muitos dos
-outros recursos discutidos aqui.
+necessários. Os tipos associados ficam em algum lugar no meio: são usados com
+menos frequência do que os recursos explicados no restante do livro, mas com
+mais frequência do que muitos dos outros recursos discutidos aqui.
 
 Um exemplo de trait com tipo associado é a trait `Iterator`, fornecida pela
 biblioteca padrão. O tipo associado chama-se `Item` e representa o tipo dos
@@ -82,7 +82,7 @@ implementar a mesma trait várias vezes para um tipo. Na definição da
 Listagem 20-13, que usa tipos associados, só podemos escolher o tipo de `Item`
 uma única vez, porque só pode existir um `impl Iterator for Counter`. Não
 precisamos especificar, em todo lugar onde chamamos `next` em `Counter`, que
-queremos um iterator de valores `u32`.
+queremos um iterador de valores `u32`.
 
 Os tipos associados também passam a fazer parte do contrato da trait:
 implementadores da trait precisam fornecer um tipo para substituir o espaço
@@ -94,7 +94,7 @@ e documentar o tipo associado na documentação da API é uma boa prática.
 
 <a id="default-generic-type-parameters-and-operator-overloading"></a>
 
-### Usando parâmetros genéricos padrão e sobrecarga de operadores
+### Usando Parâmetros Genéricos Padrão e Sobrecarga de Operadores
 
 Quando usamos parâmetros de tipo genérico, podemos especificar um tipo concreto
 padrão para o tipo genérico. Isso elimina a necessidade de implementadores da
@@ -102,9 +102,9 @@ trait especificarem um tipo concreto se o tipo padrão já servir. Você define 
 tipo padrão ao declarar um tipo genérico com a sintaxe
 `<PlaceholderType=ConcreteType>`.
 
-Um ótimo exemplo de situação em que essa técnica é útil é a sobrecarga de operadores
-(_operator overloading_), em que você personaliza o comportamento de um operador, como `+`,
-em situações específicas.
+Um ótimo exemplo de situação em que essa técnica é útil é a sobrecarga de
+operadores (_operator overloading_), em que você personaliza o comportamento de
+um operador, como `+`, em situações específicas.
 
 Rust não permite que você crie seus próprios operadores nem que sobrecarregue
 operadores arbitrariamente. Mas você pode sobrecarregar as operações e as
@@ -167,8 +167,8 @@ Listagem 20-16.
 
 </Listing>
 
-Para somar `Millimeters` e `Meters`, especificamos `impl Add<Meters>` para definir o
-valor do parâmetro de tipo `Rhs`, em vez de usar o padrão `Self`.
+Para somar `Millimeters` e `Meters`, especificamos `impl Add<Meters>` para
+definir o valor do parâmetro de tipo `Rhs`, em vez de usar o padrão `Self`.
 
 Você usará parâmetros de tipo padrão de duas maneiras principais:
 
@@ -182,9 +182,9 @@ capacidade de ir além disso. Usar um parâmetro de tipo padrão na definição 
 parte do tempo. Em outras palavras, evita-se um pouco de boilerplate de
 implementação, o que torna a trait mais fácil de usar.
 
-O primeiro propósito é parecido com o segundo, mas no sentido inverso: se você quiser adicionar um
-parâmetro de tipo a uma trait existente, pode fornecer um valor padrão para permitir a
-extensão da funcionalidade da trait sem quebrar o
+O primeiro propósito é parecido com o segundo, mas no sentido inverso: se você
+quiser adicionar um parâmetro de tipo a uma trait existente, pode fornecer um
+valor padrão para permitir a extensão da funcionalidade da trait sem quebrar o
 código de implementação já existente.
 
 <!-- Old headings. Do not remove or links may break. -->
@@ -192,7 +192,7 @@ código de implementação já existente.
 <a id="fully-qualified-syntax-for-disambiguation-calling-methods-with-the-same-name"></a>
 <a id="disambiguating-between-methods-with-the-same-name"></a>
 
-### Desambiguando entre métodos com o mesmo nome
+### Desambiguando entre Métodos com o Mesmo Nome
 
 Nada em Rust impede que uma trait tenha um método com o mesmo nome que
 o método de outra trait, nem impede que você implemente ambas as traits
@@ -228,8 +228,8 @@ A execução desse código imprimirá `*waving arms furiously*`, mostrando que R
 chamou o método `fly` implementado diretamente em `Human`.
 
 Para chamar os métodos `fly` da trait `Pilot` ou da trait `Wizard`,
-precisamos usar uma sintaxe mais explícita para especificar a qual método `fly` nos referimos.
-A Listagem 20-19 demonstra essa sintaxe.
+precisamos usar uma sintaxe mais explícita para especificar a qual método `fly`
+nos referimos. A Listagem 20-19 demonstra essa sintaxe.
 
 <Listing number="20-19" file-name="src/main.rs" caption="Especificando qual método `fly` de trait queremos chamar">
 
@@ -256,13 +256,13 @@ implementassem a mesma _trait_, Rust poderia descobrir qual implementação
 usar com base no tipo de `self`.
 
 No entanto, funções associadas que não são métodos não possuem parâmetro `self`.
-Quando existem vários tipos ou traits que definem funções não associadas a métodos
-com o mesmo nome, Rust nem sempre sabe a qual tipo você está se referindo,
-a menos que use sintaxe totalmente qualificada. Por exemplo, na Listagem 20-20, criamos
-uma trait para um abrigo de animais que quer chamar todos os cães filhotes de Spot. Fazemos
-uma trait `Animal` com uma função associada não-método chamada `baby_name`. A
-trait `Animal` é implementada para a struct `Dog`, na qual também fornecemos
-diretamente uma função associada não-método `baby_name`.
+Quando existem vários tipos ou traits que definem funções associadas com o
+mesmo nome, Rust nem sempre sabe a qual tipo você está se referindo, a menos
+que use sintaxe totalmente qualificada. Por exemplo, na Listagem 20-20, criamos
+uma trait para um abrigo de animais que quer chamar todos os filhotes de
+cachorro de Spot. Criamos uma trait `Animal` com uma função associada chamada
+`baby_name`. A trait `Animal` é implementada para a struct `Dog`, na qual também
+fornecemos diretamente uma função associada `baby_name`.
 
 <Listing number="20-20" file-name="src/main.rs" caption="Uma trait com uma função associada e um tipo com uma função associada de mesmo nome que também implementa a trait">
 
@@ -320,9 +320,9 @@ usar essa sintaxe.
 
 </Listing>
 
-Estamos fornecendo ao Rust uma anotação de tipo entre colchetes angulares, que
-indica que queremos chamar o método `baby_name` da trait `Animal` como
-implementado em `Dog`, ou seja, queremos tratar o tipo `Dog` como um
+Estamos fornecendo ao Rust uma anotação de tipo entre sinais de menor e maior,
+que indica que queremos chamar a função `baby_name` da trait `Animal` como
+implementada em `Dog`, ou seja, queremos tratar o tipo `Dog` como um
 `Animal` nessa chamada de função. Esse código agora imprimirá o que queremos:
 
 ```console
@@ -335,19 +335,19 @@ Em geral, a sintaxe totalmente qualificada é definida da seguinte forma:
 <Type as Trait>::function(receiver_if_method, next_arg, ...);
 ```
 
-Para funções associadas que não são métodos, não haveria `receiver`:
-haveria apenas a lista dos outros argumentos. Você poderia usar sintaxe totalmente qualificada
-em todos os lugares em que chama funções ou métodos. No entanto, pode
-omitir qualquer parte dessa sintaxe que Rust consiga deduzir a partir de outras informações
-do programa. Você só precisa usar essa forma mais detalhada quando
-existem várias implementações com o mesmo nome e Rust precisa de ajuda
+Para funções associadas que não são métodos, não haveria `receiver`: haveria
+apenas a lista dos outros argumentos. Você poderia usar sintaxe totalmente
+qualificada em todos os lugares em que chama funções ou métodos. No entanto,
+pode omitir qualquer parte dessa sintaxe que Rust consiga deduzir a partir de
+outras informações do programa. Você só precisa usar essa forma mais detalhada
+quando existem várias implementações com o mesmo nome e Rust precisa de ajuda
 para identificar qual delas você quer chamar.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="using-supertraits-to-require-one-traits-functionality-within-another-trait"></a>
 
-### Usando supertraits
+### Usando Supertraits
 
 Às vezes você pode escrever uma definição de trait que depende de outra trait. Para
 um tipo implementar a primeira trait, você quer exigir que esse tipo também
@@ -410,8 +410,8 @@ Recebemos um erro dizendo que a trait `Display` é exigida, mas não foi impleme
 {{#include ../listings/ch20-advanced-features/no-listing-02-impl-outlineprint-for-point/output.txt}}
 ```
 
-Para corrigir isso, implementamos `Display` para `Point` e satisfazemos a restrição exigida por
-`OutlinePrint`, assim:
+Para corrigir isso, implementamos `Display` para `Point` e satisfazemos a
+restrição exigida por `OutlinePrint`, assim:
 
 <Listing file-name="src/main.rs">
 
@@ -422,15 +422,15 @@ Para corrigir isso, implementamos `Display` para `Point` e satisfazemos a restri
 </Listing>
 
 Então, implementar a trait `OutlinePrint` para `Point` compilará
-com sucesso, e poderemos chamar `outline_print` em uma instância de `Point` para exibi-la
-dentro de um contorno de asteriscos.
+com sucesso, e poderemos chamar `outline_print` em uma instância de `Point` para
+exibi-la dentro de um contorno de asteriscos.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="using-the-newtype-pattern-to-implement-external-traits-on-external-types"></a>
 <a id="using-the-newtype-pattern-to-implement-external-traits"></a>
 
-### Implementando traits externas com o padrão newtype
+### Implementando Traits Externas com o Padrão Newtype
 
 Na seção [“Implementando uma trait em um tipo”][implementing-a-trait-on-a-type]<!--
 ignore --> do Capítulo 10, mencionamos a regra órfã, que afirma que
@@ -440,7 +440,7 @@ restrição usando o padrão newtype, que envolve criar um novo tipo em uma
 tuple struct. (Cobrimos tuple structs na seção [“Criando diferentes tipos com
 tuple structs”][tuple-structs]<!-- ignore -->, no Capítulo 5.) A tuple
 struct terá um campo e será um wrapper fino em torno do tipo para o qual
-queremos implementar uma trait. Assim, o tipo wrapper é local ao nosso crate, e nós
+queremos implementar uma trait. Assim, o tipo wrapper é local ao nosso crate, e
 podemos implementar a trait nele. _Newtype_ é um termo que vem
 da linguagem de programação Haskell. Não há penalidade de desempenho em tempo de execução
 ao usar esse padrão, e o tipo wrapper é eliminado em tempo de compilação.
@@ -476,7 +476,8 @@ métodos do tipo interno, por exemplo, para restringir seu
 comportamento, teríamos de implementar manualmente apenas os métodos desejados.
 
 Esse padrão newtype também é útil mesmo quando traits não estão envolvidas. Vamos
-mudar o foco e ver algumas maneiras avançadas de interagir com o sistema de tipos do Rust.
+mudar o foco e ver algumas maneiras avançadas de interagir com o sistema de
+tipos de Rust.
 
 [newtype]: ch20-02-advanced-traits.html#implementing-external-traits-with-the-newtype-pattern
 [implementing-a-trait-on-a-type]: ch10-02-traits.html#implementing-a-trait-on-a-type
