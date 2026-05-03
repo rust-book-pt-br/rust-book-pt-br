@@ -1,4 +1,4 @@
-## Trabalhando com variáveis de ambiente
+## Trabalhando com Variáveis de Ambiente
 
 Vamos melhorar o binário `minigrep` adicionando um recurso extra: uma opção de
 busca sem distinção entre maiúsculas e minúsculas, que o usuário pode ativar
@@ -11,7 +11,7 @@ naquela sessão do terminal.
 <!-- Old headings. Do not remove or links may break. -->
 <a id="writing-a-failing-test-for-the-case-insensitive-search-function"></a>
 
-### Escrevendo um teste que falha para a busca sem distinção entre maiúsculas e minúsculas
+### Escrevendo um Teste que Falha para Busca Sem Distinção entre Maiúsculas e Minúsculas
 
 Primeiro, adicionamos uma nova função `search_case_insensitive` à biblioteca
 `minigrep`, que será chamada quando a variável de ambiente tiver algum valor.
@@ -38,7 +38,7 @@ maiúsculas e minúsculas que já implementamos. Esse teste deve passar agora e
 deve continuar passando enquanto trabalhamos na busca insensível a maiúsculas e
 minúsculas.
 
-O novo teste para a busca case-_insensitive_ usa `"rUsT"` como consulta. Na
+O novo teste para a busca _case-insensitive_ usa `"rUsT"` como consulta. Na
 função `search_case_insensitive` que estamos prestes a adicionar, a consulta
 `"rUsT"` deve corresponder à linha que contém `"Rust:"`, com `R` maiúsculo, e
 também à linha `"Trust me."`, embora ambas usem capitalização diferente da
@@ -48,7 +48,7 @@ uma implementação esqueleto que sempre retorna um vetor vazio, semelhante ao
 que fizemos com a função `search` na Listagem 12-16, para ver o teste compilar
 e falhar.
 
-### Implementando a função `search_case_insensitive`
+### Implementando a Função `search_case_insensitive`
 
 A função `search_case_insensitive`, mostrada na Listagem 12-21, será quase
 igual à função `search`. A única diferença é que colocaremos `query` e cada
@@ -68,8 +68,8 @@ Primeiro, convertemos a string `query` para minúsculas e a armazenamos em uma
 nova variável com o mesmo nome, sombreando a `query` original. Chamar
 `to_lowercase` na consulta é necessário para que, não importa se a pessoa
 digite `"rust"`, `"RUST"`, `"Rust"` ou `"rUsT"`, tratemos a consulta como se
-fosse `"rust"` e a busca fique insensível à capitalização. Embora
-`to_lowercase` lide com Unicode básico, ela não será 100% precisa. Se
+fosse `"rust"` e a busca não diferenciasse maiúsculas de minúsculas. Embora
+`to_lowercase` lide com Unicode básico, ela não será 100 por cento precisa. Se
 estivéssemos escrevendo uma aplicação real, provavelmente precisaríamos de
 mais trabalho aqui, mas esta seção trata de variáveis de ambiente, não de
 Unicode, então vamos deixar assim.
@@ -84,8 +84,8 @@ então precisamos alocar uma nova `String` contendo `"rust"`. Quando passamos
 
 Em seguida, adicionamos uma chamada a `to_lowercase` em cada `line` para
 converter todos os caracteres para minúsculas. Agora que convertemos `line` e
-`query`, encontraremos correspondências independentemente da capitalização da
-consulta.
+`query`, encontraremos correspondências independentemente de maiúsculas e
+minúsculas na consulta.
 
 Vamos ver se essa implementação passa nos testes:
 
@@ -142,7 +142,7 @@ Estamos usando o método `is_ok` de `Result` para verificar se a variável de
 ambiente está definida, o que significa que o programa deve fazer uma busca sem
 distinção entre maiúsculas e minúsculas. Se a variável `IGNORE_CASE` não
 estiver definida, `is_ok` retornará `false`, e o programa fará uma busca
-sensível a maiúsculas e minúsculas. Não nos importamos com o _valor_ da
+com distinção entre maiúsculas e minúsculas. Não nos importamos com o _valor_ da
 variável de ambiente, apenas se ela está definida ou não; por isso usamos
 `is_ok` em vez de `unwrap`, `expect` ou qualquer outro método que já vimos em
 `Result`.
@@ -181,7 +181,7 @@ PS> Remove-Item Env:IGNORE_CASE
 ```
 
 Devemos obter linhas que contenham _to_, incluindo aquelas em que a palavra
-aparece com letras maiúsculas:
+aparece com letra maiúscula:
 
 <!-- manual-regeneration
 cd listings/ch12-an-io-project/listing-12-23
@@ -207,7 +207,8 @@ precedência. Como exercício extra, tente controlar a sensibilidade a maiúscul
 e minúsculas por meio de um argumento de linha de comando ou de uma variável de
 ambiente. Decida se o argumento da linha de comando ou a variável de ambiente
 deve ter precedência se o programa for executado com um configurado para busca
-sensível e o outro para ignorar a capitalização.
+com distinção entre maiúsculas e minúsculas e outro configurado para ignorar
+essa distinção.
 
 O módulo `std::env` contém muitos outros recursos úteis para lidar com
 variáveis de ambiente. Consulte a documentação para ver o que está disponível.

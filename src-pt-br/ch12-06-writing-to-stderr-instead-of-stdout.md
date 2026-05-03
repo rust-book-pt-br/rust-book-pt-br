@@ -2,7 +2,7 @@
 
 <a id="writing-error-messages-to-standard-error-instead-of-standard-output"></a>
 
-## Redirecionando erros para a saída de erro padrão
+## Redirecionando Erros para a Saída de Erro Padrão
 
 Neste momento, estamos escrevendo toda a saída no terminal usando a macro
 `println!`. Na maioria dos terminais, existem dois tipos de saída: _saída
@@ -14,7 +14,7 @@ mensagens de erro na tela.
 A macro `println!` só consegue imprimir em `stdout`, então precisamos usar
 outra coisa para imprimir em `stderr`.
 
-### Verificando para onde os erros estão sendo escritos
+### Verificando para Onde os Erros Estão Sendo Escritos
 
 Primeiro, vamos observar como o conteúdo impresso por `minigrep` está sendo
 gravado atualmente em `stdout`, incluindo as mensagens de erro que gostaríamos
@@ -30,7 +30,7 @@ comportando bem: estamos prestes a ver que ele salva a mensagem de erro no
 arquivo em vez disso!
 
 Para demonstrar esse comportamento, vamos executar o programa com `>` e o
-caminho do arquivo `_output.txt_`, para o qual queremos redirecionar `stdout`.
+caminho do arquivo _output.txt_, para o qual queremos redirecionar `stdout`.
 Não passaremos nenhum argumento, o que deve causar um erro:
 
 ```console
@@ -51,7 +51,7 @@ Isso mesmo: a mensagem de erro está sendo impressa em `stdout`. É muito mais
 apenas os dados de uma execução bem-sucedida terminem no arquivo. Vamos mudar
 isso.
 
-### Imprimindo erros em `stderr`
+### Imprimindo Erros em `stderr`
 
 Usaremos o código da Listagem 12-24 para alterar a forma como as mensagens de
 erro são impressas. Por causa da refatoração feita anteriormente neste

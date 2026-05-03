@@ -1,4 +1,4 @@
-## Refatoração para melhorar a modularidade e o tratamento de erros
+## Refatorando para Melhorar a Modularidade e o Tratamento de Erros
 
 Para melhorar nosso programa, vamos corrigir quatro problemas relacionados à
 estrutura do código e à forma como ele lida com possíveis erros. Primeiro, a
@@ -124,7 +124,7 @@ A Listagem 12-6 mostra as melhorias na função `parse_config`.
 
 Adicionamos uma struct chamada `Config` com campos `query` e `file_path`. A
 assinatura de `parse_config` agora indica que ela retorna um valor `Config`. No
-corpo de `parse_config`, onde antes retornávamos fatias de string que
+corpo de `parse_config`, onde antes retornávamos string slices que
 referenciavam valores `String` em `args`, agora definimos `Config` para conter
 valores `String` com ownership próprio. A variável `args`, em `main`, é a dona
 dos valores dos argumentos e apenas permite que `parse_config` os empreste. Se
@@ -139,18 +139,18 @@ da string. Ainda assim, clonar também deixa o código muito mais simples, porqu
 não precisamos gerenciar o lifetime das referências; nessa situação, abrir mão
 de um pouco de desempenho em troca de simplicidade é uma decisão razoável.
 
-> ### As vantagens e desvantagens de usar `clone`
+> ### As Vantagens e Desvantagens de Usar `clone`
 >
-> Há uma tendência entre muitos Rustáceos de evitar usar `clone` para consertar
+> Há uma tendência entre muitos rustaceanos de evitar usar `clone` para consertar
 > problemas de ownership devido ao custo em tempo de execução. Em
-> [Capítulo 13][ch13]<!-- ignore -->, você aprenderá como usar recursos mais eficientes
-> métodos neste tipo de situação. Mas, por enquanto, não há problema em copiar alguns
-> strings para continuar progredindo porque você fará apenas essas cópias
-> uma vez e o caminho do arquivo e a string de consulta são muito pequenos. É melhor ter
-> um programa funcional que é um pouco ineficiente do que tentar hiperotimizar o código
-> na sua primeira passagem. À medida que você se torna mais experiente com Rust, será
-> mais fácil começar com a solução mais eficiente, mas por enquanto, é
-> perfeitamente aceitável ligar para `clone`.
+> [Capítulo 13][ch13]<!-- ignore -->, você aprenderá a usar métodos mais
+> eficientes nesse tipo de situação. Mas, por enquanto, não há problema em
+> copiar algumas strings para continuar avançando, porque você fará essas cópias
+> apenas uma vez, e o caminho do arquivo e a string de consulta são muito
+> pequenos. É melhor ter um programa funcional que seja um pouco ineficiente do
+> que tentar hiperotimizar o código na primeira passagem. À medida que você se
+> torna mais experiente com Rust, fica mais fácil começar pela solução mais
+> eficiente, mas, por enquanto, chamar `clone` é perfeitamente aceitável.
 
 Atualizamos `main` para armazenar a instância de `Config` retornada por
 `parse_config` em uma variável chamada `config`. Também ajustamos o restante do
@@ -173,8 +173,8 @@ representar esse papel compartilhado e para poder devolver os valores usando
 nomes de campos significativos.
 
 Agora, como o objetivo de `parse_config` é criar uma instância de `Config`,
-podemos transformar `parse_config` em vez de uma função comum em uma função
-chamada `new`, associada à struct `Config`. Essa mudança torna o código mais
+podemos transformar `parse_config`, que era uma função comum, em uma função
+chamada `new` associada à struct `Config`. Essa mudança torna o código mais
 idiomático. Criamos instâncias de tipos da biblioteca padrão, como `String`,
 chamando `String::new`. Da mesma forma, ao transformar `parse_config` em uma
 função `new` associada a `Config`, poderemos criar instâncias de `Config`
@@ -292,7 +292,7 @@ caso de erro.
 
 <a id="calling-confignew-and-handling-errors"></a>
 
-#### Chamando `Config::build` e tratando erros
+#### Chamando `Config::build` e Tratando Erros
 
 Para lidar com o caso de erro e imprimir uma mensagem amigável, precisamos
 atualizar `main` para tratar o `Result` retornado por `Config::build`, como
@@ -344,15 +344,15 @@ saída extra. Vamos testar:
 ### Extraindo Lógica de `main`
 
 Agora que terminamos de refatorar a análise de configuração, vamos voltar para
-a lógica do programa. Como afirmamos em [“Separando Preocupações em Binário
-Projetos”](#separação-de-preocupações-para-projetos-binários)<!-- ignore -->, iremos
-extraia uma função chamada `run` que conterá toda a lógica atualmente no
-`main` função que não está envolvida na configuração ou manipulação
+a lógica do programa. Como afirmamos em [“Separando Responsabilidades em
+Projetos Binários”](#separation-of-concerns-for-binary-projects)<!-- ignore
+-->, vamos extrair uma função chamada `run` que conterá toda a lógica
+atualmente em `main` que não está envolvida com configuração ou tratamento de
 erros. Quando terminarmos, a função `main` será concisa e fácil de verificar
-por inspeção, e seremos capazes de escrever testes para todas as outras lógicas.
+por inspeção, e poderemos escrever testes para toda a outra lógica.
 
-A Listagem 12-11 mostra a pequena melhoria incremental da extração de um `run`
-função.
+A Listagem 12-11 mostra a pequena melhoria incremental de extrair uma função
+`run`.
 
 <Listing number="12-11" file-name="src/main.rs" caption="Extraindo uma função `run` com o restante da lógica do programa">
 
@@ -362,23 +362,22 @@ função.
 
 </Listing>
 
-A função `run` agora contém toda a lógica restante de `main`, começando
-da leitura do arquivo. A função `run` toma a instância `Config` como um
-argumento.
+A função `run` agora contém toda a lógica restante de `main`, começando pela
+leitura do arquivo. A função `run` recebe a instância `Config` como argumento.
 
 <!-- Old headings. Do not remove or links may break. -->
 
 <a id="returning-errors-from-the-run-function"></a>
 
-#### Retornando erros de `run`
+#### Retornando Erros de `run`
 
 Com a lógica restante do programa separada na função `run`, podemos
 melhorar o tratamento de erros, como fizemos com `Config::build` na Listagem 12-9.
-Em vez de permitir que o programa entre em pânico chamando `expect`, o `run`
-função retornará `Result<T, E>` quando algo der errado. Isso vai deixar
-consolidaremos ainda mais a lógica em torno do tratamento de erros em `main` em um
-maneira amigável. A Listagem 12-12 mostra as mudanças que precisamos fazer no
-assinatura e corpo de `run`.
+Em vez de permitir que o programa entre em pânico chamando `expect`, a função
+`run` retornará um `Result<T, E>` quando algo der errado. Isso nos permitirá
+consolidar ainda mais a lógica de tratamento de erros em `main` de uma maneira
+amigável para o usuário. A Listagem 12-12 mostra as mudanças que precisamos
+fazer na assinatura e no corpo de `run`.
 
 <Listing number="12-12" file-name="src/main.rs" caption="Fazendo a função `run` retornar `Result`">
 
@@ -388,31 +387,31 @@ assinatura e corpo de `run`.
 
 </Listing>
 
-Fizemos três mudanças significativas aqui. Primeiro, alteramos o tipo de retorno de
-a função `run` para `Result<(), Box<dyn Error>>`. Esta função anteriormente
-retornou o tipo de unidade, `()`, e mantemos isso como o valor retornado no
-`Ok` caso.
+Fizemos três mudanças significativas aqui. Primeiro, alteramos o tipo de
+retorno da função `run` para `Result<(), Box<dyn Error>>`. Essa função antes
+retornava o tipo unitário, `()`, e mantemos esse tipo como o valor retornado no
+caso `Ok`.
 
-Para o tipo de erro, usamos o objeto trait `Box<dyn Error>` (e trouxemos
-`std::error::Error` no escopo com uma instrução `use` no topo). Nós vamos cobrir
-objetos trait no [Capítulo 18][ch18]<!-- ignore -->. Por enquanto, apenas saiba que
-`Box<dyn Error>` significa que a função retornará um tipo que implementa o
-`Error` trait, mas não precisamos especificar que tipo específico o retorno
-valor será. Isso nos dá flexibilidade para retornar valores de erro que podem ser de
-diferentes tipos em diferentes casos de erro. A palavra-chave `dyn` é a abreviação de
-_dinâmico_.
+Para o tipo de erro, usamos o objeto de trait `Box<dyn Error>` (e trouxemos
+`std::error::Error` para o escopo com uma instrução `use` no topo). Vamos
+cobrir objetos trait no [Capítulo 18][ch18]<!-- ignore -->. Por enquanto,
+basta saber que `Box<dyn Error>` significa que a função retornará um tipo que
+implementa a trait `Error`, mas não precisamos especificar qual será o tipo
+concreto do valor retornado. Isso nos dá flexibilidade para retornar valores de
+erro que podem ser de tipos diferentes em diferentes casos de erro. A
+palavra-chave `dyn` é uma abreviação de _dinâmico_.
 
-Segundo, removemos a chamada para `expect` em favor da operadora `?`, pois
-falado no [Capítulo 9][ch9-question-mark]<!-- ignore -->. Em vez de
-`panic!` em caso de erro, `?` retornará o valor do erro da função atual
-para o chamador lidar.
+Segundo, removemos a chamada a `expect` em favor do operador `?`, como
+discutimos no [Capítulo 9][ch9-question-mark]<!-- ignore -->. Em vez de causar
+um `panic!` em caso de erro, `?` retornará o valor do erro da função atual para
+que o chamador possa lidar com ele.
 
 Terceiro, a função `run` agora retorna um valor `Ok` no caso de sucesso.
 Declaramos o tipo de sucesso da função `run` como `()` na assinatura,
-o que significa que precisamos agrupar o valor do tipo de unidade no valor `Ok`. Esse
-A sintaxe `Ok(())` pode parecer um pouco estranha no início. Mas usar `()` assim é
-a maneira idiomática de indicar que estamos ligando para `run` por seus efeitos colaterais
-apenas; ele não retorna um valor que precisamos.
+o que significa que precisamos envolver o valor do tipo unitário no valor `Ok`.
+A sintaxe `Ok(())` pode parecer um pouco estranha no início, mas usar `()`
+assim é a maneira idiomática de indicar que estamos chamando `run` apenas por
+seus efeitos colaterais; ela não retorna um valor de que precisamos.
 
 Quando você executa este código, ele será compilado, mas exibirá um aviso:
 
@@ -420,15 +419,16 @@ Quando você executa este código, ele será compilado, mas exibirá um aviso:
 {{#include ../listings/ch12-an-io-project/listing-12-12/output.txt}}
 ```
 
-Rust nos diz que nosso código ignorou o valor `Result` e o valor `Result`
-pode indicar que ocorreu um erro. Mas não estamos verificando se
-não houve um erro, e o compilador nos lembra que provavelmente pretendíamos
-tem algum código de tratamento de erros aqui! Vamos corrigir esse problema agora.
+Rust nos diz que nosso código ignorou o valor `Result`, e esse valor pode
+indicar que ocorreu um erro. Mas não estamos verificando se houve ou não um
+erro, e o compilador nos lembra que provavelmente queríamos ter algum código de
+tratamento de erros aqui! Vamos corrigir esse problema agora.
 
-#### Tratamento de erros retornados de `run` em `main`
+#### Tratando Erros Retornados por `run` em `main`
 
-Verificaremos se há erros e lidaremos com eles usando uma técnica semelhante à que usamos
-com `Config::build` na Listagem 12-10, mas com uma pequena diferença:
+Verificaremos se há erros e lidaremos com eles usando uma técnica semelhante à
+que usamos com `Config::build` na Listagem 12-10, mas com uma pequena
+diferença:
 
 <span class="filename">Nome do arquivo: src/main.rs</span>
 
@@ -438,28 +438,29 @@ com `Config::build` na Listagem 12-10, mas com uma pequena diferença:
 
 Usamos `if let` em vez de `unwrap_or_else` para verificar se `run` retorna um
 `Err` e chamar `process::exit(1)` se isso acontecer. A função `run`
-não retorna um valor que queremos `unwrap` da mesma forma que
-`Config::build` retorna a instância `Config`. Porque `run` retorna `()` em
-caso de sucesso, nos preocupamos apenas em detectar um erro, então não precisamos
-`unwrap_or_else` para retornar o valor desembrulhado, que seria apenas `()`.
+não retorna um valor que queremos extrair da mesma forma que
+`Config::build` retorna a instância `Config`. Como `run` retorna `()` no caso
+de sucesso, nos preocupamos apenas em detectar um erro, então não precisamos de
+`unwrap_or_else` para retornar o valor extraído, que seria apenas `()`.
 
-Os corpos das funções `if let` e `unwrap_or_else` são os mesmos em
-ambos os casos: Imprimimos o erro e saímos.
+Os corpos de `if let` e `unwrap_or_else` são os mesmos em ambos os casos:
+imprimimos o erro e saímos.
 
-### Dividindo o código em uma crate de biblioteca
+### Dividindo o Código em uma Crate de Biblioteca
 
 Nosso projeto `minigrep` está parecendo bom até agora! Agora vamos dividir o
-arquivo _src/main.rs_ e coloque algum código no arquivo _src/lib.rs_. Dessa forma, nós
-pode testar o código e ter um arquivo _src/main.rs_ com menos responsabilidades.
+arquivo _src/main.rs_ e colocar parte do código no arquivo _src/lib.rs_. Dessa
+forma, poderemos testar o código e ter um arquivo _src/main.rs_ com menos
+responsabilidades.
 
 Vamos definir o código responsável pela pesquisa de texto em _src/lib.rs_ em vez
-do que em _src/main.rs_, o que nos permitirá (ou qualquer outra pessoa usando nosso
-`minigrep` biblioteca) chama a função de pesquisa em mais contextos do que o nosso
-`minigrep` binário.
+de em _src/main.rs_, o que permitirá que nós (ou qualquer outra pessoa usando
+nossa biblioteca `minigrep`) chamemos a função de pesquisa em mais contextos do
+que apenas o nosso binário `minigrep`.
 
-Primeiro, vamos definir a assinatura da função `search` em _src/lib.rs_ conforme mostrado em
-Listagem 12-13, com um corpo que chama a macro `unimplemented!`. Nós vamos explicar
-a assinatura com mais detalhes quando preenchermos a implementação.
+Primeiro, vamos definir a assinatura da função `search` em _src/lib.rs_, como
+mostrado na Listagem 12-13, com um corpo que chama a macro `unimplemented!`.
+Explicaremos a assinatura com mais detalhes quando preenchermos a implementação.
 
 <Listing number="12-13" file-name="src/lib.rs" caption="Definindo a função `search` em *src/lib.rs*">
 
@@ -474,7 +475,7 @@ como parte da API pública da nossa biblioteca. Agora temos uma crate de bibliot
 podemos usar da nossa crate binária e que podemos testar!
 
 Agora precisamos trazer o código definido em _src/lib.rs_ para o escopo do
-binary crate em _src/main.rs_ e chame-o, conforme mostrado na Listagem 12-14.
+crate binário em _src/main.rs_ e chamá-lo, conforme mostrado na Listagem 12-14.
 
 <Listing number="12-14" file-name="src/main.rs" caption="Usando em *src/main.rs* a função `search` do crate de biblioteca `minigrep`">
 
@@ -484,28 +485,28 @@ binary crate em _src/main.rs_ e chame-o, conforme mostrado na Listagem 12-14.
 
 </Listing>
 
-Adicionamos uma linha `use minigrep::search` para trazer a função `search` de
-a crate da biblioteca no escopo da crate binária. Então, na função `run`,
-em vez de imprimir o conteúdo do arquivo, chamamos `search`
-função e passe o valor `config.query` e `contents` como argumentos. Então,
-`run` usará um loop `for` para imprimir cada linha retornada de `search` que
-correspondeu à consulta. Este também é um bom momento para remover as chamadas `println!` em
-a função `main` que exibia a consulta e o caminho do arquivo para que nosso
-o programa imprime apenas os resultados da pesquisa (se nenhum erro ocorrer).
+Adicionamos uma linha `use minigrep::search` para trazer a função `search` do
+crate de biblioteca para o escopo do crate binário. Então, na função `run`, em
+vez de imprimir o conteúdo do arquivo, chamamos a função `search` e passamos o
+valor `config.query` e `contents` como argumentos. Em seguida, `run` usará um
+loop `for` para imprimir cada linha retornada por `search` que corresponder à
+consulta. Este também é um bom momento para remover as chamadas `println!` na
+função `main` que exibiam a consulta e o caminho do arquivo, para que nosso
+programa imprima apenas os resultados da pesquisa (se nenhum erro ocorrer).
 
-Observe que a função de pesquisa coletará todos os resultados em um vetor
-ele retorna antes de qualquer impressão acontecer. Esta implementação poderá ser lenta
-exibir resultados ao pesquisar arquivos grandes, porque os resultados não são impressos como
-eles são encontrados; discutiremos uma possível maneira de corrigir isso usando iteradores em
-Capítulo 13.
+Observe que a função de pesquisa coletará todos os resultados em um vetor que
+ela retorna antes de qualquer impressão acontecer. Essa implementação poderá
+demorar para exibir resultados ao pesquisar arquivos grandes, porque os
+resultados não são impressos à medida que são encontrados. Discutiremos uma
+possível forma de corrigir isso usando iteradores no Capítulo 13.
 
 Uau! Foi muito trabalhoso, mas nos preparamos para o sucesso no
 futuro. Agora é muito mais fácil lidar com erros e tornamos o código mais
 modular. Quase todo o nosso trabalho será feito em _src/lib.rs_ daqui em diante.
 
 Vamos aproveitar esta nova modularidade fazendo algo que
-tem sido difícil com o código antigo, mas é fácil com o novo código: vamos
-escreva alguns testes!
+teria sido difícil com o código antigo, mas é fácil com o novo código: vamos
+escrever alguns testes!
 
 [ch13]: ch13-00-functional-features.html
 [ch9-custom-types]: ch09-03-to-panic-or-not-to-panic.html#creating-custom-types-for-validation

@@ -1,7 +1,7 @@
 <!-- Old headings. Do not remove or links may break. -->
 <a id="developing-the-librarys-functionality-with-test-driven-development"></a>
 
-## Adicionando funcionalidade com desenvolvimento orientado a testes
+## Adicionando Funcionalidade com Desenvolvimento Orientado a Testes
 
 Agora que temos a lógica de busca em _src/lib.rs_ separada da função `main`,
 fica muito mais fácil escrever testes para a funcionalidade central do nosso
@@ -12,11 +12,11 @@ Nesta seção, vamos adicionar a lógica de busca ao programa `minigrep` usando 
 processo de desenvolvimento orientado a testes (TDD) com os seguintes passos:
 
 1. Escrever um teste que falha e executá-lo para confirmar que ele falha pelo
-motivo esperado.
+   motivo esperado.
 2. Escrever ou modificar apenas o código suficiente para fazer o novo teste
-passar.
+   passar.
 3. Refatorar o código que você acabou de adicionar ou alterar e garantir que os
-testes continuem passando.
+   testes continuem passando.
 4. Repetir a partir do passo 1.
 
 Embora seja apenas uma entre muitas formas de escrever software, TDD pode
@@ -24,12 +24,12 @@ ajudar a orientar o design do código. Escrever o teste antes do código que o
 faz passar ajuda a manter uma boa cobertura de testes ao longo de todo o
 processo.
 
-Vamos dirigir por testes a implementação da funcionalidade que de fato fará a
-busca da string de consulta no conteúdo do arquivo e produzirá uma lista das
+Vamos orientar por testes a implementação da funcionalidade que de fato fará a
+busca pela string de consulta no conteúdo do arquivo e produzirá uma lista das
 linhas que correspondem à consulta. Adicionaremos essa funcionalidade em uma
 função chamada `search`.
 
-### Escrevendo um teste que falha
+### Escrevendo um Teste que Falha
 
 Em _src/lib.rs_, adicionaremos um módulo `tests` com uma função de teste, como
 fizemos no [Capítulo 11][ch11-anatomy]<!-- ignore -->. A função de teste
@@ -45,7 +45,7 @@ texto que contêm a consulta. A Listagem 12-15 mostra esse teste.
 
 </Listing>
 
-Esse teste procura pela string `"duct"`. O texto em que estamos buscando tem
+Esse teste procura pela string `"duct"`. O texto em que estamos pesquisando tem
 três linhas, e apenas uma delas contém `"duct"`; observe que a barra invertida
 após a aspa dupla de abertura instrui Rust a não colocar um caractere de nova
 linha no começo do conteúdo dessa string literal. Verificamos que o valor
@@ -75,7 +75,7 @@ lifetime do valor retornado. Neste caso, indicamos que o vetor retornado deve
 conter string slices que referenciam slices do argumento `contents`, e não do
 argumento `query`.
 
-Em outras palavras, estamos dizendo a Rust que os dados retornados pela função
+Em outras palavras, estamos dizendo ao Rust que os dados retornados pela função
 `search` viverão tanto quanto os dados passados à função pelo argumento
 `contents`. Isso é importante! Os dados referenciados _por_ um slice precisam
 ser válidos para que a referência também seja válida. Se o compilador assumir
@@ -89,10 +89,10 @@ receberemos o seguinte erro:
 {{#include ../listings/ch12-an-io-project/output-only-02-missing-lifetimes/output.txt}}
 ```
 
-Rust não consegue saber qual dos dois parâmetros deve ser conectado à saída,
-então precisamos informá-la explicitamente. Observe que o texto de ajuda sugere
-especificar o mesmo parâmetro de lifetime para todos os parâmetros e para o
-tipo de saída, mas isso está incorreto! Como `contents` é o parâmetro que
+Rust não consegue saber de qual dos dois parâmetros precisamos para a saída,
+então precisamos informar isso explicitamente. Observe que o texto de ajuda
+sugere especificar o mesmo parâmetro de lifetime para todos os parâmetros e
+para o tipo de saída, mas isso está incorreto! Como `contents` é o parâmetro que
 contém todo o texto e queremos retornar partes desse texto que correspondem à
 busca, sabemos que `contents` é o único parâmetro que deve ser ligado ao valor
 de retorno usando a sintaxe de lifetimes.
@@ -100,10 +100,10 @@ de retorno usando a sintaxe de lifetimes.
 Outras linguagens de programação não exigem que você conecte argumentos e
 valores de retorno na assinatura, mas essa prática fica mais natural com o
 tempo. Talvez você queira comparar este exemplo com os exemplos da seção
-[“Validando referências com lifetimes”][validating-references-with-lifetimes]
-<!-- ignore --> do Capítulo 10.
+[“Validando Referências com Lifetimes”][validating-references-with-lifetimes]<!--
+ignore --> do Capítulo 10.
 
-### Escrevendo código para fazer o teste passar
+### Escrevendo Código para Fazer o Teste Passar
 
 No momento, nosso teste falha porque sempre retornamos um vetor vazio. Para
 corrigir isso e implementar `search`, nosso programa precisa seguir estes
@@ -118,9 +118,9 @@ passos:
 Vamos trabalhar em cada um desses passos, começando pela iteração sobre as
 linhas.
 
-#### Iterando pelas linhas com o método `lines`
+#### Iterando pelas Linhas com o Método `lines`
 
-Rust tem um método útil para iterar por strings linha a linha, chamado
+Rust tem um método útil para iterar sobre strings linha a linha, chamado
 apropriadamente de `lines`, que funciona como mostrado na Listagem 12-17.
 Observe que isso ainda não compilará.
 
@@ -134,11 +134,11 @@ Observe que isso ainda não compilará.
 
 O método `lines` retorna um iterador. Falaremos sobre iteradores em
 profundidade no [Capítulo 13][ch13-iterators]<!-- ignore -->. Mas lembre-se de
-que você já viu esse modo de usar iteradores na [Listagem 3-5][ch3-iter]
-<!-- ignore -->, em que usamos um laço `for` com um iterador para executar
+que você já viu esse modo de usar iteradores na [Listagem 3-5][ch3-iter]<!--
+ignore -->, em que usamos um laço `for` com um iterador para executar
 código sobre cada item de uma coleção.
 
-#### Procurando a consulta em cada linha
+#### Procurando a Consulta em Cada Linha
 
 Em seguida, vamos verificar se a linha atual contém a nossa string de busca.
 Felizmente, strings têm um método útil chamado `contains` que faz isso por
@@ -157,7 +157,7 @@ Neste momento, estamos montando a funcionalidade por partes. Para o código
 compilar, precisamos retornar um valor do corpo da função, como indicamos na
 assinatura.
 
-#### Armazenando as linhas correspondentes
+#### Armazenando as Linhas Correspondentes
 
 Para concluir essa função, precisamos de uma maneira de armazenar as linhas
 correspondentes que queremos retornar. Para isso, podemos criar um vetor
@@ -189,7 +189,7 @@ alguns recursos úteis dos iteradores. Voltaremos a este exemplo no
 [Capítulo 13][ch13-iterators]<!-- ignore -->, onde exploraremos iteradores em
 detalhe e veremos como melhorá-lo.
 
-Agora o programa inteiro já deve funcionar! Vamos testá-lo, primeiro com uma
+Agora o programa inteiro já deve funcionar! Vamos testá-lo primeiro com uma
 palavra que deve retornar exatamente uma linha do poema de Emily Dickinson:
 _frog_.
 
@@ -204,8 +204,8 @@ _body_:
 {{#include ../listings/ch12-an-io-project/output-only-03-multiple-matches/output.txt}}
 ```
 
-E, por fim, vamos garantir que não obteremos linha nenhuma quando buscarmos
-uma palavra que não aparece em lugar nenhum do poema, como
+E, por fim, vamos garantir que não obteremos nenhuma linha quando buscarmos uma
+palavra que não aparece em lugar nenhum do poema, como
 _monomorphization_:
 
 ```console
@@ -218,8 +218,8 @@ pouco sobre entrada e saída de arquivos, lifetimes, testes e análise de linha
 de comando.
 
 Para completar este projeto, vamos demonstrar brevemente como trabalhar com
-variáveis de ambiente e como imprimir em `stderr`, os dois muito úteis quando
-você está escrevendo programas de linha de comando.
+variáveis de ambiente e como imprimir em `stderr`, ambos muito úteis quando
+você escreve programas de linha de comando.
 
 [validating-references-with-lifetimes]: ch10-03-lifetime-syntax.html#validating-references-with-lifetimes
 [ch11-anatomy]: ch11-01-writing-tests.html#the-anatomy-of-a-test-function
