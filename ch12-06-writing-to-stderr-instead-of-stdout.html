@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0804a304.js";
+            window.path_to_searchindex_js = "searchindex-d81030f7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -183,7 +183,7 @@
                     <main>
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="writing-error-messages-to-standard-error-instead-of-standard-output"></a></p>
-<h2 id="redirecionando-erros-para-a-saída-de-erro-padrão"><a class="header" href="#redirecionando-erros-para-a-saída-de-erro-padrão">Redirecionando erros para a saída de erro padrão</a></h2>
+<h2 id="redirecionando-erros-para-a-saída-de-erro-padrão"><a class="header" href="#redirecionando-erros-para-a-saída-de-erro-padrão">Redirecionando Erros para a Saída de Erro Padrão</a></h2>
 <p>Neste momento, estamos escrevendo toda a saída no terminal usando a macro
 <code>println!</code>. Na maioria dos terminais, existem dois tipos de saída: <em>saída
 padrão</em> (<code>stdout</code>) para informações gerais e <em>saída de erro padrão</em> (<code>stderr</code>)
@@ -192,7 +192,7 @@ saída bem-sucedida de um programa para um arquivo e, ainda assim, vejam as
 mensagens de erro na tela.</p>
 <p>A macro <code>println!</code> só consegue imprimir em <code>stdout</code>, então precisamos usar
 outra coisa para imprimir em <code>stderr</code>.</p>
-<h3 id="verificando-para-onde-os-erros-estão-sendo-escritos"><a class="header" href="#verificando-para-onde-os-erros-estão-sendo-escritos">Verificando para onde os erros estão sendo escritos</a></h3>
+<h3 id="verificando-para-onde-os-erros-estão-sendo-escritos"><a class="header" href="#verificando-para-onde-os-erros-estão-sendo-escritos">Verificando para Onde os Erros Estão Sendo Escritos</a></h3>
 <p>Primeiro, vamos observar como o conteúdo impresso por <code>minigrep</code> está sendo
 gravado atualmente em <code>stdout</code>, incluindo as mensagens de erro que gostaríamos
 de enviar a <code>stderr</code> no lugar. Faremos isso redirecionando o fluxo de saída
@@ -205,7 +205,7 @@ redirecionemos <code>stdout</code> para um arquivo. Nosso programa ainda não es
 comportando bem: estamos prestes a ver que ele salva a mensagem de erro no
 arquivo em vez disso!</p>
 <p>Para demonstrar esse comportamento, vamos executar o programa com <code>&gt;</code> e o
-caminho do arquivo <code>_output.txt_</code>, para o qual queremos redirecionar <code>stdout</code>.
+caminho do arquivo <em>output.txt</em>, para o qual queremos redirecionar <code>stdout</code>.
 Não passaremos nenhum argumento, o que deve causar um erro:</p>
 <pre><code class="language-console">$ cargo run &gt; output.txt
 </code></pre>
@@ -219,7 +219,7 @@ Veja o conteúdo de <em>output.txt</em>:</p>
 útil que mensagens de erro como essa sejam impressas em <code>stderr</code>, para que
 apenas os dados de uma execução bem-sucedida terminem no arquivo. Vamos mudar
 isso.</p>
-<h3 id="imprimindo-erros-em-stderr"><a class="header" href="#imprimindo-erros-em-stderr">Imprimindo erros em <code>stderr</code></a></h3>
+<h3 id="imprimindo-erros-em-stderr"><a class="header" href="#imprimindo-erros-em-stderr">Imprimindo Erros em <code>stderr</code></a></h3>
 <p>Usaremos o código da Listagem 12-24 para alterar a forma como as mensagens de
 erro são impressas. Por causa da refatoração feita anteriormente neste
 capítulo, todo o código que imprime mensagens de erro está concentrado em uma

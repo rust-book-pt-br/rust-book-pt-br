@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0804a304.js";
+            window.path_to_searchindex_js = "searchindex-d81030f7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -183,7 +183,7 @@
                     <main>
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="developing-the-librarys-functionality-with-test-driven-development"></a></p>
-<h2 id="adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes"><a class="header" href="#adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes">Adicionando funcionalidade com desenvolvimento orientado a testes</a></h2>
+<h2 id="adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes"><a class="header" href="#adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes">Adicionando Funcionalidade com Desenvolvimento Orientado a Testes</a></h2>
 <p>Agora que temos a lógica de busca em <em>src/lib.rs</em> separada da função <code>main</code>,
 fica muito mais fácil escrever testes para a funcionalidade central do nosso
 código. Podemos chamar funções diretamente com vários argumentos e verificar os
@@ -203,11 +203,11 @@ testes continuem passando.</li>
 ajudar a orientar o design do código. Escrever o teste antes do código que o
 faz passar ajuda a manter uma boa cobertura de testes ao longo de todo o
 processo.</p>
-<p>Vamos dirigir por testes a implementação da funcionalidade que de fato fará a
-busca da string de consulta no conteúdo do arquivo e produzirá uma lista das
+<p>Vamos orientar por testes a implementação da funcionalidade que de fato fará a
+busca pela string de consulta no conteúdo do arquivo e produzirá uma lista das
 linhas que correspondem à consulta. Adicionaremos essa funcionalidade em uma
 função chamada <code>search</code>.</p>
-<h3 id="escrevendo-um-teste-que-falha"><a class="header" href="#escrevendo-um-teste-que-falha">Escrevendo um teste que falha</a></h3>
+<h3 id="escrevendo-um-teste-que-falha"><a class="header" href="#escrevendo-um-teste-que-falha">Escrevendo um Teste que Falha</a></h3>
 <p>Em <em>src/lib.rs</em>, adicionaremos um módulo <code>tests</code> com uma função de teste, como
 fizemos no <a href="ch11-01-writing-tests.html#the-anatomy-of-a-test-function">Capítulo 11</a><!-- ignore -->. A função de teste
 especifica o comportamento que queremos para <code>search</code>: ela receberá uma
@@ -238,7 +238,7 @@ Pick three.";
 }</code></pre>
 <figcaption><a href="#listing-12-15">Listing 12-15</a>: Criando um teste com falha para a função <code>search</code> referente à funcionalidade que queremos ter</figcaption>
 </figure>
-<p>Esse teste procura pela string <code>"duct"</code>. O texto em que estamos buscando tem
+<p>Esse teste procura pela string <code>"duct"</code>. O texto em que estamos pesquisando tem
 três linhas, e apenas uma delas contém <code>"duct"</code>; observe que a barra invertida
 após a aspa dupla de abertura instrui Rust a não colocar um caractere de nova
 linha no começo do conteúdo dessa string literal. Verificamos que o valor
@@ -280,7 +280,7 @@ os parâmetros de lifetime especificam qual lifetime de argumento está ligado a
 lifetime do valor retornado. Neste caso, indicamos que o vetor retornado deve
 conter string slices que referenciam slices do argumento <code>contents</code>, e não do
 argumento <code>query</code>.</p>
-<p>Em outras palavras, estamos dizendo a Rust que os dados retornados pela função
+<p>Em outras palavras, estamos dizendo ao Rust que os dados retornados pela função
 <code>search</code> viverão tanto quanto os dados passados à função pelo argumento
 <code>contents</code>. Isso é importante! Os dados referenciados <em>por</em> um slice precisam
 ser válidos para que a referência também seja válida. Se o compilador assumir
@@ -305,19 +305,19 @@ help: consider introducing a named lifetime parameter
 For more information about this error, try `rustc --explain E0106`.
 error: could not compile `minigrep` (lib) due to 1 previous error
 </code></pre>
-<p>Rust não consegue saber qual dos dois parâmetros deve ser conectado à saída,
-então precisamos informá-la explicitamente. Observe que o texto de ajuda sugere
-especificar o mesmo parâmetro de lifetime para todos os parâmetros e para o
-tipo de saída, mas isso está incorreto! Como <code>contents</code> é o parâmetro que
+<p>Rust não consegue saber de qual dos dois parâmetros precisamos para a saída,
+então precisamos informar isso explicitamente. Observe que o texto de ajuda
+sugere especificar o mesmo parâmetro de lifetime para todos os parâmetros e
+para o tipo de saída, mas isso está incorreto! Como <code>contents</code> é o parâmetro que
 contém todo o texto e queremos retornar partes desse texto que correspondem à
 busca, sabemos que <code>contents</code> é o único parâmetro que deve ser ligado ao valor
 de retorno usando a sintaxe de lifetimes.</p>
 <p>Outras linguagens de programação não exigem que você conecte argumentos e
 valores de retorno na assinatura, mas essa prática fica mais natural com o
 tempo. Talvez você queira comparar este exemplo com os exemplos da seção
-<a href="ch10-03-lifetime-syntax.html#validating-references-with-lifetimes">“Validando referências com lifetimes”</a></p>
-<!-- ignore --> do Capítulo 10.
-<h3 id="escrevendo-código-para-fazer-o-teste-passar"><a class="header" href="#escrevendo-código-para-fazer-o-teste-passar">Escrevendo código para fazer o teste passar</a></h3>
+<a href="ch10-03-lifetime-syntax.html#validating-references-with-lifetimes">“Validando Referências com Lifetimes”</a><!--
+ignore --> do Capítulo 10.</p>
+<h3 id="escrevendo-código-para-fazer-o-teste-passar"><a class="header" href="#escrevendo-código-para-fazer-o-teste-passar">Escrevendo Código para Fazer o Teste Passar</a></h3>
 <p>No momento, nosso teste falha porque sempre retornamos um vetor vazio. Para
 corrigir isso e implementar <code>search</code>, nosso programa precisa seguir estes
 passos:</p>
@@ -330,8 +330,8 @@ passos:</p>
 </ol>
 <p>Vamos trabalhar em cada um desses passos, começando pela iteração sobre as
 linhas.</p>
-<h4 id="iterando-pelas-linhas-com-o-método-lines"><a class="header" href="#iterando-pelas-linhas-com-o-método-lines">Iterando pelas linhas com o método <code>lines</code></a></h4>
-<p>Rust tem um método útil para iterar por strings linha a linha, chamado
+<h4 id="iterando-pelas-linhas-com-o-método-lines"><a class="header" href="#iterando-pelas-linhas-com-o-método-lines">Iterando pelas Linhas com o Método <code>lines</code></a></h4>
+<p>Rust tem um método útil para iterar sobre strings linha a linha, chamado
 apropriadamente de <code>lines</code>, que funciona como mostrado na Listagem 12-17.
 Observe que isso ainda não compilará.</p>
 <figure class="listing" id="listing-12-17">
@@ -361,10 +361,10 @@ Observe que isso ainda não compilará.</p>
 </figure>
 <p>O método <code>lines</code> retorna um iterador. Falaremos sobre iteradores em
 profundidade no <a href="ch13-02-iterators.html">Capítulo 13</a><!-- ignore -->. Mas lembre-se de
-que você já viu esse modo de usar iteradores na <a href="ch03-05-control-flow.html#looping-through-a-collection-with-for">Listagem 3-5</a></p>
-<!-- ignore -->, em que usamos um laço `for` com um iterador para executar
-<p>código sobre cada item de uma coleção.</p>
-<h4 id="procurando-a-consulta-em-cada-linha"><a class="header" href="#procurando-a-consulta-em-cada-linha">Procurando a consulta em cada linha</a></h4>
+que você já viu esse modo de usar iteradores na <a href="ch03-05-control-flow.html#looping-through-a-collection-with-for">Listagem 3-5</a><!--
+ignore -->, em que usamos um laço <code>for</code> com um iterador para executar
+código sobre cada item de uma coleção.</p>
+<h4 id="procurando-a-consulta-em-cada-linha"><a class="header" href="#procurando-a-consulta-em-cada-linha">Procurando a Consulta em Cada Linha</a></h4>
 <p>Em seguida, vamos verificar se a linha atual contém a nossa string de busca.
 Felizmente, strings têm um método útil chamado <code>contains</code> que faz isso por
 nós. Adicione uma chamada ao método <code>contains</code> na função <code>search</code>, como mostra
@@ -399,7 +399,7 @@ a Listagem 12-18. Observe que isso ainda não vai compilar.</p>
 <p>Neste momento, estamos montando a funcionalidade por partes. Para o código
 compilar, precisamos retornar um valor do corpo da função, como indicamos na
 assinatura.</p>
-<h4 id="armazenando-as-linhas-correspondentes"><a class="header" href="#armazenando-as-linhas-correspondentes">Armazenando as linhas correspondentes</a></h4>
+<h4 id="armazenando-as-linhas-correspondentes"><a class="header" href="#armazenando-as-linhas-correspondentes">Armazenando as Linhas Correspondentes</a></h4>
 <p>Para concluir essa função, precisamos de uma maneira de armazenar as linhas
 correspondentes que queremos retornar. Para isso, podemos criar um vetor
 mutável antes do laço <code>for</code> e chamar o método <code>push</code> para armazenar cada
@@ -468,7 +468,7 @@ funcionalidade. O código dessa função não está ruim, mas ainda não aprovei
 alguns recursos úteis dos iteradores. Voltaremos a este exemplo no
 <a href="ch13-02-iterators.html">Capítulo 13</a><!-- ignore -->, onde exploraremos iteradores em
 detalhe e veremos como melhorá-lo.</p>
-<p>Agora o programa inteiro já deve funcionar! Vamos testá-lo, primeiro com uma
+<p>Agora o programa inteiro já deve funcionar! Vamos testá-lo primeiro com uma
 palavra que deve retornar exatamente uma linha do poema de Emily Dickinson:
 <em>frog</em>.</p>
 <pre><code class="language-console">$ cargo run -- frog poem.txt
@@ -487,8 +487,8 @@ I'm nobody! Who are you?
 Are you nobody, too?
 How dreary to be somebody!
 </code></pre>
-<p>E, por fim, vamos garantir que não obteremos linha nenhuma quando buscarmos
-uma palavra que não aparece em lugar nenhum do poema, como
+<p>E, por fim, vamos garantir que não obteremos nenhuma linha quando buscarmos uma
+palavra que não aparece em lugar nenhum do poema, como
 <em>monomorphization</em>:</p>
 <pre><code class="language-console">$ cargo run -- monomorphization poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
@@ -500,8 +500,8 @@ aprendemos bastante sobre como estruturar aplicações. Também aprendemos um
 pouco sobre entrada e saída de arquivos, lifetimes, testes e análise de linha
 de comando.</p>
 <p>Para completar este projeto, vamos demonstrar brevemente como trabalhar com
-variáveis de ambiente e como imprimir em <code>stderr</code>, os dois muito úteis quando
-você está escrevendo programas de linha de comando.</p>
+variáveis de ambiente e como imprimir em <code>stderr</code>, ambos muito úteis quando
+você escreve programas de linha de comando.</p>
 
                     </main>
 

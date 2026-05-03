@@ -40,7 +40,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0804a304.js";
+            window.path_to_searchindex_js = "searchindex-d81030f7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -13844,7 +13844,7 @@ desenvolvimento, porque é muito mais fácil refatorar pequenas quantidades de
 código. É isso que faremos a seguir.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="refatorando-para-melhorar-modularidade-e-tratamento-de-erros"><a href="#refatorando-para-melhorar-modularidade-e-tratamento-de-erros" class="header">Refatorando para Melhorar Modularidade e Tratamento de Erros</a></h1>
-<h2 id="refatoração-para-melhorar-a-modularidade-e-o-tratamento-de-erros"><a class="header" href="#refatoração-para-melhorar-a-modularidade-e-o-tratamento-de-erros">Refatoração para melhorar a modularidade e o tratamento de erros</a></h2>
+<h2 id="refatorando-para-melhorar-a-modularidade-e-o-tratamento-de-erros"><a class="header" href="#refatorando-para-melhorar-a-modularidade-e-o-tratamento-de-erros">Refatorando para Melhorar a Modularidade e o Tratamento de Erros</a></h2>
 <p>Para melhorar nosso programa, vamos corrigir quatro problemas relacionados à
 estrutura do código e à forma como ele lida com possíveis erros. Primeiro, a
 função <code>main</code> agora executa duas tarefas: analisar argumentos e ler arquivos.
@@ -13998,7 +13998,7 @@ fn parse_config(args: &amp;[String]) -&gt; Config {
 </figure>
 <p>Adicionamos uma struct chamada <code>Config</code> com campos <code>query</code> e <code>file_path</code>. A
 assinatura de <code>parse_config</code> agora indica que ela retorna um valor <code>Config</code>. No
-corpo de <code>parse_config</code>, onde antes retornávamos fatias de string que
+corpo de <code>parse_config</code>, onde antes retornávamos string slices que
 referenciavam valores <code>String</code> em <code>args</code>, agora definimos <code>Config</code> para conter
 valores <code>String</code> com ownership próprio. A variável <code>args</code>, em <code>main</code>, é a dona
 dos valores dos argumentos e apenas permite que <code>parse_config</code> os empreste. Se
@@ -14012,17 +14012,17 @@ da string. Ainda assim, clonar também deixa o código muito mais simples, porqu
 não precisamos gerenciar o lifetime das referências; nessa situação, abrir mão
 de um pouco de desempenho em troca de simplicidade é uma decisão razoável.</p>
 <section class="note" aria-role="note">
-<h3 id="as-vantagens-e-desvantagens-de-usar-clone"><a class="header" href="#as-vantagens-e-desvantagens-de-usar-clone">As vantagens e desvantagens de usar <code>clone</code></a></h3>
-<p>Há uma tendência entre muitos Rustáceos de evitar usar <code>clone</code> para consertar
+<h3 id="as-vantagens-e-desvantagens-de-usar-clone"><a class="header" href="#as-vantagens-e-desvantagens-de-usar-clone">As Vantagens e Desvantagens de Usar <code>clone</code></a></h3>
+<p>Há uma tendência entre muitos rustaceanos de evitar usar <code>clone</code> para consertar
 problemas de ownership devido ao custo em tempo de execução. Em
-<a href="#recursos-de-linguagens-funcionais-iteradores-e-closures">Capítulo 13</a><!-- ignore -->, você aprenderá como usar recursos mais eficientes
-métodos neste tipo de situação. Mas, por enquanto, não há problema em copiar alguns
-strings para continuar progredindo porque você fará apenas essas cópias
-uma vez e o caminho do arquivo e a string de consulta são muito pequenos. É melhor ter
-um programa funcional que é um pouco ineficiente do que tentar hiperotimizar o código
-na sua primeira passagem. À medida que você se torna mais experiente com Rust, será
-mais fácil começar com a solução mais eficiente, mas por enquanto, é
-perfeitamente aceitável ligar para <code>clone</code>.</p>
+<a href="#recursos-de-linguagens-funcionais-iteradores-e-closures">Capítulo 13</a><!-- ignore -->, você aprenderá a usar métodos mais
+eficientes nesse tipo de situação. Mas, por enquanto, não há problema em
+copiar algumas strings para continuar avançando, porque você fará essas cópias
+apenas uma vez, e o caminho do arquivo e a string de consulta são muito
+pequenos. É melhor ter um programa funcional que seja um pouco ineficiente do
+que tentar hiperotimizar o código na primeira passagem. À medida que você se
+torna mais experiente com Rust, fica mais fácil começar pela solução mais
+eficiente, mas, por enquanto, chamar <code>clone</code> é perfeitamente aceitável.</p>
 </section>
 <p>Atualizamos <code>main</code> para armazenar a instância de <code>Config</code> retornada por
 <code>parse_config</code> em uma variável chamada <code>config</code>. Também ajustamos o restante do
@@ -14041,8 +14041,8 @@ deveria ser expressa no código. Depois, adicionamos uma struct <code>Config</co
 representar esse papel compartilhado e para poder devolver os valores usando
 nomes de campos significativos.</p>
 <p>Agora, como o objetivo de <code>parse_config</code> é criar uma instância de <code>Config</code>,
-podemos transformar <code>parse_config</code> em vez de uma função comum em uma função
-chamada <code>new</code>, associada à struct <code>Config</code>. Essa mudança torna o código mais
+podemos transformar <code>parse_config</code>, que era uma função comum, em uma função
+chamada <code>new</code> associada à struct <code>Config</code>. Essa mudança torna o código mais
 idiomático. Criamos instâncias de tipos da biblioteca padrão, como <code>String</code>,
 chamando <code>String::new</code>. Da mesma forma, ao transformar <code>parse_config</code> em uma
 função <code>new</code> associada a <code>Config</code>, poderemos criar instâncias de <code>Config</code>
@@ -14242,7 +14242,7 @@ função obedecer à nova assinatura de tipo.</p>
 caso de erro.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="calling-confignew-and-handling-errors"></a></p>
-<h4 id="chamando-configbuild-e-tratando-erros"><a class="header" href="#chamando-configbuild-e-tratando-erros">Chamando <code>Config::build</code> e tratando erros</a></h4>
+<h4 id="chamando-configbuild-e-tratando-erros"><a class="header" href="#chamando-configbuild-e-tratando-erros">Chamando <code>Config::build</code> e Tratando Erros</a></h4>
 <p>Para lidar com o caso de erro e imprimir uma mensagem amigável, precisamos
 atualizar <code>main</code> para tratar o <code>Result</code> retornado por <code>Config::build</code>, como
 mostra a Listagem 12-10. Também vamos assumir explicitamente a
@@ -14324,14 +14324,14 @@ Problem parsing arguments: not enough arguments
 <p><a id="extracting-logic-from-the-main-function"></a></p>
 <h3 id="extraindo-lógica-de-main"><a class="header" href="#extraindo-lógica-de-main">Extraindo Lógica de <code>main</code></a></h3>
 <p>Agora que terminamos de refatorar a análise de configuração, vamos voltar para
-a lógica do programa. Como afirmamos em <a href="#separação-de-preocupações-para-projetos-binários">“Separando Preocupações em Binário
-Projetos”</a><!-- ignore -->, iremos
-extraia uma função chamada <code>run</code> que conterá toda a lógica atualmente no
-<code>main</code> função que não está envolvida na configuração ou manipulação
+a lógica do programa. Como afirmamos em <a href="#separation-of-concerns-for-binary-projects">“Separando Responsabilidades em
+Projetos Binários”</a><!-- ignore
+-->, vamos extrair uma função chamada <code>run</code> que conterá toda a lógica
+atualmente em <code>main</code> que não está envolvida com configuração ou tratamento de
 erros. Quando terminarmos, a função <code>main</code> será concisa e fácil de verificar
-por inspeção, e seremos capazes de escrever testes para todas as outras lógicas.</p>
-<p>A Listagem 12-11 mostra a pequena melhoria incremental da extração de um <code>run</code>
-função.</p>
+por inspeção, e poderemos escrever testes para toda a outra lógica.</p>
+<p>A Listagem 12-11 mostra a pequena melhoria incremental de extrair uma função
+<code>run</code>.</p>
 <figure class="listing" id="listing-12-11">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
@@ -14382,19 +14382,18 @@ fn run(config: Config) {
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-12-11">Listing 12-11</a>: Extraindo uma função <code>run</code> com o restante da lógica do programa</figcaption>
 </figure>
-<p>A função <code>run</code> agora contém toda a lógica restante de <code>main</code>, começando
-da leitura do arquivo. A função <code>run</code> toma a instância <code>Config</code> como um
-argumento.</p>
+<p>A função <code>run</code> agora contém toda a lógica restante de <code>main</code>, começando pela
+leitura do arquivo. A função <code>run</code> recebe a instância <code>Config</code> como argumento.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="returning-errors-from-the-run-function"></a></p>
-<h4 id="retornando-erros-de-run"><a class="header" href="#retornando-erros-de-run">Retornando erros de <code>run</code></a></h4>
+<h4 id="retornando-erros-de-run"><a class="header" href="#retornando-erros-de-run">Retornando Erros de <code>run</code></a></h4>
 <p>Com a lógica restante do programa separada na função <code>run</code>, podemos
 melhorar o tratamento de erros, como fizemos com <code>Config::build</code> na Listagem 12-9.
-Em vez de permitir que o programa entre em pânico chamando <code>expect</code>, o <code>run</code>
-função retornará <code>Result&lt;T, E&gt;</code> quando algo der errado. Isso vai deixar
-consolidaremos ainda mais a lógica em torno do tratamento de erros em <code>main</code> em um
-maneira amigável. A Listagem 12-12 mostra as mudanças que precisamos fazer no
-assinatura e corpo de <code>run</code>.</p>
+Em vez de permitir que o programa entre em pânico chamando <code>expect</code>, a função
+<code>run</code> retornará um <code>Result&lt;T, E&gt;</code> quando algo der errado. Isso nos permitirá
+consolidar ainda mais a lógica de tratamento de erros em <code>main</code> de uma maneira
+amigável para o usuário. A Listagem 12-12 mostra as mudanças que precisamos
+fazer na assinatura e no corpo de <code>run</code>.</p>
 <figure class="listing" id="listing-12-12">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
@@ -14446,28 +14445,28 @@ assinatura e corpo de <code>run</code>.</p>
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-12-12">Listing 12-12</a>: Fazendo a função <code>run</code> retornar <code>Result</code></figcaption>
 </figure>
-<p>Fizemos três mudanças significativas aqui. Primeiro, alteramos o tipo de retorno de
-a função <code>run</code> para <code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code>. Esta função anteriormente
-retornou o tipo de unidade, <code>()</code>, e mantemos isso como o valor retornado no
-<code>Ok</code> caso.</p>
-<p>Para o tipo de erro, usamos o objeto trait <code>Box&lt;dyn Error&gt;</code> (e trouxemos
-<code>std::error::Error</code> no escopo com uma instrução <code>use</code> no topo). Nós vamos cobrir
-objetos trait no <a href="#recursos-de-programação-orientada-a-objetos">Capítulo 18</a><!-- ignore -->. Por enquanto, apenas saiba que
-<code>Box&lt;dyn Error&gt;</code> significa que a função retornará um tipo que implementa o
-<code>Error</code> trait, mas não precisamos especificar que tipo específico o retorno
-valor será. Isso nos dá flexibilidade para retornar valores de erro que podem ser de
-diferentes tipos em diferentes casos de erro. A palavra-chave <code>dyn</code> é a abreviação de
-<em>dinâmico</em>.</p>
-<p>Segundo, removemos a chamada para <code>expect</code> em favor da operadora <code>?</code>, pois
-falado no <a href="#a-shortcut-for-propagating-errors-the--operator">Capítulo 9</a><!-- ignore -->. Em vez de
-<code>panic!</code> em caso de erro, <code>?</code> retornará o valor do erro da função atual
-para o chamador lidar.</p>
+<p>Fizemos três mudanças significativas aqui. Primeiro, alteramos o tipo de
+retorno da função <code>run</code> para <code>Result&lt;(), Box&lt;dyn Error&gt;&gt;</code>. Essa função antes
+retornava o tipo unitário, <code>()</code>, e mantemos esse tipo como o valor retornado no
+caso <code>Ok</code>.</p>
+<p>Para o tipo de erro, usamos o objeto de trait <code>Box&lt;dyn Error&gt;</code> (e trouxemos
+<code>std::error::Error</code> para o escopo com uma instrução <code>use</code> no topo). Vamos
+cobrir objetos trait no <a href="#recursos-de-programação-orientada-a-objetos">Capítulo 18</a><!-- ignore -->. Por enquanto,
+basta saber que <code>Box&lt;dyn Error&gt;</code> significa que a função retornará um tipo que
+implementa a trait <code>Error</code>, mas não precisamos especificar qual será o tipo
+concreto do valor retornado. Isso nos dá flexibilidade para retornar valores de
+erro que podem ser de tipos diferentes em diferentes casos de erro. A
+palavra-chave <code>dyn</code> é uma abreviação de <em>dinâmico</em>.</p>
+<p>Segundo, removemos a chamada a <code>expect</code> em favor do operador <code>?</code>, como
+discutimos no <a href="#a-shortcut-for-propagating-errors-the--operator">Capítulo 9</a><!-- ignore -->. Em vez de causar
+um <code>panic!</code> em caso de erro, <code>?</code> retornará o valor do erro da função atual para
+que o chamador possa lidar com ele.</p>
 <p>Terceiro, a função <code>run</code> agora retorna um valor <code>Ok</code> no caso de sucesso.
 Declaramos o tipo de sucesso da função <code>run</code> como <code>()</code> na assinatura,
-o que significa que precisamos agrupar o valor do tipo de unidade no valor <code>Ok</code>. Esse
-A sintaxe <code>Ok(())</code> pode parecer um pouco estranha no início. Mas usar <code>()</code> assim é
-a maneira idiomática de indicar que estamos ligando para <code>run</code> por seus efeitos colaterais
-apenas; ele não retorna um valor que precisamos.</p>
+o que significa que precisamos envolver o valor do tipo unitário no valor <code>Ok</code>.
+A sintaxe <code>Ok(())</code> pode parecer um pouco estranha no início, mas usar <code>()</code>
+assim é a maneira idiomática de indicar que estamos chamando <code>run</code> apenas por
+seus efeitos colaterais; ela não retorna um valor de que precisamos.</p>
 <p>Quando você executa este código, ele será compilado, mas exibirá um aviso:</p>
 <pre><code class="language-console">$ cargo run -- the poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
@@ -14501,13 +14500,14 @@ To tell your name the livelong day
 To an admiring bog!
 
 </code></pre>
-<p>Rust nos diz que nosso código ignorou o valor <code>Result</code> e o valor <code>Result</code>
-pode indicar que ocorreu um erro. Mas não estamos verificando se
-não houve um erro, e o compilador nos lembra que provavelmente pretendíamos
-tem algum código de tratamento de erros aqui! Vamos corrigir esse problema agora.</p>
-<h4 id="tratamento-de-erros-retornados-de-run-em-main"><a class="header" href="#tratamento-de-erros-retornados-de-run-em-main">Tratamento de erros retornados de <code>run</code> em <code>main</code></a></h4>
-<p>Verificaremos se há erros e lidaremos com eles usando uma técnica semelhante à que usamos
-com <code>Config::build</code> na Listagem 12-10, mas com uma pequena diferença:</p>
+<p>Rust nos diz que nosso código ignorou o valor <code>Result</code>, e esse valor pode
+indicar que ocorreu um erro. Mas não estamos verificando se houve ou não um
+erro, e o compilador nos lembra que provavelmente queríamos ter algum código de
+tratamento de erros aqui! Vamos corrigir esse problema agora.</p>
+<h4 id="tratando-erros-retornados-por-run-em-main"><a class="header" href="#tratando-erros-retornados-por-run-em-main">Tratando Erros Retornados por <code>run</code> em <code>main</code></a></h4>
+<p>Verificaremos se há erros e lidaremos com eles usando uma técnica semelhante à
+que usamos com <code>Config::build</code> na Listagem 12-10, mas com uma pequena
+diferença:</p>
 <p><span class="filename">Nome do arquivo: src/main.rs</span></p>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
 </span><span class="boring">use std::error::Error;
@@ -14560,23 +14560,24 @@ com <code>Config::build</code> na Listagem 12-10, mas com uma pequena diferença
 </span><span class="boring">}</span></code></pre>
 <p>Usamos <code>if let</code> em vez de <code>unwrap_or_else</code> para verificar se <code>run</code> retorna um
 <code>Err</code> e chamar <code>process::exit(1)</code> se isso acontecer. A função <code>run</code>
-não retorna um valor que queremos <code>unwrap</code> da mesma forma que
-<code>Config::build</code> retorna a instância <code>Config</code>. Porque <code>run</code> retorna <code>()</code> em
-caso de sucesso, nos preocupamos apenas em detectar um erro, então não precisamos
-<code>unwrap_or_else</code> para retornar o valor desembrulhado, que seria apenas <code>()</code>.</p>
-<p>Os corpos das funções <code>if let</code> e <code>unwrap_or_else</code> são os mesmos em
-ambos os casos: Imprimimos o erro e saímos.</p>
-<h3 id="dividindo-o-código-em-uma-crate-de-biblioteca"><a class="header" href="#dividindo-o-código-em-uma-crate-de-biblioteca">Dividindo o código em uma crate de biblioteca</a></h3>
+não retorna um valor que queremos extrair da mesma forma que
+<code>Config::build</code> retorna a instância <code>Config</code>. Como <code>run</code> retorna <code>()</code> no caso
+de sucesso, nos preocupamos apenas em detectar um erro, então não precisamos de
+<code>unwrap_or_else</code> para retornar o valor extraído, que seria apenas <code>()</code>.</p>
+<p>Os corpos de <code>if let</code> e <code>unwrap_or_else</code> são os mesmos em ambos os casos:
+imprimimos o erro e saímos.</p>
+<h3 id="dividindo-o-código-em-uma-crate-de-biblioteca"><a class="header" href="#dividindo-o-código-em-uma-crate-de-biblioteca">Dividindo o Código em uma Crate de Biblioteca</a></h3>
 <p>Nosso projeto <code>minigrep</code> está parecendo bom até agora! Agora vamos dividir o
-arquivo <em>src/main.rs</em> e coloque algum código no arquivo <em>src/lib.rs</em>. Dessa forma, nós
-pode testar o código e ter um arquivo <em>src/main.rs</em> com menos responsabilidades.</p>
+arquivo <em>src/main.rs</em> e colocar parte do código no arquivo <em>src/lib.rs</em>. Dessa
+forma, poderemos testar o código e ter um arquivo <em>src/main.rs</em> com menos
+responsabilidades.</p>
 <p>Vamos definir o código responsável pela pesquisa de texto em <em>src/lib.rs</em> em vez
-do que em <em>src/main.rs</em>, o que nos permitirá (ou qualquer outra pessoa usando nosso
-<code>minigrep</code> biblioteca) chama a função de pesquisa em mais contextos do que o nosso
-<code>minigrep</code> binário.</p>
-<p>Primeiro, vamos definir a assinatura da função <code>search</code> em <em>src/lib.rs</em> conforme mostrado em
-Listagem 12-13, com um corpo que chama a macro <code>unimplemented!</code>. Nós vamos explicar
-a assinatura com mais detalhes quando preenchermos a implementação.</p>
+de em <em>src/main.rs</em>, o que permitirá que nós (ou qualquer outra pessoa usando
+nossa biblioteca <code>minigrep</code>) chamemos a função de pesquisa em mais contextos do
+que apenas o nosso binário <code>minigrep</code>.</p>
+<p>Primeiro, vamos definir a assinatura da função <code>search</code> em <em>src/lib.rs</em>, como
+mostrado na Listagem 12-13, com um corpo que chama a macro <code>unimplemented!</code>.
+Explicaremos a assinatura com mais detalhes quando preenchermos a implementação.</p>
 <figure class="listing" id="listing-12-13">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust ignore does_not_compile">pub fn search&lt;'a&gt;(query: &amp;str, contents: &amp;'a str) -&gt; Vec&lt;&amp;'a str&gt; {
@@ -14588,7 +14589,7 @@ a assinatura com mais detalhes quando preenchermos a implementação.</p>
 como parte da API pública da nossa biblioteca. Agora temos uma crate de biblioteca que
 podemos usar da nossa crate binária e que podemos testar!</p>
 <p>Agora precisamos trazer o código definido em <em>src/lib.rs</em> para o escopo do
-binary crate em <em>src/main.rs</em> e chame-o, conforme mostrado na Listagem 12-14.</p>
+crate binário em <em>src/main.rs</em> e chamá-lo, conforme mostrado na Listagem 12-14.</p>
 <figure class="listing" id="listing-12-14">
 <span class="file-name">Filename: src/main.rs</span>
 <pre><code class="language-rust ignore"><span class="boring">use std::env;
@@ -14646,30 +14647,30 @@ fn main() {
 }</code></pre>
 <figcaption><a href="#listing-12-14">Listing 12-14</a>: Usando em <em>src/main.rs</em> a função <code>search</code> do crate de biblioteca <code>minigrep</code></figcaption>
 </figure>
-<p>Adicionamos uma linha <code>use minigrep::search</code> para trazer a função <code>search</code> de
-a crate da biblioteca no escopo da crate binária. Então, na função <code>run</code>,
-em vez de imprimir o conteúdo do arquivo, chamamos <code>search</code>
-função e passe o valor <code>config.query</code> e <code>contents</code> como argumentos. Então,
-<code>run</code> usará um loop <code>for</code> para imprimir cada linha retornada de <code>search</code> que
-correspondeu à consulta. Este também é um bom momento para remover as chamadas <code>println!</code> em
-a função <code>main</code> que exibia a consulta e o caminho do arquivo para que nosso
-o programa imprime apenas os resultados da pesquisa (se nenhum erro ocorrer).</p>
-<p>Observe que a função de pesquisa coletará todos os resultados em um vetor
-ele retorna antes de qualquer impressão acontecer. Esta implementação poderá ser lenta
-exibir resultados ao pesquisar arquivos grandes, porque os resultados não são impressos como
-eles são encontrados; discutiremos uma possível maneira de corrigir isso usando iteradores em
-Capítulo 13.</p>
+<p>Adicionamos uma linha <code>use minigrep::search</code> para trazer a função <code>search</code> do
+crate de biblioteca para o escopo do crate binário. Então, na função <code>run</code>, em
+vez de imprimir o conteúdo do arquivo, chamamos a função <code>search</code> e passamos o
+valor <code>config.query</code> e <code>contents</code> como argumentos. Em seguida, <code>run</code> usará um
+loop <code>for</code> para imprimir cada linha retornada por <code>search</code> que corresponder à
+consulta. Este também é um bom momento para remover as chamadas <code>println!</code> na
+função <code>main</code> que exibiam a consulta e o caminho do arquivo, para que nosso
+programa imprima apenas os resultados da pesquisa (se nenhum erro ocorrer).</p>
+<p>Observe que a função de pesquisa coletará todos os resultados em um vetor que
+ela retorna antes de qualquer impressão acontecer. Essa implementação poderá
+demorar para exibir resultados ao pesquisar arquivos grandes, porque os
+resultados não são impressos à medida que são encontrados. Discutiremos uma
+possível forma de corrigir isso usando iteradores no Capítulo 13.</p>
 <p>Uau! Foi muito trabalhoso, mas nos preparamos para o sucesso no
 futuro. Agora é muito mais fácil lidar com erros e tornamos o código mais
 modular. Quase todo o nosso trabalho será feito em <em>src/lib.rs</em> daqui em diante.</p>
 <p>Vamos aproveitar esta nova modularidade fazendo algo que
-tem sido difícil com o código antigo, mas é fácil com o novo código: vamos
-escreva alguns testes!</p>
+teria sido difícil com o código antigo, mas é fácil com o novo código: vamos
+escrever alguns testes!</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="adicionando-funcionalidade-com-desenvolvimento-guiado-por-testes"><a href="#adicionando-funcionalidade-com-desenvolvimento-guiado-por-testes" class="header">Adicionando Funcionalidade com Desenvolvimento Guiado por Testes</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="developing-the-librarys-functionality-with-test-driven-development"></a></p>
-<h2 id="adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes"><a class="header" href="#adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes">Adicionando funcionalidade com desenvolvimento orientado a testes</a></h2>
+<h2 id="adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes"><a class="header" href="#adicionando-funcionalidade-com-desenvolvimento-orientado-a-testes">Adicionando Funcionalidade com Desenvolvimento Orientado a Testes</a></h2>
 <p>Agora que temos a lógica de busca em <em>src/lib.rs</em> separada da função <code>main</code>,
 fica muito mais fácil escrever testes para a funcionalidade central do nosso
 código. Podemos chamar funções diretamente com vários argumentos e verificar os
@@ -14689,11 +14690,11 @@ testes continuem passando.</li>
 ajudar a orientar o design do código. Escrever o teste antes do código que o
 faz passar ajuda a manter uma boa cobertura de testes ao longo de todo o
 processo.</p>
-<p>Vamos dirigir por testes a implementação da funcionalidade que de fato fará a
-busca da string de consulta no conteúdo do arquivo e produzirá uma lista das
+<p>Vamos orientar por testes a implementação da funcionalidade que de fato fará a
+busca pela string de consulta no conteúdo do arquivo e produzirá uma lista das
 linhas que correspondem à consulta. Adicionaremos essa funcionalidade em uma
 função chamada <code>search</code>.</p>
-<h3 id="escrevendo-um-teste-que-falha"><a class="header" href="#escrevendo-um-teste-que-falha">Escrevendo um teste que falha</a></h3>
+<h3 id="escrevendo-um-teste-que-falha"><a class="header" href="#escrevendo-um-teste-que-falha">Escrevendo um Teste que Falha</a></h3>
 <p>Em <em>src/lib.rs</em>, adicionaremos um módulo <code>tests</code> com uma função de teste, como
 fizemos no <a href="#the-anatomy-of-a-test-function">Capítulo 11</a><!-- ignore -->. A função de teste
 especifica o comportamento que queremos para <code>search</code>: ela receberá uma
@@ -14724,7 +14725,7 @@ Pick three.";
 }</code></pre>
 <figcaption><a href="#listing-12-15">Listing 12-15</a>: Criando um teste com falha para a função <code>search</code> referente à funcionalidade que queremos ter</figcaption>
 </figure>
-<p>Esse teste procura pela string <code>"duct"</code>. O texto em que estamos buscando tem
+<p>Esse teste procura pela string <code>"duct"</code>. O texto em que estamos pesquisando tem
 três linhas, e apenas uma delas contém <code>"duct"</code>; observe que a barra invertida
 após a aspa dupla de abertura instrui Rust a não colocar um caractere de nova
 linha no começo do conteúdo dessa string literal. Verificamos que o valor
@@ -14766,7 +14767,7 @@ os parâmetros de lifetime especificam qual lifetime de argumento está ligado a
 lifetime do valor retornado. Neste caso, indicamos que o vetor retornado deve
 conter string slices que referenciam slices do argumento <code>contents</code>, e não do
 argumento <code>query</code>.</p>
-<p>Em outras palavras, estamos dizendo a Rust que os dados retornados pela função
+<p>Em outras palavras, estamos dizendo ao Rust que os dados retornados pela função
 <code>search</code> viverão tanto quanto os dados passados à função pelo argumento
 <code>contents</code>. Isso é importante! Os dados referenciados <em>por</em> um slice precisam
 ser válidos para que a referência também seja válida. Se o compilador assumir
@@ -14791,19 +14792,19 @@ help: consider introducing a named lifetime parameter
 For more information about this error, try `rustc --explain E0106`.
 error: could not compile `minigrep` (lib) due to 1 previous error
 </code></pre>
-<p>Rust não consegue saber qual dos dois parâmetros deve ser conectado à saída,
-então precisamos informá-la explicitamente. Observe que o texto de ajuda sugere
-especificar o mesmo parâmetro de lifetime para todos os parâmetros e para o
-tipo de saída, mas isso está incorreto! Como <code>contents</code> é o parâmetro que
+<p>Rust não consegue saber de qual dos dois parâmetros precisamos para a saída,
+então precisamos informar isso explicitamente. Observe que o texto de ajuda
+sugere especificar o mesmo parâmetro de lifetime para todos os parâmetros e
+para o tipo de saída, mas isso está incorreto! Como <code>contents</code> é o parâmetro que
 contém todo o texto e queremos retornar partes desse texto que correspondem à
 busca, sabemos que <code>contents</code> é o único parâmetro que deve ser ligado ao valor
 de retorno usando a sintaxe de lifetimes.</p>
 <p>Outras linguagens de programação não exigem que você conecte argumentos e
 valores de retorno na assinatura, mas essa prática fica mais natural com o
 tempo. Talvez você queira comparar este exemplo com os exemplos da seção
-<a href="#validating-references-with-lifetimes">“Validando referências com lifetimes”</a></p>
-<!-- ignore --> do Capítulo 10.
-<h3 id="escrevendo-código-para-fazer-o-teste-passar"><a class="header" href="#escrevendo-código-para-fazer-o-teste-passar">Escrevendo código para fazer o teste passar</a></h3>
+<a href="#validating-references-with-lifetimes">“Validando Referências com Lifetimes”</a><!--
+ignore --> do Capítulo 10.</p>
+<h3 id="escrevendo-código-para-fazer-o-teste-passar"><a class="header" href="#escrevendo-código-para-fazer-o-teste-passar">Escrevendo Código para Fazer o Teste Passar</a></h3>
 <p>No momento, nosso teste falha porque sempre retornamos um vetor vazio. Para
 corrigir isso e implementar <code>search</code>, nosso programa precisa seguir estes
 passos:</p>
@@ -14816,8 +14817,8 @@ passos:</p>
 </ol>
 <p>Vamos trabalhar em cada um desses passos, começando pela iteração sobre as
 linhas.</p>
-<h4 id="iterando-pelas-linhas-com-o-método-lines"><a class="header" href="#iterando-pelas-linhas-com-o-método-lines">Iterando pelas linhas com o método <code>lines</code></a></h4>
-<p>Rust tem um método útil para iterar por strings linha a linha, chamado
+<h4 id="iterando-pelas-linhas-com-o-método-lines"><a class="header" href="#iterando-pelas-linhas-com-o-método-lines">Iterando pelas Linhas com o Método <code>lines</code></a></h4>
+<p>Rust tem um método útil para iterar sobre strings linha a linha, chamado
 apropriadamente de <code>lines</code>, que funciona como mostrado na Listagem 12-17.
 Observe que isso ainda não compilará.</p>
 <figure class="listing" id="listing-12-17">
@@ -14847,10 +14848,10 @@ Observe que isso ainda não compilará.</p>
 </figure>
 <p>O método <code>lines</code> retorna um iterador. Falaremos sobre iteradores em
 profundidade no <a href="#processando-uma-série-de-itens-com-iteradores-1">Capítulo 13</a><!-- ignore -->. Mas lembre-se de
-que você já viu esse modo de usar iteradores na <a href="#looping-through-a-collection-with-for">Listagem 3-5</a></p>
-<!-- ignore -->, em que usamos um laço `for` com um iterador para executar
-<p>código sobre cada item de uma coleção.</p>
-<h4 id="procurando-a-consulta-em-cada-linha"><a class="header" href="#procurando-a-consulta-em-cada-linha">Procurando a consulta em cada linha</a></h4>
+que você já viu esse modo de usar iteradores na <a href="#looping-through-a-collection-with-for">Listagem 3-5</a><!--
+ignore -->, em que usamos um laço <code>for</code> com um iterador para executar
+código sobre cada item de uma coleção.</p>
+<h4 id="procurando-a-consulta-em-cada-linha"><a class="header" href="#procurando-a-consulta-em-cada-linha">Procurando a Consulta em Cada Linha</a></h4>
 <p>Em seguida, vamos verificar se a linha atual contém a nossa string de busca.
 Felizmente, strings têm um método útil chamado <code>contains</code> que faz isso por
 nós. Adicione uma chamada ao método <code>contains</code> na função <code>search</code>, como mostra
@@ -14885,7 +14886,7 @@ a Listagem 12-18. Observe que isso ainda não vai compilar.</p>
 <p>Neste momento, estamos montando a funcionalidade por partes. Para o código
 compilar, precisamos retornar um valor do corpo da função, como indicamos na
 assinatura.</p>
-<h4 id="armazenando-as-linhas-correspondentes"><a class="header" href="#armazenando-as-linhas-correspondentes">Armazenando as linhas correspondentes</a></h4>
+<h4 id="armazenando-as-linhas-correspondentes"><a class="header" href="#armazenando-as-linhas-correspondentes">Armazenando as Linhas Correspondentes</a></h4>
 <p>Para concluir essa função, precisamos de uma maneira de armazenar as linhas
 correspondentes que queremos retornar. Para isso, podemos criar um vetor
 mutável antes do laço <code>for</code> e chamar o método <code>push</code> para armazenar cada
@@ -14954,7 +14955,7 @@ funcionalidade. O código dessa função não está ruim, mas ainda não aprovei
 alguns recursos úteis dos iteradores. Voltaremos a este exemplo no
 <a href="#processando-uma-série-de-itens-com-iteradores-1">Capítulo 13</a><!-- ignore -->, onde exploraremos iteradores em
 detalhe e veremos como melhorá-lo.</p>
-<p>Agora o programa inteiro já deve funcionar! Vamos testá-lo, primeiro com uma
+<p>Agora o programa inteiro já deve funcionar! Vamos testá-lo primeiro com uma
 palavra que deve retornar exatamente uma linha do poema de Emily Dickinson:
 <em>frog</em>.</p>
 <pre><code class="language-console">$ cargo run -- frog poem.txt
@@ -14973,8 +14974,8 @@ I'm nobody! Who are you?
 Are you nobody, too?
 How dreary to be somebody!
 </code></pre>
-<p>E, por fim, vamos garantir que não obteremos linha nenhuma quando buscarmos
-uma palavra que não aparece em lugar nenhum do poema, como
+<p>E, por fim, vamos garantir que não obteremos nenhuma linha quando buscarmos uma
+palavra que não aparece em lugar nenhum do poema, como
 <em>monomorphization</em>:</p>
 <pre><code class="language-console">$ cargo run -- monomorphization poem.txt
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
@@ -14986,11 +14987,11 @@ aprendemos bastante sobre como estruturar aplicações. Também aprendemos um
 pouco sobre entrada e saída de arquivos, lifetimes, testes e análise de linha
 de comando.</p>
 <p>Para completar este projeto, vamos demonstrar brevemente como trabalhar com
-variáveis de ambiente e como imprimir em <code>stderr</code>, os dois muito úteis quando
-você está escrevendo programas de linha de comando.</p>
+variáveis de ambiente e como imprimir em <code>stderr</code>, ambos muito úteis quando
+você escreve programas de linha de comando.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="trabalhando-com-variáveis-de-ambiente-1"><a href="#trabalhando-com-variáveis-de-ambiente-1" class="header">Trabalhando com Variáveis de Ambiente</a></h1>
-<h2 id="trabalhando-com-variáveis-de-ambiente"><a class="header" href="#trabalhando-com-variáveis-de-ambiente">Trabalhando com variáveis de ambiente</a></h2>
+<h2 id="trabalhando-com-variáveis-de-ambiente"><a class="header" href="#trabalhando-com-variáveis-de-ambiente">Trabalhando com Variáveis de Ambiente</a></h2>
 <p>Vamos melhorar o binário <code>minigrep</code> adicionando um recurso extra: uma opção de
 busca sem distinção entre maiúsculas e minúsculas, que o usuário pode ativar
 por meio de uma variável de ambiente. Poderíamos transformar isso em uma opção
@@ -15000,7 +15001,7 @@ uma vez e tenha todas as suas buscas sem distinção entre maiúsculas e minúsc
 naquela sessão do terminal.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="writing-a-failing-test-for-the-case-insensitive-search-function"></a></p>
-<h3 id="escrevendo-um-teste-que-falha-para-a-busca-sem-distinção-entre-maiúsculas-e-minúsculas"><a class="header" href="#escrevendo-um-teste-que-falha-para-a-busca-sem-distinção-entre-maiúsculas-e-minúsculas">Escrevendo um teste que falha para a busca sem distinção entre maiúsculas e minúsculas</a></h3>
+<h3 id="escrevendo-um-teste-que-falha-para-busca-sem-distinção-entre-maiúsculas-e-minúsculas"><a class="header" href="#escrevendo-um-teste-que-falha-para-busca-sem-distinção-entre-maiúsculas-e-minúsculas">Escrevendo um Teste que Falha para Busca Sem Distinção entre Maiúsculas e Minúsculas</a></h3>
 <p>Primeiro, adicionamos uma nova função <code>search_case_insensitive</code> à biblioteca
 <code>minigrep</code>, que será chamada quando a variável de ambiente tiver algum valor.
 Vamos continuar seguindo o processo de TDD, então o primeiro passo é, mais uma
@@ -15063,7 +15064,7 @@ que não quebraremos por acidente a funcionalidade de busca sensível a
 maiúsculas e minúsculas que já implementamos. Esse teste deve passar agora e
 deve continuar passando enquanto trabalhamos na busca insensível a maiúsculas e
 minúsculas.</p>
-<p>O novo teste para a busca case-<em>insensitive</em> usa <code>"rUsT"</code> como consulta. Na
+<p>O novo teste para a busca <em>case-insensitive</em> usa <code>"rUsT"</code> como consulta. Na
 função <code>search_case_insensitive</code> que estamos prestes a adicionar, a consulta
 <code>"rUsT"</code> deve corresponder à linha que contém <code>"Rust:"</code>, com <code>R</code> maiúsculo, e
 também à linha <code>"Trust me."</code>, embora ambas usem capitalização diferente da
@@ -15072,7 +15073,7 @@ definimos a função <code>search_case_insensitive</code>. Se quiser, você pode
 uma implementação esqueleto que sempre retorna um vetor vazio, semelhante ao
 que fizemos com a função <code>search</code> na Listagem 12-16, para ver o teste compilar
 e falhar.</p>
-<h3 id="implementando-a-função-search_case_insensitive"><a class="header" href="#implementando-a-função-search_case_insensitive">Implementando a função <code>search_case_insensitive</code></a></h3>
+<h3 id="implementando-a-função-search_case_insensitive"><a class="header" href="#implementando-a-função-search_case_insensitive">Implementando a Função <code>search_case_insensitive</code></a></h3>
 <p>A função <code>search_case_insensitive</code>, mostrada na Listagem 12-21, será quase
 igual à função <code>search</code>. A única diferença é que colocaremos <code>query</code> e cada
 <code>line</code> em minúsculas, para que, independentemente da capitalização dos
@@ -15145,8 +15146,8 @@ linha contém a consulta.</p>
 nova variável com o mesmo nome, sombreando a <code>query</code> original. Chamar
 <code>to_lowercase</code> na consulta é necessário para que, não importa se a pessoa
 digite <code>"rust"</code>, <code>"RUST"</code>, <code>"Rust"</code> ou <code>"rUsT"</code>, tratemos a consulta como se
-fosse <code>"rust"</code> e a busca fique insensível à capitalização. Embora
-<code>to_lowercase</code> lide com Unicode básico, ela não será 100% precisa. Se
+fosse <code>"rust"</code> e a busca não diferenciasse maiúsculas de minúsculas. Embora
+<code>to_lowercase</code> lide com Unicode básico, ela não será 100 por cento precisa. Se
 estivéssemos escrevendo uma aplicação real, provavelmente precisaríamos de
 mais trabalho aqui, mas esta seção trata de variáveis de ambiente, não de
 Unicode, então vamos deixar assim.</p>
@@ -15159,8 +15160,8 @@ então precisamos alocar uma nova <code>String</code> contendo <code>"rust"</cod
 <code>&amp;</code>, porque a assinatura de <code>contains</code> espera um string slice.</p>
 <p>Em seguida, adicionamos uma chamada a <code>to_lowercase</code> em cada <code>line</code> para
 converter todos os caracteres para minúsculas. Agora que convertemos <code>line</code> e
-<code>query</code>, encontraremos correspondências independentemente da capitalização da
-consulta.</p>
+<code>query</code>, encontraremos correspondências independentemente de maiúsculas e
+minúsculas na consulta.</p>
 <p>Vamos ver se essa implementação passa nos testes:</p>
 <pre><code class="language-console">$ cargo test
    Compiling minigrep v0.1.0 (file:///projects/minigrep)
@@ -15395,7 +15396,7 @@ de ambiente, se ela estiver definida com qualquer valor; e será a variante
 ambiente está definida, o que significa que o programa deve fazer uma busca sem
 distinção entre maiúsculas e minúsculas. Se a variável <code>IGNORE_CASE</code> não
 estiver definida, <code>is_ok</code> retornará <code>false</code>, e o programa fará uma busca
-sensível a maiúsculas e minúsculas. Não nos importamos com o <em>valor</em> da
+com distinção entre maiúsculas e minúsculas. Não nos importamos com o <em>valor</em> da
 variável de ambiente, apenas se ela está definida ou não; por isso usamos
 <code>is_ok</code> em vez de <code>unwrap</code>, <code>expect</code> ou qualquer outro método que já vimos em
 <code>Result</code>.</p>
@@ -15425,7 +15426,7 @@ de shell. Você pode removê-lo com o cmdlet <code>Remove-Item</code>:</p>
 <pre><code class="language-console">PS&gt; Remove-Item Env:IGNORE_CASE
 </code></pre>
 <p>Devemos obter linhas que contenham <em>to</em>, incluindo aquelas em que a palavra
-aparece com letras maiúsculas:</p>
+aparece com letra maiúscula:</p>
 <!-- manual-regeneration
 cd listings/ch12-an-io-project/listing-12-23
 IGNORE_CASE=1 cargo run -- to poem.txt
@@ -15446,14 +15447,15 @@ precedência. Como exercício extra, tente controlar a sensibilidade a maiúscul
 e minúsculas por meio de um argumento de linha de comando ou de uma variável de
 ambiente. Decida se o argumento da linha de comando ou a variável de ambiente
 deve ter precedência se o programa for executado com um configurado para busca
-sensível e o outro para ignorar a capitalização.</p>
+com distinção entre maiúsculas e minúsculas e outro configurado para ignorar
+essa distinção.</p>
 <p>O módulo <code>std::env</code> contém muitos outros recursos úteis para lidar com
 variáveis de ambiente. Consulte a documentação para ver o que está disponível.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="redirecionando-erros-para-a-saída-de-erro-padrão-1"><a href="#redirecionando-erros-para-a-saída-de-erro-padrão-1" class="header">Redirecionando Erros para a Saída de Erro Padrão</a></h1>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="writing-error-messages-to-standard-error-instead-of-standard-output"></a></p>
-<h2 id="redirecionando-erros-para-a-saída-de-erro-padrão"><a class="header" href="#redirecionando-erros-para-a-saída-de-erro-padrão">Redirecionando erros para a saída de erro padrão</a></h2>
+<h2 id="redirecionando-erros-para-a-saída-de-erro-padrão"><a class="header" href="#redirecionando-erros-para-a-saída-de-erro-padrão">Redirecionando Erros para a Saída de Erro Padrão</a></h2>
 <p>Neste momento, estamos escrevendo toda a saída no terminal usando a macro
 <code>println!</code>. Na maioria dos terminais, existem dois tipos de saída: <em>saída
 padrão</em> (<code>stdout</code>) para informações gerais e <em>saída de erro padrão</em> (<code>stderr</code>)
@@ -15462,7 +15464,7 @@ saída bem-sucedida de um programa para um arquivo e, ainda assim, vejam as
 mensagens de erro na tela.</p>
 <p>A macro <code>println!</code> só consegue imprimir em <code>stdout</code>, então precisamos usar
 outra coisa para imprimir em <code>stderr</code>.</p>
-<h3 id="verificando-para-onde-os-erros-estão-sendo-escritos"><a class="header" href="#verificando-para-onde-os-erros-estão-sendo-escritos">Verificando para onde os erros estão sendo escritos</a></h3>
+<h3 id="verificando-para-onde-os-erros-estão-sendo-escritos"><a class="header" href="#verificando-para-onde-os-erros-estão-sendo-escritos">Verificando para Onde os Erros Estão Sendo Escritos</a></h3>
 <p>Primeiro, vamos observar como o conteúdo impresso por <code>minigrep</code> está sendo
 gravado atualmente em <code>stdout</code>, incluindo as mensagens de erro que gostaríamos
 de enviar a <code>stderr</code> no lugar. Faremos isso redirecionando o fluxo de saída
@@ -15475,7 +15477,7 @@ redirecionemos <code>stdout</code> para um arquivo. Nosso programa ainda não es
 comportando bem: estamos prestes a ver que ele salva a mensagem de erro no
 arquivo em vez disso!</p>
 <p>Para demonstrar esse comportamento, vamos executar o programa com <code>&gt;</code> e o
-caminho do arquivo <code>_output.txt_</code>, para o qual queremos redirecionar <code>stdout</code>.
+caminho do arquivo <em>output.txt</em>, para o qual queremos redirecionar <code>stdout</code>.
 Não passaremos nenhum argumento, o que deve causar um erro:</p>
 <pre><code class="language-console">$ cargo run &gt; output.txt
 </code></pre>
@@ -15489,7 +15491,7 @@ Veja o conteúdo de <em>output.txt</em>:</p>
 útil que mensagens de erro como essa sejam impressas em <code>stderr</code>, para que
 apenas os dados de uma execução bem-sucedida terminem no arquivo. Vamos mudar
 isso.</p>
-<h3 id="imprimindo-erros-em-stderr"><a class="header" href="#imprimindo-erros-em-stderr">Imprimindo erros em <code>stderr</code></a></h3>
+<h3 id="imprimindo-erros-em-stderr"><a class="header" href="#imprimindo-erros-em-stderr">Imprimindo Erros em <code>stderr</code></a></h3>
 <p>Usaremos o código da Listagem 12-24 para alterar a forma como as mensagens de
 erro são impressas. Por causa da refatoração feita anteriormente neste
 capítulo, todo o código que imprime mensagens de erro está concentrado em uma
