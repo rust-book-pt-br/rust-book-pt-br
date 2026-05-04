@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d81030f7.js";
+            window.path_to_searchindex_js = "searchindex-ae472fff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -184,20 +184,21 @@
                         <!-- Old headings. Do not remove or links may break. -->
 <p><a id="turning-our-single-threaded-server-into-a-multithreaded-server"></a>
 <a id="from-single-threaded-to-multithreaded-server"></a></p>
-<h2 id="de-um-servidor-single-thread-para-um-servidor-multithread"><a class="header" href="#de-um-servidor-single-thread-para-um-servidor-multithread">De um servidor single-thread para um servidor multithread</a></h2>
-<p>Neste momento, o servidor processará cada solicitação por vez, o que significa que não
-processar uma segunda conexão até que o processamento da primeira conexão seja concluído.
-Se o servidor recebesse cada vez mais solicitações, esta execução serial seria
-cada vez menos ideal. Se o servidor receber uma solicitação que demora muito
-para processar, as solicitações subsequentes terão que esperar até que a solicitação longa seja
-concluído, mesmo que as novas solicitações possam ser processadas rapidamente. Precisaremos consertar
-isso, mas primeiro veremos o problema em ação.</p>
+<h2 id="de-um-servidor-single-threaded-para-um-servidor-multithreaded"><a class="header" href="#de-um-servidor-single-threaded-para-um-servidor-multithreaded">De um Servidor Single-Threaded para um Servidor Multithreaded</a></h2>
+<p>Neste momento, o servidor processa cada requisição por vez, o que significa que
+não processará uma segunda conexão até que o processamento da primeira termine.
+Se o servidor recebesse cada vez mais requisições, essa execução em série se
+mostraria cada vez menos adequada. Se o servidor receber uma requisição que
+demora muito para ser processada, as requisições subsequentes terão de esperar
+até que a requisição longa termine, mesmo que as novas requisições possam ser
+processadas rapidamente. Precisaremos corrigir isso, mas primeiro veremos o
+problema em ação.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="simulating-a-slow-request-in-the-current-server-implementation"></a></p>
 <h3 id="simulando-uma-requisição-lenta"><a class="header" href="#simulando-uma-requisição-lenta">Simulando uma requisição lenta</a></h3>
-<p>Veremos como uma solicitação de processamento lento pode afetar outras solicitações feitas para
-nossa implementação de servidor atual. A Listagem 21-10 implementa o tratamento de uma solicitação
-para <em>/sleep</em> com uma resposta lenta simulada que fará o servidor dormir
+<p>Veremos como uma requisição de processamento lento pode afetar outras
+requisições feitas ao nosso servidor atual. A Listagem 21-10 implementa o
+tratamento de uma requisição para <em>/sleep</em> com uma resposta lenta simulada que fará o servidor dormir
 por cinco segundos antes de responder.</p>
 <figure class="listing" id="listing-21-10">
 <span class="file-name">Filename: src/main.rs</span>
@@ -252,48 +253,49 @@ fazer <code>match</code> explicitamente em um slice de <code>request_line</code>
 valores literais de string; <code>match</code> não faz referência automática e
 desreferenciação, como faz o método da igualdade.</p>
 <p>O primeiro braço é igual ao bloco <code>if</code> da Listagem 21-9. O segundo braço
-corresponde a uma solicitação para <em>/sleep</em>. Quando essa solicitação for recebida, o servidor irá
-durma por cinco segundos antes de renderizar a página HTML bem-sucedida. O terceiro braço
+corresponde a uma requisição para <em>/sleep</em>. Quando essa requisição for recebida, o servidor
+dormirá por cinco segundos antes de renderizar a página HTML bem-sucedida. O terceiro braço
 é igual ao bloco <code>else</code> da Listagem 21-9.</p>
 <p>Você pode ver o quão primitivo é o nosso servidor: bibliotecas reais lidariam com o
 reconhecimento de múltiplas solicitações de uma forma muito menos detalhada!</p>
-<p>Inicie o servidor usando <code>cargo run</code>. Em seguida, abra duas janelas do navegador: uma para
-<em>http://127.0.0.1:7878</em> e outro para <em>http://127.0.0.1:7878/sleep</em>. Se você
-insira o URI <em>/</em> algumas vezes, como antes, você verá que ele responde rapidamente. Mas se
-você digita <em>/sleep</em> e então carrega <em>/</em>, você verá que <em>/</em> espera até <code> sleep</code>
-dormiu cinco segundos inteiros antes de carregar.</p>
+<p>Inicie o servidor usando <code>cargo run</code>. Em seguida, abra duas janelas do
+navegador: uma para <em>http://127.0.0.1:7878</em> e outra para
+<em>http://127.0.0.1:7878/sleep</em>. Se você acessar o URI <em>/</em> algumas vezes, como
+antes, verá que ele responde rapidamente. Mas, se acessar <em>/sleep</em> e depois
+carregar <em>/</em>, verá que <em>/</em> precisa esperar <code>sleep</code> completar os cinco segundos
+antes de carregar.</p>
 <p>Existem várias técnicas que podemos usar para evitar que uma requisição lenta
 faça outras requisições se acumularem, incluindo o uso de async, como fizemos
 no Capítulo 17; a que implementaremos aqui é um thread pool.</p>
 <h3 id="melhorando-o-rendimento-com-um-pool-de-threads"><a class="header" href="#melhorando-o-rendimento-com-um-pool-de-threads">Melhorando o rendimento com um pool de threads</a></h3>
-<p>Um <em>thread pool</em> é um grupo de threads geradas que estão prontas e aguardando para
-lidar com uma tarefa. Quando o programa recebe uma nova tarefa, ele atribui uma das
-threads no pool para a tarefa e que thread processará a tarefa. O
-threads restantes no pool estão disponíveis para lidar com quaisquer outras tarefas que venham
-enquanto o primeiro thread está sendo processado. Quando o primeiro thread estiver pronto
-processando sua tarefa, ele retorna ao pool de threads ocioso, pronto para lidar
-uma nova tarefa. Um thread pool permite processar conexões simultaneamente,
+<p>Um <em>thread pool</em> é um grupo de threads criadas que estão prontas e esperando
+para lidar com uma tarefa. Quando o programa recebe uma nova tarefa, ele
+atribui essa tarefa a uma das threads do pool, e essa thread a processa. As
+threads restantes do pool ficam disponíveis para lidar com qualquer outra tarefa
+que apareça enquanto a primeira thread está ocupada. Quando a primeira thread
+termina de processar sua tarefa, ela volta ao conjunto de threads ociosas,
+pronta para lidar com uma nova tarefa. Um thread pool permite processar conexões simultaneamente,
 aumentando o rendimento do seu servidor.</p>
-<p>Limitaremos o número de threads no pool a um pequeno número para nos proteger
-de ataques DoS; se nosso programa criasse um novo thread para cada solicitação como
-quando chegou, alguém fazendo 10 milhões de solicitações ao nosso servidor poderia causar estragos
-usando todos os recursos do nosso servidor e processando solicitações
-parar.</p>
-<p>Em vez de gerar threads ilimitadas, teremos um número fixo de
-threads esperando no pool. As solicitações recebidas são enviadas ao pool para
-processamento. O pool manterá uma fila de solicitações recebidas. Cada um dos
-threads no pool irá gerar uma solicitação desta fila, tratar a solicitação,
-e então solicite outra solicitação à fila. Com este design, podemos processar
-para solicitações _ <code>N</code> _ simultaneamente, onde _ <code>N</code> _ é o número de threads. Se cada
-thread está respondendo a uma solicitação de longa duração, as solicitações subsequentes ainda podem
-fazer backup na fila, mas aumentamos o número de solicitações de longa duração
-podemos lidar antes de chegar a esse ponto.</p>
-<p>Esta técnica é apenas uma das muitas maneiras de melhorar o rendimento de uma web
-servidor. Outras opções que você pode explorar são o modelo fork/join, o
-modelo de E/S async de thread único e o modelo de E/S async multithread. Se
-você está interessado neste tópico, você pode ler mais sobre outras soluções e
-tente implementá-los; com uma linguagem de baixo nível como Rust, todos esses
-opções são possíveis.</p>
+<p>Limitaremos o número de threads no pool a um número pequeno para nos proteger
+de ataques DoS; se nosso programa criasse uma nova thread para cada requisição
+conforme ela chegasse, alguém fazendo 10 milhões de requisições ao nosso
+servidor poderia causar estragos, consumindo todos os recursos do servidor e
+paralisando o processamento.</p>
+<p>Em vez de criar threads ilimitadas, teremos um número fixo de threads
+esperando no pool. As requisições que chegarem serão enviadas ao pool para
+processamento. O pool manterá uma fila de requisições de entrada. Cada thread
+do pool retirará uma requisição dessa fila, tratará a requisição e então
+pedirá outra à fila. Com esse design, podemos processar até <em><code>N</code></em>
+requisições simultaneamente, em que <em><code>N</code></em> é o número de threads. Se cada
+thread estiver respondendo a uma requisição longa, as requisições
+subsequentes ainda poderão se acumular na fila, mas aumentamos o número de
+requisições longas que conseguimos tratar antes de chegar a esse ponto.</p>
+<p>Essa técnica é apenas uma das muitas formas de melhorar o throughput de um web
+server. Outras opções que você pode explorar são o modelo fork/join, o modelo
+de E/S async single-threaded e o modelo de E/S async multithreaded. Se você se
+interessa por esse tema, pode ler mais sobre outras soluções e tentar
+implementá-las; com uma linguagem de baixo nível como Rust, todas essas opções
+são possíveis.</p>
 <p>Antes de começarmos a implementar um thread pool, vamos falar sobre como seu uso
 deve se parecer. Quando você está tentando projetar código, escrever primeiro a interface do
 cliente pode ajudar a orientar o design. Escreva a API do código de modo que ela
@@ -307,12 +309,13 @@ o que devemos mudar a seguir para fazer o código funcionar. Antes de fazermos i
 exploraremos a técnica que não usaremos como ponto de partida.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="code-structure-if-we-could-spawn-a-thread-for-each-request"></a></p>
-<h4 id="gerando-uma-thread-para-cada-solicitação"><a class="header" href="#gerando-uma-thread-para-cada-solicitação">Gerando uma thread para cada solicitação</a></h4>
-<p>Primeiro, vamos explorar como nosso código ficaria se ele criasse um novo thread para
-cada conexão. Como mencionado anteriormente, este não é o nosso plano final devido ao
-problemas com a geração potencial de um número ilimitado de threads, mas é um
-ponto de partida para obter primeiro um servidor multithread funcional. Então, adicionaremos o
-thread pool como uma melhoria, e contrastar as duas soluções será mais fácil.</p>
+<h4 id="gerando-uma-thread-para-cada-requisição"><a class="header" href="#gerando-uma-thread-para-cada-requisição">Gerando uma Thread para Cada Requisição</a></h4>
+<p>Primeiro, vamos explorar como nosso código ficaria se ele criasse uma nova
+thread para cada conexão. Como mencionado anteriormente, esse não é o plano
+final por causa dos problemas de potencialmente criar um número ilimitado de
+threads, mas é um bom ponto de partida para obter primeiro um servidor
+multithreaded funcional. Depois, adicionaremos o thread pool como melhoria, e
+contrastar as duas soluções ficará mais fácil.</p>
 <p>A Listagem 21-11 mostra as alterações a serem feitas em <code>main</code> para gerar um novo thread para
 lidar com cada stream dentro do loop <code>for</code>.</p>
 <figure class="listing" id="listing-21-11">
@@ -371,7 +374,7 @@ onde async e await realmente brilham! Tenha isso em mente enquanto construímos 
 pool e pense em como as coisas seriam diferentes ou iguais com async.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="creating-a-similar-interface-for-a-finite-number-of-threads"></a></p>
-<h4 id="criando-um-número-finito-de-threads"><a class="header" href="#criando-um-número-finito-de-threads">Criando um número finito de threads</a></h4>
+<h4 id="criando-um-número-finito-de-threads"><a class="header" href="#criando-um-número-finito-de-threads">Criando um Número Finito de Threads</a></h4>
 <p>Queremos que nosso thread pool funcione de maneira semelhante e familiar, para
 que trocar threads por um thread pool não exija grandes alterações no código
 que usa nossa API. A Listagem 21-12 mostra a interface hipotética da struct
@@ -422,12 +425,13 @@ que usa nossa API. A Listagem 21-12 mostra a interface hipotética da struct
 </span><span class="boring">}</span></code></pre>
 <figcaption><a href="#listing-21-12">Listing 21-12</a>: Nossa interface ideal para <code>ThreadPool</code></figcaption>
 </figure>
-<p>Usamos <code>ThreadPool::new</code> para criar um novo thread pool com um número configurável
-de threads, neste caso quatro. Então, no loop <code>for</code>, <code> pool.execute</code>tem um
-interface semelhante ao <code> thread::spawn</code>, pois é necessário um closure que o pool
-deve ser executado para cada stream. Precisamos implementar <code> pool.execute</code>para que
-pega o closure e o entrega a um thread no pool para execução. Este código não
-ainda compilar, mas tentaremos para que o compilador possa nos orientar sobre como corrigi-lo.</p>
+<p>Usamos <code>ThreadPool::new</code> para criar um novo thread pool com um número
+configurável de threads, neste caso quatro. Então, no loop <code>for</code>,
+<code>pool.execute</code> tem uma interface semelhante à de <code>thread::spawn</code>, pois recebe
+uma closure que o pool deve executar para cada stream. Precisamos implementar
+<code>pool.execute</code> para que ele receba essa closure e a entregue a uma thread do
+pool para execução. Esse código ainda não compila, mas vamos tentar
+compilá-lo para que o compilador nos oriente sobre como corrigi-lo.</p>
 <!-- Old headings. Do not remove or links may break. -->
 <p><a id="building-the-threadpool-struct-using-compiler-driven-development"></a></p>
 <h4 id="construindo-threadpool-usando-desenvolvimento-orientado-a-compilador"><a class="header" href="#construindo-threadpool-usando-desenvolvimento-orientado-a-compilador">Construindo <code>ThreadPool</code> usando desenvolvimento orientado a compilador</a></h4>
@@ -520,11 +524,10 @@ error[E0599]: no function or associated item named `new` found for struct `Threa
 For more information about this error, try `rustc --explain E0599`.
 error: could not compile `hello` (bin "hello") due to 1 previous error
 </code></pre>
-<p>Este erro indica que a seguir precisamos criar uma função associada chamada
-<code>new </code> para<code>ThreadPool </code>. Também sabemos que<code>new</code>precisa ter um parâmetro
-que pode aceitar<code>4</code>como argumento e deve retornar uma instância<code>ThreadPool</code>.
-Vamos implementar a função<code> new</code>mais simples que terá esses
-características:</p>
+<p>Esse erro indica que, agora, precisamos criar uma função associada chamada
+<code>new</code> para <code>ThreadPool</code>. Também sabemos que <code>new</code> precisa ter um parâmetro que
+aceite <code>4</code> como argumento e deve retornar uma instância de <code>ThreadPool</code>.
+Vamos implementar a forma mais simples de <code>new</code> com essas características:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground">pub struct ThreadPool;
@@ -536,9 +539,9 @@ impl ThreadPool {
 }</code></pre>
 </figure>
 <p>Escolhemos <code>usize</code> como o tipo do parâmetro <code>size</code> porque sabemos que um
-número negativo de threads não faz sentido. Também sabemos que usaremos isso
-<code>4 </code> como o número de elementos em uma coleção de threads, que é o que o
-O tipo<code>usize</code> é para, conforme discutido na seção <a href="ch03-02-data-types.html#integer-types">“Tipos inteiros”</a><!--
+número negativo de threads não faz sentido. Também sabemos que usaremos esse
+<code>4</code> como o número de elementos em uma coleção de threads, que é justamente
+para isso que serve o tipo <code>usize</code>, conforme discutido na seção <a href="ch03-02-data-types.html#integer-types">“Tipos inteiros”</a><!--
 ignore --> no Capítulo 3.</p>
 <p>Vamos verificar o código novamente:</p>
 <pre><code class="language-console">$ cargo check
@@ -553,37 +556,39 @@ For more information about this error, try `rustc --explain E0599`.
 error: could not compile `hello` (bin "hello") due to 1 previous error
 </code></pre>
 <p>Agora o erro ocorre porque não temos um método <code>execute</code> em <code>ThreadPool</code>.
-Lembre-se do artigo <a href="#creating-a-finite-number-of-threads">“Criando um Número Finito de
-Threads”</a> seção <!-- ignore --> que
+Lembre-se da seção <a href="#creating-a-finite-number-of-threads">“Criando um Número Finito de
+Threads”</a><!-- ignore -->, em que
 decidimos que nosso thread pool deveria ter uma interface semelhante à de
 <code>thread::spawn</code>. Além disso, implementaremos a função <code>execute</code> para que ela
 receba a closure fornecida e a entregue a uma thread ociosa no pool para ser
 executada.</p>
-<p>Definiremos o método <code>execute</code> em <code>ThreadPool</code> para tomar um closure como
-parâmetro. Lembre-se do artigo <a href="ch13-01-closures.html#moving-captured-values-out-of-closures">“Movendo valores capturados para fora
-Fechamentos”</a><!-- ignore --> no Capítulo 13 que podemos
-tome closures como parâmetros com três traits diferentes: <code>Fn</code>, <code> FnMut</code>e
-<code>FnOnce</code>. Precisamos decidir que tipo de closure usar aqui. Nós sabemos que vamos
-acabar fazendo algo semelhante à biblioteca padrão<code>thread::spawn</code>
-implementação, para que possamos ver o que limita a assinatura de<code> thread::spawn</code>
-tem em seu parâmetro. A documentação nos mostra o seguinte:</p>
+<p>Definiremos o método <code>execute</code> em <code>ThreadPool</code> para receber uma closure como
+parâmetro. Lembre-se da seção <a href="ch13-01-closures.html#moving-captured-values-out-of-closures">“Movendo Valores Capturados para Fora de
+Closures”</a><!-- ignore -->, no Capítulo 13, em que vimos
+que closures podem ser recebidas como parâmetros com três traits diferentes:
+<code>Fn</code>, <code>FnMut</code> e <code>FnOnce</code>. Precisamos decidir qual tipo de closure usar aqui.
+Sabemos que acabaremos fazendo algo semelhante à implementação de
+<code>thread::spawn</code> da biblioteca padrão, então podemos observar quais limites a
+assinatura de <code>thread::spawn</code> impõe ao seu parâmetro. A documentação nos mostra
+o seguinte:</p>
 <pre><code class="language-rust ignore">pub fn spawn&lt;F, T&gt;(f: F) -&gt; JoinHandle&lt;T&gt;
     where
         F: FnOnce() -&gt; T,
         F: Send + 'static,
         T: Send + 'static,</code></pre>
-<p>O parâmetro de tipo <code>F</code> é o que nos preocupa aqui; o tipo <code>T</code>
-parâmetro está relacionado ao valor de retorno e não estamos preocupados com isso. Nós
-podemos ver que <code> spawn</code>usa <code> FnOnce</code>como trait vinculado a <code> F</code>. Isto é provavelmente
-o que queremos também, porque eventualmente passaremos no argumento que entramos
-<code>execute</code>para<code>spawn</code>. Podemos ter ainda mais certeza de que<code>FnOnce</code>é o trait que
-deseja usar porque o thread para executar uma solicitação executará apenas aquela
-closure da solicitação uma vez, que corresponde ao<code>Once</code>em<code> FnOnce</code>.</p>
-<p>O parâmetro de tipo <code>F</code> também possui o trait vinculado ao <code>Send</code> e o lifetime vinculado
-<code>'static </code>, que são úteis em nossa situação: Precisamos de<code>Send</code>para transferir o
-closure de um thread para outro e<code>'static</code>porque não sabemos quanto tempo
-o thread levará para ser executado. Vamos criar um método<code>execute</code>em
-<code>ThreadPool</code>que receberá um parâmetro genérico do tipo<code> F</code>com estes limites:</p>
+<p>O parâmetro de tipo <code>F</code> é o que nos interessa aqui; o parâmetro de tipo <code>T</code>
+está relacionado ao valor de retorno, e isso não nos preocupa agora. Podemos
+ver que <code>spawn</code> usa <code>FnOnce</code> como trait bound para <code>F</code>. Provavelmente isso
+também é o que queremos, porque acabaremos passando o argumento recebido em
+<code>execute</code> para <code>spawn</code>. Podemos ficar ainda mais confiantes de que <code>FnOnce</code> é
+a trait certa porque a thread que executa uma requisição executará a closure
+daquela requisição apenas uma vez, o que corresponde ao <code>Once</code> em <code>FnOnce</code>.</p>
+<p>O parâmetro de tipo <code>F</code> também tem o trait bound <code>Send</code> e o lifetime bound
+<code>'static</code>, que são úteis na nossa situação: precisamos de <code>Send</code> para
+transferir a closure de uma thread para outra e de <code>'static</code> porque não sabemos
+quanto tempo a thread levará para executá-la. Vamos criar um método <code>execute</code>
+em <code>ThreadPool</code> que receba um parâmetro genérico do tipo <code>F</code> com esses
+limites:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/lib.rs</span>
 <pre><code class="language-rust noplayground"><span class="boring">pub struct ThreadPool;
@@ -611,17 +616,16 @@ nada, mas estamos apenas tentando compilar nosso código. Vamos verificar novame
     Checking hello v0.1.0 (file:///projects/hello)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.24s
 </code></pre>
-<p>Ele compila! Mas observe que se você tentar <code>cargo run</code> e fizer uma solicitação no
-navegador, você verá os erros no navegador que vimos no início de
-o capítulo. Nossa biblioteca não está realmente chamando o closure passado para <code>execute</code>
-ainda!</p>
+<p>Ele compila! Mas observe que, se você tentar <code>cargo run</code> e fizer uma
+requisição no navegador, verá os erros que vimos no início do capítulo. Nossa
+biblioteca ainda não está realmente chamando a closure passada para <code>execute</code>!</p>
 <blockquote>
 <p>Nota: Um ditado que você pode ouvir sobre linguagens com compiladores estritos, como
-Haskell e Rust, é “Se o código compilar, ele funciona”. Mas este ditado não é
-universalmente verdadeiro. Nosso projeto compila, mas não faz absolutamente nada! Se nós
-estamos construindo um projeto real e completo, este seria um bom momento para começar
-escrever testes unitários para verificar se o código compila <em>e</em> tem o comportamento que
-quero.</p>
+Haskell e Rust, é “Se o código compilar, ele funciona”. Mas esse ditado não é
+universalmente verdadeiro. Nosso projeto compila, mas não faz absolutamente nada! Se
+estivéssemos construindo um projeto real e completo, este seria um bom momento
+para começar a escrever testes unitários para verificar se o código compila <em>e</em>
+tem o comportamento que queremos.</p>
 </blockquote>
 <p>Pense nisto: o que seria diferente aqui se fôssemos executar um future em vez
 de uma closure?</p>

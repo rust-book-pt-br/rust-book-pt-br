@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d81030f7.js";
+            window.path_to_searchindex_js = "searchindex-ae472fff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,17 +181,17 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="funções-e-closures-avançadas"><a class="header" href="#funções-e-closures-avançadas">Funções e closures avançadas</a></h2>
+                        <h2 id="funções-e-closures-avançadas"><a class="header" href="#funções-e-closures-avançadas">Funções e Closures Avançadas</a></h2>
 <p>Esta seção explora alguns recursos avançados relacionados a funções e closures,
 incluindo ponteiros de função e o retorno de closures.</p>
 <h3 id="ponteiros-de-função"><a class="header" href="#ponteiros-de-função">Ponteiros de função</a></h3>
 <p>Já falamos sobre como passar closures para funções; você também pode passar
-funções comuns para outras funções! Essa técnica é útil quando você quer passar uma
-função que já definiu em vez de definir uma nova closure. Funções
-coagem para o tipo <code>fn</code> (com <em>f</em> minúsculo), não confundir com a
-trait de closure <code>Fn</code>. O tipo <code>fn</code> é chamado de <em>ponteiro de função</em>. Passar
-funções por meio de ponteiros de função permite que você use funções como argumentos
-para outras funções.</p>
+funções comuns para outras funções! Essa técnica é útil quando você quer passar
+uma função que já definiu em vez de definir uma nova closure. Funções
+são coercidas para o tipo <code>fn</code> (com <em>f</em> minúsculo), que não deve ser confundido
+com a trait de closure <code>Fn</code>. O tipo <code>fn</code> é chamado de <em>ponteiro de função</em>.
+Passar funções por meio de ponteiros de função permite que você use funções
+como argumentos de outras funções.</p>
 <p>A sintaxe para especificar que um parâmetro é um ponteiro de função é semelhante à
 das closures, como mostrado na Listagem 20-28, em que definimos uma função
 <code>add_one</code> que adiciona 1 ao seu parâmetro. A função <code>do_twice</code> recebe dois
@@ -351,7 +351,7 @@ For more information about this error, try `rustc --explain E0308`.
 error: could not compile `functions-example` (bin "functions-example") due to 1 previous error
 </code></pre>
 <p>A mensagem de erro nos diz que, sempre que retornamos um <code>impl Trait</code>, Rust
-cria um <em>tipo opaco</em> exclusivo: um tipo cujos detalhes não podemos ver
+cria um <em>tipo opaco</em> distinto: um tipo cujos detalhes não podemos ver
 nem nomear diretamente. Portanto, mesmo que essas funções retornem closures que implementam
 a mesma trait, <code>Fn(i32) -&gt; i32</code>, os tipos opacos que Rust gera para cada uma são
 distintos. (Isso é semelhante à forma como Rust produz tipos concretos diferentes para

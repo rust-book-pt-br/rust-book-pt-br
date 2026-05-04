@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d81030f7.js";
+            window.path_to_searchindex_js = "searchindex-ae472fff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -319,14 +319,14 @@ tipo e gerar código para criar um vetor contendo os elementos especificados.</p
 <p>Para saber mais sobre como escrever macros, consulte a documentação online ou
 outros recursos, como <a href="https://veykril.github.io/tlborm/"><em>The Little Book of Rust Macros</em></a>, iniciado por
 Daniel Keep e continuado por Lukas Wirth.</p>
-<h3 id="macros-processuais-para-geração-de-código-a-partir-de-atributos"><a class="header" href="#macros-processuais-para-geração-de-código-a-partir-de-atributos">Macros processuais para geração de código a partir de atributos</a></h3>
+<h3 id="macros-procedurais-para-gerar-código-a-partir-de-atributos"><a class="header" href="#macros-procedurais-para-gerar-código-a-partir-de-atributos">Macros procedurais para gerar código a partir de atributos</a></h3>
 <p>A segunda forma de macro é a macro procedural, que se comporta mais como uma
 função. <em>Macros procedurais</em> aceitam algum código como entrada, operam sobre
 esse código e produzem outro código como saída, em vez de comparar padrões e
 substituir código por outro código, como fazem as macros declarativas. Os três
 tipos de macros procedurais são as <code>derive</code> personalizadas, as semelhantes a
 atributos e as semelhantes a funções, e todas funcionam de forma parecida.</p>
-<p>Ao criar macros procedurais, as definições devem residir em seu próprio crate,
+<p>Ao criar macros procedurais, as definições devem ficar em seu próprio crate,
 com um tipo especial de crate. Isso acontece por razões técnicas complexas que
 esperamos eliminar no futuro. Na Listagem 20-36, mostramos como definir uma
 macro procedural, em que <code>some_attribute</code> é um marcador de posição para usar
@@ -348,7 +348,7 @@ o núcleo da macro: o código-fonte sobre o qual a macro opera compõe o
 saída. A função também tem um atributo anexado a ela que especifica qual tipo
 de macro procedural estamos criando. Podemos ter vários tipos de macros
 procedurais no mesmo crate.</p>
-<p>Vejamos os diferentes tipos de macros procedurais. Começaremos com uma macro
+<p>Vamos ver os diferentes tipos de macros procedurais. Começaremos com uma macro
 <code>derive</code> personalizada e, em seguida, explicaremos as pequenas diferenças que
 tornam as outras formas distintas.</p>
 <!-- Old headings. Do not remove or links may break. -->

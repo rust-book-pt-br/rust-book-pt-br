@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d81030f7.js";
+            window.path_to_searchindex_js = "searchindex-ae472fff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,7 +181,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="desligamento-e-limpeza-elegantes"><a class="header" href="#desligamento-e-limpeza-elegantes">Desligamento e limpeza elegantes</a></h2>
+                        <h2 id="encerramento-elegante-e-limpeza"><a class="header" href="#encerramento-elegante-e-limpeza">Encerramento Elegante e Limpeza</a></h2>
 <p>O código na Listagem 21-20 está respondendo a requisições de forma assíncrona por meio do
 uso de um thread pool, como pretendíamos. Recebemos alguns avisos sobre os campos
 <code>workers</code>, <code>id</code> e <code>thread</code>, que não estamos usando de forma direta, lembrando-nos de que
@@ -417,8 +417,8 @@ código. Observe que, como drop pode ser chamado em caso de pânico, o unwrap
 também poderia panic e causar um panic duplo, que trava imediatamente o
 programa e encerra qualquer limpeza em andamento. Isso é bom para um programa de exemplo,
 mas não é recomendado para código de produção.</p>
-<h3 id="sinalização-para-os-threads-pararem-de-escutar-trabalhos"><a class="header" href="#sinalização-para-os-threads-pararem-de-escutar-trabalhos">Sinalização para os threads pararem de escutar trabalhos</a></h3>
-<p>Com todas as alterações que fizemos, nosso código é compilado sem nenhum aviso.
+<h3 id="sinalizando-para-as-threads-pararem-de-escutar-trabalhos"><a class="header" href="#sinalizando-para-as-threads-pararem-de-escutar-trabalhos">Sinalizando para as Threads Pararem de Escutar Trabalhos</a></h3>
+<p>Com todas as alterações que fizemos, nosso código compila sem nenhum aviso.
 No entanto, a má notícia é que esse código ainda não funciona da maneira que
 desejamos. A chave está na lógica da closure executada pelas threads das
 instâncias <code>Worker</code>: no momento, chamamos <code>join</code>, mas isso não desligará essas
@@ -620,7 +620,7 @@ chamar <code>join</code> nelas.</p>
 }</code></pre>
 <figcaption><a href="#listing-21-24">Listing 21-24</a>: Saindo explicitamente do loop quando <code>recv</code> retorna um erro</figcaption>
 </figure>
-<p>Para ver este código em ação, vamos modificar <code>main</code> para aceitar apenas duas solicitações
+<p>Para ver este código em ação, vamos modificar <code>main</code> para aceitar apenas duas requisições
 antes de desligar o servidor normalmente, conforme mostrado na Listagem 21-25.</p>
 <figure class="listing" id="listing-21-25">
 <span class="file-name">Filename: src/main.rs</span>
@@ -677,8 +677,8 @@ limpeza normais estão funcionando.</p>
 <p>O método <code>take</code> é definido na trait <code>Iterator</code> e limita a iteração, no máximo,
 aos dois primeiros itens. O <code>ThreadPool</code> sairá de escopo ao final de <code>main</code>, e
 a implementação de <code>drop</code> será executada.</p>
-<p>Inicie o servidor com <code>cargo run</code> e faça três solicitações. O terceiro pedido
-deve ocorrer um erro e, em seu terminal, você deverá ver uma saída semelhante a esta:</p>
+<p>Inicie o servidor com <code>cargo run</code> e faça três requisições. A terceira deverá
+falhar e, em seu terminal, você deverá ver uma saída semelhante a esta:</p>
 <!-- manual-regeneration
 cd listings/ch21-web-server/listing-21-25
 cargo run
@@ -724,7 +724,7 @@ restante das instâncias <code>Worker</code> terminasse. Nesse ponto, todas já 
 de seus loops e parado.</p>
 <p>Parabéns! Agora concluímos nosso projeto: temos um web server básico que usa
 um thread pool para responder de forma assíncrona. Somos capazes de realizar um
-desligamento gracioso do servidor, limpando todas as threads do pool.</p>
+encerramento elegante do servidor, limpando todas as threads do pool.</p>
 <p>Aqui está o código completo para referência:</p>
 <figure class="listing">
 <span class="file-name">Filename: src/main.rs</span>
@@ -883,11 +883,11 @@ implemente um web server semelhante usando esse crate. Em seguida, compare
 sua API e robustez com o thread pool que implementamos.</li>
 </ul>
 <h2 id="resumo"><a class="header" href="#resumo">Resumo</a></h2>
-<p>Bom trabalho! Você chegou ao final do livro! Queremos agradecer-lhe por
-juntando-se a nós neste tour pelo Rust. Agora você está pronto para implementar seu próprio Rust
-projetos e ajudar com projetos de outras pessoas. Tenha em mente que existe um
-comunidade acolhedora de outros Rustáceos que adorariam ajudá-lo com qualquer
-desafios que você encontra em sua jornada Rust.</p>
+<p>Bom trabalho! Você chegou ao final do livro! Queremos agradecer por ter
+acompanhado este tour pelo Rust conosco. Agora você está pronto para criar seus
+próprios projetos em Rust e ajudar em projetos de outras pessoas. Tenha em
+mente que existe uma comunidade acolhedora de outros Rustaceans que adoraria
+ajudar com qualquer desafio que você encontrar em sua jornada com Rust.</p>
 
                     </main>
 

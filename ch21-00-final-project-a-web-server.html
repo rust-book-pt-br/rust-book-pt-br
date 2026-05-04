@@ -39,7 +39,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d81030f7.js";
+            window.path_to_searchindex_js = "searchindex-ae472fff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-47748130.js"></script>
@@ -181,29 +181,29 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="projeto-final-construindo-um-servidor-web-multithread"><a class="header" href="#projeto-final-construindo-um-servidor-web-multithread">Projeto Final: Construindo um Servidor Web Multithread</a></h1>
+                        <h1 id="projeto-final-construindo-um-servidor-web-multithreaded"><a class="header" href="#projeto-final-construindo-um-servidor-web-multithreaded">Projeto Final: Construindo um Servidor Web Multithreaded</a></h1>
 <p>Foi uma longa jornada, mas chegamos ao final do livro. Neste
 capítulo, construiremos mais um projeto juntos para demonstrar alguns dos
 conceitos que abordamos nos capítulos finais, bem como recapitular algumas
 lições.</p>
-<p>Para nosso projeto final, faremos um servidor web que diz “Olá!” e se parece com a
-Figura 21-1 em um navegador.</p>
+<p>No projeto final, faremos um servidor web que diz “Olá!” e que, no navegador,
+tem a aparência mostrada na Figura 21-1.</p>
 <p>Aqui está nosso plano para construir o servidor web:</p>
 <ol>
-<li>Aprenda um pouco sobre TCP e HTTP.</li>
-<li>Ouça conexões TCP em um soquete.</li>
-<li>Analise um pequeno número de solicitações HTTP.</li>
-<li>Crie uma resposta HTTP adequada.</li>
-<li>Melhore o rendimento do nosso servidor com um thread pool.</li>
+<li>Aprender um pouco sobre TCP e HTTP.</li>
+<li>Escutar conexões TCP em um socket.</li>
+<li>Analisar um pequeno número de requisições HTTP.</li>
+<li>Criar uma resposta HTTP adequada.</li>
+<li>Melhorar o throughput do nosso servidor com um thread pool.</li>
 </ol>
 <img alt="Captura de tela de um navegador acessando o endereço 127.0.0.1:8080 e exibindo uma página com o texto “Hello! Hi from Rust”" src="img/trpl21-01.png" class="center" style="width: 50%;" />
 <p><span class="caption">Figura 21-1: Nosso projeto final compartilhado</span></p>
-<p>Antes de começarmos, devemos mencionar dois detalhes. Primeiro, o método que iremos
+<p>Antes de começarmos, devemos mencionar dois detalhes. Primeiro, o método que vamos
 usar não será a melhor maneira de construir um servidor web com Rust. Membros da comunidade
 publicaram uma série de crates prontos para produção disponíveis em
 <a href="https://crates.io/">crates.io</a> que fornecem servidores web e
 implementações de thread pool semelhantes às que construiremos. Contudo, a nossa intenção neste
-capítulo é ajudá-lo a aprender, não seguir o caminho mais fácil. Como Rust é uma
+capítulo é ajudar você a aprender, não seguir o caminho mais fácil. Como Rust é uma
 linguagem de programação de sistemas, podemos escolher o nível de abstração em que queremos
 trabalhar e podemos ir para um nível mais baixo do que é possível ou prático em outras
 linguagens.</p>
@@ -212,7 +212,7 @@ grande o suficiente por si só, sem adicionar a construção de um runtime async
 No entanto, observaremos como async e await podem ser aplicáveis a alguns dos
 mesmos problemas que veremos neste capítulo. Em última análise, como observamos em
 Capítulo 17, muitos runtimes async usam thread pools para gerenciar seu trabalho.</p>
-<p>Portanto, escreveremos o servidor HTTP básico e o thread pool manualmente para que
+<p>Portanto, escreveremos manualmente o servidor HTTP básico e o thread pool para que
 você possa aprender as ideias e técnicas gerais por trás dos crates que poderá usar
 no futuro.</p>
 
