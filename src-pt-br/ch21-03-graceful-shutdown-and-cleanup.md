@@ -1,4 +1,4 @@
-## Desligamento e limpeza elegantes
+## Encerramento Elegante e Limpeza
 
 O código na Listagem 21-20 está respondendo a requisições de forma assíncrona por meio do
 uso de um thread pool, como pretendíamos. Recebemos alguns avisos sobre os campos
@@ -89,9 +89,9 @@ também poderia panic e causar um panic duplo, que trava imediatamente o
 programa e encerra qualquer limpeza em andamento. Isso é bom para um programa de exemplo,
 mas não é recomendado para código de produção.
 
-### Sinalização para os threads pararem de escutar trabalhos
+### Sinalizando para as Threads Pararem de Escutar Trabalhos
 
-Com todas as alterações que fizemos, nosso código é compilado sem nenhum aviso.
+Com todas as alterações que fizemos, nosso código compila sem nenhum aviso.
 No entanto, a má notícia é que esse código ainda não funciona da maneira que
 desejamos. A chave está na lógica da closure executada pelas threads das
 instâncias `Worker`: no momento, chamamos `join`, mas isso não desligará essas
@@ -132,7 +132,7 @@ chamar `join` nelas.
 
 </Listing>
 
-Para ver este código em ação, vamos modificar `main` para aceitar apenas duas solicitações
+Para ver este código em ação, vamos modificar `main` para aceitar apenas duas requisições
 antes de desligar o servidor normalmente, conforme mostrado na Listagem 21-25.
 
 <Listing number="21-25" file-name="src/main.rs" caption="Encerrando o servidor após atender duas requisições ao sair do loop">
@@ -151,8 +151,8 @@ O método `take` é definido na trait `Iterator` e limita a iteração, no máxi
 aos dois primeiros itens. O `ThreadPool` sairá de escopo ao final de `main`, e
 a implementação de `drop` será executada.
 
-Inicie o servidor com `cargo run` e faça três solicitações. O terceiro pedido
-deve ocorrer um erro e, em seu terminal, você deverá ver uma saída semelhante a esta:
+Inicie o servidor com `cargo run` e faça três requisições. A terceira deverá
+falhar e, em seu terminal, você deverá ver uma saída semelhante a esta:
 
 <!-- manual-regeneration
 cd listings/ch21-web-server/listing-21-25
@@ -204,7 +204,7 @@ de seus loops e parado.
 
 Parabéns! Agora concluímos nosso projeto: temos um web server básico que usa
 um thread pool para responder de forma assíncrona. Somos capazes de realizar um
-desligamento gracioso do servidor, limpando todas as threads do pool.
+encerramento elegante do servidor, limpando todas as threads do pool.
 
 Aqui está o código completo para referência:
 
@@ -237,8 +237,8 @@ aqui estão algumas ideias:
 
 ## Resumo
 
-Bom trabalho! Você chegou ao final do livro! Queremos agradecer-lhe por
-juntando-se a nós neste tour pelo Rust. Agora você está pronto para implementar seu próprio Rust
-projetos e ajudar com projetos de outras pessoas. Tenha em mente que existe um
-comunidade acolhedora de outros Rustáceos que adorariam ajudá-lo com qualquer
-desafios que você encontra em sua jornada Rust.
+Bom trabalho! Você chegou ao final do livro! Queremos agradecer por ter
+acompanhado este tour pelo Rust conosco. Agora você está pronto para criar seus
+próprios projetos em Rust e ajudar em projetos de outras pessoas. Tenha em
+mente que existe uma comunidade acolhedora de outros Rustaceans que adoraria
+ajudar com qualquer desafio que você encontrar em sua jornada com Rust.

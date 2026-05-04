@@ -1,4 +1,4 @@
-## Funções e closures avançadas
+## Funções e Closures Avançadas
 
 Esta seção explora alguns recursos avançados relacionados a funções e closures,
 incluindo ponteiros de função e o retorno de closures.
@@ -6,12 +6,12 @@ incluindo ponteiros de função e o retorno de closures.
 ### Ponteiros de função
 
 Já falamos sobre como passar closures para funções; você também pode passar
-funções comuns para outras funções! Essa técnica é útil quando você quer passar uma
-função que já definiu em vez de definir uma nova closure. Funções
-coagem para o tipo `fn` (com _f_ minúsculo), não confundir com a
-trait de closure `Fn`. O tipo `fn` é chamado de _ponteiro de função_. Passar
-funções por meio de ponteiros de função permite que você use funções como argumentos
-para outras funções.
+funções comuns para outras funções! Essa técnica é útil quando você quer passar
+uma função que já definiu em vez de definir uma nova closure. Funções
+são coercidas para o tipo `fn` (com _f_ minúsculo), que não deve ser confundido
+com a trait de closure `Fn`. O tipo `fn` é chamado de _ponteiro de função_.
+Passar funções por meio de ponteiros de função permite que você use funções
+como argumentos de outras funções.
 
 A sintaxe para especificar que um parâmetro é um ponteiro de função é semelhante à
 das closures, como mostrado na Listagem 20-28, em que definimos uma função
@@ -147,7 +147,7 @@ compilar isso, Rust nos informará que não funcionará:
 ```
 
 A mensagem de erro nos diz que, sempre que retornamos um `impl Trait`, Rust
-cria um _tipo opaco_ exclusivo: um tipo cujos detalhes não podemos ver
+cria um _tipo opaco_ distinto: um tipo cujos detalhes não podemos ver
 nem nomear diretamente. Portanto, mesmo que essas funções retornem closures que implementam
 a mesma trait, `Fn(i32) -> i32`, os tipos opacos que Rust gera para cada uma são
 distintos. (Isso é semelhante à forma como Rust produz tipos concretos diferentes para

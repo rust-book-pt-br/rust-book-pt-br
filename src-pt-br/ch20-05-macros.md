@@ -155,7 +155,7 @@ Para saber mais sobre como escrever macros, consulte a documentação online ou
 outros recursos, como [_The Little Book of Rust Macros_][tlborm], iniciado por
 Daniel Keep e continuado por Lukas Wirth.
 
-### Macros processuais para geração de código a partir de atributos
+### Macros procedurais para gerar código a partir de atributos
 
 A segunda forma de macro é a macro procedural, que se comporta mais como uma
 função. _Macros procedurais_ aceitam algum código como entrada, operam sobre
@@ -164,7 +164,7 @@ substituir código por outro código, como fazem as macros declarativas. Os trê
 tipos de macros procedurais são as `derive` personalizadas, as semelhantes a
 atributos e as semelhantes a funções, e todas funcionam de forma parecida.
 
-Ao criar macros procedurais, as definições devem residir em seu próprio crate,
+Ao criar macros procedurais, as definições devem ficar em seu próprio crate,
 com um tipo especial de crate. Isso acontece por razões técnicas complexas que
 esperamos eliminar no futuro. Na Listagem 20-36, mostramos como definir uma
 macro procedural, em que `some_attribute` é um marcador de posição para usar
@@ -191,7 +191,7 @@ saída. A função também tem um atributo anexado a ela que especifica qual tip
 de macro procedural estamos criando. Podemos ter vários tipos de macros
 procedurais no mesmo crate.
 
-Vejamos os diferentes tipos de macros procedurais. Começaremos com uma macro
+Vamos ver os diferentes tipos de macros procedurais. Começaremos com uma macro
 `derive` personalizada e, em seguida, explicaremos as pequenas diferenças que
 tornam as outras formas distintas.
 

@@ -3,15 +3,16 @@
 <a id="turning-our-single-threaded-server-into-a-multithreaded-server"></a>
 <a id="from-single-threaded-to-multithreaded-server"></a>
 
-## De um servidor single-thread para um servidor multithread
+## De um Servidor Single-Threaded para um Servidor Multithreaded
 
-Neste momento, o servidor processará cada solicitação por vez, o que significa que não
-processar uma segunda conexão até que o processamento da primeira conexão seja concluído.
-Se o servidor recebesse cada vez mais solicitações, esta execução serial seria
-cada vez menos ideal. Se o servidor receber uma solicitação que demora muito
-para processar, as solicitações subsequentes terão que esperar até que a solicitação longa seja
-concluído, mesmo que as novas solicitações possam ser processadas rapidamente. Precisaremos consertar
-isso, mas primeiro veremos o problema em ação.
+Neste momento, o servidor processa cada requisição por vez, o que significa que
+não processará uma segunda conexão até que o processamento da primeira termine.
+Se o servidor recebesse cada vez mais requisições, essa execução em série se
+mostraria cada vez menos adequada. Se o servidor receber uma requisição que
+demora muito para ser processada, as requisições subsequentes terão de esperar
+até que a requisição longa termine, mesmo que as novas requisições possam ser
+processadas rapidamente. Precisaremos corrigir isso, mas primeiro veremos o
+problema em ação.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -19,9 +20,9 @@ isso, mas primeiro veremos o problema em ação.
 
 ### Simulando uma requisição lenta
 
-Veremos como uma solicitação de processamento lento pode afetar outras solicitações feitas para
-nossa implementação de servidor atual. A Listagem 21-10 implementa o tratamento de uma solicitação
-para _/sleep_ com uma resposta lenta simulada que fará o servidor dormir
+Veremos como uma requisição de processamento lento pode afetar outras
+requisições feitas ao nosso servidor atual. A Listagem 21-10 implementa o
+tratamento de uma requisição para _/sleep_ com uma resposta lenta simulada que fará o servidor dormir
 por cinco segundos antes de responder.
 
 <Listing number="21-10" file-name="src/main.rs" caption="Simulando uma requisição lenta ao dormir por cinco segundos">
@@ -38,18 +39,19 @@ valores literais de string; `match` não faz referência automática e
 desreferenciação, como faz o método da igualdade.
 
 O primeiro braço é igual ao bloco `if` da Listagem 21-9. O segundo braço
-corresponde a uma solicitação para _/sleep_. Quando essa solicitação for recebida, o servidor irá
-durma por cinco segundos antes de renderizar a página HTML bem-sucedida. O terceiro braço
+corresponde a uma requisição para _/sleep_. Quando essa requisição for recebida, o servidor
+dormirá por cinco segundos antes de renderizar a página HTML bem-sucedida. O terceiro braço
 é igual ao bloco `else` da Listagem 21-9.
 
 Você pode ver o quão primitivo é o nosso servidor: bibliotecas reais lidariam com o
 reconhecimento de múltiplas solicitações de uma forma muito menos detalhada!
 
-Inicie o servidor usando `cargo run`. Em seguida, abra duas janelas do navegador: uma para
-_http://127.0.0.1:7878_ e outro para _http://127.0.0.1:7878/sleep_. Se você
-insira o URI _/_ algumas vezes, como antes, você verá que ele responde rapidamente. Mas se
-você digita _/sleep_ e então carrega _/_, você verá que _/_ espera até ` sleep`
-dormiu cinco segundos inteiros antes de carregar.
+Inicie o servidor usando `cargo run`. Em seguida, abra duas janelas do
+navegador: uma para _http://127.0.0.1:7878_ e outra para
+_http://127.0.0.1:7878/sleep_. Se você acessar o URI _/_ algumas vezes, como
+antes, verá que ele responde rapidamente. Mas, se acessar _/sleep_ e depois
+carregar _/_, verá que _/_ precisa esperar `sleep` completar os cinco segundos
+antes de carregar.
 
 Existem várias técnicas que podemos usar para evitar que uma requisição lenta
 faça outras requisições se acumularem, incluindo o uso de async, como fizemos
@@ -57,37 +59,37 @@ no Capítulo 17; a que implementaremos aqui é um thread pool.
 
 ### Melhorando o rendimento com um pool de threads
 
-Um _thread pool_ é um grupo de threads geradas que estão prontas e aguardando para
-lidar com uma tarefa. Quando o programa recebe uma nova tarefa, ele atribui uma das
-threads no pool para a tarefa e que thread processará a tarefa. O
-threads restantes no pool estão disponíveis para lidar com quaisquer outras tarefas que venham
-enquanto o primeiro thread está sendo processado. Quando o primeiro thread estiver pronto
-processando sua tarefa, ele retorna ao pool de threads ocioso, pronto para lidar
-uma nova tarefa. Um thread pool permite processar conexões simultaneamente,
+Um _thread pool_ é um grupo de threads criadas que estão prontas e esperando
+para lidar com uma tarefa. Quando o programa recebe uma nova tarefa, ele
+atribui essa tarefa a uma das threads do pool, e essa thread a processa. As
+threads restantes do pool ficam disponíveis para lidar com qualquer outra tarefa
+que apareça enquanto a primeira thread está ocupada. Quando a primeira thread
+termina de processar sua tarefa, ela volta ao conjunto de threads ociosas,
+pronta para lidar com uma nova tarefa. Um thread pool permite processar conexões simultaneamente,
 aumentando o rendimento do seu servidor.
 
-Limitaremos o número de threads no pool a um pequeno número para nos proteger
-de ataques DoS; se nosso programa criasse um novo thread para cada solicitação como
-quando chegou, alguém fazendo 10 milhões de solicitações ao nosso servidor poderia causar estragos
-usando todos os recursos do nosso servidor e processando solicitações
-parar.
+Limitaremos o número de threads no pool a um número pequeno para nos proteger
+de ataques DoS; se nosso programa criasse uma nova thread para cada requisição
+conforme ela chegasse, alguém fazendo 10 milhões de requisições ao nosso
+servidor poderia causar estragos, consumindo todos os recursos do servidor e
+paralisando o processamento.
 
-Em vez de gerar threads ilimitadas, teremos um número fixo de
-threads esperando no pool. As solicitações recebidas são enviadas ao pool para
-processamento. O pool manterá uma fila de solicitações recebidas. Cada um dos
-threads no pool irá gerar uma solicitação desta fila, tratar a solicitação,
-e então solicite outra solicitação à fila. Com este design, podemos processar
-para solicitações _ `N` _ simultaneamente, onde _ `N` _ é o número de threads. Se cada
-thread está respondendo a uma solicitação de longa duração, as solicitações subsequentes ainda podem
-fazer backup na fila, mas aumentamos o número de solicitações de longa duração
-podemos lidar antes de chegar a esse ponto.
+Em vez de criar threads ilimitadas, teremos um número fixo de threads
+esperando no pool. As requisições que chegarem serão enviadas ao pool para
+processamento. O pool manterá uma fila de requisições de entrada. Cada thread
+do pool retirará uma requisição dessa fila, tratará a requisição e então
+pedirá outra à fila. Com esse design, podemos processar até _`N`_
+requisições simultaneamente, em que _`N`_ é o número de threads. Se cada
+thread estiver respondendo a uma requisição longa, as requisições
+subsequentes ainda poderão se acumular na fila, mas aumentamos o número de
+requisições longas que conseguimos tratar antes de chegar a esse ponto.
 
-Esta técnica é apenas uma das muitas maneiras de melhorar o rendimento de uma web
-servidor. Outras opções que você pode explorar são o modelo fork/join, o
-modelo de E/S async de thread único e o modelo de E/S async multithread. Se
-você está interessado neste tópico, você pode ler mais sobre outras soluções e
-tente implementá-los; com uma linguagem de baixo nível como Rust, todos esses
-opções são possíveis.
+Essa técnica é apenas uma das muitas formas de melhorar o throughput de um web
+server. Outras opções que você pode explorar são o modelo fork/join, o modelo
+de E/S async single-threaded e o modelo de E/S async multithreaded. Se você se
+interessa por esse tema, pode ler mais sobre outras soluções e tentar
+implementá-las; com uma linguagem de baixo nível como Rust, todas essas opções
+são possíveis.
 
 Antes de começarmos a implementar um thread pool, vamos falar sobre como seu uso
 deve se parecer. Quando você está tentando projetar código, escrever primeiro a interface do
@@ -106,13 +108,14 @@ exploraremos a técnica que não usaremos como ponto de partida.
 
 <a id="code-structure-if-we-could-spawn-a-thread-for-each-request"></a>
 
-#### Gerando uma thread para cada solicitação
+#### Gerando uma Thread para Cada Requisição
 
-Primeiro, vamos explorar como nosso código ficaria se ele criasse um novo thread para
-cada conexão. Como mencionado anteriormente, este não é o nosso plano final devido ao
-problemas com a geração potencial de um número ilimitado de threads, mas é um
-ponto de partida para obter primeiro um servidor multithread funcional. Então, adicionaremos o
-thread pool como uma melhoria, e contrastar as duas soluções será mais fácil.
+Primeiro, vamos explorar como nosso código ficaria se ele criasse uma nova
+thread para cada conexão. Como mencionado anteriormente, esse não é o plano
+final por causa dos problemas de potencialmente criar um número ilimitado de
+threads, mas é um bom ponto de partida para obter primeiro um servidor
+multithreaded funcional. Depois, adicionaremos o thread pool como melhoria, e
+contrastar as duas soluções ficará mais fácil.
 
 A Listagem 21-11 mostra as alterações a serem feitas em `main` para gerar um novo thread para
 lidar com cada stream dentro do loop `for`.
@@ -140,7 +143,7 @@ pool e pense em como as coisas seriam diferentes ou iguais com async.
 
 <a id="creating-a-similar-interface-for-a-finite-number-of-threads"></a>
 
-#### Criando um número finito de threads
+#### Criando um Número Finito de Threads
 
 Queremos que nosso thread pool funcione de maneira semelhante e familiar, para
 que trocar threads por um thread pool não exija grandes alterações no código
@@ -155,12 +158,13 @@ que usa nossa API. A Listagem 21-12 mostra a interface hipotética da struct
 
 </Listing>
 
-Usamos `ThreadPool::new` para criar um novo thread pool com um número configurável
-de threads, neste caso quatro. Então, no loop `for`, ` pool.execute`tem um
-interface semelhante ao ` thread::spawn`, pois é necessário um closure que o pool
-deve ser executado para cada stream. Precisamos implementar ` pool.execute`para que
-pega o closure e o entrega a um thread no pool para execução. Este código não
-ainda compilar, mas tentaremos para que o compilador possa nos orientar sobre como corrigi-lo.
+Usamos `ThreadPool::new` para criar um novo thread pool com um número
+configurável de threads, neste caso quatro. Então, no loop `for`,
+`pool.execute` tem uma interface semelhante à de `thread::spawn`, pois recebe
+uma closure que o pool deve executar para cada stream. Precisamos implementar
+`pool.execute` para que ele receba essa closure e a entregue a uma thread do
+pool para execução. Esse código ainda não compila, mas vamos tentar
+compilá-lo para que o compilador nos oriente sobre como corrigi-lo.
 
 <!-- Old headings. Do not remove or links may break. -->
 
@@ -215,11 +219,10 @@ precisamos abordar:
 {{#include ../listings/ch21-web-server/no-listing-01-define-threadpool-struct/output.txt}}
 ```
 
-Este erro indica que a seguir precisamos criar uma função associada chamada
-`new ` para`ThreadPool `. Também sabemos que` new `precisa ter um parâmetro
-que pode aceitar` 4 `como argumento e deve retornar uma instância` ThreadPool `.
-Vamos implementar a função` new`mais simples que terá esses
-características:
+Esse erro indica que, agora, precisamos criar uma função associada chamada
+`new` para `ThreadPool`. Também sabemos que `new` precisa ter um parâmetro que
+aceite `4` como argumento e deve retornar uma instância de `ThreadPool`.
+Vamos implementar a forma mais simples de `new` com essas características:
 
 <Listing file-name="src/lib.rs">
 
@@ -230,9 +233,9 @@ características:
 </Listing>
 
 Escolhemos `usize` como o tipo do parâmetro `size` porque sabemos que um
-número negativo de threads não faz sentido. Também sabemos que usaremos isso
-`4 ` como o número de elementos em uma coleção de threads, que é o que o
-O tipo`usize` é para, conforme discutido na seção [“Tipos inteiros”][integer-types]<!--
+número negativo de threads não faz sentido. Também sabemos que usaremos esse
+`4` como o número de elementos em uma coleção de threads, que é justamente
+para isso que serve o tipo `usize`, conforme discutido na seção [“Tipos inteiros”][integer-types]<!--
 ignore --> no Capítulo 3.
 
 Vamos verificar o código novamente:
@@ -242,21 +245,22 @@ Vamos verificar o código novamente:
 ```
 
 Agora o erro ocorre porque não temos um método `execute` em `ThreadPool`.
-Lembre-se do artigo [“Criando um Número Finito de
-Threads”](#creating-a-finite-number-of-threads) seção <!-- ignore --> que
+Lembre-se da seção [“Criando um Número Finito de
+Threads”](#creating-a-finite-number-of-threads)<!-- ignore -->, em que
 decidimos que nosso thread pool deveria ter uma interface semelhante à de
 `thread::spawn`. Além disso, implementaremos a função `execute` para que ela
 receba a closure fornecida e a entregue a uma thread ociosa no pool para ser
 executada.
 
-Definiremos o método `execute` em `ThreadPool` para tomar um closure como
-parâmetro. Lembre-se do artigo [“Movendo valores capturados para fora
-Fechamentos”][moving-out-of-closures]<!-- ignore --> no Capítulo 13 que podemos
-tome closures como parâmetros com três traits diferentes: `Fn`, ` FnMut`e
-` FnOnce `. Precisamos decidir que tipo de closure usar aqui. Nós sabemos que vamos
-acabar fazendo algo semelhante à biblioteca padrão` thread::spawn `
-implementação, para que possamos ver o que limita a assinatura de` thread::spawn`
-tem em seu parâmetro. A documentação nos mostra o seguinte:
+Definiremos o método `execute` em `ThreadPool` para receber uma closure como
+parâmetro. Lembre-se da seção [“Movendo Valores Capturados para Fora de
+Closures”][moving-out-of-closures]<!-- ignore -->, no Capítulo 13, em que vimos
+que closures podem ser recebidas como parâmetros com três traits diferentes:
+`Fn`, `FnMut` e `FnOnce`. Precisamos decidir qual tipo de closure usar aqui.
+Sabemos que acabaremos fazendo algo semelhante à implementação de
+`thread::spawn` da biblioteca padrão, então podemos observar quais limites a
+assinatura de `thread::spawn` impõe ao seu parâmetro. A documentação nos mostra
+o seguinte:
 
 ```rust,ignore
 pub fn spawn<F, T>(f: F) -> JoinHandle<T>
@@ -266,19 +270,20 @@ pub fn spawn<F, T>(f: F) -> JoinHandle<T>
         T: Send + 'static,
 ```
 
-O parâmetro de tipo `F` é o que nos preocupa aqui; o tipo `T`
-parâmetro está relacionado ao valor de retorno e não estamos preocupados com isso. Nós
-podemos ver que ` spawn`usa ` FnOnce`como trait vinculado a ` F`. Isto é provavelmente
-o que queremos também, porque eventualmente passaremos no argumento que entramos
-` execute `para` spawn `. Podemos ter ainda mais certeza de que` FnOnce `é o trait que
-deseja usar porque o thread para executar uma solicitação executará apenas aquela
-closure da solicitação uma vez, que corresponde ao` Once `em` FnOnce`.
+O parâmetro de tipo `F` é o que nos interessa aqui; o parâmetro de tipo `T`
+está relacionado ao valor de retorno, e isso não nos preocupa agora. Podemos
+ver que `spawn` usa `FnOnce` como trait bound para `F`. Provavelmente isso
+também é o que queremos, porque acabaremos passando o argumento recebido em
+`execute` para `spawn`. Podemos ficar ainda mais confiantes de que `FnOnce` é
+a trait certa porque a thread que executa uma requisição executará a closure
+daquela requisição apenas uma vez, o que corresponde ao `Once` em `FnOnce`.
 
-O parâmetro de tipo `F` também possui o trait vinculado ao `Send` e o lifetime vinculado
-`'static `, que são úteis em nossa situação: Precisamos de` Send `para transferir o
-closure de um thread para outro e` 'static `porque não sabemos quanto tempo
-o thread levará para ser executado. Vamos criar um método` execute `em
-` ThreadPool `que receberá um parâmetro genérico do tipo` F`com estes limites:
+O parâmetro de tipo `F` também tem o trait bound `Send` e o lifetime bound
+`'static`, que são úteis na nossa situação: precisamos de `Send` para
+transferir a closure de uma thread para outra e de `'static` porque não sabemos
+quanto tempo a thread levará para executá-la. Vamos criar um método `execute`
+em `ThreadPool` que receba um parâmetro genérico do tipo `F` com esses
+limites:
 
 <Listing file-name="src/lib.rs">
 
@@ -300,17 +305,16 @@ nada, mas estamos apenas tentando compilar nosso código. Vamos verificar novame
 {{#include ../listings/ch21-web-server/no-listing-03-define-execute/output.txt}}
 ```
 
-Ele compila! Mas observe que se você tentar `cargo run` e fizer uma solicitação no
-navegador, você verá os erros no navegador que vimos no início de
-o capítulo. Nossa biblioteca não está realmente chamando o closure passado para `execute`
-ainda!
+Ele compila! Mas observe que, se você tentar `cargo run` e fizer uma
+requisição no navegador, verá os erros que vimos no início do capítulo. Nossa
+biblioteca ainda não está realmente chamando a closure passada para `execute`!
 
 > Nota: Um ditado que você pode ouvir sobre linguagens com compiladores estritos, como
-> Haskell e Rust, é “Se o código compilar, ele funciona”. Mas este ditado não é
-> universalmente verdadeiro. Nosso projeto compila, mas não faz absolutamente nada! Se nós
-> estamos construindo um projeto real e completo, este seria um bom momento para começar
-> escrever testes unitários para verificar se o código compila _e_ tem o comportamento que
-> quero.
+> Haskell e Rust, é “Se o código compilar, ele funciona”. Mas esse ditado não é
+> universalmente verdadeiro. Nosso projeto compila, mas não faz absolutamente nada! Se
+> estivéssemos construindo um projeto real e completo, este seria um bom momento
+> para começar a escrever testes unitários para verificar se o código compila _e_
+> tem o comportamento que queremos.
 
 Pense nisto: o que seria diferente aqui se fôssemos executar um future em vez
 de uma closure?
